@@ -1,5 +1,6 @@
 package jelly;
 
+import java.lang.reflect.Method;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,6 +19,12 @@ public class Loggin {
     public static void debug(String msg){
         if(Jelly.DEBUG){
             System.out.println("[debug] " + msg);
+        }
+    }
+    
+    public static void debug(String format, Object[] args){
+        if(Jelly.DEBUG){
+            System.out.println("[debug]" + String.format(format, args));
         }
     }
     
