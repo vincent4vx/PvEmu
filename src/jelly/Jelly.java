@@ -50,12 +50,6 @@ public class Jelly {
     }
     
     private static void start(){
-        Runtime.getRuntime().addShutdownHook(new Thread(){
-            @Override
-            public void run(){
-                Jelly.close();
-            }
-        });
         start=System.currentTimeMillis();
         Config.load();
         Database.connect();
@@ -64,6 +58,12 @@ public class Jelly {
         RealmServer.start();
         GameServer.start();
         System.out.println("Serveur lancé en " + (System.currentTimeMillis() - start) + "ms");
+        Runtime.getRuntime().addShutdownHook(new Thread(){
+            @Override
+            public void run(){
+                Jelly.close();
+            }
+        });
     }
 
     private static void printAsciiLogo(){
