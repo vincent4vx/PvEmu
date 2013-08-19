@@ -62,6 +62,10 @@ public enum GamePacketEnum {
      */
     MAP_ADD_PLAYER("GM|+"),
     /**
+     * Supprime un élément de la map
+     */
+    MAP_REMOVE("GM|-"),
+    /**
      * dès que la map est chargé
      */
     MAP_LOADED("GDK"),

@@ -17,6 +17,20 @@ public class GameIoHandler extends MinaIoHandler {
     }
 
     @Override
+    public void sessionClosed(IoSession session) throws Exception {
+        MapEvents.onRemoveMap(session);
+        
+        Player p = (Player)session.getAttribute("player");
+        
+        if(p == null){
+            return;
+        }
+        
+        Loggin.debug("Déconnexion de %s", new Object[]{p.getName()});
+        p.getCharacter().logout();
+    }
+
+    @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
         String packet = ((String) message).trim();
         if (packet.length() > 1) {
@@ -45,12 +59,12 @@ public class GameIoHandler extends MinaIoHandler {
                             break;
                         case 'A': //character add
                             Account acc = getAccount(session);
-                            if(acc == null){
+                            if (acc == null) {
                                 return;
                             }
                             GamePacketEnum p = Character.onCharacterAdd(acc, packet.substring(2));
                             p.send(session);
-                            if(p == GamePacketEnum.CREATE_CHARACTER_OK){
+                            if (p == GamePacketEnum.CREATE_CHARACTER_OK) {
                                 GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
                             }
                             break;
@@ -60,7 +74,7 @@ public class GameIoHandler extends MinaIoHandler {
                     }
                     break;
                 case 'G': //game packets
-                    switch(packet.charAt(1)){
+                    switch (packet.charAt(1)) {
                         case 'C': //game create
                             CharacterEvents.onGameCreate(session);
                             break;
@@ -76,7 +90,7 @@ public class GameIoHandler extends MinaIoHandler {
                     }
                     break;
                 case 'B':
-                    switch(packet.charAt(1)){
+                    switch (packet.charAt(1)) {
                         case 'D': //basic date
                             BasicEvents.onDate(session);
                             break;
@@ -86,7 +100,7 @@ public class GameIoHandler extends MinaIoHandler {
                     }
                     break;
                 case 'c': //chat
-                    switch(packet.charAt(1)){
+                    switch (packet.charAt(1)) {
                         case 'C': //add / remove chanel
                             session.write(packet);
                             break;

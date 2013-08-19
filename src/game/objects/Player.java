@@ -2,6 +2,7 @@ package game.objects;
 
 import game.objects.dep.Creature;
 import game.objects.dep.Stats.Element;
+import jelly.Utils;
 import models.Character;
 import models.MapModel;
 import models.dao.DAOFactory;
@@ -30,41 +31,41 @@ public class Player extends Creature {
         colors[0] = c.color1 == -1 ? "-1" : Integer.toHexString(c.color1);
         colors[1] = c.color2 == -1 ? "-1" : Integer.toHexString(c.color2);
         colors[2] = c.color3 == -1 ? "-1" : Integer.toHexString(c.color3);
-        
+
         MapModel m = DAOFactory.map().getById(c.lastMap);
-        if(m != null){
+        if (m != null) {
             curMap = m.getGameMap();
         }
-        
-        if(curMap != null){
+
+        if (curMap != null) {
             curCell = curMap.getCellById(c.lastCell);
         }
     }
-    
-    public byte getClassID(){
+
+    public byte getClassID() {
         return classID;
     }
-    
-    public byte getSexe(){
+
+    public byte getSexe() {
         return sexe;
     }
-    
-    public Character getCharacter(){
+
+    public Character getCharacter() {
         return _character;
     }
-    
-    public int getID(){
+
+    public int getID() {
         return id;
     }
-    
-    public IoSession getSession(){
+
+    public IoSession getSession() {
         return session;
     }
-    
-    public void setSession(IoSession session){
+
+    public void setSession(IoSession session) {
         this.session = session;
     }
-    
+
     public String getStatsPacket() {
 
         StringBuilder ASData = new StringBuilder();
@@ -125,31 +126,94 @@ public class Player extends Creature {
 
         return ASData.toString();
     }
-    
+
+    public String getGMData() {
+        StringBuilder str = new StringBuilder();
+
+        str.append(curCell.getID()).append(";").append(0).append(";");
+        str.append("0").append(";");//FIXME:?
+        str.append(id).append(";").append(name).append(";").append(classID);
+
+        //30^100,1247;
+        //FIXME pnj suiveur ? 
+        str.append("").append(";"); //title
+        str.append(gfxID).append("^").append(100) //gfxID^size //FIXME ,GFXID pnj suiveur
+                .append(",").append("")
+                //.append(",").append("1247") // mob suvieur1
+                //.append(",").append("1503") //mob suiveur2
+                //.append(",").append("1451") //mob suiveur 3
+                //.append(",").append("1186") // mob suiveur 4
+                //.append(",").append("8013") // MS5
+                //.append(",").append("8018") // MS6
+                //.append(",").append("8017") // MS7 ... Infini quoi
+                .append(";");
+        str.append(sexe).append(";");
+        str.append(0).append(","); //alignement
+        str.append("0").append(",");//FIXME:?
+        str.append((false ? 0 : "0")).append(","); //grade
+        str.append(getLevel() + getID());
+        if (false && 0 > 0) { //déshoneur
+            str.append(",");
+            str.append(0 > 0 ? 1 : 0).append(';');
+        } else {
+            str.append(";");
+        }
+        //str.append(_lvl).append(";");
+        str.append(Utils.implode(";", colors)).append(";");
+        str.append("").append(";"); //stuff
+        /*if (Ancestra.AURA_SYSTEM) {
+         if (hasEquiped(10054) || hasEquiped(10055) || hasEquiped(10056) || hasEquiped(10058) || hasEquiped(10061) || hasEquiped(10102)) {
+         str.append(3).append(";");
+         } else {
+         str.append((_lvl > 99 ? (_lvl > 199 ? (2) : (1)) : (0))).append(";");
+         }
+         } else {
+         str.append("0;");
+         }*/
+        str.append("0;");
+        str.append(";");//Emote
+        str.append(";");//Emote timer
+        /*if (this._guildMember != null && this._guildMember.getGuild().getMembers().size() > 9)//>9TODO:
+         {
+         str.append(this._guildMember.getGuild().get_name()).append(";").append(this._guildMember.getGuild().get_emblem()).append(";");
+         } else {
+         str.append(";;");
+         }*/
+        str.append(";;");
+        str.append(0).append(";");//Restriction
+        //str.append((_onMount && _mount != null ? _mount.get_color(parsecolortomount()) : "")).append(";");
+        str.append(";");
+        str.append(";");
+        
+        return str.toString();
+    }
+
     /**
      * Retourne la propection du joueur
-     * @return 
+     *
+     * @return
      */
-    public int getProspection(){
+    public int getProspection() {
         int p = getTotalStats().get(Element.PROSPEC);
         p += Math.ceil(getTotalStats().get(Element.CHANCE) / 10);
-        
+
         return p;
     }
-    
+
     /**
      * cannaux utilisés
-     * @return 
+     *
+     * @return
      */
-    public String getChanels(){
+    public String getChanels() {
         return chanels;
     }
-    
-    public void addChanel(char c){
+
+    public void addChanel(char c) {
         chanels += c;
     }
-    
-    public void removeChanel(char c){
+
+    public void removeChanel(char c) {
         chanels.replace(String.valueOf(c), "");
     }
 }

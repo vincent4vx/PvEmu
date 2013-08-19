@@ -158,6 +158,17 @@ public class Character implements jelly.database.Model {
         }
         return _player;
     }
+    
+    public void logout(){
+        if(_player == null){
+            return;
+        }
+        
+        _player.getSession().removeAttribute("player");
+        _player.getSession().removeAttribute("account");
+        _player.setSession(null);
+        _player = null;
+    }
 
     public void clear() {
         id = 0;

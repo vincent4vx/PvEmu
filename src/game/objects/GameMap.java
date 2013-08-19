@@ -85,6 +85,16 @@ public class GameMap {
         getCellById(cellID)._players.put(p.getID(), p);
     }
     
+    /**
+     * Supprime un joueur de la map
+     * @param p
+     * @param cellID 
+     */
+    public void removePlayer(Player p, int cellID){
+        _players.remove(p.getID());
+        getCellById(cellID)._players.remove(p.getID());
+    }
+    
     public ConcurrentHashMap<Integer, Player> getPlayers(){
         return _players;
     }
