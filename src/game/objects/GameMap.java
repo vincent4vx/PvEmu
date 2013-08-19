@@ -50,6 +50,14 @@ public class GameMap {
         public boolean isWalkable(){
             return walkable;
         }
+        
+        public void removePlayer(int id){
+            _players.remove(id);
+        }
+        
+        public void addPlayer(Player p){
+            _players.put(p.getID(), p);
+        }
     }
     private MapModel _model;
     private ArrayList<Cell> _cells = new ArrayList<>(150); //300 cells. devrait allez pour la plupart des maps
@@ -67,8 +75,14 @@ public class GameMap {
         }
     }
     
-    public void addPlayer(Player p){
+    /**
+     * Ajoute un joueur à la map
+     * @param p
+     * @param cellID 
+     */
+    public void addPlayer(Player p, int cellID){
         _players.put(p.getID(), p);
+        getCellById(cellID)._players.put(p.getID(), p);
     }
     
     public ConcurrentHashMap<Integer, Player> getPlayers(){

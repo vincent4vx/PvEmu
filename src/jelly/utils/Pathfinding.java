@@ -6,54 +6,80 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Pathfinding {
 
     public static int isValidPath(GameMap map, int cellID, AtomicReference<String> pathRef) {
+        //_nSteps = 0;
+        AtomicReference<Integer> rSteps = new AtomicReference<>(0);
         int newPos = cellID;
-        int lastPos = cellID;
+        //int Steps = 0;
         String path = pathRef.get();
-        StringBuilder newPath = new StringBuilder();
-        AtomicReference<Integer> rSteps = new AtomicReference<>();
-        rSteps.set(0);
-
+        String newPath = "";
         for (int i = 0; i < path.length(); i += 3) {
             String SmallPath = path.substring(i, i + 3);
             char dir = SmallPath.charAt(0);
+            int dirCaseID = cellCode_To_ID(SmallPath.substring(1));
+            //_nSteps = 0;
 
-            newPos = ValidSinglePath(newPos, SmallPath, map, rSteps);
-            if(newPos == -1){
-                pathRef.set(newPath.toString());
+            String[] aPathInfos = ValidSinglePath(newPos, SmallPath, map, rSteps).split(":");
+            if (aPathInfos[0].equalsIgnoreCase("stop")) {
+                newPos = Integer.parseInt(aPathInfos[1]);
+                //Steps += _nSteps;
+                newPath += dir + cellID_To_Code(newPos);
+                pathRef.set(newPath);
                 return rSteps.get();
-            }else if (newPos != lastPos) {
-                newPath.append(dir).append(cellID_To_Code(newPos));
-                pathRef.set(newPath.toString());
+            } else if (aPathInfos[0].equalsIgnoreCase("ok")) {
+                newPos = dirCaseID;
+                //Steps += _nSteps;
             } else {
-                pathRef.set(newPath.toString());
+                pathRef.set(newPath);
                 return -1000;
             }
-            newPath.append(dir).append(cellID_To_Code(newPos));
+            newPath += dir + cellID_To_Code(newPos);
         }
-
-        pathRef.set(newPath.toString());
+        pathRef.set(newPath);
         return rSteps.get();
     }
 
-    public static int ValidSinglePath(int CurrentPos, String Path, GameMap map, AtomicReference<Integer> rSteps) {
+    public static String ValidSinglePath(int CurrentPos, String Path, GameMap map, AtomicReference<Integer> rSteps) {
+        int steps = 0;
         char dir = Path.charAt(0);
-        int dirCellID = cellCode_To_ID(Path.substring(1));
+        int dirCaseID = cellCode_To_ID(Path.substring(1));
         int lastPos = CurrentPos;
-        int steps;
         for (steps = 1; steps <= 64; steps++) {
-            if (GetCellIDFromDirrection(lastPos, dir, map, false) == dirCellID) {
-                if (map.getCellById(dirCellID).isWalkable()) {
-                    rSteps.set(rSteps.get() + steps);
-                    return dirCellID;
+
+            if (GetCellIDFromDirrection(lastPos, dir, map, false) == dirCaseID) {
+                /*if (map.getCellById(lastPos).isTrigger()) {
+                 return "stop:" + lastPos;
+                 }*/
+
+                if (map.getCellById(dirCaseID).isWalkable()) {
+                    return "ok:";
                 } else {
+                    steps--;
                     rSteps.set(rSteps.get() + steps);
-                    return lastPos;
+                    return ("stop:" + lastPos);
                 }
             } else {
                 lastPos = GetCellIDFromDirrection(lastPos, dir, map, false);
             }
+
+            /*if (fight != null && fight.isOccuped(lastPos)) {
+             return "no:";
+             }*/
+            /*if (fight != null) {
+             if (getEnemyFighterArround(lastPos, map, fight) != null)//Si ennemie proche
+             {
+             return "stop:" + lastPos;
+             }
+             for (Piege p : fight.get_traps()) {
+             int dist = getDistanceBetween(map, p.get_cell().getID(), lastPos);
+             if (dist <= p.get_size()) {
+             //on arrete le déplacement sur la 1ere case du piege
+             return "stop:" + lastPos;
+             }
+             }
+             }*/
+
         }
-        return -1;
+        return "no:";
     }
 
     public static int GetCellIDFromDirrection(int CaseID, char Direction, GameMap map, boolean inFight) {

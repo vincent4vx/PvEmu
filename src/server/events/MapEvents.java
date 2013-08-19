@@ -2,6 +2,7 @@ package server.events;
 
 import game.objects.GameMap;
 import game.objects.Player;
+import jelly.Loggin;
 import jelly.Utils;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
@@ -101,13 +102,13 @@ public class MapEvents {
             return;
         }
         
-        p.curMap.addPlayer(p);
+        p.curMap.addPlayer(p, cellID);
         
         GamePacketEnum.MAP_DATA.send(session, p.curMap.getMapDataPacket());
         GamePacketEnum.MAP_FIGHT_COUNT.send(session);
     }
     
-    public static void onArrivedInGame(IoSession session){   
+    public static void onArrivedInGame(IoSession session){
         Player p = (Player)session.getAttribute("player");
         
         if(p == null){
@@ -115,7 +116,7 @@ public class MapEvents {
             return;
         }
         
-        p.curMap.addPlayer(p);
+        p.curMap.addPlayer(p, p.curCell.getID());
            
         GamePacketEnum.MAP_DATA.send(session, p.curMap.getMapDataPacket());
         GamePacketEnum.MAP_FIGHT_COUNT.send(session);
@@ -127,6 +128,16 @@ public class MapEvents {
     }
     
     public static void onArrivedOnCell(IoSession session, int cellID){
+        Player p = (Player)session.getAttribute("player");
         
+        if(p == null){
+            return;
+        }
+        
+        p.curCell.removePlayer(p.getID());
+        p.curCell = p.curMap.getCellById(cellID);
+        p.curCell.addPlayer(p);
+        
+        Loggin.debug("Joueur %s arrivé sur la cellule %d avec succès !", new Object[]{p.getName(), cellID});
     }
 }

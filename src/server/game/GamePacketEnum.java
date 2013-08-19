@@ -87,8 +87,13 @@ public enum GamePacketEnum {
     BASIC_TIME("BT"),
     /**
      * confirmation de game action
+     * [id de l'action] ; [type] (;[args]...)
      */
-    GAME_ACTION("GA")
+    GAME_ACTION("GA"),
+    /**
+     * Annule la dernière game action
+     */
+    GAME_ACTION_ERROR("GA;0")
     ;
     
     private String packet;

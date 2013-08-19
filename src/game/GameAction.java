@@ -3,6 +3,7 @@ package game;
 import game.objects.Player;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import jelly.Loggin;
 
 public class GameAction {
     private static ConcurrentHashMap<Player, HashMap<Integer, GameAction>> actions = new ConcurrentHashMap<>();
@@ -10,37 +11,55 @@ public class GameAction {
     public Player _player;
     public int actionID;
     public String args;
-    public int id;
+    public int id = 0;
+    private HashMap<Object, Object> _attachement = new HashMap<>();
     
-    private GameAction(Player p, int actionID, String args, int id){
+    public GameAction(Player p, int actionID, String args){
         _player = p;
         this.actionID = actionID;
         this.args = args;
+        
+        if(actions.containsKey(p)){
+            Object[] keys = actions.get(p).keySet().toArray();
+            if(keys.length > 0){
+                id = (int)keys[keys.length - 1] + 1;
+            }
+        }
+    }
+    
+    public void attach(Object key, Object o){
+        _attachement.put(key, o);
+    }
+    
+    public Object get(Object key){
+        return _attachement.get(key);
     }
     
     /**
-     * Ajoute une nouvelle GA dans la liste d'attente
-     * @param p
-     * @param actionID
-     * @param args 
+     * sauvegarde la GA, et la met en attente
      */
-    public static GameAction create(Player p, int actionID, String args){
+    public void save(){
         HashMap<Integer, GameAction> p_actions;
         
-        if(actions.containsKey(p)){
-            p_actions = actions.get(p);
+        if(actions.containsKey(_player)){
+            p_actions = actions.get(_player);
         }else{
             p_actions = new HashMap<>();
         }
         
-        int id = p_actions.size();
-        GameAction GA = new GameAction(p, actionID, args, id);
+        p_actions.put(id, this);
+        actions.put(_player, p_actions);
+    }
+    
+    /**
+     * Supprime la GA de la liste d'attente
+     */
+    public void delete(){
+        if(!actions.containsKey(_player)){
+            return; //ne devrait pas arriver
+        }
         
-        p_actions.put(id, GA);
-        
-        actions.put(p, p_actions);
-        
-        return GA;
+        actions.get(_player).remove(id);
     }
     
     /**
@@ -54,11 +73,7 @@ public class GameAction {
             return null;
         }
         HashMap<Integer, GameAction> p_actions = actions.get(p);
-        
-        if(!p_actions.containsKey(id)){
-            return null;
-        }
-        
+                
         return p_actions.get(id);
     }
 }

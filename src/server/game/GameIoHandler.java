@@ -70,6 +70,9 @@ public class GameIoHandler extends MinaIoHandler {
                         case 'A':
                             GameActionEvents.onGameAction(session, packet.substring(2));
                             break;
+                        case 'K':
+                            GameActionEvents.onGK(session, packet.substring(2));
+                            break;
                     }
                     break;
                 case 'B':
