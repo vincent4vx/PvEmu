@@ -51,6 +51,7 @@ public class Pathfinding {
                  }*/
 
                 if (map.getCellById(dirCaseID).isWalkable()) {
+                    rSteps.set(rSteps.get() + steps);
                     return "ok:";
                 } else {
                     steps--;

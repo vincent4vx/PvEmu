@@ -91,7 +91,7 @@ public class GameActionEvents {
 
         Loggin.debug("Tentative de déplacement de %s de %d en %d étapes", new Object[]{p.getName(), p.curCell.getID(), steps});
 
-        if (steps == -1000) {
+        if (steps == -1000 || steps == 0) {
             Loggin.debug("Path invalide !");
             GamePacketEnum.GAME_ACTION_ERROR.send(session);
             return;
