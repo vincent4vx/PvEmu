@@ -1,5 +1,6 @@
 package server.events;
 
+import game.objects.Player;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,5 +36,26 @@ public class BasicEvents {
 
         GamePacketEnum.BASIC_DATE.send(session, p.toString());
         GamePacketEnum.BASIC_TIME.send(session, String.valueOf(actDate.getTime() + 3600000));
+    }
+    
+    public static void onMessage(IoSession session, String packet){
+        Player p = (Player)session.getAttribute("player");
+        
+        if(p == null){
+            return;
+        }
+        
+        String[] args = packet.split("\\|");
+        
+        switch(args[0]){
+            case "*": //canal noir (map)
+                StringBuilder b = new StringBuilder();
+                b.append("|").append(p.getID()).append("|").append(p.getName()).append("|").append(args[1]);
+                String msg = b.toString();
+                for(Player P : p.curMap.getPlayers().values()){
+                    GamePacketEnum.CHAT_MESSAGE_OK.send(P.getSession(), msg);
+                }
+                break;
+        }
     }
 }

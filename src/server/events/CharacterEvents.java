@@ -46,6 +46,7 @@ public class CharacterEvents {
 
         GamePacketEnum.GAME_CREATE_OK.send(session, p.getName());
         GamePacketEnum.STATS_PACKET.send(session, p.getStatsPacket());
+        GamePacketEnum.CHAT_CHANEL_ADD.send(session, p.getChanels());
         MapEvents.onArrivedInGame(session);
     }
 

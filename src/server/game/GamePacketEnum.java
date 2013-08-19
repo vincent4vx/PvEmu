@@ -93,7 +93,19 @@ public enum GamePacketEnum {
     /**
      * Annule la dernière game action
      */
-    GAME_ACTION_ERROR("GA;0")
+    GAME_ACTION_ERROR("GA;0"),
+    /**
+     * Packet de chat
+     */
+    CHAT_MESSAGE_OK("cMK"),
+    /**
+     * Ajoute un canal de chat
+     */
+    CHAT_CHANEL_ADD("cC+"),
+    /**
+     * Supprime un canal de chat
+     */
+    CHAT_CHANEL_REMOVE("cC-"),
     ;
     
     private String packet;

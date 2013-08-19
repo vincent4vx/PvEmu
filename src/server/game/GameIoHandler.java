@@ -80,6 +80,16 @@ public class GameIoHandler extends MinaIoHandler {
                         case 'D': //basic date
                             BasicEvents.onDate(session);
                             break;
+                        case 'M': //message
+                            BasicEvents.onMessage(session, packet.substring(2));
+                            break;
+                    }
+                    break;
+                case 'c': //chat
+                    switch(packet.charAt(1)){
+                        case 'C': //add / remove chanel
+                            session.write(packet);
+                            break;
                     }
                     break;
             }

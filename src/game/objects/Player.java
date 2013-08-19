@@ -16,6 +16,7 @@ public class Player extends Creature {
     public GameMap curMap;
     public GameMap.Cell curCell;
     private IoSession session = null;
+    private String chanels = "*#$:?";
 
     public Player(Character c) {
         _character = c;
@@ -134,5 +135,21 @@ public class Player extends Creature {
         p += Math.ceil(getTotalStats().get(Element.CHANCE) / 10);
         
         return p;
+    }
+    
+    /**
+     * cannaux utilisés
+     * @return 
+     */
+    public String getChanels(){
+        return chanels;
+    }
+    
+    public void addChanel(char c){
+        chanels += c;
+    }
+    
+    public void removeChanel(char c){
+        chanels.replace(String.valueOf(c), "");
     }
 }
