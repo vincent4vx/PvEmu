@@ -35,7 +35,7 @@ public class AccountDAO extends DAO<Account> {
             a.question = RS.getString("question");
             a.response = RS.getString("response");
             
-            accountsByName.put(RS.getString("account"), a);
+            accountsByName.put(RS.getString("account").toLowerCase(), a);
             accountsById.put(RS.getInt("id"), a);
             
             return a;
@@ -61,7 +61,7 @@ public class AccountDAO extends DAO<Account> {
      * @return 
      */
     public Account getByName(String name){
-        if(!accountsByName.containsKey(name)){
+        if(!accountsByName.containsKey(name.toLowerCase())){
             if(getByNameStatement == null){
                 getByNameStatement = Database.prepare("SELECT * FROM accounts WHERE account = ?");
             }
