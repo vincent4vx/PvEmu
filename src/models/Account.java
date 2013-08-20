@@ -10,7 +10,7 @@ public class Account implements jelly.database.Model {
     public String account;
     public String pass;
     public String pseudo;
-    public int level;
+    public byte level;
     public String question;
     public String response;
 

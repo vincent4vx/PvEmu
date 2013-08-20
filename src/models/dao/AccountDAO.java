@@ -29,7 +29,7 @@ public class AccountDAO extends DAO<Account> {
             
             a.id = RS.getInt("id");
             a.account = RS.getString("account");
-            a.level = RS.getShort("level");
+            a.level = RS.getByte("level");
             a.pass = RS.getString("pass");
             a.pseudo = RS.getString("pseudo");
             a.question = RS.getString("question");

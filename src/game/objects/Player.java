@@ -3,6 +3,7 @@ package game.objects;
 import game.objects.dep.Creature;
 import game.objects.dep.Stats.Element;
 import jelly.Utils;
+import models.Account;
 import models.Character;
 import models.MapModel;
 import models.dao.DAOFactory;
@@ -18,7 +19,8 @@ public class Player extends Creature {
     public GameMap curMap;
     public GameMap.Cell curCell;
     private IoSession session = null;
-    private String chanels = "*#$:?";
+    private String chanels = "*#$:?i^!%";
+    private Account _account;
 
     public Player(Character c) {
         _character = c;
@@ -41,6 +43,8 @@ public class Player extends Creature {
         if (curMap != null) {
             curCell = curMap.getCellById(c.lastCell);
         }
+        
+        _account = DAOFactory.account().getById(_character.accountId);
     }
 
     public byte getClassID() {
@@ -207,7 +211,7 @@ public class Player extends Creature {
      * @return
      */
     public String getChanels() {
-        return chanels;
+        return chanels + (_account.level > 0 ? "@¤" : "");
     }
 
     public void addChanel(char c) {

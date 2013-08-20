@@ -55,7 +55,7 @@ public class RealmIoHandler extends MinaIoHandler {
                     RealmPacketEnum.PSEUDO.send(session, acc.pseudo);
                     RealmPacketEnum.HOSTS_LIST.send(session);
                     RealmPacketEnum.QUESTION.send(session, acc.question);
-                    RealmPacketEnum.LOGIN_OK.send(session, String.valueOf(acc.level));
+                    RealmPacketEnum.LOGIN_OK.send(session, acc.level > 0 ? "1" : "0");
                 }else{
                     switch(packet.charAt(0)){
                         case 'A':

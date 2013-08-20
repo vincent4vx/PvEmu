@@ -4,6 +4,8 @@ import game.objects.Player;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import jelly.Commands;
+import models.Account;
 import org.apache.mina.core.session.IoSession;
 import server.game.GamePacketEnum;
 
@@ -57,5 +59,16 @@ public class BasicEvents {
                 }
                 break;
         }
+    }
+    
+    public static void onAdminCommand(IoSession session, String command){
+        Account acc = (Account)session.getAttribute("account");
+        
+        if(acc == null){
+            session.close(false);
+            return;
+        }
+        
+        Commands.exec(command, acc.level, session);
     }
 }

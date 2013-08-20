@@ -110,6 +110,10 @@ public enum GamePacketEnum {
      * Supprime un canal de chat
      */
     CHAT_CHANEL_REMOVE("cC-"),
+    /**
+     * écrit dans la console (150 caractères max)
+     */
+    BASIC_CONSOLE_WRITE("BAT2")
     ;
     
     private String packet;
