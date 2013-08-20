@@ -26,7 +26,7 @@ public class MapDAO extends DAO<MapModel> {
             map.key = RS.getString("key");
             map.mapData = RS.getString("mapData");
             map.monsters = RS.getString("monsters");
-            map.capabilities = RS.getByte("capabilities");
+            //map.capabilities = RS.getByte("capabilities");
             map.mappos = RS.getString("mappos");
             map.numgroup = RS.getByte("numgroup");
             map.groupmaxsize = RS.getByte("groupmaxsize");

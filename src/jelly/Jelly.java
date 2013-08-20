@@ -54,6 +54,9 @@ public class Jelly {
         Config.load();
         Database.connect();
         Stats.loadElements();
+        if(Config.getBool("preload")){
+            preload();
+        }
         System.out.println("Lancement du Realm");
         RealmServer.start();
         GameServer.start();
@@ -77,6 +80,19 @@ public class Jelly {
                 "                 __/ |\n" +
                 "                |___/\n"
         );
+    }
+    
+    private static void preload(){
+        System.out.println("====> Prechargement <====");
+        System.out.print("Chargement des maps : ");
+        System.out.println(DAOFactory.map().getAll().size() + " maps chargées");
+        System.out.print("Chargement des comptes : ");
+        System.out.println(DAOFactory.account().getAll().size() + " comptes chargés");
+        System.out.print("Chargement des personnages : ");
+        System.out.println(DAOFactory.character().getAll().size() + " personnages chargées");
+        System.out.print("Execution du GC : ");
+        System.gc();
+        System.out.println("Ok");
     }
     
     public static void close(){
