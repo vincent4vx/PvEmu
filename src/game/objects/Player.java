@@ -7,6 +7,7 @@ import models.Character;
 import models.MapModel;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
+import server.events.MapEvents;
 
 public class Player extends Creature {
 
@@ -214,6 +215,16 @@ public class Player extends Creature {
     }
 
     public void removeChanel(char c) {
-        chanels.replace(String.valueOf(c), "");
+        chanels = chanels.replace(String.valueOf(c), "");
+    }
+    
+    /**
+     * Téléporte le personnage
+     * @param mapID
+     * @param cellID 
+     */
+    public void teleport(int mapID, int cellID){        
+        MapEvents.onRemoveMap(session);
+        MapEvents.onArrivedOnMap(session, mapID, cellID);
     }
 }

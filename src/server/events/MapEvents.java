@@ -10,6 +10,10 @@ import server.game.GamePacketEnum;
 
 public class MapEvents {
 
+    /**
+     * Affiche le perso sur la map (à appeler après GameMap.addPlayer())
+     * @param session 
+     */
     public static void onAddMap(IoSession session) {
         Player p = (Player) session.getAttribute("player");
 
@@ -27,6 +31,10 @@ public class MapEvents {
         }
     }
     
+    /**
+     * Retire le joueur de la map (ne pas appeler GameMap.removePlayer())
+     * @param session 
+     */
     public static void onRemoveMap(IoSession session){
         Player p = (Player)session.getAttribute("player");
         
@@ -43,6 +51,12 @@ public class MapEvents {
         p.curMap.removePlayer(p, p.curCell.getID());
     }
     
+    /**
+     * Utilisé en cas de changement de maps
+     * @param session
+     * @param mapID
+     * @param cellID 
+     */
     public static void onArrivedOnMap(IoSession session, int mapID, int cellID){
         Player p = (Player)session.getAttribute("player");
         
@@ -70,6 +84,10 @@ public class MapEvents {
         GamePacketEnum.MAP_FIGHT_COUNT.send(session);
     }
     
+    /**
+     * En cas d'arrivé IG
+     * @param session 
+     */
     public static void onArrivedInGame(IoSession session){
         Player p = (Player)session.getAttribute("player");
         
@@ -84,11 +102,20 @@ public class MapEvents {
         GamePacketEnum.MAP_FIGHT_COUNT.send(session);
     }
     
+    /**
+     * Packet GI : charge les données de la map
+     * @param session 
+     */
     public static void onInitialize(IoSession session){
         onAddMap(session);
         GamePacketEnum.MAP_LOADED.send(session);
     }
     
+    /**
+     * Arrivé sur une cellule après déplacement (gestion des triggers)
+     * @param session
+     * @param cellID 
+     */
     public static void onArrivedOnCell(IoSession session, int cellID){
         Player p = (Player)session.getAttribute("player");
         
@@ -101,5 +128,7 @@ public class MapEvents {
         p.curCell.addPlayer(p);
         
         Loggin.debug("Joueur %s arrivé sur la cellule %d avec succès !", new Object[]{p.getName(), cellID});
+        
+        p.curCell.performCellAction(p);
     }
 }

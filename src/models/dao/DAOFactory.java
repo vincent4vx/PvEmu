@@ -4,6 +4,7 @@ public class DAOFactory {
     private static AccountDAO account = null;
     private static CharacterDAO player = null;
     private static MapDAO map = null;
+    private static TriggerDAO trigger = null;
     
     public static AccountDAO account(){
         if(account == null){
@@ -24,5 +25,12 @@ public class DAOFactory {
             map = new MapDAO();
         }
         return map;
+    }
+    
+    public static TriggerDAO trigger(){
+        if(trigger == null){
+            trigger = new TriggerDAO();
+        }
+        return trigger;
     }
 }

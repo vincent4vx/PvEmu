@@ -1,8 +1,12 @@
 package game.objects;
 
+import game.ActionsHandler.Action;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import jelly.Loggin;
 import models.MapModel;
+import models.Trigger;
+import models.dao.DAOFactory;
 
 public class GameMap {
 
@@ -14,6 +18,7 @@ public class GameMap {
         protected boolean canSight = true;
         protected ConcurrentHashMap<Integer, Player> _players = new ConcurrentHashMap<>();
         protected int id;
+        protected ArrayList<Action> _actions = new ArrayList<>();
 
         public Cell(GameMap map, int cellID, String CellData) {
             _map = map;
@@ -58,6 +63,26 @@ public class GameMap {
         public void addPlayer(Player p){
             _players.put(p.getID(), p);
         }
+        
+        /**
+         * Ajoute une action sur la cellule
+         * @param T
+         */
+        public void addTrigger(Trigger T){
+            Action a = new Action(T.actionID, T.actionArgs.split(","), T.conditions);
+            _actions.add(a);
+        }
+        
+        /**
+         * Effectue les actions sur la cellule (triggers)
+         * @param p 
+         */
+        public void performCellAction(Player p){
+            for(Action a : _actions){
+                Loggin.debug("[%s] Déclanchement du trigger en [%d;%d] : actionID = %d", new Object[]{p.getName(), _map.id, id, a.actionID});
+                a.performAction(p);
+            }
+        }
     }
     private MapModel _model;
     private ArrayList<Cell> _cells = new ArrayList<>(150); //300 cells. devrait allez pour la plupart des maps
@@ -72,6 +97,14 @@ public class GameMap {
         for (int f = 0; f < _model.mapData.length(); f += 10) {
             String CellData = _model.mapData.substring(f, f + 10);
             _cells.add(new Cell(this, f / 10, CellData));
+        }
+        
+        for(Trigger T : DAOFactory.trigger().getByMapID(id)){
+            Cell cell = getCellById(T.cellID);
+            
+            if(cell != null){
+                cell.addTrigger(T);
+            }
         }
     }
     
@@ -99,6 +132,11 @@ public class GameMap {
         return _players;
     }
     
+    /**
+     * Retourne la cellule par son ID, si elle existe
+     * @param id
+     * @return 
+     */
     public Cell getCellById(int id){
         if(_cells.size() - 1 < id){
             return null;

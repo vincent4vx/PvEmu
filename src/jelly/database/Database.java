@@ -73,6 +73,7 @@ public class Database {
             ResultSet RS;
             synchronized(self){
                 RS = self.db.createStatement().executeQuery(query);
+                Loggin.debug("Execution de la requête : %s", new Object[]{query});
             }
             return RS;
         }catch(SQLException e){
@@ -83,6 +84,7 @@ public class Database {
     public static PreparedStatement prepare(String query){
         try{
             PreparedStatement stmt = self.db.prepareStatement(query);
+            Loggin.debug("Préparation de la requête : %s", new Object[]{query});
             return stmt;
         }catch(SQLException e){
             return null;
