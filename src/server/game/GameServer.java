@@ -15,7 +15,7 @@ public class GameServer {
             _server = new MinaServer(Config.getInt("GAME_PORT", 5555), new GameIoHandler());
             System.out.println("Serveur de Game lancé sur port " + Config.getInt("game_port", 5555));
         } catch (IOException ex) {
-            Loggin.realm("Impossible de lancer le serveur de Game (port : " + Config.getInt("game_port", 5555) + ")", Level.SEVERE, ex);
+            Loggin.game("Impossible de lancer le serveur de Game (port : " + Config.getInt("game_port", 5555) + ")", Level.SEVERE, null);
             System.exit(1);
         }
     }

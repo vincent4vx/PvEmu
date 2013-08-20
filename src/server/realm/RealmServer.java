@@ -14,7 +14,7 @@ public class RealmServer {
             _server = new MinaServer(Config.getInt("REALM_PORT", 443), new RealmIoHandler());
             System.out.println("Serveur de Realm lancé sur port " + Config.getInt("realm_port", 443));
         } catch (IOException ex) {
-            Loggin.realm("Impossible de lancer le serveur de Realm (port : " + Config.getInt("realm_port", 443) + ")", Level.SEVERE, ex);
+            Loggin.realm("Impossible de lancer le serveur de Realm (port : " + Config.getInt("realm_port", 443) + ")", Level.SEVERE, null);
             System.exit(1);
         }
     }

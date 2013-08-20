@@ -29,12 +29,17 @@ public class GameIoHandler extends MinaIoHandler {
         Loggin.debug("Déconnexion de %s", new Object[]{p.getName()});
         p.getCharacter().logout();
     }
+    
+    @Override
+    public void messageSent(IoSession session, Object message){
+        Loggin.game("Send >> %s", message);
+    }
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
         String packet = ((String) message).trim();
         if (packet.length() > 1) {
-            Loggin.debug("Recv << " + packet);
+            Loggin.game("Recv << %s", packet);
             switch (packet.charAt(0)) {
                 case 'A': //packet perso / compte
                     switch (packet.charAt(1)) {

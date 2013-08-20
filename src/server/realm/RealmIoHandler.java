@@ -1,6 +1,5 @@
 package server.realm;
 
-import jelly.Config;
 import jelly.Constants;
 import jelly.Loggin;
 import jelly.Utils;
@@ -8,7 +7,6 @@ import models.Account;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import server.MinaIoHandler;
-import models.Character;
 
 /**
  *
@@ -21,6 +19,11 @@ public class RealmIoHandler extends MinaIoHandler {
         String HC = Utils.str_aleat(32);
         session.setAttribute("HC", HC);
         RealmPacketEnum.HELLO_CONNECTION.send(session, HC);
+    }
+    
+    @Override
+    public void messageSent(IoSession session, Object message){
+        Loggin.realm("Send >> %s", message);
     }
      
     @Override
