@@ -60,7 +60,7 @@ public class Loggin {
      */
     public static void realm(String msg, Object ... args){
         if(Jelly.DEBUG){
-            realm(String.format(msg, args), Level.INFO, null);
+            realm(msg, Level.INFO, args);
         }
     }
     
@@ -99,7 +99,7 @@ public class Loggin {
      */
     public static void game(String msg, Object ... args){
         if(Jelly.DEBUG){
-            game(String.format(msg, args), Level.INFO, null);
+            game(msg, Level.INFO, args);
         }
     }
     
