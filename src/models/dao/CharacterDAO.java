@@ -39,8 +39,8 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
             p.gfxid = RS.getInt("gfxid");
             p.sexe = RS.getByte("sexe");
             p.level = RS.getInt("level");
-            p.lastMap = RS.getInt("lastMap");
-            p.lastCell = RS.getInt("lastCell");
+            p.lastMap = RS.getShort("lastMap");
+            p.lastCell = RS.getShort("lastCell");
             
             charactersById.put(p.id, p);
 
@@ -54,7 +54,7 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
     @Override
     public boolean create(Character p){
         if(createStatement == null){
-            createStatement = Database.prepareInsert("INSERT INTO characters(name, class, sexe, color1, color2, color3, account, gfxid) VALUES(?,?,?,?,?,?,?,?);");
+            createStatement = Database.prepareInsert("INSERT INTO characters(name, class, sexe, color1, color2, color3, account, gfxid, lastMap, lastCell, startMap, startCell) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);");
         }
         try {
             createStatement.setString(1, p.name);
@@ -65,8 +65,18 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
             createStatement.setInt(6, p.color3);
             createStatement.setInt(7, p.accountId);
             createStatement.setInt(8, p.gfxid);
+            createStatement.setShort(9, p.lastMap);
+            createStatement.setShort(10, p.lastCell);
+            createStatement.setShort(11, p.startMap);
+            createStatement.setShort(12, p.startCell);
             
             int id = createStatement.executeUpdate();
+            
+            ResultSet RS = createStatement.getGeneratedKeys();
+            
+            if(RS.next()){
+                id = RS.getInt(1);
+            }
             
             if(id == 0){
                 return false;

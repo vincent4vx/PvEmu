@@ -102,4 +102,22 @@ public class Utils {
         
         return r.substring(0, r.length() - 1);
     }
+    
+    /**
+     * Retourne une valeur aléatoirement du tableau
+     * @param arr
+     * @return 
+     */
+    public static Object array_rand(Object[] arr){
+        return arr[_rand.nextInt(arr.length)];
+    }
+    
+    /**
+     * Retourne un caractère d'une chaine au hasard
+     * @param s
+     * @return 
+     */
+    public static char char_rand(String s){
+        return s.charAt(_rand.nextInt(s.length()));
+    }
 }

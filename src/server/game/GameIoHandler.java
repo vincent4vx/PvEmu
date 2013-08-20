@@ -60,18 +60,10 @@ public class GameIoHandler extends MinaIoHandler {
                             }
                             break;
                         case 'P': //name generator
-                            GamePacketEnum.CHARACTER_GENERATOR_NAME.send(session, Character.generateName());
+                            CharacterEvents.onNameGenerator(session);
                             break;
                         case 'A': //character add
-                            Account acc = getAccount(session);
-                            if (acc == null) {
-                                return;
-                            }
-                            GamePacketEnum p = Character.onCharacterAdd(acc, packet.substring(2));
-                            p.send(session);
-                            if (p == GamePacketEnum.CREATE_CHARACTER_OK) {
-                                GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
-                            }
+                            CharacterEvents.onCharacterAdd(session, packet.substring(2));
                             break;
                         case 'S': //character selected
                             CharacterEvents.onCharacterSelected(session, packet);
