@@ -223,8 +223,10 @@ public class Player extends Creature {
      * @param mapID
      * @param cellID 
      */
-    public void teleport(int mapID, int cellID){        
-        MapEvents.onRemoveMap(session);
-        MapEvents.onArrivedOnMap(session, mapID, cellID);
+    public void teleport(int mapID, int cellID){
+        if(GameMap.isValidDest(mapID, cellID)){
+            MapEvents.onRemoveMap(session);
+            MapEvents.onArrivedOnMap(session, mapID, cellID);
+        }
     }
 }

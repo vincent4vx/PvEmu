@@ -121,11 +121,12 @@ public class GameMap {
     /**
      * Supprime un joueur de la map
      * @param p
-     * @param cellID 
      */
-    public void removePlayer(Player p, int cellID){
+    public void removePlayer(Player p){
         _players.remove(p.getID());
-        getCellById(cellID)._players.remove(p.getID());
+        if(p.curCell != null){
+            p.curCell._players.remove(p.getID());
+        }
     }
     
     public ConcurrentHashMap<Integer, Player> getPlayers(){
@@ -138,7 +139,8 @@ public class GameMap {
      * @return 
      */
     public Cell getCellById(int id){
-        if(_cells.size() - 1 < id){
+        if(_cells.size() < id){
+            Loggin.debug("CellID invalide : %d, max : %d", id, _cells.size());
             return null;
         }
         
@@ -164,5 +166,25 @@ public class GameMap {
             mapDataPacket = p.toString();
         }
         return mapDataPacket;
+    }
+    
+    /**
+     * Vérifie si la destination est valide ou non
+     * @param mapID
+     * @param cellID
+     * @return 
+     */
+    public static boolean isValidDest(int mapID, int cellID){
+        GameMap map = DAOFactory.map().getById(mapID).getGameMap();
+        
+        if(map == null){ //map inexistante
+            return false;
+        }
+        
+        if(map._cells.size() < cellID){ //cellule inexistante
+            return false;
+        }
+        
+        return map._cells.get(cellID).isWalkable();
     }
 }

@@ -48,7 +48,7 @@ public class MapEvents {
             }
         }
         
-        p.curMap.removePlayer(p, p.curCell.getID());
+        p.curMap.removePlayer(p);
     }
     
     /**
@@ -61,7 +61,6 @@ public class MapEvents {
         Player p = (Player)session.getAttribute("player");
         
         if(p == null){
-            session.close(true);
             return;
         }
         
@@ -69,12 +68,10 @@ public class MapEvents {
             p.curMap = DAOFactory.map().getById(mapID).getGameMap();
             p.curCell = p.curMap.getCellById(cellID);
         }catch(NullPointerException e){
-            session.close(true);
             return;
         }
         
         if(p.curCell == null){
-            session.close(true);
             return;
         }
         
