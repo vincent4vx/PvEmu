@@ -16,8 +16,8 @@ public class Player extends Creature {
     private byte classID;
     private byte sexe;
     private int id;
-    public GameMap curMap;
-    public GameMap.Cell curCell;
+    private GameMap curMap;
+    private GameMap.Cell curCell;
     private IoSession session = null;
     private String chanels = "*#$:?i^!%";
     private Account _account;
@@ -45,6 +45,24 @@ public class Player extends Creature {
         }
         
         _account = DAOFactory.account().getById(_character.accountId);
+    }
+    
+    public GameMap getMap(){
+        return curMap;
+    }
+    
+    public void setMap(GameMap map){
+        curMap = map;
+        _character.lastMap = map.getID();
+    }
+    
+    public GameMap.Cell getCell(){
+        return curCell;
+    }
+    
+    public void setCell(GameMap.Cell cell){
+        curCell = cell;
+        _character.lastCell = cell.getID();
     }
 
     public byte getClassID() {

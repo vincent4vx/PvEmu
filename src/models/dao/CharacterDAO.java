@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jelly.Loggin;
 import models.Character;
 
 public class CharacterDAO extends jelly.database.DAO<Character> {
@@ -16,6 +17,7 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
     private PreparedStatement createStatement = null;
     private PreparedStatement countNameStatement = null;
     private PreparedStatement countByAccountStatement = null;
+    private PreparedStatement updateStatement = null;
     
     private ConcurrentHashMap<Integer, Character> charactersById = new ConcurrentHashMap<>();
 
@@ -94,7 +96,27 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
 
     @Override
     public boolean update(Character P){
-        return false;
+        try{
+            Loggin.debug("Sauvegarde de %s", P.name);
+            if(updateStatement == null){
+                updateStatement = Database.prepare("UPDATE characters SET level = ?, gfxid = ?, lastMap = ?, lastCell = ?, startMap = ?, startCell = ? WHERE id = ?");
+            }
+            
+            updateStatement.setInt(1, P.level);
+            updateStatement.setInt(2, P.gfxid);
+            updateStatement.setShort(3 , P.lastMap);
+            updateStatement.setShort(4, P.lastCell);
+            updateStatement.setShort(5, P.startMap);
+            updateStatement.setShort(6, P.startCell);
+            updateStatement.setInt(7, P.id);
+            
+            updateStatement.execute();
+            
+            return true;
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }
     }
 
     /**

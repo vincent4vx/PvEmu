@@ -6,11 +6,8 @@ package models;
 
 import game.World;
 import game.objects.Player;
-import game.objects.dep.ClassData;
-import java.util.Random;
-import jelly.Config;
+import jelly.Loggin;
 import models.dao.DAOFactory;
-import server.game.GamePacketEnum;
 
 /**
  *
@@ -75,6 +72,10 @@ public class Character implements jelly.database.Model {
         _player.getSession().removeAttribute("account");
         _player.setSession(null);
         _player = null;
+        
+        if(!DAOFactory.character().update(this)){
+            Loggin.debug("Sauvegarde impossible de %s", name);
+        }
     }
 
     public void clear() {

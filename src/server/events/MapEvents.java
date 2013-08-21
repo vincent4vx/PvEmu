@@ -21,7 +21,7 @@ public class MapEvents {
             return;
         }
         
-        for (Player P : p.curMap.getPlayers().values()) {
+        for (Player P : p.getMap().getPlayers().values()) {
             if (P.getSession() != null) {
                 GamePacketEnum.MAP_ADD_PLAYER.send(P.getSession(), p.getGMData());
             }
@@ -42,13 +42,13 @@ public class MapEvents {
             return;
         }
         
-        for(Player P : p.curMap.getPlayers().values()){
+        for(Player P : p.getMap().getPlayers().values()){
             if(P.getSession() != null){
                 GamePacketEnum.MAP_REMOVE.send(P.getSession(), String.valueOf(p.getID()));
             }
         }
         
-        p.curMap.removePlayer(p);
+        p.getMap().removePlayer(p);
     }
     
     /**
@@ -65,19 +65,15 @@ public class MapEvents {
         }
         
         try{
-            p.curMap = DAOFactory.map().getById(mapID).getGameMap();
-            p.curCell = p.curMap.getCellById(cellID);
+            p.setMap(DAOFactory.map().getById(mapID).getGameMap());
+            p.setCell(p.getMap().getCellById(cellID));
         }catch(NullPointerException e){
             return;
         }
         
-        if(p.curCell == null){
-            return;
-        }
+        p.getMap().addPlayer(p, cellID);
         
-        p.curMap.addPlayer(p, cellID);
-        
-        GamePacketEnum.MAP_DATA.send(session, p.curMap.getMapDataPacket());
+        GamePacketEnum.MAP_DATA.send(session, p.getMap().getMapDataPacket());
         GamePacketEnum.MAP_FIGHT_COUNT.send(session);
     }
     
@@ -93,9 +89,9 @@ public class MapEvents {
             return;
         }
         
-        p.curMap.addPlayer(p, p.curCell.getID());
+        p.getMap().addPlayer(p, p.getCell().getID());
            
-        GamePacketEnum.MAP_DATA.send(session, p.curMap.getMapDataPacket());
+        GamePacketEnum.MAP_DATA.send(session, p.getMap().getMapDataPacket());
         GamePacketEnum.MAP_FIGHT_COUNT.send(session);
     }
     
@@ -120,12 +116,12 @@ public class MapEvents {
             return;
         }
         
-        p.curCell.removePlayer(p.getID());
-        p.curCell = p.curMap.getCellById(cellID);
-        p.curCell.addPlayer(p);
+        p.getCell().removePlayer(p.getID());
+        p.setCell(p.getMap().getCellById(cellID));
+        p.getCell().addPlayer(p);
         
         Loggin.debug("Joueur %s arrivé sur la cellule %d avec succès !", new Object[]{p.getName(), cellID});
         
-        p.curCell.performCellAction(p);
+        p.getCell().performCellAction(p);
     }
 }

@@ -87,9 +87,9 @@ public class GameActionEvents {
 
 
         AtomicReference<String> rPath = new AtomicReference<>(GA.args);
-        int steps = Pathfinding.isValidPath(p.curMap, p.curCell.getID(), rPath);
+        int steps = Pathfinding.isValidPath(p.getMap(), p.getCell().getID(), rPath);
 
-        Loggin.debug("Tentative de déplacement de %s de %d en %d étapes", new Object[]{p.getName(), p.curCell.getID(), steps});
+        Loggin.debug("Tentative de déplacement de %s de %d en %d étapes", new Object[]{p.getName(), p.getCell().getID(), steps});
 
         if (steps == -1000 || steps == 0) {
             Loggin.debug("Path invalide !");
@@ -99,14 +99,14 @@ public class GameActionEvents {
 
         StringBuilder param = new StringBuilder();
 
-        param.append(GA.id).append(";1;").append(p.getID()).append(";a").append(Pathfinding.cellID_To_Code(p.curCell.getID())).append(rPath.get());
+        param.append(GA.id).append(";1;").append(p.getID()).append(";a").append(Pathfinding.cellID_To_Code(p.getCell().getID())).append(rPath.get());
 
         short cellDest = Pathfinding.cellCode_To_ID(rPath.get().substring(rPath.get().length() - 2));
 
         GA.attach("dest", cellDest);
         GA.save();
 
-        for (Player P : p.curMap.getPlayers().values()) {
+        for (Player P : p.getMap().getPlayers().values()) {
             if (P.getSession() != null) {
                 GamePacketEnum.GAME_ACTION.send(P.getSession(), param.toString());
             }

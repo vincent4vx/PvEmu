@@ -166,11 +166,11 @@ public class Commands {
                     }
                     players.add(self);
                 }else if(id.equalsIgnoreCase("#map")){
-                    if(self == null || self.curMap == null){
+                    if(self == null || self.getMap() == null){
                         err.append("\nErreur : map introuvable !");
                         continue;
                     }
-                    players.addAll(self.curMap.getPlayers().values());
+                    players.addAll(self.getMap().getPlayers().values());
                 }else if(id.toLowerCase().startsWith("#map")){
                     short mapID = 0;
                     try{

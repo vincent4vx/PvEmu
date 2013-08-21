@@ -56,7 +56,7 @@ public class BasicEvents {
                 StringBuilder b = new StringBuilder();
                 b.append("|").append(p.getID()).append("|").append(p.getName()).append("|").append(args[1]);
                 String msg = b.toString();
-                GamePacketEnum.CHAT_MESSAGE_OK.sendToMap(p.curMap, msg);
+                GamePacketEnum.CHAT_MESSAGE_OK.sendToMap(p.getMap(), msg);
                 break;
         }
     }
