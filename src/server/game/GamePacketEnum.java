@@ -1,5 +1,9 @@
 package server.game;
 
+import game.World;
+import game.objects.GameMap;
+import game.objects.Player;
+import java.util.Collection;
 import org.apache.mina.core.session.IoSession;
 
 public enum GamePacketEnum {
@@ -113,18 +117,22 @@ public enum GamePacketEnum {
     /**
      * écrit dans la console (150 caractères max)
      */
-    BASIC_CONSOLE_WRITE("BAT2")
+    BASIC_CONSOLE_WRITE("BAT2"),
+    /**
+     * Message serveur (utilisé par console admin)
+     */
+    SERVER_MESSAGE("cs")
     ;
     
     private String packet;
-    private String param;
+    private Object param;
     
     GamePacketEnum(String packet){
         this.packet = packet;
         this.param = "";
     }
     
-    GamePacketEnum(String packet, String param){
+    GamePacketEnum(String packet, Object param){
         this.packet = packet;
         this.param = param;
     }
@@ -134,8 +142,8 @@ public enum GamePacketEnum {
      * @param session
      * @param param 
      */
-    public void send(IoSession session, String param){
-        session.write(packet + param);
+    public void send(IoSession session, Object param){
+        session.write(packet + String.valueOf(param));
     }
     
     /**
@@ -143,6 +151,59 @@ public enum GamePacketEnum {
      * @param session 
      */
     public void send(IoSession session){
-        session.write(packet + param);
+        send(session, param);
+    }
+    
+    /**
+     * Envoit le packet à tous les joueurs connectés
+     */
+    public void sendToAll(){
+        sendToAll(param);
+    }
+    
+    /**
+     * Envoit le packet à tous les joueurs connectés
+     */    
+    public void sendToAll(Object param){
+        sendToPlayerList(World.getOnlinePlayers(), param);
+    }
+    
+    /**
+     * Envoit le packet aux joueurs sléectionné
+     * @param players 
+     */
+    public void sendToPlayerList(Collection<Player> players){
+        sendToPlayerList(players, param);
+    }
+    
+    /**
+     * Envoit le packet aux joueurs sélectionnés
+     * @param players
+     * @param param 
+     */
+    public void sendToPlayerList(Collection<Player> players, Object param){
+        for(Player P : players){
+            if(P.getSession() == null){
+                P.logout();
+                continue;
+            }
+            P.getSession().write(packet + String.valueOf(param));
+        }
+    }
+    
+    /**
+     * Envoit le packet à tout les joueurs de la map
+     * @param map 
+     */
+    public void sendToMap(GameMap map){
+        sendToMap(map, param);
+    }
+
+    /**
+     * Envoit le packet à tout les joueurs de la map
+     * @param map 
+     */
+    public void sendToMap(GameMap map, Object param){
+        sendToPlayerList(map.getPlayers().values(), param);
     }
 }

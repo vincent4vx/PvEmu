@@ -3,8 +3,10 @@ package server.events;
 import game.objects.Player;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import jelly.Commands;
+import jelly.Constants;
 import models.Account;
 import org.apache.mina.core.session.IoSession;
 import server.game.GamePacketEnum;
@@ -54,9 +56,7 @@ public class BasicEvents {
                 StringBuilder b = new StringBuilder();
                 b.append("|").append(p.getID()).append("|").append(p.getName()).append("|").append(args[1]);
                 String msg = b.toString();
-                for(Player P : p.curMap.getPlayers().values()){
-                    GamePacketEnum.CHAT_MESSAGE_OK.send(P.getSession(), msg);
-                }
+                GamePacketEnum.CHAT_MESSAGE_OK.sendToMap(p.curMap, msg);
                 break;
         }
     }
@@ -70,5 +70,19 @@ public class BasicEvents {
         }
         
         Commands.exec(command, acc.level, session);
+    }
+    
+    public static void onServerMessage(IoSession session, String message, Collection<Player> players){
+        String name = "Système";
+        
+        if(session != null){
+            Player p = (Player)session.getAttribute("player");
+            if(p != null){
+                name = p.getName();
+            }
+        }
+        
+        String msg = String.format("<font color='#%s'><b>[%s]</b> %s</font>", Constants.COLOR_RED, name, message);
+        GamePacketEnum.SERVER_MESSAGE.sendToPlayerList(players, msg);
     }
 }

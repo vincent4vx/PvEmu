@@ -1,5 +1,6 @@
 package server.events;
 
+import game.World;
 import game.objects.Player;
 import game.objects.dep.ClassData;
 import java.util.Random;
@@ -26,6 +27,7 @@ public class CharacterEvents {
             session.setAttribute("player", chr.getPlayer());
             chr.getPlayer().setSession(session);
 
+            World.addOnline(chr.getPlayer());
 
             StringBuilder param = new StringBuilder();
 

@@ -70,6 +70,10 @@ public class Player extends Creature {
     public void setSession(IoSession session) {
         this.session = session;
     }
+    
+    public Account getAccount(){
+        return _account;
+    }
 
     public String getStatsPacket() {
 
@@ -232,5 +236,12 @@ public class Player extends Creature {
             MapEvents.onRemoveMap(session);
             MapEvents.onArrivedOnMap(session, mapID, cellID);
         }
+    }
+    
+    /**
+     * Prépare la déconnexion
+     */
+    public void logout(){
+        _character.logout();
     }
 }

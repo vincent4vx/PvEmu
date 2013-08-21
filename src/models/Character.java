@@ -4,6 +4,7 @@
  */
 package models;
 
+import game.World;
 import game.objects.Player;
 import game.objects.dep.ClassData;
 import java.util.Random;
@@ -68,6 +69,7 @@ public class Character implements jelly.database.Model {
             return;
         }
         
+        World.removeOnline(_player);
         _player.getSession().removeAttribute("player");
         _player.getSession().removeAttribute("account");
         _player.setSession(null);
