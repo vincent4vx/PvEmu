@@ -57,7 +57,7 @@ public class MapEvents {
      * @param mapID
      * @param cellID 
      */
-    public static void onArrivedOnMap(IoSession session, int mapID, int cellID){
+    public static void onArrivedOnMap(IoSession session, short mapID, short cellID){
         Player p = (Player)session.getAttribute("player");
         
         if(p == null){
@@ -113,7 +113,7 @@ public class MapEvents {
      * @param session
      * @param cellID 
      */
-    public static void onArrivedOnCell(IoSession session, int cellID){
+    public static void onArrivedOnCell(IoSession session, short cellID){
         Player p = (Player)session.getAttribute("player");
         
         if(p == null){

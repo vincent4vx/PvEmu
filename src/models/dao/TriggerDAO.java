@@ -24,9 +24,9 @@ public class TriggerDAO extends DAO<Trigger> {
         try{
             Trigger t = new Trigger();
             
-            t.mapID = RS.getInt("MapID");
-            t.cellID = RS.getInt("CellID");
-            t.actionID = RS.getInt("ActionID");
+            t.mapID = RS.getShort("MapID");
+            t.cellID = RS.getShort("CellID");
+            t.actionID = RS.getShort("ActionID");
             t.actionArgs = RS.getString("ActionArgs");
             t.conditions = RS.getString("Conditions");
             

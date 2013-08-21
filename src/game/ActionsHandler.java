@@ -5,11 +5,11 @@ import jelly.Loggin;
 
 public class ActionsHandler {
     public static class Action{
-        public int actionID;
+        public short actionID;
         public String[] args;
         public String conditions;
         
-        public Action(int actionID, String[] args, String conditions){
+        public Action(short actionID, String[] args, String conditions){
             this.actionID = actionID;
             this.args = args;
             this.conditions = conditions;
@@ -38,8 +38,8 @@ public class ActionsHandler {
                 Loggin.debug("Téléportation de %s vers map : %s; cell : %s", new Object[]{p.getName(), a.args[0], a.args[1]});
                 try{
                     p.teleport(
-                            Integer.parseInt(a.args[0]),
-                            Integer.parseInt(a.args[1])
+                            Short.parseShort(a.args[0]),
+                            Short.parseShort(a.args[1])
                     );
                 }catch(NumberFormatException e){}
                 break;

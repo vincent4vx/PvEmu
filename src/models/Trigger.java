@@ -4,7 +4,7 @@ import jelly.database.Model;
 
 public class Trigger implements Model {
     
-    public int mapID, cellID, actionID;
+    public short mapID, cellID, actionID;
     public String actionArgs, conditions;
 
     @Override

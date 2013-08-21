@@ -17,10 +17,10 @@ public class GameMap {
         protected int obj;
         protected boolean canSight = true;
         protected ConcurrentHashMap<Integer, Player> _players = new ConcurrentHashMap<>();
-        protected int id;
+        protected short id;
         protected ArrayList<Action> _actions = new ArrayList<>();
 
-        public Cell(GameMap map, int cellID, String CellData) {
+        public Cell(GameMap map, short cellID, String CellData) {
             _map = map;
             id = cellID;
             
@@ -48,7 +48,7 @@ public class GameMap {
             return -1;
         }
         
-        public int getID(){
+        public short getID(){
             return id;
         }
         
@@ -86,7 +86,7 @@ public class GameMap {
     }
     private MapModel _model;
     private ArrayList<Cell> _cells = new ArrayList<>(150); //300 cells. devrait allez pour la plupart des maps
-    private int id;
+    private short id;
     private ConcurrentHashMap<Integer, Player> _players = new ConcurrentHashMap<>();
     private String mapDataPacket = null;
 
@@ -96,7 +96,7 @@ public class GameMap {
         
         for (int f = 0; f < _model.mapData.length(); f += 10) {
             String CellData = _model.mapData.substring(f, f + 10);
-            _cells.add(new Cell(this, f / 10, CellData));
+            _cells.add(new Cell(this, (short)(f / 10), CellData));
         }
         
         for(Trigger T : DAOFactory.trigger().getByMapID(id)){
@@ -113,7 +113,7 @@ public class GameMap {
      * @param p
      * @param cellID 
      */
-    public void addPlayer(Player p, int cellID){
+    public void addPlayer(Player p, short cellID){
         _players.put(p.getID(), p);
         getCellById(cellID)._players.put(p.getID(), p);
     }
@@ -138,7 +138,7 @@ public class GameMap {
      * @param id
      * @return 
      */
-    public Cell getCellById(int id){
+    public Cell getCellById(short id){
         if(_cells.size() < id){
             Loggin.debug("CellID invalide : %d, max : %d", id, _cells.size());
             return null;
@@ -174,7 +174,7 @@ public class GameMap {
      * @param cellID
      * @return 
      */
-    public static boolean isValidDest(int mapID, int cellID){
+    public static boolean isValidDest(short mapID, short cellID){
         GameMap map = DAOFactory.map().getById(mapID).getGameMap();
         
         if(map == null){ //map inexistante
@@ -186,5 +186,9 @@ public class GameMap {
         }
         
         return map._cells.get(cellID).isWalkable();
+    }
+    
+    public short getID(){
+        return id;
     }
 }

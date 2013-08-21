@@ -172,9 +172,9 @@ public class Commands {
                     }
                     players.addAll(self.curMap.getPlayers().values());
                 }else if(id.toLowerCase().startsWith("#map")){
-                    int mapID = 0;
+                    short mapID = 0;
                     try{
-                        mapID = Integer.parseInt(id.substring(4));
+                        mapID = Short.parseShort(id.substring(4));
                     }catch(NumberFormatException e){
                         err.append("\nErreur : mapID invalide : mapID doit être un nombre valide !");
                         continue;

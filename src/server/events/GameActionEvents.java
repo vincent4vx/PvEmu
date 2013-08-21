@@ -67,10 +67,10 @@ public class GameActionEvents {
         switch (GA.actionID) {
             case 1: //déplacement
                 if(ok){
-                    int cellDest = (Integer) GA.get("dest");
+                    short cellDest = (Short) GA.get("dest");
                     MapEvents.onArrivedOnCell(session, cellDest);
                 }else{
-                    int cellDest = Integer.parseInt(args[1]);
+                    short cellDest = Short.parseShort(args[1]);
                     MapEvents.onArrivedOnCell(session, cellDest);        
                 }
                 break;
@@ -101,7 +101,7 @@ public class GameActionEvents {
 
         param.append(GA.id).append(";1;").append(p.getID()).append(";a").append(Pathfinding.cellID_To_Code(p.curCell.getID())).append(rPath.get());
 
-        int cellDest = Pathfinding.cellCode_To_ID(rPath.get().substring(rPath.get().length() - 2));
+        short cellDest = Pathfinding.cellCode_To_ID(rPath.get().substring(rPath.get().length() - 2));
 
         GA.attach("dest", cellDest);
         GA.save();

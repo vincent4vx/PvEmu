@@ -6,7 +6,7 @@ import jelly.database.DAO;
 import models.MapModel;
 
 public class MapDAO extends DAO<MapModel> {
-    private HashMap<Integer, MapModel> mapById = new HashMap<>();
+    private HashMap<Short, MapModel> mapById = new HashMap<>();
     
     @Override
     protected String tableName() {
@@ -18,7 +18,7 @@ public class MapDAO extends DAO<MapModel> {
         try{
             MapModel map = new MapModel();
             
-            map.id = RS.getInt("id");
+            map.id = RS.getShort("id");
             map.date = RS.getString("date");
             map.width = RS.getByte("width");
             map.heigth = RS.getByte("heigth");
@@ -55,7 +55,7 @@ public class MapDAO extends DAO<MapModel> {
      * @param id
      * @return 
      */
-    public MapModel getById(int id){
+    public MapModel getById(short id){
         if(!mapById.containsKey(id)){
             return find(id);
         }

@@ -4,7 +4,7 @@ import game.objects.GameMap;
 import jelly.database.Model;
 
 public class MapModel implements Model {
-    public int id;
+    public short id;
     public String date;
     public byte width, heigth;
     public String places;
