@@ -43,6 +43,7 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
             p.level = RS.getInt("level");
             p.lastMap = RS.getShort("lastMap");
             p.lastCell = RS.getShort("lastCell");
+            p.baseStats = RS.getString("baseStats");
             
             charactersById.put(p.id, p);
 
@@ -99,7 +100,7 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
         try{
             Loggin.debug("Sauvegarde de %s", P.name);
             if(updateStatement == null){
-                updateStatement = Database.prepare("UPDATE characters SET level = ?, gfxid = ?, lastMap = ?, lastCell = ?, startMap = ?, startCell = ? WHERE id = ?");
+                updateStatement = Database.prepare("UPDATE characters SET level = ?, gfxid = ?, lastMap = ?, lastCell = ?, startMap = ?, startCell = ?, baseStats = ? WHERE id = ?");
             }
             
             updateStatement.setInt(1, P.level);
@@ -108,7 +109,9 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
             updateStatement.setShort(4, P.lastCell);
             updateStatement.setShort(5, P.startMap);
             updateStatement.setShort(6, P.startCell);
-            updateStatement.setInt(7, P.id);
+            updateStatement.setString(7, P.baseStats);
+            
+            updateStatement.setInt(8, P.id);
             
             updateStatement.execute();
             

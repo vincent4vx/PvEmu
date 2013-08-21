@@ -29,6 +29,7 @@ public class Character implements jelly.database.Model {
     public short lastCell;
     public short startMap;
     public short startCell;
+    public String baseStats;
     
     private Player _player = null;
 

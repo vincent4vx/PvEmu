@@ -49,9 +49,13 @@ public class CharacterEvents {
         if (p == null) {
             return;
         }
+        
+        StringBuilder b = new StringBuilder();
 
         GamePacketEnum.GAME_CREATE_OK.send(session, p.getName());
         GamePacketEnum.STATS_PACKET.send(session, p.getStatsPacket());
+        b.append(0).append("|").append(p.getTotalPods());
+        GamePacketEnum.OBJECTS_WEIGHT.send(session, b.toString());
         GamePacketEnum.CHAT_CHANEL_ADD.send(session, p.getChanels());
         MapEvents.onArrivedInGame(session);
     }

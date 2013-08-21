@@ -121,7 +121,11 @@ public enum GamePacketEnum {
     /**
      * Message serveur (utilisé par console admin)
      */
-    SERVER_MESSAGE("cs")
+    SERVER_MESSAGE("cs"),
+    /**
+     * Nombre de pods utilisés | pods max
+     */
+    OBJECTS_WEIGHT("Ow")
     ;
     
     private String packet;

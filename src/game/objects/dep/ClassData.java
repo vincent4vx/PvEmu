@@ -1,6 +1,17 @@
 package game.objects.dep;
 
+import game.objects.Player;
+
 public class ClassData {
+    
+    public static final int BASE_PA = 6;
+    public static final int BONUS_PA_LVL100 = 1;
+    public static final int BASE_PM = 3;
+    public static final int BASE_PROS = 100;
+    public static final int PROS_BONUS_ENU = 20;
+    public static final int BASE_PODS = 1000;
+    public static final int BASE_INVOC = 1;
+    public static final int BASE_INIT = 100;
 
     public static final int CLASS_FECA = 1;
     public static final int CLASS_OSAMODAS = 2;
@@ -98,5 +109,26 @@ public class ClassData {
         }
 
         return new short[]{mapID, cellID};
+    }
+    
+    /**
+     * Retourne les stats de base en fonction de la classe et du lvl
+     * @param p
+     * @return 
+     */
+    public static void setBaseStats(Player p){
+        Stats s = p.getBaseStats();
+        s.add(Stats.Element.PA, BASE_PA);
+        if(p.getLevel() >= 100){
+            s.add(Stats.Element.PA, BONUS_PA_LVL100);
+        }
+        s.add(Stats.Element.PM, BASE_PM);
+        s.add(Stats.Element.INIT, BASE_INIT);
+        s.add(Stats.Element.INVOC, BASE_INVOC);
+        s.add(Stats.Element.PODS, BASE_PODS);
+        s.add(Stats.Element.PROSPEC, BASE_PROS);
+        if(p.getClassID() == CLASS_ENUTROF){
+            s.add(Stats.Element.PROSPEC, PROS_BONUS_ENU);
+        }
     }
 }

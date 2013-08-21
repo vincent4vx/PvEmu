@@ -1,5 +1,6 @@
 package game.objects;
 
+import game.objects.dep.ClassData;
 import game.objects.dep.Creature;
 import game.objects.dep.Stats.Element;
 import jelly.Utils;
@@ -45,6 +46,23 @@ public class Player extends Creature {
         }
         
         _account = DAOFactory.account().getById(_character.accountId);
+        
+        loadStats();
+    }
+    
+    /**
+     * Charge les stats du perso
+     */
+    private void loadStats(){
+        for(String data : _character.baseStats.split("\\|")){
+            try{
+                String[] arr = data.split(";");
+                int elemID = Integer.parseInt(arr[0]);
+                int qu = Integer.parseInt(arr[1]);
+                baseStats.add(elemID, qu);
+            }catch(Exception e){}
+        }
+        ClassData.setBaseStats(this);
     }
     
     public GameMap getMap(){
@@ -261,5 +279,16 @@ public class Player extends Creature {
      */
     public void logout(){
         _character.logout();
+    }
+    
+    /**
+     * Retourne ne nombre total de pods
+     * @return 
+     */
+    public int getTotalPods(){
+        int pods = getTotalStats().get(Element.PODS);
+        pods += getTotalStats().get(Element.FORCE)*5;
+        
+        return pods;
     }
 }
