@@ -117,7 +117,7 @@ public class Stats {
      * @return 
      */
     public int get(Element e){
-        if(e != null && stats.contains(e)){
+        if(e != null && stats.containsKey(e)){
             return stats.get(e);
         }
         return 0;
