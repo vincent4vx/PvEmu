@@ -68,7 +68,7 @@ public class Character implements jelly.database.Model {
         if(_player == null){
             return;
         }
-        
+        _player.getAccount().removeSession();
         World.removeOnline(_player);
         _player.getSession().removeAttribute("player");
         _player.getSession().removeAttribute("account");

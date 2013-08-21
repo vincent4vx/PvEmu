@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import jelly.Config;
 import jelly.Utils;
 import models.dao.*;
+import org.apache.mina.core.session.IoSession;
 
 public class Account implements jelly.database.Model {
     public int id;
@@ -16,6 +17,7 @@ public class Account implements jelly.database.Model {
 
     protected ArrayList<Character> _characters = null;
     private boolean waiting = false;
+    private IoSession _session;
 
     public ArrayList<Character> getCharacters(){
         if(_characters == null){
@@ -74,6 +76,30 @@ public class Account implements jelly.database.Model {
      */
     public boolean isWaiting(){
         return waiting;
+    }
+    
+    /**
+     * Retourne la session (si elle existe)
+     * @return 
+     */
+    public IoSession getSession(){
+        return _session;
+    }
+    
+    /**
+     * Attache la session au compte
+     * @param session 
+     */
+    public void setSession(IoSession session){
+        _session = session;
+        session.setAttribute("account", this);
+    }
+    
+    /**
+     * lors de la déconnexion, supprime la session
+     */
+    public void removeSession(){
+        _session = null;
     }
 
     @Override

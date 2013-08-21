@@ -22,6 +22,14 @@ public enum RealmPacketEnum {
      */
     ACCESS_DENIED("AlE"),
     /**
+     * compte déjà connecté au serveur
+     */
+    LOGIN_ALREADY_CONNECTED("AlEc"),
+    /**
+     * Envoyé au compte déconnecté
+     */
+    LOGIN_DISCONNECT("AlEd"),
+    /**
      * Envoit le pseudo (après login)
      */
     PSEUDO("Ad"),

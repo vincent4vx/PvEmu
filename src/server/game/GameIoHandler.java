@@ -17,7 +17,7 @@ public class GameIoHandler extends MinaIoHandler {
     }
 
     @Override
-    public void sessionClosed(IoSession session) throws Exception {
+    public void sessionClosed(IoSession session) throws Exception {        
         MapEvents.onRemoveMap(session);
         
         Player p = (Player)session.getAttribute("player");
@@ -53,7 +53,7 @@ public class GameIoHandler extends MinaIoHandler {
                                     return;
                                 }
 
-                                session.setAttribute("account", acc);
+                                acc.setSession(session);
                                 GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
                             } catch (Exception e) {
                                 session.close(false);
