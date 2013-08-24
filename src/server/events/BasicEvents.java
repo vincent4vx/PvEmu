@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 import jelly.Commands;
 import jelly.Constants;
+import jelly.Loggin;
 import models.Account;
 import org.apache.mina.core.session.IoSession;
 import server.game.GamePacketEnum;
@@ -70,8 +71,21 @@ public class BasicEvents {
             return;
         }
 
-        String msg = Commands.exec(command, acc.level, session);
-        //GamePacketEnum.BASIC_CONSOLE_WRITE.send(session, msg);
+        String ret = Commands.exec(command, acc.level, session);
+        for (String msg : ret.split("\n")) {
+            if (msg.isEmpty()) {
+                break;
+            }
+
+            for (int i = 0; i < msg.length(); i += 150) {
+                int endIndex = i + 150;
+                if (msg.length() < endIndex) {
+                    endIndex = msg.length();
+                }
+                String submsg = msg.substring(i, endIndex).trim();
+                GamePacketEnum.BASIC_CONSOLE_WRITE.send(session, submsg);
+            }
+        }
     }
 
     public static void onServerMessage(IoSession session, String message, Collection<Player> players) {

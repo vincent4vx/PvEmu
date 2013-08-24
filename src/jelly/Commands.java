@@ -21,23 +21,7 @@ public class Commands {
     public static String exec(String line, byte level, IoSession session) {
         StringBuilder ret = new StringBuilder();
         for (String data : line.split("&&")) {
-
-
-            /*for (String msg : parseCommand(data, level, session).split("\n")) {
-                if (msg.isEmpty()) {
-                    break;
-                }
-
-                for (int i = 0; i < msg.length(); i += 150) {
-                    int endIndex = i + 150;
-                    if (msg.length() < endIndex) {
-                        endIndex = msg.length();
-                    }
-                    String submsg = msg.substring(i, endIndex).trim();
-                    GamePacketEnum.BASIC_CONSOLE_WRITE.send(session, submsg);
-                }
-            }*/
-            ret.append(parseCommand(data, level, session));
+            ret.append(parseCommand(data, level, session)).append('\n');
         }
         return ret.toString();
     }
