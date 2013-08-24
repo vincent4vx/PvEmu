@@ -6,8 +6,9 @@ import jelly.database.DAO;
 import models.MapModel;
 
 public class MapDAO extends DAO<MapModel> {
+
     private HashMap<Short, MapModel> mapById = new HashMap<>();
-    
+
     @Override
     protected String tableName() {
         return "maps";
@@ -15,9 +16,9 @@ public class MapDAO extends DAO<MapModel> {
 
     @Override
     protected MapModel createByResultSet(ResultSet RS) {
-        try{
+        try {
             MapModel map = new MapModel();
-            
+
             map.id = RS.getShort("id");
             map.date = RS.getString("date");
             map.width = RS.getByte("width");
@@ -30,11 +31,11 @@ public class MapDAO extends DAO<MapModel> {
             map.mappos = RS.getString("mappos");
             map.numgroup = RS.getByte("numgroup");
             map.groupmaxsize = RS.getByte("groupmaxsize");
-            
+
             mapById.put(map.id, map);
-            
+
             return map;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -49,17 +50,17 @@ public class MapDAO extends DAO<MapModel> {
     public boolean create(MapModel obj) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     /**
      * A utiliser à la place de find
+     *
      * @param id
-     * @return 
+     * @return
      */
-    public MapModel getById(short id){
-        if(!mapById.containsKey(id)){
+    public MapModel getById(short id) {
+        if (!mapById.containsKey(id)) {
             return find(id);
         }
         return mapById.get(id);
     }
-    
 }

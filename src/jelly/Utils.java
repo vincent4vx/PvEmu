@@ -43,9 +43,10 @@ public class Utils {
 
     /**
      * Décodage des packets encodé (cf: pass)
+     *
      * @param pass
      * @param key
-     * @return 
+     * @return
      */
     public static String decryptPacket(String pass, String key) {
         if (pass.startsWith("#1")) {
@@ -84,40 +85,43 @@ public class Utils {
 
         return decrypted.toString();
     }
-    
+
     /**
      * Recole les parties de pieces avec glue, dans un String
+     *
      * @param delimiter
      * @param pieces
-     * @return 
+     * @return
      */
-    public static String implode(String glue, String[] pieces){
+    public static String implode(String glue, String[] pieces) {
         StringBuilder b = new StringBuilder();
-        
-        for(String p : pieces){
+
+        for (String p : pieces) {
             b.append(p).append(glue);
         }
-        
+
         String r = b.toString();
-        
+
         return r.substring(0, r.length() - 1);
     }
-    
+
     /**
      * Retourne une valeur aléatoirement du tableau
+     *
      * @param arr
-     * @return 
+     * @return
      */
-    public static Object array_rand(Object[] arr){
+    public static Object array_rand(Object[] arr) {
         return arr[_rand.nextInt(arr.length)];
     }
-    
+
     /**
      * Retourne un caractère d'une chaine au hasard
+     *
      * @param s
-     * @return 
+     * @return
      */
-    public static char char_rand(String s){
+    public static char char_rand(String s) {
         return s.charAt(_rand.nextInt(s.length()));
     }
 }

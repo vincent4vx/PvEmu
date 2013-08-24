@@ -3,7 +3,6 @@ package server.events;
 import game.World;
 import game.objects.Player;
 import game.objects.dep.ClassData;
-import java.util.Random;
 import jelly.Config;
 import jelly.Utils;
 import models.Account;
@@ -49,7 +48,7 @@ public class CharacterEvents {
         if (p == null) {
             return;
         }
-        
+
         StringBuilder b = new StringBuilder();
 
         GamePacketEnum.GAME_CREATE_OK.send(session, p.getName());
@@ -118,15 +117,15 @@ public class CharacterEvents {
 
         GamePacketEnum.CHARACTER_GENERATOR_NAME.send(session, name.substring(0, size));
     }
-    
-    public static void onCharacterAdd(IoSession session, String packet){
-        
-        Account acc = (Account)session.getAttribute("account");
-        
-        if(acc == null){
+
+    public static void onCharacterAdd(IoSession session, String packet) {
+
+        Account acc = (Account) session.getAttribute("account");
+
+        if (acc == null) {
             return;
         }
-        
+
         String[] arr_data = packet.split("\\|");
 
         try {

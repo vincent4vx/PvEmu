@@ -9,5 +9,4 @@ package models;
  * @author vincent
  */
 public class Cell {
-    
 }

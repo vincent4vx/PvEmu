@@ -66,12 +66,12 @@ public class GameActionEvents {
 
         switch (GA.actionID) {
             case 1: //déplacement
-                if(ok){
+                if (ok) {
                     short cellDest = (Short) GA.get("dest");
                     MapEvents.onArrivedOnCell(session, cellDest);
-                }else{
+                } else {
                     short cellDest = Short.parseShort(args[1]);
-                    MapEvents.onArrivedOnCell(session, cellDest);        
+                    MapEvents.onArrivedOnCell(session, cellDest);
                 }
                 break;
         }

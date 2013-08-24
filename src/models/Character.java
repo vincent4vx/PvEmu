@@ -6,6 +6,7 @@ package models;
 
 import game.World;
 import game.objects.Player;
+import jelly.Jelly;
 import jelly.Loggin;
 import models.dao.DAOFactory;
 
@@ -30,12 +31,12 @@ public class Character implements jelly.database.Model {
     public short startMap;
     public short startCell;
     public String baseStats;
-    
     private Player _player = null;
 
     /**
      * retourne les données du personnage pour packet ALK
-     * @return 
+     *
+     * @return
      */
     public String getForALK() {
         StringBuilder perso = new StringBuilder();
@@ -54,28 +55,30 @@ public class Character implements jelly.database.Model {
         perso.append(";");//LevelMax
         return perso.toString();
     }
-    
-    public Player getPlayer(){
-        if(_player == null){
+
+    public Player getPlayer() {
+        if (_player == null) {
             _player = new Player(this);
         }
         return _player;
     }
-    
-    public void logout(){
-        if(_player == null){
+
+    public void logout() {
+        if (_player == null) {
             return;
         }
-        
+
         _player.getAccount().removeSession();
         World.removeOnline(_player);
         _player.getSession().removeAttribute("player");
         _player.getSession().removeAttribute("account");
         _player.setSession(null);
         _player = null;
-        
-        if(!DAOFactory.character().update(this)){
-            Loggin.debug("Sauvegarde impossible de %s", name);
+
+        if (Jelly.running) {
+            if (!DAOFactory.character().update(this)) {
+                Loggin.debug("Sauvegarde impossible de %s", name);
+            }
         }
     }
 

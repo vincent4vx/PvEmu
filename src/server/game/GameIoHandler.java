@@ -1,6 +1,7 @@
 package server.game;
 
 import game.objects.Player;
+import jelly.Jelly;
 import jelly.Loggin;
 import models.Account;
 import models.dao.DAOFactory;
@@ -17,26 +18,29 @@ public class GameIoHandler extends MinaIoHandler {
     }
 
     @Override
-    public void sessionClosed(IoSession session) throws Exception {        
+    public void sessionClosed(IoSession session) throws Exception {
         MapEvents.onRemoveMap(session);
-        
-        Player p = (Player)session.getAttribute("player");
-        
-        if(p == null){
+
+        Player p = (Player) session.getAttribute("player");
+
+        if (p == null) {
             return;
         }
-        
+
         Loggin.debug("Déconnexion de %s", new Object[]{p.getName()});
         p.getCharacter().logout();
     }
-    
+
     @Override
-    public void messageSent(IoSession session, Object message){
+    public void messageSent(IoSession session, Object message) {
         Loggin.game("Send >> %s", message);
     }
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
+        if (!Jelly.running) { //si serveur offline, on ne recoit rien
+            return;
+        }
         String packet = ((String) message).trim();
         if (packet.length() > 1) {
             Loggin.game("Recv << %s", packet);
@@ -105,6 +109,9 @@ public class GameIoHandler extends MinaIoHandler {
                             session.write(packet);
                             break;
                     }
+                    break;
+                case 'p':
+                    GamePacketEnum.PONG.send(session);
                     break;
             }
         }

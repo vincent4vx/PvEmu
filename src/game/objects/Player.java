@@ -22,6 +22,7 @@ public class Player extends Creature {
     private IoSession session = null;
     private String chanels = "*#$:?i^!%";
     private Account _account;
+    public int orientation = 2;
 
     public Player(Character c) {
         _character = c;
@@ -44,41 +45,42 @@ public class Player extends Creature {
         if (curMap != null) {
             curCell = curMap.getCellById(c.lastCell);
         }
-        
+
         _account = DAOFactory.account().getById(_character.accountId);
-        
+
         loadStats();
     }
-    
+
     /**
      * Charge les stats du perso
      */
-    private void loadStats(){
-        for(String data : _character.baseStats.split("\\|")){
-            try{
+    private void loadStats() {
+        for (String data : _character.baseStats.split("\\|")) {
+            try {
                 String[] arr = data.split(";");
                 int elemID = Integer.parseInt(arr[0]);
                 int qu = Integer.parseInt(arr[1]);
                 baseStats.add(elemID, qu);
-            }catch(Exception e){}
+            } catch (Exception e) {
+            }
         }
         ClassData.setBaseStats(this);
     }
-    
-    public GameMap getMap(){
+
+    public GameMap getMap() {
         return curMap;
     }
-    
-    public void setMap(GameMap map){
+
+    public void setMap(GameMap map) {
         curMap = map;
         _character.lastMap = map.getID();
     }
-    
-    public GameMap.Cell getCell(){
+
+    public GameMap.Cell getCell() {
         return curCell;
     }
-    
-    public void setCell(GameMap.Cell cell){
+
+    public void setCell(GameMap.Cell cell) {
         curCell = cell;
         _character.lastCell = cell.getID();
     }
@@ -106,8 +108,8 @@ public class Player extends Creature {
     public void setSession(IoSession session) {
         this.session = session;
     }
-    
-    public Account getAccount(){
+
+    public Account getAccount() {
         return _account;
     }
 
@@ -175,7 +177,7 @@ public class Player extends Creature {
     public String getGMData() {
         StringBuilder str = new StringBuilder();
 
-        str.append(curCell.getID()).append(";").append(0).append(";");
+        str.append(curCell.getID()).append(";").append(orientation).append(";");
         str.append("0").append(";");//FIXME:?
         str.append(id).append(";").append(name).append(";").append(classID);
 
@@ -206,16 +208,12 @@ public class Player extends Creature {
         //str.append(_lvl).append(";");
         str.append(Utils.implode(";", colors)).append(";");
         str.append("").append(";"); //stuff
-        /*if (Ancestra.AURA_SYSTEM) {
-         if (hasEquiped(10054) || hasEquiped(10055) || hasEquiped(10056) || hasEquiped(10058) || hasEquiped(10061) || hasEquiped(10102)) {
+         /*if (hasEquiped(10054) || hasEquiped(10055) || hasEquiped(10056) || hasEquiped(10058) || hasEquiped(10061) || hasEquiped(10102)) {
          str.append(3).append(";");
-         } else {
-         str.append((_lvl > 99 ? (_lvl > 199 ? (2) : (1)) : (0))).append(";");
-         }
-         } else {
-         str.append("0;");
-         }*/
-        str.append("0;");
+         } else {*/
+        str.append((level > 99 ? (level > 199 ? (2) : (1)) : (0))).append(";");
+        //}
+        //str.append("0;");
         str.append(";");//Emote
         str.append(";");//Emote timer
         /*if (this._guildMember != null && this._guildMember.getGuild().getMembers().size() > 9)//>9TODO:
@@ -225,11 +223,11 @@ public class Player extends Creature {
          str.append(";;");
          }*/
         str.append(";;");
-        str.append(0).append(";");//Restriction
+        str.append("0").append(";");//Restriction
         //str.append((_onMount && _mount != null ? _mount.get_color(parsecolortomount()) : "")).append(";");
         str.append(";");
         str.append(";");
-        
+
         return str.toString();
     }
 
@@ -261,34 +259,36 @@ public class Player extends Creature {
     public void removeChanel(char c) {
         chanels = chanels.replace(String.valueOf(c), "");
     }
-    
+
     /**
      * Téléporte le personnage
+     *
      * @param mapID
-     * @param cellID 
+     * @param cellID
      */
-    public void teleport(short mapID, short cellID){
-        if(GameMap.isValidDest(mapID, cellID)){
+    public void teleport(short mapID, short cellID) {
+        if (GameMap.isValidDest(mapID, cellID)) {
             MapEvents.onRemoveMap(session);
             MapEvents.onArrivedOnMap(session, mapID, cellID);
         }
     }
-    
+
     /**
      * Prépare la déconnexion
      */
-    public void logout(){
+    public void logout() {
         _character.logout();
     }
-    
+
     /**
      * Retourne ne nombre total de pods
-     * @return 
+     *
+     * @return
      */
-    public int getTotalPods(){
+    public int getTotalPods() {
         int pods = getTotalStats().get(Element.PODS);
-        pods += getTotalStats().get(Element.FORCE)*5;
-        
+        pods += getTotalStats().get(Element.FORCE) * 5;
+
         return pods;
     }
 }

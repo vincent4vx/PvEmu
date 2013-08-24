@@ -1,6 +1,7 @@
 package server.realm;
 
 import jelly.Constants;
+import jelly.Jelly;
 import jelly.Loggin;
 import jelly.Utils;
 import models.Account;
@@ -28,6 +29,9 @@ public class RealmIoHandler extends MinaIoHandler {
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
+        if (!Jelly.running) {
+            return;
+        }
         String packet = ((String) message).trim();
         if (packet.length() > 0) {
             Loggin.realm("Recv << " + packet);
@@ -58,7 +62,7 @@ public class RealmIoHandler extends MinaIoHandler {
                         RealmPacketEnum.HOSTS_LIST.send(session);
                         RealmPacketEnum.QUESTION.send(session, acc.question);
                         RealmPacketEnum.LOGIN_OK.send(session, acc.level > 0 ? "1" : "0");
-                    }else{
+                    } else {
                         RealmPacketEnum.LOGIN_ALREADY_CONNECTED.send(session);
                         session.close(false);
                     }

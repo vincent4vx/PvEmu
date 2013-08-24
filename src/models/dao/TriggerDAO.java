@@ -11,7 +11,7 @@ import jelly.database.Database;
 import models.Trigger;
 
 public class TriggerDAO extends DAO<Trigger> {
-    
+
     private PreparedStatement getByMapIDStatement = null;
 
     @Override
@@ -21,43 +21,43 @@ public class TriggerDAO extends DAO<Trigger> {
 
     @Override
     protected Trigger createByResultSet(ResultSet RS) {
-        try{
+        try {
             Trigger t = new Trigger();
-            
+
             t.mapID = RS.getShort("MapID");
             t.cellID = RS.getShort("CellID");
             t.actionID = RS.getShort("ActionID");
             t.actionArgs = RS.getString("ActionArgs");
             t.conditions = RS.getString("Conditions");
-            
+
             return t;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
-    
-    public ArrayList<Trigger> getByMapID(int mapID){
-        if(getByMapIDStatement == null){
+
+    public ArrayList<Trigger> getByMapID(int mapID) {
+        if (getByMapIDStatement == null) {
             getByMapIDStatement = Database.prepare("SELECT * FROM triggers WHERE MapID = ?");
         }
-        
+
         ArrayList<Trigger> triggers = new ArrayList<>();
         try {
             getByMapIDStatement.setInt(1, mapID);
-            
+
             ResultSet RS = getByMapIDStatement.executeQuery();
-            
-            while(RS.next()){
+
+            while (RS.next()) {
                 Trigger t = createByResultSet(RS);
-                if(t != null){
+                if (t != null) {
                     triggers.add(t);
                 }
             }
         } catch (SQLException ex) {
             Logger.getLogger(TriggerDAO.class.getName()).log(Level.WARNING, "Impossible de charger les triggers", ex);
-        }       
-        
+        }
+
         return triggers;
     }
 
@@ -70,5 +70,4 @@ public class TriggerDAO extends DAO<Trigger> {
     public boolean create(Trigger obj) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 }

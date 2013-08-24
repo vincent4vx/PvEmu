@@ -1,5 +1,6 @@
 package jelly.database;
 
+import game.World;
 import jelly.Config;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,51 +12,54 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jelly.Loggin;
+import jelly.Shell;
+import jelly.Shell.GraphicRenditionEnum;
 
 public class Database {
+
     public Connection db;
     private static Database self = null;
     private Timer _commitTimer;
     private boolean _autocommit = false;
 
-    private Database(){
+    private Database() {
         try {
-            System.out.print("Connexion à la base de données : ");
+            Shell.print("Connexion à la base de données : ", GraphicRenditionEnum.YELLOW);
             StringBuilder dsn = new StringBuilder();
 
             dsn.append("jdbc:mysql://");
             dsn.append(Config.getString("db_host"));
             dsn.append("/").append(Config.getString("db_name"));
-            
+
             db = DriverManager.getConnection(
                     dsn.toString(),
                     Config.getString("db_user"),
-                    Config.getString("db_pass")
-            );
-   
+                    Config.getString("db_pass"));
+
             _commitTimer = new Timer();
-            System.out.println("Ok");
+            Shell.println("Ok", GraphicRenditionEnum.GREEN);
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, "Connexion impossible", ex);
             System.exit(1);
         }
     }
-    
-    public static void setAutocommit(boolean state){
+
+    public static void setAutocommit(boolean state) {
         self._autocommit = state;
         try {
+            if (state) {
+                self.db.commit();
+            }
             self.db.setAutoCommit(state);
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        if(state){
-            self._commitTimer.cancel();
-        }else{    
-            self._commitTimer.schedule(new TimerTask(){
+
+        if (self._commitTimer == null) {
+            self._commitTimer.schedule(new TimerTask() {
                 @Override
-                public void run(){
-                    if(!self._autocommit){
+                public void run() {
+                    if (!self._autocommit) {
                         try {
                             self.db.commit();
                             Loggin.debug("Commit Database");
@@ -68,59 +72,58 @@ public class Database {
         }
     }
 
-    public static ResultSet query(String query){
-        try{
+    public static ResultSet query(String query) {
+        try {
             ResultSet RS;
-            synchronized(self){
+            synchronized (self) {
                 RS = self.db.createStatement().executeQuery(query);
                 Loggin.debug("Execution de la requête : %s", new Object[]{query});
             }
             return RS;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             return null;
         }
     }
 
-    public static PreparedStatement prepare(String query){
-        try{
+    public static PreparedStatement prepare(String query) {
+        try {
             PreparedStatement stmt = self.db.prepareStatement(query);
-            Loggin.debug("Préparation de la requête : %s", new Object[]{query});
+            Loggin.debug("Préparation de la requête : %s", query);
             return stmt;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             return null;
         }
     }
-    
+
     /**
      * Prépare une requête d'insertion (retourne l'id généré)
+     *
      * @param query
-     * @return 
+     * @return
      */
-    public static PreparedStatement prepareInsert(String query){
-        try{
+    public static PreparedStatement prepareInsert(String query) {
+        try {
             PreparedStatement stmt = self.db.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS);
             return stmt;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             return null;
-        }    
+        }
     }
-    
-    public static void connect(){
-        if(self == null){
+
+    public static void connect() {
+        if (self == null) {
             self = new Database();
             setAutocommit(false);
         }
     }
-    
-    public static void close(){
+
+    public static void close() {
         try {
-            System.out.print("Arrêt de database : ");
-            setAutocommit(false);
-            self.db.commit();
+            Shell.print("Arrêt de database : ", GraphicRenditionEnum.RED);
             self._commitTimer.cancel();
             self._commitTimer = null;
             self.db.close();
-            System.out.println("ok");
+            Shell.println("ok", GraphicRenditionEnum.GREEN);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }

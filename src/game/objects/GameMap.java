@@ -23,12 +23,12 @@ public class GameMap {
         public Cell(GameMap map, short cellID, String CellData) {
             _map = map;
             id = cellID;
-            
+
             walkable = (((parseHashChar(CellData.charAt(2))) & 56) >> 3) != 0;
             canSight = ((parseHashChar(CellData.charAt(0))) & 1) != 0;
             int layerObject2 = (((parseHashChar(CellData.charAt(0))) & 2) << 12) + (((parseHashChar(CellData.charAt(7))) & 1) << 12) + ((parseHashChar(CellData.charAt(8))) << 6) + parseHashChar(CellData.charAt(9));
             boolean layerObject2Interactive = (((parseHashChar(CellData.charAt(7))) & 2) >> 1) != 0;
-            obj = (layerObject2Interactive ? layerObject2 : -1);  
+            obj = (layerObject2Interactive ? layerObject2 : -1);
         }
 
         private static byte parseHashChar(char c) {
@@ -47,38 +47,40 @@ public class GameMap {
 
             return -1;
         }
-        
-        public short getID(){
+
+        public short getID() {
             return id;
         }
-        
-        public boolean isWalkable(){
+
+        public boolean isWalkable() {
             return walkable;
         }
-        
-        public void removePlayer(int id){
+
+        public void removePlayer(int id) {
             _players.remove(id);
         }
-        
-        public void addPlayer(Player p){
+
+        public void addPlayer(Player p) {
             _players.put(p.getID(), p);
         }
-        
+
         /**
          * Ajoute une action sur la cellule
+         *
          * @param T
          */
-        public void addTrigger(Trigger T){
+        public void addTrigger(Trigger T) {
             Action a = new Action(T.actionID, T.actionArgs.split(","), T.conditions);
             _actions.add(a);
         }
-        
+
         /**
          * Effectue les actions sur la cellule (triggers)
-         * @param p 
+         *
+         * @param p
          */
-        public void performCellAction(Player p){
-            for(Action a : _actions){
+        public void performCellAction(Player p) {
+            for (Action a : _actions) {
                 Loggin.debug("[%s] Déclanchement du trigger en [%d;%d] : actionID = %d", new Object[]{p.getName(), _map.id, id, a.actionID});
                 a.performAction(p);
             }
@@ -93,102 +95,107 @@ public class GameMap {
     public GameMap(MapModel model) {
         _model = model;
         id = _model.id;
-        
+
         for (int f = 0; f < _model.mapData.length(); f += 10) {
             String CellData = _model.mapData.substring(f, f + 10);
-            _cells.add(new Cell(this, (short)(f / 10), CellData));
+            _cells.add(new Cell(this, (short) (f / 10), CellData));
         }
-        
-        for(Trigger T : DAOFactory.trigger().getByMapID(id)){
+
+        for (Trigger T : DAOFactory.trigger().getByMapID(id)) {
             Cell cell = getCellById(T.cellID);
-            
-            if(cell != null){
+
+            if (cell != null) {
                 cell.addTrigger(T);
             }
         }
     }
-    
+
     /**
      * Ajoute un joueur à la map
+     *
      * @param p
-     * @param cellID 
+     * @param cellID
      */
-    public void addPlayer(Player p, short cellID){
+    public void addPlayer(Player p, short cellID) {
         _players.put(p.getID(), p);
         getCellById(cellID)._players.put(p.getID(), p);
     }
-    
+
     /**
      * Supprime un joueur de la map
+     *
      * @param p
      */
-    public void removePlayer(Player p){
+    public void removePlayer(Player p) {
         _players.remove(p.getID());
-        if(p.getCell() != null){
+        if (p.getCell() != null) {
             p.getCell()._players.remove(p.getID());
         }
     }
-    
-    public ConcurrentHashMap<Integer, Player> getPlayers(){
+
+    public ConcurrentHashMap<Integer, Player> getPlayers() {
         return _players;
     }
-    
+
     /**
      * Retourne la cellule par son ID, si elle existe
+     *
      * @param id
-     * @return 
+     * @return
      */
-    public Cell getCellById(short id){
-        if(_cells.size() < id){
+    public Cell getCellById(short id) {
+        if (_cells.size() < id) {
             Loggin.debug("CellID invalide : %d, max : %d", id, _cells.size());
             return null;
         }
-        
+
         return _cells.get(id);
     }
-    
-    public byte getWidth(){
+
+    public byte getWidth() {
         return _model.width;
     }
-    
-    public byte getHeigth(){
+
+    public byte getHeigth() {
         return _model.heigth;
     }
 
     /**
      * Packet pour charger la map
-     * @return 
+     *
+     * @return
      */
-    public String getMapDataPacket(){
-        if(mapDataPacket == null){
+    public String getMapDataPacket() {
+        if (mapDataPacket == null) {
             StringBuilder p = new StringBuilder();
             p.append(id).append("|").append(_model.date).append("|").append(_model.key);
             mapDataPacket = p.toString();
         }
         return mapDataPacket;
     }
-    
+
     /**
      * Vérifie si la destination est valide ou non
+     *
      * @param mapID
      * @param cellID
-     * @return 
+     * @return
      */
-    public static boolean isValidDest(short mapID, short cellID){
+    public static boolean isValidDest(short mapID, short cellID) {
         GameMap map = DAOFactory.map().getById(mapID).getGameMap();
-        
-        if(map == null){ //map inexistante
+
+        if (map == null) { //map inexistante
             return false;
         }
-        
-        if(map._cells.size() < cellID){ //cellule inexistante
+
+        if (map._cells.size() < cellID) { //cellule inexistante
             return false;
         }
-        
+
         return map._cells.get(cellID).isWalkable();
     }
-    
-    public short getID(){
+
+    public short getID() {
         return id;
     }
 }

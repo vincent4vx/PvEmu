@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
 import jelly.Constants;
+import jelly.Loggin;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
@@ -24,18 +25,23 @@ public class MinaServer {
         _acceptor.setHandler(handler);
         _acceptor.bind(new InetSocketAddress(port));
     }
-    
-    public NioSocketAcceptor getAcceptor(){
+
+    public NioSocketAcceptor getAcceptor() {
         return _acceptor;
     }
-    
-    public void stop(){
-        for(IoSession session : _acceptor.getManagedSessions().values()){
-            if(session.isConnected() && !session.isClosing()){
-                session.close(false);
+
+    public void stop() {
+        try {
+            for (IoSession session : _acceptor.getManagedSessions().values()) {
+                if (session == null || session.isClosing()) {
+                    continue;
+                }
+                session.close(true);
             }
+           /* _acceptor.unbind();
+            _acceptor.dispose(false);*/
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        _acceptor.unbind();
-        _acceptor.dispose(false);
     }
 }

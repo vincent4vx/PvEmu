@@ -64,27 +64,27 @@ public class Spell implements Model {
 
         private ArrayList<SpellEffect> parseSpellEffects(String data) {
             ArrayList<SpellEffect> list = new ArrayList<>();
-            
+
             int i = 0;
-            for(String str_effect : data.split("\\|")){
+            for (String str_effect : data.split("\\|")) {
                 String[] args = str_effect.split(";");
-                try{
+                try {
                     int id = Integer.parseInt(args[0]);
                     String jet = args[6];
                     //int buffID = 
                     int duration = Integer.parseInt(args[4]);
                     int ET = 0;
-                    if(_spell.effectTarget.get(i) != null){
+                    if (_spell.effectTarget.get(i) != null) {
                         ET = _spell.effectTarget.get(i);
                     }
                     list.add(new SpellEffect(id, duration, jet, ET));
-                }catch(ArrayIndexOutOfBoundsException e){
+                } catch (ArrayIndexOutOfBoundsException e) {
                     Loggin.debug("Analyse du SpellEffect impossible : " + str_effect);
-                }finally{
+                } finally {
                     i++;
                 }
             }
-            
+
             return list;
         }
     }

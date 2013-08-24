@@ -12,9 +12,9 @@ import jelly.database.Database;
 import models.Account;
 
 public class AccountDAO extends DAO<Account> {
+
     private final Map<String, Account> accountsByName = new ConcurrentHashMap<>();
     private final Map<Integer, Account> accountsById = new ConcurrentHashMap<>();
-    
     private PreparedStatement getByNameStatement = null;
 
     @Override
@@ -24,9 +24,9 @@ public class AccountDAO extends DAO<Account> {
 
     @Override
     protected Account createByResultSet(ResultSet RS) {
-        try{
+        try {
             Account a = new Account();
-            
+
             a.id = RS.getInt("id");
             a.account = RS.getString("account");
             a.level = RS.getByte("level");
@@ -34,12 +34,12 @@ public class AccountDAO extends DAO<Account> {
             a.pseudo = RS.getString("pseudo");
             a.question = RS.getString("question");
             a.response = RS.getString("response");
-            
+
             accountsByName.put(RS.getString("account").toLowerCase(), a);
             accountsById.put(RS.getInt("id"), a);
-            
+
             return a;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
@@ -54,23 +54,24 @@ public class AccountDAO extends DAO<Account> {
     public boolean create(Account obj) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     /**
      * Charge le compte suivant le username (bdd ou HashMap)
+     *
      * @param name
-     * @return 
+     * @return
      */
-    public Account getByName(String name){
-        if(!accountsByName.containsKey(name.toLowerCase())){
-            if(getByNameStatement == null){
+    public Account getByName(String name) {
+        if (!accountsByName.containsKey(name.toLowerCase())) {
+            if (getByNameStatement == null) {
                 getByNameStatement = Database.prepare("SELECT * FROM accounts WHERE account = ?");
             }
             try {
                 getByNameStatement.setString(1, name);
                 ResultSet RS = getByNameStatement.executeQuery();
-                if(RS.next()){
+                if (RS.next()) {
                     return createByResultSet(RS);
-                }else{
+                } else {
                     return null;
                 }
             } catch (SQLException ex) {
@@ -80,17 +81,17 @@ public class AccountDAO extends DAO<Account> {
         }
         return accountsByName.get(name);
     }
-    
+
     /**
      * Charge le compte suivent l'id (bdd ou HashMap)
+     *
      * @param id
-     * @return 
+     * @return
      */
-    public Account getById(int id){
-        if(!accountsById.containsKey(id)){
+    public Account getById(int id) {
+        if (!accountsById.containsKey(id)) {
             return find(id);
         }
-        return accountsById.get(id); 
+        return accountsById.get(id);
     }
-    
 }

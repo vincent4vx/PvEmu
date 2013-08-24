@@ -12,23 +12,23 @@ import jelly.Loggin;
 import models.Character;
 
 public class CharacterDAO extends jelly.database.DAO<Character> {
+
     private PreparedStatement findByNameStatement = null;
     private PreparedStatement getByAccountId = null;
     private PreparedStatement createStatement = null;
     private PreparedStatement countNameStatement = null;
     private PreparedStatement countByAccountStatement = null;
     private PreparedStatement updateStatement = null;
-    
     private ConcurrentHashMap<Integer, Character> charactersById = new ConcurrentHashMap<>();
 
     @Override
-    protected String tableName(){
+    protected String tableName() {
         return "characters";
     }
 
     @Override
-    protected Character createByResultSet(ResultSet RS){
-        try{
+    protected Character createByResultSet(ResultSet RS) {
+        try {
             Character p = new Character();
 
             p.id = RS.getInt("id");
@@ -44,19 +44,19 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
             p.lastMap = RS.getShort("lastMap");
             p.lastCell = RS.getShort("lastCell");
             p.baseStats = RS.getString("baseStats");
-            
+
             charactersById.put(p.id, p);
 
             return p;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
     @Override
-    public boolean create(Character p){
-        if(createStatement == null){
+    public boolean create(Character p) {
+        if (createStatement == null) {
             createStatement = Database.prepareInsert("INSERT INTO characters(name, class, sexe, color1, color2, color3, account, gfxid, lastMap, lastCell, startMap, startCell) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);");
         }
         try {
@@ -72,51 +72,51 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
             createStatement.setShort(10, p.lastCell);
             createStatement.setShort(11, p.startMap);
             createStatement.setShort(12, p.startCell);
-            
+
             int id = createStatement.executeUpdate();
-            
+
             ResultSet RS = createStatement.getGeneratedKeys();
-            
-            if(RS.next()){
+
+            if (RS.next()) {
                 id = RS.getInt(1);
             }
-            
-            if(id == 0){
+
+            if (id == 0) {
                 return false;
-            }else{
+            } else {
                 p.id = id;
             }
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(CharacterDAO.class.getName()).log(Level.SEVERE, "Enregistrement impossible !", ex);
             return false;
         }
-        
+
         return true;
     }
 
     @Override
-    public boolean update(Character P){
-        try{
+    public boolean update(Character P) {
+        try {
             Loggin.debug("Sauvegarde de %s", P.name);
-            if(updateStatement == null){
+            if (updateStatement == null) {
                 updateStatement = Database.prepare("UPDATE characters SET level = ?, gfxid = ?, lastMap = ?, lastCell = ?, startMap = ?, startCell = ?, baseStats = ? WHERE id = ?");
             }
-            
+
             updateStatement.setInt(1, P.level);
             updateStatement.setInt(2, P.gfxid);
-            updateStatement.setShort(3 , P.lastMap);
+            updateStatement.setShort(3, P.lastMap);
             updateStatement.setShort(4, P.lastCell);
             updateStatement.setShort(5, P.startMap);
             updateStatement.setShort(6, P.startCell);
             updateStatement.setString(7, P.baseStats);
-            
+
             updateStatement.setInt(8, P.id);
-            
+
             updateStatement.execute();
-            
+
             return true;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
@@ -124,19 +124,20 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
 
     /**
      * Charge le perso par son nom
+     *
      * @param name
-     * @return 
+     * @return
      */
-    public Character findByName(String name){
+    public Character findByName(String name) {
         try {
-            if(findByNameStatement == null){
+            if (findByNameStatement == null) {
                 findByNameStatement = Database.prepare("SELECT * FROM characters WHERE name = ?");
             }
 
             findByNameStatement.setString(1, name);
             ResultSet RS = findByNameStatement.executeQuery();
 
-            if(!RS.next()){
+            if (!RS.next()) {
                 return null;
             }
 
@@ -145,88 +146,93 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
             return null;
         }
     }
-    
+
     /**
      * Charge un perso par son ID
+     *
      * @param id
-     * @return 
+     * @return
      */
-    public Character getById(int id){
-        if(!charactersById.containsKey(id)){
+    public Character getById(int id) {
+        if (!charactersById.containsKey(id)) {
             return find(id);
         }
         return charactersById.get(id);
     }
-    
+
     /**
      * Récupère les perso d'un compte
+     *
      * @param accountId
-     * @return 
+     * @return
      */
-    public ArrayList<Character> getByAccountId(int accountId){
+    public ArrayList<Character> getByAccountId(int accountId) {
         ArrayList<Character> players = new ArrayList<>();
-        
-        try{
-            if(getByAccountId == null){
+
+        try {
+            if (getByAccountId == null) {
                 getByAccountId = Database.prepare("SELECT * FROM characters WHERE account = ?");
             }
-            
+
             getByAccountId.setInt(1, accountId);
             ResultSet RS = getByAccountId.executeQuery();
-            
-            while(RS.next()){
+
+            while (RS.next()) {
                 Character c = createByResultSet(RS);
-                if(c != null)
+                if (c != null) {
                     players.add(c);
+                }
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return players;
     }
-    
+
     /**
      * Test si un nom existe en bdd
+     *
      * @param name
-     * @return 
+     * @return
      */
-    public boolean nameExists(String name){
-        try{
-            if(countNameStatement == null){
+    public boolean nameExists(String name) {
+        try {
+            if (countNameStatement == null) {
                 countNameStatement = Database.prepare("SELECT COUNT(*) AS count FROM characters WHERE name = ?");
             }
-            
+
             countNameStatement.setString(1, name);
             ResultSet RS = countNameStatement.executeQuery();
-            if(!RS.next()){
+            if (!RS.next()) {
                 return true; //ne devrait pas arriver :/
             }
-            
+
             return RS.getInt("count") > 0;
-        }catch(Exception e){
+        } catch (Exception e) {
             return true;
         }
     }
-    
+
     /**
      * Compte le nombre de perso dans un compte
+     *
      * @param accountId
-     * @return 
+     * @return
      */
-    public int countByAccount(int accountId){
-        try{
-            if(countByAccountStatement == null){
+    public int countByAccount(int accountId) {
+        try {
+            if (countByAccountStatement == null) {
                 countByAccountStatement = Database.prepare("SELECT COUNT(*) AS count FROM characters WHERE account = ?");
             }
-            
+
             countByAccountStatement.setInt(1, accountId);
             ResultSet RS = countByAccountStatement.executeQuery();
-            if(!RS.next()){
+            if (!RS.next()) {
                 return 0;
             }
             return RS.getInt("count");
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }

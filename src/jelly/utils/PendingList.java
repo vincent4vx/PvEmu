@@ -3,15 +3,16 @@ package jelly.utils;
 import java.util.ArrayList;
 
 public class PendingList<T> extends ArrayList<T> {
-    public synchronized void push(T object){
+
+    public synchronized void push(T object) {
         add(object);
         notify();
     }
 
-    public synchronized T pop(){
+    public synchronized T pop() {
         T object = null;
 
-        if(!isEmpty()){
+        if (!isEmpty()) {
             object = get(0);
             remove(0);
         }
@@ -19,8 +20,8 @@ public class PendingList<T> extends ArrayList<T> {
         return object;
     }
 
-    public synchronized void waitForElements() throws InterruptedException{
-        while(isEmpty()){
+    public synchronized void waitForElements() throws InterruptedException {
+        while (isEmpty()) {
             wait();
         }
     }

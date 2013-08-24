@@ -1,30 +1,33 @@
 package jelly;
 
+import game.World;
 import game.objects.dep.Stats;
-import java.util.ArrayList;
+import jelly.Shell.GraphicRenditionEnum;
 import jelly.database.Database;
 import models.dao.DAOFactory;
 import server.game.GameServer;
 import server.realm.RealmServer;
 
 public class Jelly {
-    public static boolean DEBUG=false;
-    
-    public static long start;
 
+    public static boolean DEBUG = false;
+    public static long start;
     public static boolean running = true;
-    
+    private static final Thread main = Thread.currentThread();
+
     public static void main(String[] args) {
-        System.out.println("======================================================");
+        Shell.setTitle(Constants.NAME);
+        Shell.println("======================================================", GraphicRenditionEnum.YELLOW);
         printAsciiLogo();
-        System.out.println("\t\t\tJelly-emu by v4vx");
-        System.out.println("Version " + Constants.VERSION);
-        System.out.println("======================================================");
-        
-        if(args.length == 0)
+        Shell.print("\t\t\t" + Constants.NAME + " by ", GraphicRenditionEnum.YELLOW);
+        Shell.println("v4vx", GraphicRenditionEnum.YELLOW, GraphicRenditionEnum.BOLD);
+        Shell.println("Version " + Constants.VERSION, GraphicRenditionEnum.YELLOW);
+        Shell.println("======================================================", GraphicRenditionEnum.YELLOW);
+
+        if (args.length == 0) {
             start();
-        else{
-            switch(args[0].toLowerCase()){
+        } else {
+            switch (args[0].toLowerCase()) {
                 case "?":
                 case "help":
                     System.out.println("\nAide Jelly CLI :");
@@ -39,50 +42,49 @@ public class Jelly {
                     start();
                     break;
                 case "set":
-                    if(args.length < 2){
+                    if (args.length < 2) {
                         System.out.println("Arguments manquants");
                         return;
                     }
-                    Config.set(args[1], args[2], true);
+                    Config.set(args[1], args[2]);
                     break;
             }
         }
     }
-    
-    private static void start(){
-        start=System.currentTimeMillis();
+
+    private static void start() {
+        start = System.currentTimeMillis();
         Config.load();
         Database.connect();
         Stats.loadElements();
-        if(Config.getBool("preload")){
+        if (Config.getBool("preload")) {
             preload();
         }
-        System.out.println("Lancement du Realm");
         RealmServer.start();
         GameServer.start();
-        System.out.println("Serveur lancé en " + (System.currentTimeMillis() - start) + "ms");
-        Runtime.getRuntime().addShutdownHook(new Thread(){
+        Shell.println("Serveur lancé en " + (System.currentTimeMillis() - start) + "ms", GraphicRenditionEnum.GREEN, GraphicRenditionEnum.BOLD);
+        Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
-            public void run(){
+            public void run() {
                 Jelly.close();
             }
         });
     }
 
-    private static void printAsciiLogo(){
-        System.out.println(
-                "   ___      _ _       _____\n" +
-                "  |_  |    | | |     |  ___|\n" +
-                "    | | ___| | |_   _| |__ _ __ ___  _   _\n" +
-                "    | |/ _ \\ | | | | |  __| '_ ` _ \\| | | |\n" +
-                "/\\__/ /  __/ | | |_| | |__| | | | | | |_| |\n" +
-                "\\____/ \\___|_|_|\\__, \\____/_| |_| |_|\\__,_|\n" +
-                "                 __/ |\n" +
-                "                |___/\n"
-        );
+    private static void printAsciiLogo() {
+        Shell.println(
+                "   ___      _ _       _____\n"
+                + "  |_  |    | | |     |  ___|\n"
+                + "    | | ___| | |_   _| |__ _ __ ___  _   _\n"
+                + "    | |/ _ \\ | | | | |  __| '_ ` _ \\| | | |\n"
+                + "/\\__/ /  __/ | | |_| | |__| | | | | | |_| |\n"
+                + "\\____/ \\___|_|_|\\__, \\____/_| |_| |_|\\__,_|\n"
+                + "                 __/ |\n"
+                + "                |___/\n",
+                GraphicRenditionEnum.YELLOW, GraphicRenditionEnum.BOLD);
     }
-    
-    private static void preload(){
+
+    private static void preload() {
         System.out.println("====> Prechargement <====");
         System.out.print("Chargement des maps : ");
         System.out.println(DAOFactory.map().getAll().size() + " maps chargées");
@@ -94,12 +96,19 @@ public class Jelly {
         System.gc();
         System.out.println("Ok");
     }
-    
-    public static void close(){
-        System.out.println("Arrêt du serveur en cours...");
-        RealmServer.stop();
-        GameServer.stop();
-        Database.close();
-        System.out.println("JellyEmu : arrêt");
+
+    public static void close() {
+        if (running) {
+            running = false;
+            Shell.println("Arrêt du serveur en cours...", GraphicRenditionEnum.RED);
+            World.save();
+            World.kickAll();
+            Database.close();
+            RealmServer.stop();
+            GameServer.stop();
+            Shell.println("JellyEmu : arrêt", GraphicRenditionEnum.RED);
+        }else{
+            Shell.println("Serveur déjà en cours d'arrêt...", GraphicRenditionEnum.RED);
+        }
     }
 }

@@ -4,9 +4,11 @@ import game.World;
 import game.objects.GameMap;
 import game.objects.Player;
 import java.util.Collection;
+import jelly.Jelly;
 import org.apache.mina.core.session.IoSession;
 
 public enum GamePacketEnum {
+
     /**
      * Packet envoyé à la connexion
      */
@@ -37,7 +39,7 @@ public enum GamePacketEnum {
      */
     CREATE_CHARACTER_OK("AAK"),
     /**
-     * 
+     *
      */
     SELECT_CHARACTER_ERROR("ASE"),
     /**
@@ -53,8 +55,7 @@ public enum GamePacketEnum {
      */
     STATS_PACKET("As"),
     /**
-     * information sur la map courrante
-     * id | date | key
+     * information sur la map courrante id | date | key
      */
     MAP_DATA("GDM|"),
     /**
@@ -94,8 +95,7 @@ public enum GamePacketEnum {
      */
     BASIC_TIME("BT"),
     /**
-     * confirmation de game action
-     * [id de l'action] ; [type] (;[args]...)
+     * confirmation de game action [id de l'action] ; [type] (;[args]...)
      */
     GAME_ACTION("GA"),
     /**
@@ -125,89 +125,100 @@ public enum GamePacketEnum {
     /**
      * Nombre de pods utilisés | pods max
      */
-    OBJECTS_WEIGHT("Ow")
-    ;
-    
+    OBJECTS_WEIGHT("Ow"),
+    PONG("pong");
     private String packet;
     private Object param;
-    
-    GamePacketEnum(String packet){
+
+    GamePacketEnum(String packet) {
         this.packet = packet;
         this.param = "";
     }
-    
-    GamePacketEnum(String packet, Object param){
+
+    GamePacketEnum(String packet, Object param) {
         this.packet = packet;
         this.param = param;
     }
-    
+
     /**
      * Envoit le packet avec des parametres
+     *
      * @param session
-     * @param param 
+     * @param param
      */
-    public void send(IoSession session, Object param){
+    public void send(IoSession session, Object param) {
+        if (!Jelly.running) {
+            return; //ne rien envoyer une fois off
+        }
         session.write(packet + String.valueOf(param));
     }
-    
+
     /**
      * Envoit le packet avec les paramatres par défaut
-     * @param session 
+     *
+     * @param session
      */
-    public void send(IoSession session){
+    public void send(IoSession session) {
         send(session, param);
     }
-    
+
     /**
      * Envoit le packet à tous les joueurs connectés
      */
-    public void sendToAll(){
+    public void sendToAll() {
         sendToAll(param);
     }
-    
+
     /**
      * Envoit le packet à tous les joueurs connectés
-     */    
-    public void sendToAll(Object param){
+     */
+    public void sendToAll(Object param) {
         sendToPlayerList(World.getOnlinePlayers(), param);
     }
-    
+
     /**
      * Envoit le packet aux joueurs sléectionné
-     * @param players 
+     *
+     * @param players
      */
-    public void sendToPlayerList(Collection<Player> players){
+    public void sendToPlayerList(Collection<Player> players) {
         sendToPlayerList(players, param);
     }
-    
+
     /**
      * Envoit le packet aux joueurs sélectionnés
+     *
      * @param players
-     * @param param 
+     * @param param
      */
-    public void sendToPlayerList(Collection<Player> players, Object param){
-        for(Player P : players){
-            if(P.getSession() == null){
+    public void sendToPlayerList(Collection<Player> players, Object param) {
+        if (!Jelly.running) {
+            return;
+        }
+        for (Player P : players) {
+            if (P.getSession() == null) {
                 P.logout();
                 continue;
             }
             P.getSession().write(packet + String.valueOf(param));
         }
     }
-    
+
     /**
      * Envoit le packet à tout les joueurs de la map
-     * @param map 
+     *
+     * @param map
      */
-    public void sendToMap(GameMap map){
+    public void sendToMap(GameMap map) {
         sendToMap(map, param);
     }
 
     /**
      * Envoit le packet à tout les joueurs de la map
-     * @param map 
+     *
+     * @param map
      */
-    public void sendToMap(GameMap map, Object param){
+    public void sendToMap(GameMap map, Object param) {
         sendToPlayerList(map.getPlayers().values(), param);
     }
 }

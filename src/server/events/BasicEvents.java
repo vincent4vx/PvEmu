@@ -5,6 +5,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 import jelly.Commands;
 import jelly.Constants;
 import models.Account;
@@ -23,11 +24,11 @@ public class BasicEvents {
 
         dateFormat = new SimpleDateFormat("MM");
         String mois = (Integer.parseInt(dateFormat.format(actDate)) - 1) + "";
-        
-        if(mois.length() < 2){
+
+        if (mois.length() < 2) {
             p.append(0);
         }
-        
+
         p.append(mois).append("|");
 
         dateFormat = new SimpleDateFormat("dd");
@@ -41,17 +42,17 @@ public class BasicEvents {
         GamePacketEnum.BASIC_DATE.send(session, p.toString());
         GamePacketEnum.BASIC_TIME.send(session, String.valueOf(actDate.getTime() + 3600000));
     }
-    
-    public static void onMessage(IoSession session, String packet){
-        Player p = (Player)session.getAttribute("player");
-        
-        if(p == null){
+
+    public static void onMessage(IoSession session, String packet) {
+        Player p = (Player) session.getAttribute("player");
+
+        if (p == null) {
             return;
         }
-        
+
         String[] args = packet.split("\\|");
-        
-        switch(args[0]){
+
+        switch (args[0]) {
             case "*": //canal noir (map)
                 StringBuilder b = new StringBuilder();
                 b.append("|").append(p.getID()).append("|").append(p.getName()).append("|").append(args[1]);
@@ -60,28 +61,29 @@ public class BasicEvents {
                 break;
         }
     }
-    
-    public static void onAdminCommand(IoSession session, String command){
-        Account acc = (Account)session.getAttribute("account");
-        
-        if(acc == null){
+
+    public static void onAdminCommand(IoSession session, String command) {
+        Account acc = (Account) session.getAttribute("account");
+
+        if (acc == null) {
             session.close(false);
             return;
         }
-        
-        Commands.exec(command, acc.level, session);
+
+        String msg = Commands.exec(command, acc.level, session);
+        //GamePacketEnum.BASIC_CONSOLE_WRITE.send(session, msg);
     }
-    
-    public static void onServerMessage(IoSession session, String message, Collection<Player> players){
+
+    public static void onServerMessage(IoSession session, String message, Collection<Player> players) {
         String name = "Système";
-        
-        if(session != null){
-            Player p = (Player)session.getAttribute("player");
-            if(p != null){
+
+        if (session != null) {
+            Player p = (Player) session.getAttribute("player");
+            if (p != null) {
                 name = p.getName();
             }
         }
-        
+
         String msg = String.format("<font color='#%s'><b>[%s]</b> %s</font>", Constants.COLOR_RED, name, message);
         GamePacketEnum.SERVER_MESSAGE.sendToPlayerList(players, msg);
     }

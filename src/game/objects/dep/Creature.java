@@ -42,15 +42,16 @@ public abstract class Creature {
 
     /**
      * Retourne l'initiative
-     * @return 
+     *
+     * @return
      */
     public int getInitiative() {
         int fact = 4;
         int pvmax = 100;
         int pv = 100;
         /*if (_classe == Constants.CLASS_SACRIEUR) {
-            fact = 8;
-        }*/
+         fact = 8;
+         }*/
         double coef = pvmax / fact;
 
         coef += getTotalStats().get(Element.INIT);
@@ -68,16 +69,16 @@ public abstract class Creature {
         }
         return init;
     }
-    
-    public int getLevel(){
+
+    public int getLevel() {
         return level;
     }
-    
-    public int getGfxID(){
+
+    public int getGfxID() {
         return gfxID;
     }
-    
-    public String[] getColors(){
+
+    public String[] getColors() {
         return colors;
     }
 }

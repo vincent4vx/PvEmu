@@ -2,9 +2,11 @@ package server.realm;
 
 import jelly.Config;
 import jelly.Constants;
+import jelly.Jelly;
 import org.apache.mina.core.session.IoSession;
 
 public enum RealmPacketEnum {
+
     /**
      * Packet contenant la hash key
      */
@@ -42,8 +44,7 @@ public enum RealmPacketEnum {
      */
     HOSTS_LIST("AH", "1;1;110;1"),
     /**
-     * Login confirmé
-     * Paramètre : admin level
+     * Login confirmé Paramètre : admin level
      */
     LOGIN_OK("AlK"),
     /**
@@ -53,36 +54,42 @@ public enum RealmPacketEnum {
     /**
      * Sélection du serveur de jeu (avant co au game)
      */
-    SELECT_SERVER("AYK")
-    ;
-    
+    SELECT_SERVER("AYK"),;
     private String packet;
     private String param;
-    
-    RealmPacketEnum(String packet){
+
+    RealmPacketEnum(String packet) {
         this.packet = packet;
         this.param = "";
     }
-    
-    RealmPacketEnum(String packet, String param){
+
+    RealmPacketEnum(String packet, String param) {
         this.packet = packet;
         this.param = param;
     }
-    
+
     /**
      * Envoit le packet avec des parametres
+     *
      * @param session
-     * @param param 
+     * @param param
      */
-    public void send(IoSession session, String param){
+    public void send(IoSession session, String param) {
+        if (!Jelly.running) {
+            return;
+        }
         session.write(packet + param);
     }
-    
+
     /**
      * Envoit le packet avec les paramatres par défaut
-     * @param session 
+     *
+     * @param session
      */
-    public void send(IoSession session){
+    public void send(IoSession session) {
+        if (!Jelly.running) {
+            return;
+        }
         session.write(packet + param);
     }
 }
