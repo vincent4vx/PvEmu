@@ -70,22 +70,30 @@ public class BasicEvents {
             session.close(false);
             return;
         }
+        
+        if(acc.level < 1){
+            return;
+        }
 
-        String ret = Commands.exec(command, acc.level, session);
-        for (String msg : ret.split("\n")) {
-            if (msg.isEmpty()) {
+        Commands.exec(command, acc.level, session);
+    }
+    
+    public static void onWriteConsole(IoSession session, String msg){
+        for (String line : msg.split("\n")) {
+            if (line.isEmpty()) {
                 break;
             }
 
-            for (int i = 0; i < msg.length(); i += 150) {
+            for (int i = 0; i < line.length(); i += 150) {
                 int endIndex = i + 150;
-                if (msg.length() < endIndex) {
-                    endIndex = msg.length();
+                if (line.length() < endIndex) {
+                    endIndex = line.length();
                 }
-                String submsg = msg.substring(i, endIndex).trim();
+                String submsg = line.substring(i, endIndex).trim();
                 GamePacketEnum.BASIC_CONSOLE_WRITE.send(session, submsg);
             }
         }
+        
     }
 
     public static void onServerMessage(IoSession session, String message, Collection<Player> players) {

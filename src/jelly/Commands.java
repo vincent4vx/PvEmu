@@ -5,11 +5,17 @@ import game.objects.GameMap;
 import game.objects.Player;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jelly.Shell.GraphicRenditionEnum;
 import org.apache.mina.core.session.IoSession;
 import server.events.BasicEvents;
 
 public class Commands {
+    private final static ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     /**
      * Analyse puis exécute la (ou les) commandes d'une console admin
@@ -18,26 +24,29 @@ public class Commands {
      * @param level
      * @param session
      */
-    public static String exec(String line, byte level, IoSession session) {
-        StringBuilder ret = new StringBuilder();
-        for (String data : line.split("&&")) {
-            ret.append(parseCommand(data, level, session)).append('\n');
+    public static void exec(String line, final byte level, final IoSession session) {
+        for (final String data : line.split("&&")) {
+            pool.execute(new Runnable(){
+                @Override
+                public void run(){
+                    parseCommand(data, level, session);
+                }
+            });
         }
-        return ret.toString();
     }
 
-//    /**
-//     * Analyse la (ou les) commandes du shell et execution args
-//     *
-//     * @param line
-//     */
-//    public static void exec(String line, IoSession session) {
-//        for (String data : line.split("&&")) {
-//            String msg = parseCommand(data, (byte) 256, session);
-//            System.out.println(msg);
-//        }
-//    }
-    private static String parseCommand(String command_data, byte lvl, IoSession session) {
+    /**
+     * Analyse la (ou les) commandes du shell et execution args
+     *
+     * @param line
+     */
+    public static void exec(String line) {
+        for (String data : line.split("&&")) {
+            parseCommand(data, (byte) 256, null);
+        }
+    }
+    
+    private static void parseCommand(String command_data, byte lvl, IoSession session) {
         String[] arr = command_data.trim().split(" +", 2);
         String[] arr2 = {};
         if (arr.length > 1) {
@@ -49,31 +58,48 @@ public class Commands {
             System.arraycopy(arr2, 0, argv, 1, arr2.length);
         }
 
-        return process(arr[0].toLowerCase().trim(), argv.length - 1, argv, lvl, session);
+        process(arr[0].toLowerCase().trim(), argv.length - 1, argv, lvl, session);
     }
 
-    private static String process(String command, int argc, String[] argv, byte lvl, IoSession session) {
+    private static void process(String command, int argc, String[] argv, byte lvl, IoSession session) {
         if ((lvl >= 4)) {
-            return process_lvl4(command, argc, argv, session);
+            process_lvl4(command, argc, argv, session);
         } else if (lvl == 3) {
-            return process_lvl3(command, argc, argv, session);
+            process_lvl3(command, argc, argv, session);
         } else if (lvl == 2) {
-            return process_lvl2(command, argc, argv, session);
+            process_lvl2(command, argc, argv, session);
         } else if (lvl == 1) {
-            return process_lvl1(command, argc, argv, session);
+            process_lvl1(command, argc, argv, session);
         }
-        return "";
     }
 
-    private static String process_lvl1(String command, int argc, String[] argv, IoSession session) {
+    private static void process_lvl1(String command, int argc, String[] argv, IoSession session) {
         switch (command) {
             case "echo":
-                return argv[0];
+                display(argv[0], session);
+                break;
+            case "tic":
+                int turn = 1;
+                if(argc > 0){
+                    turn = Integer.parseInt(argv[1]);
+                }
+                for(int i = 0; i < turn; i++){
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {}
+                    if(i % 2 == 0){
+                        display("tac (" + i + ")", session);
+                    }else{
+                        display("tic (" + i + ")", session);
+                    }
+                }
+                break;
             case "@":
             case "msg":
             case "pm":
                 if (argc < 2) {
-                    return "Nombre d'arguments invalide !";
+                    display("Nombre d'arguments invalide !", session);
+                    return;
                 }
                 StringBuilder message = new StringBuilder();
 
@@ -83,60 +109,68 @@ public class Commands {
 
                 AtomicReference<String> err = new AtomicReference<>();
                 BasicEvents.onServerMessage(session, message.toString(), getPlayers(argv[1], session, err));
-                return err.get();
+                display(err.get(), session);
+                break;
             case "map": //alias de @ #map msg
-                return parseCommand("@ #map " + argv[0], (byte) 1, session);
+                parseCommand("@ #map " + argv[0], (byte) 1, session);
+                break;
             case "all": //alias de @ #all msg
-                return parseCommand("@ #all " + argv[0], (byte) 1, session);
+                parseCommand("@ #all " + argv[0], (byte) 1, session);
+                break;
+            default:
+                display("Commande invalide !", session);
         }
-        return "Commande invalide !";
     }
 
-    private static String process_lvl2(String command, int argc, String[] argv, IoSession session) {
+    private static void process_lvl2(String command, int argc, String[] argv, IoSession session) {
         switch (command) {
+            default:
+                process_lvl1(command, argc, argv, session);
         }
-        return process_lvl1(command, argc, argv, session);
     }
 
-    private static String process_lvl3(String command, int argc, String[] argv, IoSession session) {
+    private static void process_lvl3(String command, int argc, String[] argv, IoSession session) {
         switch (command) {
+            default:
+                process_lvl2(command, argc, argv, session);
         }
-        return process_lvl2(command, argc, argv, session);
     }
 
-    private static String process_lvl4(String command, int argc, String[] argv, IoSession session) {
+    private static void process_lvl4(String command, int argc, String[] argv, IoSession session) {
         switch (command) {
             case "set":
             case "configure":
                 if (argc < 2) {
-                    return "Nombre d'arguments invalides !";
+                    display("Nombre d'arguments invalides !", session);
+                    return;
                 }
                 Config.set(argv[1], argv[2]);
-                return "Configuration sauvegardé. Pour appliquer la modification, veuillez lancer <b>reload config</b>";
+                display("Configuration sauvegardé. Pour appliquer la modification, veuillez lancer <b>reload config</b>", session);
+                break;
             case "debug":
-                if (argc < 1) {
-                    if (Jelly.DEBUG) {
-                        Jelly.DEBUG = false;
-                        return "Mode débug désactivé !";
-                    } else {
-                        Jelly.DEBUG = true;
-                        return "Mode débug activé !";
-                    }
-                }
                 switch (argv[0].toLowerCase()) {
                     case "on":
                     case "true":
                     case "yes":
                     case "oui":
                         Jelly.DEBUG = true;
-                        return "Mode débug activé !";
                     case "off":
                     case "no":
                     case "false":
                     case "non":
                         Jelly.DEBUG = false;
-                        return "Mode débug désactivé !";
+                    case "":
+                        Jelly.DEBUG = !Jelly.DEBUG;
+                        break;
+                    default:
+                        display("argument invalide : Il doit être un booléen !", session);
                 }
+                String msg = "Mode DEBUG activé !";
+                if(!Jelly.DEBUG){
+                    msg = "Mode DEBUG désactivé !";
+                }
+                display(msg, session);
+                Shell.println(msg, GraphicRenditionEnum.GREEN);
                 break;
             case "exit": //arrêt forcé du serveur
             case "quit":
@@ -144,10 +178,11 @@ public class Commands {
                     session.close(true);
                 }
                 System.exit(0);
-                return "";
+                break;
             case "send":
                 if (argc < 2) {
-                    return "Nombre d'arguments invalides !";
+                    display("Nombre d'arguments invalides !", session);
+                    return;
                 }
                 AtomicReference<String> errors = new AtomicReference<>();
                 StringBuilder ret = new StringBuilder();
@@ -157,9 +192,12 @@ public class Commands {
                         P.getSession().write(argv[2].replace("&nbsp;", " "));
                     }
                 }
-                return errors + ret.toString();
+                display(errors.get(), session);
+                display(ret.toString(), session);
+                break;
+            default:
+        process_lvl3(command, argc, argv, session);
         }
-        return process_lvl3(command, argc, argv, session);
     }
 
     private static Collection<Player> getPlayers(String identifier, IoSession session, AtomicReference<String> errors) {
@@ -243,5 +281,13 @@ public class Commands {
         errors.set(err.toString());
 
         return players;
+    }
+    
+    private static void display(String msg, IoSession session){
+        if(session != null && session.containsAttribute("player")){
+            BasicEvents.onWriteConsole(session, msg);
+        }else{
+            Shell.println(msg, GraphicRenditionEnum.GREEN);
+        }
     }
 }
