@@ -1,11 +1,15 @@
 package game.objects;
 
+import game.objects.dep.ItemStats;
 import game.objects.dep.ClassData;
 import game.objects.dep.Creature;
 import game.objects.dep.Stats.Element;
+import java.util.Collection;
+import java.util.HashMap;
 import jelly.Utils;
 import models.Account;
 import models.Character;
+import models.Inventory;
 import models.MapModel;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
@@ -23,6 +27,7 @@ public class Player extends Creature {
     private String chanels = "*#$:?i^!%";
     private Account _account;
     public int orientation = 2;
+    private HashMap<ItemStats, GameItem> inventory = new HashMap<>();
 
     public Player(Character c) {
         _character = c;
@@ -48,7 +53,14 @@ public class Player extends Creature {
 
         _account = DAOFactory.account().getById(_character.accountId);
 
+        loadInventory();
         loadStats();
+    }
+    
+    private void loadInventory(){
+        for(Inventory I : DAOFactory.inventory().getByPlayerId(id)){
+            inventory.put(I.getItemStats(), I.getGameItem());
+        }
     }
 
     /**
@@ -290,5 +302,13 @@ public class Player extends Creature {
         pods += getTotalStats().get(Element.FORCE) * 5;
 
         return pods;
+    }
+    
+    /**
+     * Retourne tout les items du joueur
+     * @return 
+     */
+    public Collection<GameItem> getInventory(){
+        return inventory.values();
     }
 }

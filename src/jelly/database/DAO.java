@@ -18,6 +18,14 @@ public abstract class DAO<T extends Model> {
 
     protected abstract T createByResultSet(ResultSet RS);
 
+    /**
+     * Cherche un élément par sa clé primaire.
+     * Ne pas utiliser directement, car n'enregistre pas les résultat
+     * @param pk
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public T find(int pk) {
         if (primaryKey().isEmpty()) {
             return null;

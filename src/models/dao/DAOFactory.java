@@ -6,6 +6,8 @@ public class DAOFactory {
     private static CharacterDAO player = null;
     private static MapDAO map = null;
     private static TriggerDAO trigger = null;
+    private static InventoryDAO inventory = null;
+    private static ItemTemplateDAO item = null;
 
     public static AccountDAO account() {
         if (account == null) {
@@ -33,5 +35,19 @@ public class DAOFactory {
             trigger = new TriggerDAO();
         }
         return trigger;
+    }
+    
+    public static InventoryDAO inventory(){
+        if(inventory == null){
+            inventory = new InventoryDAO();
+        }
+        return inventory;
+    }
+    
+    public static ItemTemplateDAO item(){
+        if(item == null){
+            item = new ItemTemplateDAO();
+        }
+        return item;
     }
 }

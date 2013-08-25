@@ -1,11 +1,13 @@
 package game.objects.dep;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import jelly.Shell;
 import jelly.Shell.GraphicRenditionEnum;
 
-public class Stats {
+public class Stats{
 
     public enum Element {
         //basiques
@@ -133,6 +135,14 @@ public class Stats {
     public int get(int elemId) {
         Element e = intToElement.get(elemId);
         return get(e);
+    }
+    
+    /**
+     * Retourne toute les stats, pour for-each
+     * @return 
+     */
+    public Set<Entry<Element, Integer>> getAll(){
+        return stats.entrySet();
     }
 
     public static void loadElements() {

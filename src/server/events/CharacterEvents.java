@@ -1,6 +1,7 @@
 package server.events;
 
 import game.World;
+import game.objects.GameItem;
 import game.objects.Player;
 import game.objects.dep.ClassData;
 import jelly.Config;
@@ -28,12 +29,17 @@ public class CharacterEvents {
 
             World.addOnline(chr.getPlayer());
 
+            //génération du packet ASK
             StringBuilder param = new StringBuilder();
 
             param.append(chr.id).append("|").append(chr.name).append("|")
                     .append(chr.level).append("|").append(chr.classId).append("|")
                     .append(chr.sexe).append("|").append(chr.gfxid).append("|")
                     .append(Utils.implode("|", chr.getPlayer().getColors())).append("|");
+            
+            for(GameItem GI : chr.getPlayer().getInventory()){
+                param.append(GI.toString()).append(';');
+            }
 
             GamePacketEnum.SELECT_CHARACTER_OK.send(session, param.toString());
         } catch (Exception e) {

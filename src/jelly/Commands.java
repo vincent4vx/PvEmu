@@ -8,8 +8,6 @@ import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jelly.Shell.GraphicRenditionEnum;
 import org.apache.mina.core.session.IoSession;
 import server.events.BasicEvents;
