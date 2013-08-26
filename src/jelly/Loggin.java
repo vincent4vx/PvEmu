@@ -1,5 +1,7 @@
 package jelly;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Level;
@@ -13,8 +15,10 @@ public class Loggin {
     private final static Loggin self = new Loggin();
     private Logger realm;
     private Logger game;
+    private Logger errors;
     private StreamHandler realm_handler;
     private StreamHandler game_handler;
+    private StreamHandler errors_handler;
 
     private Loggin() {
         try {
@@ -27,9 +31,17 @@ public class Loggin {
 
             game = Logger.getLogger("Game");
             game.addHandler(new FileHandler("game.log"));
+            
             game_handler = new StreamHandler(Shell.out(), new ConsoleFormatter());
             game.addHandler(game_handler);
             game.setUseParentHandlers(false);
+            
+            errors = Logger.getLogger("Errors");
+            errors.addHandler(new FileHandler("errors.log"));
+            
+            errors_handler = new StreamHandler(Shell.out(), new ErrorsFormatter());
+            errors.addHandler(errors_handler);
+            errors.setUseParentHandlers(false);
         } catch (Exception e) {
         }
     }
@@ -130,6 +142,16 @@ public class Loggin {
         self.game.log(lvl, format, args);
         self.game_handler.flush();
     }
+    
+    /**
+     * log pour erreurs autre que Game et Realm
+     * @param msg
+     * @param ex 
+     */
+    public static void error(String msg, Throwable ex){
+        self.errors.log(Level.WARNING, msg, ex);
+        self.errors_handler.flush();
+    }
 
     private static class ConsoleFormatter extends Formatter {
 
@@ -161,5 +183,33 @@ public class Loggin {
 
             return msg.toString();
         }
+    }
+    
+    /**
+     * Utilisé uniquement par le logger d'erreurs
+     */
+    private static class ErrorsFormatter extends Formatter{
+
+        @Override
+        public String format(LogRecord record) {
+            StringBuilder msg = new StringBuilder();
+            
+            msg.append(Shell.generateAnsiCode("[Error] ", GraphicRenditionEnum.RED, GraphicRenditionEnum.BOLD));
+            String className = record.getThrown().getStackTrace()[0].getClassName();
+            msg.append(' ').append(Shell.generateAnsiCode(className, GraphicRenditionEnum.YELLOW)).append(" : ");
+            msg.append(record.getMessage()).append('\n');
+            
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            
+            record.getThrown().printStackTrace(pw);
+            
+            String trace = sw.toString();
+            
+            msg.append(Shell.generateAnsiCode(trace, GraphicRenditionEnum.RED));
+            
+            return msg.toString();
+        }
+        
     }
 }
