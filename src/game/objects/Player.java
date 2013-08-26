@@ -9,7 +9,7 @@ import java.util.HashMap;
 import jelly.Utils;
 import models.Account;
 import models.Character;
-import models.Inventory;
+import models.InventoryEntry;
 import models.MapModel;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
@@ -27,7 +27,18 @@ public class Player extends Creature {
     private String chanels = "*#$:?i^!%";
     private Account _account;
     public int orientation = 2;
-    private HashMap<ItemStats, GameItem> inventory = new HashMap<>();
+    /**
+     * Liste des items par id
+     */
+    private HashMap<Integer, GameItem> inventory = new HashMap<>();
+    /**
+     * Liste des items par itemStats
+     */
+    private HashMap<ItemStats, GameItem> itemsByStats = new HashMap<>();
+    /**
+     * équipements portés Position => Item
+     */
+    private HashMap<Byte, GameItem> wornItems = new HashMap<>();
 
     public Player(Character c) {
         _character = c;
@@ -56,11 +67,124 @@ public class Player extends Creature {
         loadInventory();
         loadStats();
     }
-    
-    private void loadInventory(){
-        for(Inventory I : DAOFactory.inventory().getByPlayerId(id)){
-            inventory.put(I.getItemStats(), I.getGameItem());
+
+    private void loadInventory() {
+        for (InventoryEntry I : DAOFactory.inventory().getByPlayerId(id)) {
+            GameItem GI = I.getGameItem();
+            inventory.put(I.id, GI);
+            itemsByStats.put(GI.getItemStats(), GI);
+
+            if (I.position != -1) { //si équipé
+                if (!GI.canMove(I.position)) { //si impossible à équiper on remet dans inventaire
+                    I.position = -1;
+                    DAOFactory.inventory().update(I);
+                    continue;
+                }
+                if (!GI.isWearable()) {//si ce n'est pa un équipement
+                    continue; 
+                }
+                if (I.qu > 1) { //si + de 1
+                    int qu = I.qu - 1;
+                    I.qu = 1;
+                    addItem(I.getItemStats(), qu); //on les remet dans l'inventaire "normal"
+                    DAOFactory.inventory().update(I); //on save
+                }
+                wornItems.put(I.position, GI);
+            }
         }
+    }
+
+    /**
+     * Ajoute un item à l'inventaire (position -1)
+     *
+     * @param item
+     * @param qu
+     */
+    public void addItem(ItemStats item, int qu) {
+        if (item == null || qu < 1) {
+            return;
+        }
+        if (itemsByStats.containsKey(item)) { //item existe déjà, on augemente le nombre
+            itemsByStats.get(item).getInventory().qu += qu;
+            DAOFactory.inventory().update(itemsByStats.get(item).getInventory());
+        } else { //sinon, on crée les new objects
+            GameItem GI = new GameItem(this, item, qu);
+            itemsByStats.put(item, GI);
+            inventory.put(GI.getID(), GI);
+        }
+    }
+
+    /**
+     * Déplace un item (packet Object Move)
+     * @param id
+     * @param qu
+     * @param pos
+     * @return 
+     */
+    public boolean moveItem(int id, int qu, byte pos) {
+        if (qu < 1) {
+            return false;
+        }
+        if (!inventory.containsKey(id)) { //on n'a pas l'item dans son inventaire
+            return false;
+        }
+        GameItem GI = inventory.get(id);
+        InventoryEntry I = GI.getInventory();
+        if (!GI.canMove(pos)) {
+            return false;
+        }
+        if (qu > I.qu) {
+            qu = I.qu;
+        }
+        if (qu == I.qu) { //si même qu, on déplace tout
+            moveGameItem(GI, pos);
+            return true;
+        }
+        GameItem nGI = new GameItem(this, GI.getItemStats(), qu); //on crée nouveau GameItem
+        I.qu -= qu;
+        DAOFactory.inventory().update(I);
+        moveGameItem(nGI, pos); //on déplace
+        return true;
+    }
+
+    /**
+     * Déplace un GameItem (TOUT les items qu'il comporte)
+     * @param GI
+     * @param pos 
+     */
+    public void moveGameItem(GameItem GI, byte pos) {
+        if(GI == null){
+            return;
+        }
+        if (!GI.canMove(pos)) {
+            return;
+        }
+        GI.move(pos);
+        if(GI.isWearable() && pos != -1){ //si on veut l'équiper
+            if(GI.getInventory().qu > 1){ //si on veut en équiper plus de 1, impossible
+                return;
+            }
+            moveGameItem(wornItems.get(pos), (byte)-1); //met l'ancien équipement dans l'inventaire
+            wornItems.put(pos, GI);
+        }
+        if (itemsByStats.containsKey(GI.getItemStats())){ //si existe déjà un item similaire
+            addItem(GI.getItemStats(), GI.getInventory().qu); //on ajoute à l'inventaire
+            deleteGameItem(GI); //on supprime l'ancien item
+        }
+    }
+
+    /**
+     * Supprime proprement le GameItem
+     *
+     * @param GI
+     */
+    public void deleteGameItem(GameItem GI) {
+        inventory.remove(GI.getID());
+        itemsByStats.remove(GI.getItemStats());
+        if(wornItems.get(GI.getInventory().position) == GI){ //si équipement porté
+            wornItems.remove(GI.getInventory().position);
+        }
+        GI.delete();
     }
 
     /**
@@ -130,7 +254,7 @@ public class Player extends Creature {
         StringBuilder ASData = new StringBuilder();
         ASData.append("0,0").append("|");
         ASData.append(0).append("|").append(0).append("|").append(0).append("|");
-        ASData.append(0).append("~").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0 + ",").append((false ? "1" : "0")).append("|");
+        ASData.append(0).append("~").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append((false ? "1" : "0")).append("|");
         int pdv = 100;
         int pdvMax = 100;
 
@@ -303,12 +427,21 @@ public class Player extends Creature {
 
         return pods;
     }
-    
+
+    public int getUsedPods() {
+        int pods = 0;
+        for (GameItem GI : inventory.values()) {
+            pods += GI.getPods();
+        }
+        return pods;
+    }
+
     /**
      * Retourne tout les items du joueur
-     * @return 
+     *
+     * @return
      */
-    public Collection<GameItem> getInventory(){
+    public Collection<GameItem> getInventory() {
         return inventory.values();
     }
 }

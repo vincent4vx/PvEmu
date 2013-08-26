@@ -19,8 +19,8 @@ public abstract class MinaIoHandler extends IoHandlerAdapter {
     }
 
     @Override
-    public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-        cause.printStackTrace();
+    public final void exceptionCaught(IoSession session, Throwable cause) throws Exception {
+        Loggin.error(cause.getMessage(), cause);
         session.close(true);
     }
 

@@ -6,24 +6,26 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import jelly.Loggin;
 import jelly.database.DAO;
 import jelly.database.Database;
-import models.Inventory;
+import models.InventoryEntry;
 
-public class InventoryDAO extends DAO<Inventory> {
+public class InventoryDAO extends DAO<InventoryEntry> {
     
     private PreparedStatement getByPlayerId = null;
     private PreparedStatement createStatement = null;
+    private PreparedStatement updateStatement = null;
 
     @Override
     protected String tableName() {
-        return "inventory";
+        return "inventory_entries";
     }
 
     @Override
-    protected Inventory createByResultSet(ResultSet RS) {
+    protected InventoryEntry createByResultSet(ResultSet RS) {
         try {
-            Inventory I = new Inventory();
+            InventoryEntry I = new InventoryEntry();
             
             I.id = RS.getInt("id");
             I.item_id = RS.getInt("item_id");
@@ -35,7 +37,7 @@ public class InventoryDAO extends DAO<Inventory> {
             
             return I;
         } catch (SQLException ex) {
-            Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Impossible de charge l'item en inventaire", ex);
+            Loggin.error("Impossible de charger l'iventaire !", ex);
             return null;
         }
     }
@@ -45,11 +47,11 @@ public class InventoryDAO extends DAO<Inventory> {
      * @param id
      * @return 
      */
-    public ArrayList<Inventory> getByPlayerId(int id){
-        ArrayList<Inventory> list = new ArrayList<>();
+    public ArrayList<InventoryEntry> getByPlayerId(int id){
+        ArrayList<InventoryEntry> list = new ArrayList<>();
         
         if(getByPlayerId == null){
-            getByPlayerId = Database.prepare("SELECT * FROM inventory WHERE owner = ? AND owner_type = 1");
+            getByPlayerId = Database.prepare("SELECT * FROM inventory_entries WHERE owner = ? AND owner_type = 1");
         }
         try {
             getByPlayerId.setInt(1, id);
@@ -57,24 +59,47 @@ public class InventoryDAO extends DAO<Inventory> {
             ResultSet RS = getByPlayerId.executeQuery();
             
             while(RS.next()){
-                list.add(createByResultSet(RS));
+                InventoryEntry I = createByResultSet(RS);
+                if(I == null){
+                    continue;
+                }
+                if(I.qu < 1){
+                    delete(I);
+                    continue;
+                }
+                list.add(I);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Loggin.error("Impossible de charger l'inventaire de " + id, ex);
         }
         
         return list;
     }
 
     @Override
-    public boolean update(Inventory obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean update(InventoryEntry obj) {
+        try {
+            if(updateStatement == null){
+                updateStatement = Database.prepare("UPDATE inventory_entries SET position = ?, qu = ?, stats = ? WHERE id = ?");
+            }
+            
+            updateStatement.setByte(1, obj.position);
+            updateStatement.setInt(2, obj.qu);
+            updateStatement.setString(3, obj.stats);
+            updateStatement.setInt(4, obj.id);
+            
+            return updateStatement.execute();
+        } catch (SQLException ex) {
+            Loggin.error("Impossible d'enregistrer l'item !", ex);
+            return false;
+        }
+        
     }
 
     @Override
-    public boolean create(Inventory obj) {
+    public boolean create(InventoryEntry obj) {
         if(createStatement == null){
-            createStatement = Database.prepareInsert("INSERT INTO inventory(item_id, owner, owner_type, position, stats, qu) VALUES(?,?,?,?,?,?)");
+            createStatement = Database.prepareInsert("INSERT INTO inventory_entries(item_id, owner, owner_type, position, stats, qu) VALUES(?,?,?,?,?,?)");
         }
         try {
             createStatement.setInt(1, obj.item_id);
@@ -98,7 +123,7 @@ public class InventoryDAO extends DAO<Inventory> {
             return true;
             
         } catch (SQLException ex) {
-            Logger.getLogger(InventoryDAO.class.getName()).log(Level.SEVERE, "Enregistrement impossible de l'item dans la dbb", ex);
+            Loggin.error("Enregistrement impossible de l'item dans la dbb", ex);
             return false;
         }
     }

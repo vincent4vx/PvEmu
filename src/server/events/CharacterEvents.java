@@ -59,7 +59,7 @@ public class CharacterEvents {
 
         GamePacketEnum.GAME_CREATE_OK.send(session, p.getName());
         GamePacketEnum.STATS_PACKET.send(session, p.getStatsPacket());
-        b.append(0).append("|").append(p.getTotalPods());
+        b.append(p.getUsedPods()).append("|").append(p.getTotalPods());
         GamePacketEnum.OBJECTS_WEIGHT.send(session, b.toString());
         GamePacketEnum.CHAT_CHANEL_ADD.send(session, p.getChanels());
         MapEvents.onArrivedInGame(session);

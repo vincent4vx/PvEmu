@@ -3,13 +3,14 @@ package game.objects.dep;
 import java.util.Map.Entry;
 import java.util.Objects;
 import jelly.Utils;
-import models.Inventory;
+import models.InventoryEntry;
 import models.ItemTemplate;
 import models.dao.DAOFactory;
 
 public class ItemStats {
     private Stats stats = new Stats();
     private ItemTemplate _template;
+    private byte position = -1;
     
     public ItemStats(ItemTemplate T, boolean useMax){
         _template = T;
@@ -20,8 +21,9 @@ public class ItemStats {
         this(T, false);
     }
     
-    public ItemStats(Inventory I){
+    public ItemStats(InventoryEntry I){
         _template = DAOFactory.item().getById(I.item_id);
+        position = I.position;
         parseStats(I.stats, false);
     }
     
@@ -46,7 +48,7 @@ public class ItemStats {
     
     @Override
     public int hashCode(){
-        return stats.hashCode() + _template.hashCode();
+        return position + stats.hashCode() + _template.hashCode();
     }
 
     @Override
@@ -58,6 +60,9 @@ public class ItemStats {
             return false;
         }
         final ItemStats other = (ItemStats) obj;
+        if(other.position != position){
+            return false;
+        }
         if (!Objects.equals(this.stats, other.stats)) {
             return false;
         }
@@ -96,5 +101,14 @@ public class ItemStats {
         }
         
         return s.toString();
+    }
+    
+    /**
+     * Appelé en cas de GameItem.move
+     * Ne pas utiliser directement !
+     * @param pos 
+     */
+    public void setPosition(byte pos){
+        position = pos;
     }
 }

@@ -4,7 +4,7 @@ import game.objects.GameItem;
 import game.objects.dep.ItemStats;
 import jelly.database.Model;
 
-public class Inventory implements Model {
+public class InventoryEntry implements Model {
     public int id;
     public int item_id;
     public byte position;
@@ -15,12 +15,18 @@ public class Inventory implements Model {
     
     public static final byte OWNER_PLAYER = 1;
     
+    private GameItem gameItem = null;
+    private ItemStats itemStats = null;
+    
     /**
      * génère l'item
      * @return 
      */
     public ItemStats getItemStats(){
-        return new ItemStats(this);
+        if(itemStats == null){
+            itemStats = new ItemStats(this);
+        }
+        return itemStats;
     }
     
     /**
@@ -28,7 +34,10 @@ public class Inventory implements Model {
      * @return 
      */
     public GameItem getGameItem(){
-        return new GameItem(this);
+        if(gameItem == null){
+            gameItem = new GameItem(this);
+        }
+        return gameItem;
     }
     
     @Override
@@ -38,7 +47,13 @@ public class Inventory implements Model {
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        id = 0;
+        item_id = 0;
+        position = -1;
+        owner = 0;
+        owner_type = 0;
+        stats = null;
+        qu = 0;
     }
     
 }
