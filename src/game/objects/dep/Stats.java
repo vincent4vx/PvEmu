@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import jelly.Loggin;
 import jelly.Shell;
 import jelly.Shell.GraphicRenditionEnum;
 
@@ -101,13 +102,15 @@ public class Stats{
      * @return
      */
     public Stats add(int elemId, int qu) {
-        Element e = intToElement.get(qu);
+        Element e = intToElement.get(elemId);
 
         if (e != null) {
             if (e.isRemove(elemId)) {
                 qu = -qu;
             }
             add(e, qu);
+        }else{
+            Loggin.debug("Element inconnue : %d", elemId);
         }
 
         return this;
