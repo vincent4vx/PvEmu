@@ -110,6 +110,13 @@ public class GameIoHandler extends MinaIoHandler {
                             break;
                     }
                     break;
+                case 'O': //objets
+                    switch(packet.charAt(1)){
+                        case 'M': //object move
+                            
+                            break;
+                    }
+                    break;
                 case 'p':
                     GamePacketEnum.PONG.send(session);
                     break;
