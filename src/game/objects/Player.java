@@ -6,6 +6,7 @@ import game.objects.dep.Creature;
 import game.objects.dep.Stats.Element;
 import java.util.Collection;
 import java.util.HashMap;
+import jelly.Loggin;
 import jelly.Utils;
 import models.Account;
 import models.Character;
@@ -85,9 +86,8 @@ public class Player extends Creature {
                 }
                 if (I.qu > 1) { //si + de 1
                     int qu = I.qu - 1;
-                    I.qu = 1;
+                    GI.changeQuantity(1, false);
                     addItem(I.getItemStats(), qu); //on les remet dans l'inventaire "normal"
-                    DAOFactory.inventory().update(I); //on save
                 }
                 wornItems.put(I.position, GI);
             }
@@ -105,10 +105,9 @@ public class Player extends Creature {
             return;
         }
         if (itemsByStats.containsKey(item)) { //item existe déjà, on augemente le nombre
-            itemsByStats.get(item).getInventory().qu += qu;
-            DAOFactory.inventory().update(itemsByStats.get(item).getInventory());
+            itemsByStats.get(item).addQuantity(qu, true);
         } else { //sinon, on crée les new objects
-            GameItem GI = new GameItem(this, item, qu);
+            GameItem GI = new GameItem(this, item, qu, (byte)-1);
             itemsByStats.put(item, GI);
             inventory.put(GI.getID(), GI);
         }
@@ -133,17 +132,29 @@ public class Player extends Creature {
         if (!GI.canMove(pos)) {
             return false;
         }
-        if (qu > I.qu) {
+        if (qu > I.qu) { //peu pas déplacer plus que ce que l'on a
             qu = I.qu;
         }
-        if (qu == I.qu) { //si même qu, on déplace tout
-            moveGameItem(GI, pos);
-            return true;
+        if (qu == I.qu) { //si même qu, on déplace tout (pour déséquiper par exemple)
+            return moveGameItem(GI, pos);
         }
-        GameItem nGI = new GameItem(this, GI.getItemStats(), qu); //on crée nouveau GameItem
-        I.qu -= qu;
-        DAOFactory.inventory().update(I);
-        moveGameItem(nGI, pos); //on déplace
+        //sinon faut déplacer manuellement...
+        if(GI.isWearable() && qu > 1){ //si on veut équiper plusieurs fois le même items
+            return false;
+        }
+        if(GI.isWearable() && pos != -1 && wornItems.containsKey(pos)){ //place déjà prise. Le client gère add/remove équip
+            Loggin.debug("GI %d : déjà prise par %d", GI.getID(), wornItems.get(pos).getID());
+            return false;
+        }
+        //sinon crée new GI
+        GameItem nGI = new GameItem(this, GI.getItemStats(), qu, pos);
+        //ajoute l'item
+        if(nGI.isWearable() && pos != -1){ //on équipe
+            wornItems.put(pos, nGI);
+        }
+        inventory.put(nGI.getID(), nGI);
+        itemsByStats.put(nGI.getItemStats(), nGI);
+        GI.changeQuantity(I.qu - qu, true); //on change quantité
         return true;
     }
 
@@ -151,26 +162,38 @@ public class Player extends Creature {
      * Déplace un GameItem (TOUT les items qu'il comporte)
      * @param GI
      * @param pos 
+     * @return false en erreur, true sinon
      */
-    public void moveGameItem(GameItem GI, byte pos) {
+    public boolean moveGameItem(GameItem GI, byte pos) {
         if(GI == null){
-            return;
+            return false;
         }
         if (!GI.canMove(pos)) {
-            return;
+            return false;
         }
-        GI.move(pos);
-        if(GI.isWearable() && pos != -1){ //si on veut l'équiper
-            if(GI.getInventory().qu > 1){ //si on veut en équiper plus de 1, impossible
-                return;
+        if(GI.isWearable()){ //si c'est un équipement
+            if(pos != -1 && GI.getInventory().qu > 1){ //impossible d'équiper 2 fois le même item
+                return false;
+            }else if(pos == -1 && GI.getInventory().position != -1){ //on vire l'équipement
+                wornItems.remove(GI.getInventory().position);
+            }else if(pos != -1 && wornItems.containsKey(pos)){ //place déjà prise
+                return false;
             }
-            moveGameItem(wornItems.get(pos), (byte)-1); //met l'ancien équipement dans l'inventaire
-            wornItems.put(pos, GI);
         }
-        if (itemsByStats.containsKey(GI.getItemStats())){ //si existe déjà un item similaire
-            addItem(GI.getItemStats(), GI.getInventory().qu); //on ajoute à l'inventaire
-            deleteGameItem(GI); //on supprime l'ancien item
+        //vérification OK, on le déplace
+        GameItem oGI = GI.clone(); //clone le GI pour ne pas le modifier
+        ItemStats IS = GI.getItemStats();
+        IS.setPosition(pos);
+        if(itemsByStats.containsKey(IS)){ //si item déjà existant en inventaire
+            System.out.println("ok");
+            int qu = oGI.getInventory().qu;
+            deleteGameItem(oGI); //supprime l'ancien GI (évite duplications)
+            itemsByStats.get(IS).addQuantity(qu, true); //on ajoute la quantité
+            return true;
         }
+        //sinon, simple transfert
+        GI.move(pos);
+        return true;
     }
 
     /**
@@ -179,6 +202,7 @@ public class Player extends Creature {
      * @param GI
      */
     public void deleteGameItem(GameItem GI) {
+        Loggin.debug("Suppression du GI %d", GI.getID());
         inventory.remove(GI.getID());
         itemsByStats.remove(GI.getItemStats());
         if(wornItems.get(GI.getInventory().position) == GI){ //si équipement porté

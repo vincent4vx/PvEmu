@@ -2,15 +2,17 @@ package game.objects.dep;
 
 import java.util.Map.Entry;
 import java.util.Objects;
+import jelly.Loggin;
 import jelly.Utils;
 import models.InventoryEntry;
 import models.ItemTemplate;
 import models.dao.DAOFactory;
 
-public class ItemStats {
+public class ItemStats implements Cloneable {
     private Stats stats = new Stats();
     private ItemTemplate _template;
     private byte position = -1;
+    private String stringStats = null;
     
     public ItemStats(ItemTemplate T, boolean useMax){
         _template = T;
@@ -48,7 +50,7 @@ public class ItemStats {
     
     @Override
     public int hashCode(){
-        return position + stats.hashCode() + _template.hashCode();
+        return position + statsToString().hashCode() + _template.hashCode();
     }
 
     @Override
@@ -63,7 +65,7 @@ public class ItemStats {
         if(other.position != position){
             return false;
         }
-        if (!Objects.equals(this.stats, other.stats)) {
+        if (!Objects.equals(this.statsToString(), other.statsToString())) {
             return false;
         }
         if (!Objects.equals(this._template, other._template)) {
@@ -89,6 +91,10 @@ public class ItemStats {
      * @return 
      */
     public String statsToString(){
+        if(stringStats != null){
+            return stringStats;
+        }
+        
         StringBuilder s = new StringBuilder();
         
         for(Entry<Stats.Element, Integer> curElem : stats.getAll()){
@@ -100,7 +106,7 @@ public class ItemStats {
             s.append(Integer.toHexString(elemID)).append('#').append(Integer.toHexString(jet)).append("#0#0#").append("0d0+").append(jet).append(',');
         }
         
-        return s.toString();
+        return stringStats = s.toString();
     }
     
     /**
@@ -110,5 +116,14 @@ public class ItemStats {
      */
     public void setPosition(byte pos){
         position = pos;
+    }
+    
+    @Override
+    public ItemStats clone(){
+        try {
+            return (ItemStats)super.clone();
+        } catch (CloneNotSupportedException ex) {
+            return null;
+        }
     }
 }

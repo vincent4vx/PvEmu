@@ -48,6 +48,7 @@ public class Database {
         self._autocommit = state;
         try {
             if (state) {
+                Loggin.debug("Commit Database");
                 self.db.commit();
             }
             self.db.setAutoCommit(state);

@@ -113,7 +113,7 @@ public class GameIoHandler extends MinaIoHandler {
                 case 'O': //objets
                     switch(packet.charAt(1)){
                         case 'M': //object move
-                            
+                            ObjectEvents.onObjectMove(session, packet.substring(2));
                             break;
                     }
                     break;

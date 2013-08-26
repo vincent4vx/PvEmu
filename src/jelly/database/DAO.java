@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import jelly.Loggin;
 
 public abstract class DAO<T extends Model> {
 
@@ -47,11 +48,13 @@ public abstract class DAO<T extends Model> {
             ResultSet RS = findStatement.executeQuery();
 
             if (!RS.next()) {
+                Loggin.debug("Impossible de trouver la pk %d dans la table %s", pk, tableName());
                 return null;
             }
 
             return createByResultSet(RS);
         } catch (SQLException e) {
+            Loggin.error("Chargement impossible !", e);
             return null;
         }
     }

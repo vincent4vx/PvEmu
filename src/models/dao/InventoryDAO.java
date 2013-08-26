@@ -120,6 +120,7 @@ public class InventoryDAO extends DAO<InventoryEntry> {
             if(id < 1){
                 return false;
             }
+            obj.id = id; //ne pas oublier ça...
             return true;
             
         } catch (SQLException ex) {

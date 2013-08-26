@@ -3,8 +3,7 @@ package models.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jelly.Loggin;
 import jelly.database.DAO;
 import models.ItemTemplate;
 
@@ -26,12 +25,13 @@ public class ItemTemplateDAO extends DAO<ItemTemplate> {
             T.level = RS.getInt("level");
             T.statsTemplate = RS.getString("statsTemplate");
             T.pods = RS.getInt("pods");
+            T.type = RS.getByte("type");
             
             itemTemplateById.put(T.id, T);
             
             return T;
         } catch (SQLException ex) {
-            Logger.getLogger(ItemTemplateDAO.class.getName()).log(Level.WARNING, "Chargement impossible de l'item", ex);
+            Loggin.error("Chargement impossible de l'item", ex);
             return null;
         }
     }

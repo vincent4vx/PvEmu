@@ -1,10 +1,14 @@
 package game.objects;
 
 import game.objects.dep.ItemStats;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jelly.Loggin;
 import models.InventoryEntry;
 import models.dao.DAOFactory;
+import server.events.ObjectEvents;
 
-public class GameItem {
+public class GameItem implements Cloneable {
 
     //constantes de type
     public static final int TYPE_AMULETTE = 1;
@@ -154,11 +158,18 @@ public class GameItem {
     private InventoryEntry _inventory;
     private ItemStats _itemStats;
     private int id;
+    private Player _owner = null;
 
     public GameItem(InventoryEntry I) {
         _inventory = I;
         _itemStats = I.getItemStats();
         id = I.id;
+    }
+    
+    private void loadOwner(){    
+        if(_inventory.owner_type == 1){
+            _owner = DAOFactory.character().getById(_inventory.owner).getPlayer();
+        }
     }
 
     /**
@@ -168,14 +179,20 @@ public class GameItem {
      * @param stats
      * @param qu
      */
-    public GameItem(Player owner, ItemStats stats, int qu) {
+    public GameItem(Player owner, ItemStats stats, int qu, byte pos) {
+        _owner = owner;
         _inventory = new InventoryEntry();
         _inventory.item_id = stats.getID();
         _inventory.owner = owner.getID();
         _inventory.owner_type = 1;
-        _inventory.position = -1;
+        _inventory.position = pos;
         _inventory.stats = stats.statsToString();
+        _inventory.qu = qu;
         DAOFactory.inventory().create(_inventory);
+        _itemStats = stats;
+        _itemStats.setPosition(pos);
+        id = _inventory.id;
+        ObjectEvents.onAdd(owner.getSession(), this);
     }
 
     public ItemStats getItemStats() {
@@ -287,9 +304,14 @@ public class GameItem {
         if(!canMove(pos)){
             return;
         }
+        Loggin.debug("Move GI %d from %d to %d", id, _inventory.position, pos);
         _inventory.position = pos;
         _itemStats.setPosition(pos);
         DAOFactory.inventory().update(_inventory);
+        if(_owner == null){
+            loadOwner();
+        }
+        ObjectEvents.onMove(_owner.getSession(), this);
     }
     
     /**
@@ -298,6 +320,51 @@ public class GameItem {
     public void delete(){
         DAOFactory.inventory().delete(_inventory);
         _itemStats = null;
+        if(_owner == null){
+            loadOwner();
+        }
+        ObjectEvents.onRemove(_owner.getSession(), id);
         id = 0;
+    }
+    
+    /**
+     * Change la quantité d'objets
+     * @param newQu 
+     */
+    public void changeQuantity(int newQu, boolean sendPacket){
+        _inventory.qu = newQu;
+        DAOFactory.inventory().update(_inventory);
+        
+        if(sendPacket){
+            if(_owner == null){
+                loadOwner();
+            }
+            ObjectEvents.onQuantityChange(_owner.getSession(), this);
+        }
+    }
+    
+    /**
+     * Ajoute des objets
+     * @param qu 
+     */
+    public void addQuantity(int qu, boolean sendPacket){
+        changeQuantity(_inventory.qu + qu, sendPacket);
+    }
+    
+    /**
+     * Clone l'item courrant
+     * @return 
+     */
+    @Override
+    public GameItem clone(){
+        try {
+            GameItem clone = (GameItem)super.clone();
+            clone._itemStats = _itemStats.clone();
+            
+            return clone;
+        } catch (CloneNotSupportedException ex) {
+            Logger.getLogger(GameItem.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 }

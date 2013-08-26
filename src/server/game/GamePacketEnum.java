@@ -126,6 +126,23 @@ public enum GamePacketEnum {
      * Nombre de pods utilisés | pods max
      */
     OBJECTS_WEIGHT("Ow"),
+    /**
+     * Utilisé par onQuantityChange
+     */
+    OBJECT_QUANTITY("OQ"),
+    /**
+     * Ajoute un objet à l'inventaire
+     */
+    OBJECT_ADD_OK("OAKO"),
+    /**
+     * Supprime l'objet de l'inventaire
+     */
+    OBJECT_REMOVE("OR"),
+    /**
+     * Déplace l'objet
+     * [id] | [position]
+     */
+    OBJECT_MOVE("OM"),
     PONG("pong");
     private String packet;
     private Object param;
