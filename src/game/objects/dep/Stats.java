@@ -115,6 +115,19 @@ public class Stats{
 
         return this;
     }
+    
+    /**
+     * Combine deux classes de stats
+     * @param other
+     * @return 
+     */
+    public Stats addAll(Stats other){
+        for(Entry<Element, Integer> entry : other.stats.entrySet()){
+            add(entry.getKey(), entry.getValue());
+        }
+        
+        return this;
+    }
 
     /**
      * Retourne la quatité total de l'élément e

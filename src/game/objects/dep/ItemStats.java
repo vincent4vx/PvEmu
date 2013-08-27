@@ -126,4 +126,12 @@ public class ItemStats implements Cloneable {
             return null;
         }
     }
+    
+    /**
+     * retourne les stats de l'item
+     * @return 
+     */
+    public Stats getStats(){
+        return stats;
+    }
 }

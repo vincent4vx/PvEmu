@@ -3,6 +3,7 @@ package game.objects;
 import game.objects.dep.ItemStats;
 import game.objects.dep.ClassData;
 import game.objects.dep.Creature;
+import game.objects.dep.Stats;
 import game.objects.dep.Stats.Element;
 import java.util.Collection;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ public class Player extends Creature {
      * équipements portés Position => Item
      */
     private HashMap<Byte, GameItem> wornItems = new HashMap<>();
+    private Stats stuffStats = new Stats();
 
     public Player(Character c) {
         _character = c;
@@ -151,6 +153,7 @@ public class Player extends Creature {
         //ajoute l'item
         if(nGI.isWearable() && pos != -1){ //on équipe
             wornItems.put(pos, nGI);
+            loadStuffStats();
         }
         inventory.put(nGI.getID(), nGI);
         itemsByStats.put(nGI.getItemStats(), nGI);
@@ -176,8 +179,13 @@ public class Player extends Creature {
                 return false;
             }else if(pos == -1 && GI.getInventory().position != -1){ //on vire l'équipement
                 wornItems.remove(GI.getInventory().position);
+                loadStuffStats();
             }else if(pos != -1 && wornItems.containsKey(pos)){ //place déjà prise
                 return false;
+            }
+            if(pos != 1){ //on équipe
+                wornItems.put(pos, GI);
+                loadStuffStats();
             }
         }
         //vérification OK, on le déplace
@@ -185,7 +193,6 @@ public class Player extends Creature {
         ItemStats IS = GI.getItemStats();
         IS.setPosition(pos);
         if(itemsByStats.containsKey(IS)){ //si item déjà existant en inventaire
-            System.out.println("ok");
             int qu = oGI.getInventory().qu;
             deleteGameItem(oGI); //supprime l'ancien GI (évite duplications)
             itemsByStats.get(IS).addQuantity(qu, true); //on ajoute la quantité
@@ -207,6 +214,7 @@ public class Player extends Creature {
         itemsByStats.remove(GI.getItemStats());
         if(wornItems.get(GI.getInventory().position) == GI){ //si équipement porté
             wornItems.remove(GI.getInventory().position);
+            loadStuffStats();
         }
         GI.delete();
     }
@@ -225,6 +233,26 @@ public class Player extends Creature {
             }
         }
         ClassData.setBaseStats(this);
+        loadStuffStats();
+    }
+    
+    /**
+     * Charge les stats du stuff
+     */
+    private void loadStuffStats(){
+        for(GameItem GI : wornItems.values()){
+            stuffStats.addAll(GI.getItemStats().getStats());
+        }
+    }
+    
+    /**
+     * Retourne toute les stats du perso
+     * @return 
+     */
+    @Override
+    public Stats getTotalStats(){
+        Stats total = new Stats();
+        return total.addAll(baseStats).addAll(stuffStats);
     }
 
     public GameMap getMap() {
@@ -287,26 +315,26 @@ public class Player extends Creature {
 
         ASData.append(getInitiative()).append("|");
         ASData.append(getProspection()).append("|");
-        ASData.append(baseStats.get(Element.PA)).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(getTotalStats().get(Element.PA)).append("|");
-        ASData.append(baseStats.get(Element.PM)).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(getTotalStats().get(Element.PM)).append("|");
-        ASData.append(baseStats.get(Element.FORCE)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.VITA)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.SAGESSE)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.CHANCE)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.AGILITE)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.INTEL)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.PO)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.INVOC)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.DOMMAGE)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.PA)).append(",").append(stuffStats.get(Element.PA)).append(",").append(0).append(",").append(0).append(",").append(getTotalStats().get(Element.PA)).append("|");
+        ASData.append(baseStats.get(Element.PM)).append(",").append(stuffStats.get(Element.PM)).append(",").append(0).append(",").append(0).append(",").append(getTotalStats().get(Element.PM)).append("|");
+        ASData.append(baseStats.get(Element.FORCE)).append(",").append(stuffStats.get(Element.FORCE)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.VITA)).append(",").append(stuffStats.get(Element.VITA)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.SAGESSE)).append(",").append(stuffStats.get(Element.SAGESSE)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.CHANCE)).append(",").append(stuffStats.get(Element.CHANCE)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.AGILITE)).append(",").append(stuffStats.get(Element.AGILITE)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.INTEL)).append(",").append(stuffStats.get(Element.INTEL)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.PO)).append(",").append(stuffStats.get(Element.PO)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.INVOC)).append(",").append(stuffStats.get(Element.INVOC)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.DOMMAGE)).append(",").append(stuffStats.get(Element.DOMMAGE)).append(",").append(0).append(",").append(0).append("|");
         ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|"); //PDOM ?
         ASData.append("0,0,0,0|");//Maitrise ?
-        ASData.append(baseStats.get(Element.PERDOM)).append(",").append(0).append("," + "0").append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.SOIN)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.TRAP_DOM)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.TRAP_PERDOM)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.PERDOM)).append(",").append(stuffStats.get(Element.PERDOM)).append("," + "0").append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.SOIN)).append(",").append(stuffStats.get(Element.SOIN)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.TRAP_DOM)).append(",").append(stuffStats.get(Element.TRAP_DOM)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.TRAP_PERDOM)).append(",").append(stuffStats.get(Element.TRAP_PERDOM)).append(",").append(0).append(",").append(0).append("|");
         ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|"); //?
-        ASData.append(baseStats.get(Element.CC)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
-        ASData.append(baseStats.get(Element.EC)).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.CC)).append(",").append(stuffStats.get(Element.CC)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(baseStats.get(Element.EC)).append(",").append(stuffStats.get(Element.EC)).append(",").append(0).append(",").append(0).append("|");
         ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
         ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
         ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
