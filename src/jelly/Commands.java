@@ -3,14 +3,18 @@ package jelly;
 import game.World;
 import game.objects.GameMap;
 import game.objects.Player;
+import game.objects.dep.ItemStats;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 import jelly.Shell.GraphicRenditionEnum;
+import models.ItemTemplate;
+import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import server.events.BasicEvents;
+import server.game.GamePacketEnum;
 
 public class Commands {
     private final static ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -122,6 +126,59 @@ public class Commands {
 
     private static void process_lvl2(String command, int argc, String[] argv, IoSession session) {
         switch (command) {
+            case "save":
+                display("Début de la sauvegarde...", session);
+                World.save();
+                display("Sauvegarde terminé !", session);
+                break;
+            case "!getitem":
+            case "item":
+                if(argc < 1){
+                    display("Nombre d'arguments incorrect !", session);
+                    return;
+                }
+                int id = 0;
+                int qu = 1;
+                boolean useMax = false;
+                String identifier = "#me";
+                try{
+                    id = Integer.parseInt(argv[1]);   
+                    if(argc > 1){
+                        qu = Integer.parseInt(argv[2]);
+                    }
+                    if(argc > 2){
+                        identifier = argv[3];
+                    }
+                    if(argc > 3 && argv[4].equalsIgnoreCase("max")){
+                        useMax = true;
+                    }
+                }catch(NumberFormatException e){
+                    display("L'id ou la quantité de l'item doivent être un nombre valide !", session);
+                    return;
+                }
+                ItemTemplate T = DAOFactory.item().getById(id);
+                
+                if(T == null){
+                    display("L'item d'id " + id + " n'existe pas !", session);
+                    return;
+                }
+                
+                display("Création de l'item...", session);
+                ItemStats IS = new ItemStats(T, useMax);
+                AtomicReference<String> errors = new AtomicReference<>();
+                StringBuilder msg = new StringBuilder();
+                for(Player P : getPlayers(identifier, session, errors)){
+                    msg.append("Ajout de l'item ").append(id).append(" au joueur ").append(P.getName());
+                    if(useMax){
+                        msg.append(" Avec les stats maximum !");
+                    }
+                    msg.append('\n');
+                    P.addItem(IS, qu);
+                    GamePacketEnum.INFORMATION_MESSAGE.send(P.getSession(), "21;" + qu + "~" + id);
+                }
+                display(errors.get(), session);
+                display(msg.toString(), session);
+                break;
             default:
                 process_lvl1(command, argc, argv, session);
         }
@@ -177,6 +234,7 @@ public class Commands {
                 }
                 System.exit(0);
                 break;
+            case ">>":
             case "send":
                 if (argc < 2) {
                     display("Nombre d'arguments invalides !", session);
