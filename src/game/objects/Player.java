@@ -7,7 +7,6 @@ import game.objects.dep.Stats;
 import game.objects.dep.Stats.Element;
 import java.util.Collection;
 import java.util.HashMap;
-import jelly.Loggin;
 import jelly.Utils;
 import models.Account;
 import models.Character;
@@ -15,7 +14,9 @@ import models.InventoryEntry;
 import models.MapModel;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
+import server.events.CharacterEvents;
 import server.events.MapEvents;
+import server.events.ObjectEvents;
 
 public class Player extends Creature {
 
@@ -41,7 +42,7 @@ public class Player extends Creature {
      * équipements portés Position => Item
      */
     private HashMap<Byte, GameItem> wornItems = new HashMap<>();
-    private Stats stuffStats = new Stats();
+    private Stats stuffStats;
 
     public Player(Character c) {
         _character = c;
@@ -131,33 +132,35 @@ public class Player extends Creature {
         }
         GameItem GI = inventory.get(id);
         InventoryEntry I = GI.getInventory();
+        if(I.position == pos){
+            return false; //déplace au même endroit ?? (ne devrait pas arriver)
+        }
         if (!GI.canMove(pos)) {
             return false;
         }
         if (qu > I.qu) { //peu pas déplacer plus que ce que l'on a
             qu = I.qu;
         }
-        if (qu == I.qu) { //si même qu, on déplace tout (pour déséquiper par exemple)
+        if(GI.isWearable() && qu > 1 && pos != -1){ //impossible d'équiper 2 fois le même item
+            return false;
+        }
+        if (qu == I.qu) { //si même qu, on déplace tout
             return moveGameItem(GI, pos);
         }
-        //sinon faut déplacer manuellement...
-        if(GI.isWearable() && qu > 1){ //si on veut équiper plusieurs fois le même items
-            return false;
-        }
-        if(GI.isWearable() && pos != -1 && wornItems.containsKey(pos)){ //place déjà prise. Le client gère add/remove équip
-            Loggin.debug("GI %d : déjà prise par %d", GI.getID(), wornItems.get(pos).getID());
-            return false;
+        if(GI.isWearable() && pos != -1 && wornItems.containsKey(pos)){ //si un item déjà équipé
+            if(wornItems.get(pos).getItemStats().equals(GI.getItemStats())){
+                return false; //sert à rien d'équiper 2 fois le même item
+            }
+            itemFreePlace(pos); //sinon libère le place
         }
         //sinon crée new GI
         GameItem nGI = new GameItem(this, GI.getItemStats(), qu, pos);
-        //ajoute l'item
-        if(nGI.isWearable() && pos != -1){ //on équipe
-            wornItems.put(pos, nGI);
-            loadStuffStats();
-        }
         inventory.put(nGI.getID(), nGI);
         itemsByStats.put(nGI.getItemStats(), nGI);
         GI.changeQuantity(I.qu - qu, true); //on change quantité
+        if(nGI.isWearable() && pos != -1){
+            return equipGameItem(nGI, pos); //on équipe
+        }
         return true;
     }
 
@@ -177,15 +180,18 @@ public class Player extends Creature {
         if(GI.isWearable()){ //si c'est un équipement
             if(pos != -1 && GI.getInventory().qu > 1){ //impossible d'équiper 2 fois le même item
                 return false;
-            }else if(pos == -1 && GI.getInventory().position != -1){ //on vire l'équipement
-                wornItems.remove(GI.getInventory().position);
-                loadStuffStats();
+            }else if(pos == -1){ //on vire l'équipement
+                unequip(GI.getInventory().position);
             }else if(pos != -1 && wornItems.containsKey(pos)){ //place déjà prise
-                return false;
+                if(wornItems.get(pos).getItemStats().equals(GI.getItemStats())){
+                    return false; //même stats, pas besoin de changer
+                }
+                itemFreePlace(pos); //sinon on libère l'ancien item
             }
-            if(pos != 1){ //on équipe
-                wornItems.put(pos, GI);
-                loadStuffStats();
+            if(pos != -1){ //on équipe
+                if(!equipGameItem(GI, pos)){
+                    return false;
+                }
             }
         }
         //vérification OK, on le déplace
@@ -208,15 +214,58 @@ public class Player extends Creature {
      *
      * @param GI
      */
-    public void deleteGameItem(GameItem GI) {
-        Loggin.debug("Suppression du GI %d", GI.getID());
+    private void deleteGameItem(GameItem GI) {
         inventory.remove(GI.getID());
         itemsByStats.remove(GI.getItemStats());
         if(wornItems.get(GI.getInventory().position) == GI){ //si équipement porté
-            wornItems.remove(GI.getInventory().position);
-            loadStuffStats();
+            unequip(GI.getInventory().position);
         }
         GI.delete();
+    }
+    
+    /**
+     * Equipe l'item
+     * /!\ Ne pas utiliser directement (ne libère pas la place)
+     * @param GI
+     * @param pos 
+     * @return true si tout ce passe bien, false si déjà équipé item similaire
+     */
+    private boolean equipGameItem(GameItem GI, byte pos){
+        if(!GI.isWearable() || !GI.canMove(pos) || wornItems.containsKey(pos)){
+            return false;
+        }
+        wornItems.put(pos, GI);
+        loadStuffStats();
+        CharacterEvents.onStatsChange(session, this);
+        ObjectEvents.onWeightChange(session, this);
+        return true;
+    }
+    
+    /**
+     * Enlève un équipement de la liste des équipements portés et recharge les stats
+     * /!\ ne remet pas dans l'inventaire /!\
+     * @param pos 
+     */
+    private void unequip(byte pos){
+        if(wornItems.remove(pos) == null){
+            return;
+        }
+        
+        loadStuffStats();
+        CharacterEvents.onStatsChange(session, this);
+        ObjectEvents.onWeightChange(session, this);
+    }
+    
+    /**
+     * Libère la place pour un autre item et remet dans l'inventaire
+     * @param pos 
+     */
+    private void itemFreePlace(byte pos){
+        if(pos == -1 || !wornItems.containsKey(pos)){
+            return;
+        }
+        GameItem GI = wornItems.remove(pos);
+        moveGameItem(GI, (byte)-1);
     }
 
     /**
@@ -240,6 +289,7 @@ public class Player extends Creature {
      * Charge les stats du stuff
      */
     private void loadStuffStats(){
+        stuffStats = new Stats();
         for(GameItem GI : wornItems.values()){
             stuffStats.addAll(GI.getItemStats().getStats());
         }

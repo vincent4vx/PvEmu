@@ -55,14 +55,16 @@ public class CharacterEvents {
             return;
         }
 
-        StringBuilder b = new StringBuilder();
-
         GamePacketEnum.GAME_CREATE_OK.send(session, p.getName());
-        GamePacketEnum.STATS_PACKET.send(session, p.getStatsPacket());
-        b.append(p.getUsedPods()).append("|").append(p.getTotalPods());
-        GamePacketEnum.OBJECTS_WEIGHT.send(session, b.toString());
+        onStatsChange(session, p);
+        ObjectEvents.onWeightChange(session, p);
         GamePacketEnum.CHAT_CHANEL_ADD.send(session, p.getChanels());
+        ChatEvents.onSendErrorMessage(session, 89);
         MapEvents.onArrivedInGame(session);
+    }
+    
+    public static void onStatsChange(IoSession session, Player p){
+        GamePacketEnum.STATS_PACKET.send(session, p.getStatsPacket());    
     }
 
     private static Player getPlayer(IoSession session) {

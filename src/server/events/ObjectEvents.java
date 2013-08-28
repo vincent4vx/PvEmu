@@ -47,17 +47,41 @@ public class ObjectEvents {
         GamePacketEnum.OBJECT_QUANTITY.send(session, new StringBuilder().append(obj.getID()).append('|').append(obj.getInventory().qu).toString());
     }
     
+    /**
+     * Appelé à chaque modification des pods (ajout d'item dans inventaire / modification stats)
+     * @param session
+     * @param P 
+     */
+    public static void onWeightChange(IoSession session, Player P){
+        GamePacketEnum.OBJECTS_WEIGHT.send(session, new StringBuilder().append(P.getUsedPods()).append('|').append(P.getTotalPods()));
+    }
+    
     public static void onAdd(IoSession session, GameItem obj){
         if(session == null || obj == null){
             return;
         }
+        
+        Player p = (Player)session.getAttribute("player");
+        
+        if(p == null){
+            return;
+        }
+        
         GamePacketEnum.OBJECT_ADD_OK.send(session, obj.toString());
+        onWeightChange(session, p);
     }
     
     public static void onRemove(IoSession session, int id){
         if(session == null){
             return;
         }
+        
+        Player p = (Player)session.getAttribute("player");
+        
+        if(p == null){
+            return;
+        }
+        
         GamePacketEnum.OBJECT_REMOVE.send(session, id);
     }
 }

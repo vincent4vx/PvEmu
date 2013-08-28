@@ -94,6 +94,10 @@ public class Utils {
      * @return
      */
     public static String implode(String glue, String[] pieces) {
+        if(pieces == null || pieces.length < 1){
+            return "";
+        }
+        
         StringBuilder b = new StringBuilder();
 
         for (String p : pieces) {
