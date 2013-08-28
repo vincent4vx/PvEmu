@@ -14,6 +14,7 @@ import models.ItemTemplate;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import server.events.BasicEvents;
+import server.events.ChatEvents;
 import server.game.GamePacketEnum;
 
 public class Commands {
@@ -174,7 +175,7 @@ public class Commands {
                     }
                     msg.append('\n');
                     P.addItem(IS, qu);
-                    GamePacketEnum.INFORMATION_MESSAGE.send(P.getSession(), "21;" + qu + "~" + id);
+                    ChatEvents.onSendInfoMessage(P.getSession(), 21, String.valueOf(qu), String.valueOf(id));
                 }
                 display(errors.get(), session);
                 display(msg.toString(), session);
