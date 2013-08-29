@@ -1,14 +1,14 @@
 package jelly.database;
 
-import game.World;
 import jelly.Config;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jelly.Loggin;
@@ -19,7 +19,7 @@ public class Database {
 
     public Connection db;
     private static Database self = null;
-    private Timer _commitTimer;
+    private ScheduledExecutorService scheduledCommit;
     private boolean _autocommit = false;
 
     private Database() {
@@ -36,7 +36,26 @@ public class Database {
                     Config.getString("db_user"),
                     Config.getString("db_pass"));
 
-            _commitTimer = new Timer();
+            scheduledCommit = Executors.newSingleThreadScheduledExecutor();
+            scheduledCommit.scheduleAtFixedRate(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!self._autocommit) {
+                                try {
+                                    synchronized(self.db){
+                                        self.db.commit();
+                                    }
+                                    Loggin.debug("Commit Database");
+                                } catch (SQLException ex) {
+                                    Loggin.error("Commit impossible !", ex);
+                                }
+                            }
+                        }
+                    },
+                    Config.getInt("db_commit_time", 60),
+                    Config.getInt("db_commit_time", 60), TimeUnit.SECONDS
+            );
             Shell.println("Ok", GraphicRenditionEnum.GREEN);
         } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, "Connexion impossible", ex);
@@ -47,29 +66,16 @@ public class Database {
     public static void setAutocommit(boolean state) {
         self._autocommit = state;
         try {
-            if (state) {
-                Loggin.debug("Commit Database");
-                self.db.commit();
-            }
-            self.db.setAutoCommit(state);
-        } catch (SQLException ex) {
-            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        if (self._commitTimer == null) {
-            self._commitTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (!self._autocommit) {
-                        try {
-                            self.db.commit();
-                            Loggin.debug("Commit Database");
-                        } catch (SQLException ex) {
-                            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
+            synchronized(self.db){
+                if (state) {
+                    Loggin.debug("Commit Database");
+                    self.db.commit();
                 }
-            }, Config.getInt("db_commit_time", 60) * 1000, Config.getInt("db_commit_time", 60) * 1000);
+                self.db.setAutoCommit(state);
+            }
+        } catch (SQLException ex) {
+            Loggin.error("Impossible de changer le mode autoCommit !", ex);
+            System.exit(1);
         }
     }
 
@@ -82,6 +88,7 @@ public class Database {
             }
             return RS;
         } catch (SQLException e) {
+            Loggin.error("exécution de la requête '" + query + "' impossible !" , e);
             return null;
         }
     }
@@ -121,8 +128,8 @@ public class Database {
     public static void close() {
         try {
             Shell.print("Arrêt de database : ", GraphicRenditionEnum.RED);
-            self._commitTimer.cancel();
-            self._commitTimer = null;
+            self.scheduledCommit.shutdown();
+            self.scheduledCommit = null;
             self.db.close();
             Shell.println("ok", GraphicRenditionEnum.GREEN);
         } catch (SQLException ex) {
