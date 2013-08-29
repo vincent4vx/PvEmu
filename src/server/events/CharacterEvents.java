@@ -59,6 +59,7 @@ public class CharacterEvents {
         onStatsChange(session, p);
         ObjectEvents.onWeightChange(session, p);
         GamePacketEnum.CHAT_CHANEL_ADD.send(session, p.getChanels());
+        GamePacketEnum.CHARACTER_RESTRICTION.send(session, p.restriction);
         ChatEvents.onSendErrorMessage(session, 89);
         MapEvents.onArrivedInGame(session);
     }

@@ -55,6 +55,10 @@ public enum GamePacketEnum {
      */
     STATS_PACKET("As"),
     /**
+     * Restriction du personnage (vitesse, tombe...)
+     */
+    CHARACTER_RESTRICTION("AR", "6bk"),
+    /**
      * information sur la map courrante id | date | key
      */
     MAP_DATA("GDM|"),

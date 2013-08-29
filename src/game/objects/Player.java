@@ -29,6 +29,7 @@ public class Player extends Creature {
     private IoSession session = null;
     private String chanels = "*#$:?i^!%";
     private Account _account;
+    public String restriction = "6bk";
     public int orientation = 2;
     /**
      * Liste des items par id
@@ -421,16 +422,15 @@ public class Player extends Creature {
 
         //30^100,1247;
         //FIXME pnj suiveur ? 
-        str.append("").append(";"); //title
+        str.append(",18").append(";"); //title
         str.append(gfxID).append("^").append(100) //gfxID^size //FIXME ,GFXID pnj suiveur
-                .append(",").append("")
-                //.append(",").append("1247") // mob suvieur1
-                //.append(",").append("1503") //mob suiveur2
-                //.append(",").append("1451") //mob suiveur 3
-                //.append(",").append("1186") // mob suiveur 4
-                //.append(",").append("8013") // MS5
-                //.append(",").append("8018") // MS6
-                //.append(",").append("8017") // MS7 ... Infini quoi
+//                .append(",").append("1247") // mob suvieur1
+//                .append(",").append("1503") //mob suiveur2
+//                .append(",").append("1451") //mob suiveur 3
+//                .append(",").append("1186") // mob suiveur 4
+//                .append(",").append("8013") // MS5
+//                .append(",").append("8018") // MS6
+//                .append(",").append("8017") // MS7 ... Infini quoi
                 .append(";");
         str.append(sexe).append(";");
         str.append(0).append(","); //alignement
@@ -461,7 +461,7 @@ public class Player extends Creature {
          str.append(";;");
          }*/
         str.append(";;");
-        str.append("0").append(";");//Restriction
+        str.append(restriction).append(";");//Restriction
         //str.append((_onMount && _mount != null ? _mount.get_color(parsecolortomount()) : "")).append(";");
         str.append(";");
         str.append(";");
