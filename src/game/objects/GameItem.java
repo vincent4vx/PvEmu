@@ -254,6 +254,21 @@ public class GameItem implements Cloneable {
             case TYPE_MARTEAU:
             case TYPE_PELLE:
                 return pos == POS_ARME;
+            case TYPE_SAC_DOS:
+            case TYPE_CAPE:
+                return pos == POS_CAPE;
+            case TYPE_COIFFE:
+                return pos == POS_COIFFE;
+            case TYPE_ANNEAU:
+                return pos == POS_ANNEAU1 || pos == POS_ANNEAU2;
+            case TYPE_BOTTES:
+                return pos == POS_BOTTES;
+            case TYPE_CEINTURE:
+                return pos == POS_CEINTURE;
+            case TYPE_FAMILIER:
+                return pos == POS_FAMILIER;
+            case TYPE_DOFUS:
+                return pos == POS_DOFUS1 || pos == POS_DOFUS2 || pos == POS_DOFUS3 || pos == POS_DOFUS4 || pos == POS_DOFUS5 || pos == POS_DOFUS6;
             default:
                 return false;
         }

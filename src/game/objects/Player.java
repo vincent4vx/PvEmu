@@ -7,6 +7,7 @@ import game.objects.dep.Stats;
 import game.objects.dep.Stats.Element;
 import java.util.Collection;
 import java.util.HashMap;
+import jelly.Loggin;
 import jelly.Utils;
 import models.Account;
 import models.Character;
@@ -90,8 +91,9 @@ public class Player extends Creature {
                 }
                 if (I.qu > 1) { //si + de 1
                     int qu = I.qu - 1;
-                    GI.changeQuantity(1, false);
-                    addItem(I.getItemStats(), qu); //on les remet dans l'inventaire "normal"
+                    /*GI.changeQuantity(1, false);
+                    addItem(I.getItemStats(), qu); //on les remet dans l'inventaire "normal"*/
+                    moveItem(I.id, qu, (byte)-1);
                 }
                 wornItems.put(I.position, GI);
             }
@@ -198,6 +200,7 @@ public class Player extends Creature {
         //vérification OK, on le déplace
         GameItem oGI = GI.clone(); //clone le GI pour ne pas le modifier
         ItemStats IS = GI.getItemStats();
+        itemsByStats.remove(oGI.getItemStats());
         IS.setPosition(pos);
         if(itemsByStats.containsKey(IS)){ //si item déjà existant en inventaire
             int qu = oGI.getInventory().qu;
@@ -207,6 +210,7 @@ public class Player extends Creature {
         }
         //sinon, simple transfert
         GI.move(pos);
+        itemsByStats.put(IS, GI);
         return true;
     }
 
@@ -216,8 +220,11 @@ public class Player extends Creature {
      * @param GI
      */
     private void deleteGameItem(GameItem GI) {
+        Loggin.debug("supprime GI %d", GI.getID());
         inventory.remove(GI.getID());
-        itemsByStats.remove(GI.getItemStats());
+        if(itemsByStats.get(GI.getItemStats()) == GI){
+            itemsByStats.remove(GI.getItemStats());
+        }
         if(wornItems.get(GI.getInventory().position) == GI){ //si équipement porté
             unequip(GI.getInventory().position);
         }

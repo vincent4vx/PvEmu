@@ -42,7 +42,7 @@ public class ItemStats implements Cloneable {
             
             max = min > max ? min : max;
             
-            int jet = useMax ? max : Utils.rand(min, max);
+            int jet = useMax ? max : Utils.rand(min, max + 1);
             
             this.stats.add(elemID, jet);
         }
