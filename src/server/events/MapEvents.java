@@ -21,14 +21,12 @@ public class MapEvents {
             return;
         }
 
-        /*for (Player P : p.getMap().getPlayers().values()) {
-            if (P.getSession() != null && P != p) {
-                GamePacketEnum.MAP_ADD_PLAYER.send(P.getSession(), p.getGMData());
-            }
-        }*/
         GamePacketEnum.MAP_ADD_PLAYER.sendToMap(p.getMap(), p.getGMData());
         
         for(GMable Ga : p.getMap().getGMables()){
+            if(Ga == p){
+                continue; //pas besoin d'envoyer 2 fois le même packet
+            }
             GamePacketEnum.MAP_ADD_PLAYER.send(session, Ga.getGMData());
         }
     }

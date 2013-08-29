@@ -247,6 +247,10 @@ public class Player extends Creature implements GMable {
         loadStuffStats();
         CharacterEvents.onStatsChange(session, this);
         ObjectEvents.onWeightChange(session, this);
+        
+        if(pos == GameItem.POS_ARME || pos == GameItem.POS_CAPE || pos == GameItem.POS_BOUCLIER || pos == GameItem.POS_FAMILIER || pos == GameItem.POS_COIFFE){
+            ObjectEvents.onAccessoriesChange(this);
+        }
         return true;
     }
     
@@ -263,6 +267,9 @@ public class Player extends Creature implements GMable {
         loadStuffStats();
         CharacterEvents.onStatsChange(session, this);
         ObjectEvents.onWeightChange(session, this);
+        if(pos == GameItem.POS_ARME || pos == GameItem.POS_CAPE || pos == GameItem.POS_BOUCLIER || pos == GameItem.POS_FAMILIER || pos == GameItem.POS_COIFFE){
+            ObjectEvents.onAccessoriesChange(this);
+        }
     }
     
     /**
@@ -455,7 +462,7 @@ public class Player extends Creature implements GMable {
         }
         //str.append(_lvl).append(";");
         str.append(Utils.implode(";", colors)).append(";");
-        str.append("").append(";"); //stuff
+        str.append(getGMStuff()).append(";"); //stuff
          /*if (hasEquiped(10054) || hasEquiped(10055) || hasEquiped(10056) || hasEquiped(10058) || hasEquiped(10061) || hasEquiped(10102)) {
          str.append(3).append(";");
          } else {*/
@@ -477,6 +484,36 @@ public class Player extends Creature implements GMable {
         str.append(";");
 
         return str.toString();
+    }
+    
+    /**
+     * retourne le stuff pour les packets d'affichage
+     * @return 
+     */
+    public String getGMStuff(){
+        StringBuilder s = new StringBuilder();
+        
+        if(wornItems.containsKey(GameItem.POS_ARME)){
+            s.append(Integer.toHexString(wornItems.get(GameItem.POS_ARME).getItemStats().getID()));
+        }
+        s.append(',');
+        if(wornItems.containsKey(GameItem.POS_COIFFE)){
+            s.append(Integer.toHexString(wornItems.get(GameItem.POS_COIFFE).getItemStats().getID()));
+        }
+        s.append(',');
+        if(wornItems.containsKey(GameItem.POS_CAPE)){
+            s.append(Integer.toHexString(wornItems.get(GameItem.POS_CAPE).getItemStats().getID()));
+        }
+        s.append(',');
+        if(wornItems.containsKey(GameItem.POS_FAMILIER)){
+            s.append(Integer.toHexString(wornItems.get(GameItem.POS_FAMILIER).getItemStats().getID()));
+        }
+        s.append(',');
+        if(wornItems.containsKey(GameItem.POS_BOUCLIER)){
+            s.append(wornItems.get(GameItem.POS_BOUCLIER).getItemStats().getID());
+        }
+        
+        return s.toString();
     }
 
     /**

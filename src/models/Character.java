@@ -48,7 +48,7 @@ public class Character implements jelly.database.Model {
         perso.append((color1 != -1 ? Integer.toHexString(color1) : "-1")).append(";");
         perso.append((color2 != -1 ? Integer.toHexString(color2) : "-1")).append(";");
         perso.append((color3 != -1 ? Integer.toHexString(color3) : "-1")).append(";");
-        perso.append("").append(";");
+        perso.append(getPlayer().getGMStuff()).append(";");
         perso.append(0).append(";");
         perso.append("1;");//ServerID
         perso.append(";");//DeathCount	this.deathCount;
