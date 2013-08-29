@@ -1,14 +1,17 @@
 package game.objects;
 
 import game.ActionsHandler.Action;
+import game.objects.dep.GMable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import jelly.Loggin;
 import models.MapModel;
+import models.MapNpcs;
 import models.Trigger;
 import models.dao.DAOFactory;
 
-public class GameMap {
+public final class GameMap {
 
     public static class Cell {
 
@@ -91,6 +94,8 @@ public class GameMap {
     private short id;
     private ConcurrentHashMap<Integer, Player> _players = new ConcurrentHashMap<>();
     private String mapDataPacket = null;
+    private ConcurrentHashMap<Integer, GMable> _gms = new ConcurrentHashMap<>();
+    private int lastGMId = 0;
 
     public GameMap(MapModel model) {
         _model = model;
@@ -108,6 +113,11 @@ public class GameMap {
                 cell.addTrigger(T);
             }
         }
+        
+        for(MapNpcs MN : DAOFactory.mapNpcs().getByMapId(id)){
+            lastGMId--;
+            _gms.put(lastGMId, new GameNpc(MN, lastGMId));
+        }
     }
 
     /**
@@ -118,6 +128,7 @@ public class GameMap {
      */
     public void addPlayer(Player p, short cellID) {
         _players.put(p.getID(), p);
+        _gms.put(p.getID(), p);
         getCellById(cellID)._players.put(p.getID(), p);
     }
 
@@ -135,6 +146,14 @@ public class GameMap {
 
     public ConcurrentHashMap<Integer, Player> getPlayers() {
         return _players;
+    }
+    
+    /**
+     * Retourne le liste des GMables (pour envoyer packet GM par exmple)
+     * @return 
+     */
+    public Collection<GMable> getGMables(){
+        return _gms.values();
     }
 
     /**

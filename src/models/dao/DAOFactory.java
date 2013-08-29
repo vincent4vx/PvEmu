@@ -8,6 +8,8 @@ public class DAOFactory {
     private static TriggerDAO trigger = null;
     private static InventoryDAO inventory = null;
     private static ItemTemplateDAO item = null;
+    private static NpcTemplateDAO npcTemplate = null;
+    private static MapNpcsDAO mapNpcs = null;
 
     public static AccountDAO account() {
         if (account == null) {
@@ -49,5 +51,19 @@ public class DAOFactory {
             item = new ItemTemplateDAO();
         }
         return item;
+    }
+    
+    public static NpcTemplateDAO npcTemplate(){
+        if(npcTemplate == null){
+            npcTemplate = new NpcTemplateDAO();
+        }
+        return npcTemplate;
+    }
+    
+    public static MapNpcsDAO mapNpcs(){
+        if(mapNpcs == null){
+            mapNpcs = new MapNpcsDAO();
+        }
+        return mapNpcs;
     }
 }

@@ -84,16 +84,19 @@ public class Jelly {
     }
 
     private static void preload() {
-        System.out.println("====> Prechargement <====");
-        System.out.print("Chargement des maps : ");
-        System.out.println(DAOFactory.map().getAll().size() + " maps chargées");
-        System.out.print("Chargement des comptes : ");
-        System.out.println(DAOFactory.account().getAll().size() + " comptes chargés");
-        System.out.print("Chargement des personnages : ");
-        System.out.println(DAOFactory.character().getAll().size() + " personnages chargées");
-        System.out.print("Execution du GC : ");
+        Shell.println("\n====> Préchargement <====", GraphicRenditionEnum.BOLD);
+        Shell.print("Chargement des maps : ", GraphicRenditionEnum.YELLOW);
+        Shell.println(DAOFactory.map().getAll().size() + " maps chargées", GraphicRenditionEnum.GREEN);
+        Shell.print("Chargement des pnj : ", GraphicRenditionEnum.YELLOW);
+        Shell.println(DAOFactory.npcTemplate().getAll().size() + " templates chargées", GraphicRenditionEnum.GREEN);
+        Shell.print("Chargement des comptes : ", GraphicRenditionEnum.YELLOW);
+        Shell.println(DAOFactory.account().getAll().size() + " comptes chargés", GraphicRenditionEnum.GREEN);
+        Shell.print("Chargement des personnages : ", GraphicRenditionEnum.YELLOW);
+        Shell.println(DAOFactory.character().getAll().size() + " personnages chargées", GraphicRenditionEnum.GREEN);
+        Shell.print("Execution du GC : ", GraphicRenditionEnum.YELLOW);
         System.gc();
-        System.out.println("Ok");
+        Shell.println("Ok", GraphicRenditionEnum.GREEN);
+        Shell.println("");
     }
 
     public static void close() {

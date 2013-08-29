@@ -3,6 +3,7 @@ package game.objects;
 import game.objects.dep.ItemStats;
 import game.objects.dep.ClassData;
 import game.objects.dep.Creature;
+import game.objects.dep.GMable;
 import game.objects.dep.Stats;
 import game.objects.dep.Stats.Element;
 import java.util.Collection;
@@ -19,7 +20,7 @@ import server.events.CharacterEvents;
 import server.events.MapEvents;
 import server.events.ObjectEvents;
 
-public class Player extends Creature {
+public class Player extends Creature implements GMable {
 
     private Character _character;
     private byte classID;
@@ -343,6 +344,7 @@ public class Player extends Creature {
         return _character;
     }
 
+    @Override
     public int getID() {
         return id;
     }
@@ -420,6 +422,7 @@ public class Player extends Creature {
         return ASData.toString();
     }
 
+    @Override
     public String getGMData() {
         StringBuilder str = new StringBuilder();
 

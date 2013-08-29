@@ -1,9 +1,8 @@
 package server.events;
 
-import game.objects.GameMap;
 import game.objects.Player;
+import game.objects.dep.GMable;
 import jelly.Loggin;
-import jelly.Utils;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import server.game.GamePacketEnum;
@@ -22,13 +21,15 @@ public class MapEvents {
             return;
         }
 
-        for (Player P : p.getMap().getPlayers().values()) {
-            if (P.getSession() != null) {
+        /*for (Player P : p.getMap().getPlayers().values()) {
+            if (P.getSession() != null && P != p) {
                 GamePacketEnum.MAP_ADD_PLAYER.send(P.getSession(), p.getGMData());
             }
-            if (P != p) {
-                GamePacketEnum.MAP_ADD_PLAYER.send(session, P.getGMData());
-            }
+        }*/
+        GamePacketEnum.MAP_ADD_PLAYER.sendToMap(p.getMap(), p.getGMData());
+        
+        for(GMable Ga : p.getMap().getGMables()){
+            GamePacketEnum.MAP_ADD_PLAYER.send(session, Ga.getGMData());
         }
     }
 
