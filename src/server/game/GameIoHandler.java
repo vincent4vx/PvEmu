@@ -44,6 +44,10 @@ public class GameIoHandler extends MinaIoHandler {
         String packet = ((String) message).trim();
         if (packet.length() > 1) {
             Loggin.game("Recv << %s", packet);
+            if(!packet.startsWith("AT") && !session.containsAttribute("account")){
+                session.close(true);
+                return;
+            }
             switch (packet.charAt(0)) {
                 case 'A': //packet perso / compte
                     switch (packet.charAt(1)) {
@@ -53,14 +57,14 @@ public class GameIoHandler extends MinaIoHandler {
                                 Account acc = DAOFactory.account().getById(id);
 
                                 if (acc == null || !acc.isWaiting()) {
-                                    session.close(false);
+                                    session.close(true);
                                     return;
                                 }
 
                                 acc.setSession(session);
                                 GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
                             } catch (Exception e) {
-                                session.close(false);
+                                session.close(true);
                             }
                             break;
                         case 'P': //name generator
