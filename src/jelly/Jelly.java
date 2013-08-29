@@ -13,7 +13,6 @@ public class Jelly {
     public static boolean DEBUG = false;
     public static long start;
     public static boolean running = true;
-    private static final Thread main = Thread.currentThread();
 
     public static void main(String[] args) {
         Shell.setTitle(Constants.NAME);
@@ -21,7 +20,7 @@ public class Jelly {
         printAsciiLogo();
         Shell.print("\t\t\t" + Constants.NAME + " by ", GraphicRenditionEnum.YELLOW);
         Shell.println("v4vx", GraphicRenditionEnum.YELLOW, GraphicRenditionEnum.BOLD);
-        Shell.println("Version " + Constants.VERSION, GraphicRenditionEnum.YELLOW);
+        Shell.println("Version " + Constants.VERSION + " (r" + Constants.REV + ")", GraphicRenditionEnum.YELLOW);
         Shell.println("======================================================", GraphicRenditionEnum.YELLOW);
 
         if (args.length == 0) {
