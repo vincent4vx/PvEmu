@@ -73,19 +73,18 @@ public class Character implements jelly.database.Model {
         _player.getSession().removeAttribute("player");
         _player.getSession().removeAttribute("account");
         _player.setSession(null);
-        _player = null;
 
         if (Jelly.running) {
-            if (!DAOFactory.character().update(this)) {
-                Loggin.debug("Sauvegarde impossible de %s", name);
-            }
+            _player.save();
         }
     }
 
+    @Override
     public void clear() {
         id = 0;
     }
 
+    @Override
     public int getPk() {
         return id;
     }

@@ -105,6 +105,8 @@ public final class GameMap {
             String CellData = _model.mapData.substring(f, f + 10);
             _cells.add(new Cell(this, (short) (f / 10), CellData));
         }
+        
+        _model.mapData = null;
 
         for (Trigger T : DAOFactory.trigger().getByMapID(id)) {
             Cell cell = getCellById(T.cellID);

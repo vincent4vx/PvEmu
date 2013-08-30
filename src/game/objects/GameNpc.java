@@ -27,7 +27,6 @@ public class GameNpc implements GMable {
         }
         StringBuilder packet = new StringBuilder();
         
-        packet.append("+");
         packet.append(cellID).append(";");
         packet.append(orientation).append(";");
         packet.append("0").append(";");

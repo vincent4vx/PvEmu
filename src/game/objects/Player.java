@@ -8,6 +8,7 @@ import game.objects.dep.Stats;
 import game.objects.dep.Stats.Element;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import jelly.Loggin;
 import jelly.Utils;
 import models.Account;
@@ -88,13 +89,13 @@ public class Player extends Creature implements GMable {
                     continue;
                 }
                 if (!GI.isWearable()) {//si ce n'est pa un équipement
-                    continue; 
+                    continue;
                 }
                 if (I.qu > 1) { //si + de 1
                     int qu = I.qu - 1;
                     /*GI.changeQuantity(1, false);
-                    addItem(I.getItemStats(), qu); //on les remet dans l'inventaire "normal"*/
-                    moveItem(I.id, qu, (byte)-1);
+                     addItem(I.getItemStats(), qu); //on les remet dans l'inventaire "normal"*/
+                    moveItem(I.id, qu, (byte) -1);
                 }
                 wornItems.put(I.position, GI);
             }
@@ -114,7 +115,7 @@ public class Player extends Creature implements GMable {
         if (itemsByStats.containsKey(item)) { //item existe déjà, on augemente le nombre
             itemsByStats.get(item).addQuantity(qu, true);
         } else { //sinon, on crée les new objects
-            GameItem GI = new GameItem(this, item, qu, (byte)-1);
+            GameItem GI = new GameItem(this, item, qu, (byte) -1);
             itemsByStats.put(item, GI);
             inventory.put(GI.getID(), GI);
         }
@@ -122,10 +123,11 @@ public class Player extends Creature implements GMable {
 
     /**
      * Déplace un item (packet Object Move)
+     *
      * @param id
      * @param qu
      * @param pos
-     * @return 
+     * @return
      */
     public boolean moveItem(int id, int qu, byte pos) {
         if (qu < 1) {
@@ -136,7 +138,7 @@ public class Player extends Creature implements GMable {
         }
         GameItem GI = inventory.get(id);
         InventoryEntry I = GI.getInventory();
-        if(I.position == pos){
+        if (I.position == pos) {
             return false; //déplace au même endroit ?? (ne devrait pas arriver)
         }
         if (!GI.canMove(pos)) {
@@ -145,14 +147,14 @@ public class Player extends Creature implements GMable {
         if (qu > I.qu) { //peu pas déplacer plus que ce que l'on a
             qu = I.qu;
         }
-        if(GI.isWearable() && qu > 1 && pos != -1){ //impossible d'équiper 2 fois le même item
+        if (GI.isWearable() && qu > 1 && pos != -1) { //impossible d'équiper 2 fois le même item
             return false;
         }
         if (qu == I.qu) { //si même qu, on déplace tout
             return moveGameItem(GI, pos);
         }
-        if(GI.isWearable() && pos != -1 && wornItems.containsKey(pos)){ //si un item déjà équipé
-            if(wornItems.get(pos).getItemStats().equals(GI.getItemStats())){
+        if (GI.isWearable() && pos != -1 && wornItems.containsKey(pos)) { //si un item déjà équipé
+            if (wornItems.get(pos).getItemStats().equals(GI.getItemStats())) {
                 return false; //sert à rien d'équiper 2 fois le même item
             }
             itemFreePlace(pos); //sinon libère le place
@@ -162,7 +164,7 @@ public class Player extends Creature implements GMable {
         inventory.put(nGI.getID(), nGI);
         itemsByStats.put(nGI.getItemStats(), nGI);
         GI.changeQuantity(I.qu - qu, true); //on change quantité
-        if(nGI.isWearable() && pos != -1){
+        if (nGI.isWearable() && pos != -1) {
             return equipGameItem(nGI, pos); //on équipe
         }
         return true;
@@ -170,30 +172,31 @@ public class Player extends Creature implements GMable {
 
     /**
      * Déplace un GameItem (TOUT les items qu'il comporte)
+     *
      * @param GI
-     * @param pos 
+     * @param pos
      * @return false en erreur, true sinon
      */
     public boolean moveGameItem(GameItem GI, byte pos) {
-        if(GI == null){
+        if (GI == null) {
             return false;
         }
         if (!GI.canMove(pos)) {
             return false;
         }
-        if(GI.isWearable()){ //si c'est un équipement
-            if(pos != -1 && GI.getInventory().qu > 1){ //impossible d'équiper 2 fois le même item
+        if (GI.isWearable()) { //si c'est un équipement
+            if (pos != -1 && GI.getInventory().qu > 1) { //impossible d'équiper 2 fois le même item
                 return false;
-            }else if(pos == -1){ //on vire l'équipement
+            } else if (pos == -1) { //on vire l'équipement
                 unequip(GI.getInventory().position);
-            }else if(pos != -1 && wornItems.containsKey(pos)){ //place déjà prise
-                if(wornItems.get(pos).getItemStats().equals(GI.getItemStats())){
+            } else if (pos != -1 && wornItems.containsKey(pos)) { //place déjà prise
+                if (wornItems.get(pos).getItemStats().equals(GI.getItemStats())) {
                     return false; //même stats, pas besoin de changer
                 }
                 itemFreePlace(pos); //sinon on libère l'ancien item
             }
-            if(pos != -1){ //on équipe
-                if(!equipGameItem(GI, pos)){
+            if (pos != -1) { //on équipe
+                if (!equipGameItem(GI, pos)) {
                     return false;
                 }
             }
@@ -203,7 +206,7 @@ public class Player extends Creature implements GMable {
         ItemStats IS = GI.getItemStats();
         itemsByStats.remove(oGI.getItemStats());
         IS.setPosition(pos);
-        if(itemsByStats.containsKey(IS)){ //si item déjà existant en inventaire
+        if (itemsByStats.containsKey(IS)) { //si item déjà existant en inventaire
             int qu = oGI.getInventory().qu;
             deleteGameItem(oGI); //supprime l'ancien GI (évite duplications)
             itemsByStats.get(IS).addQuantity(qu, true); //on ajoute la quantité
@@ -223,100 +226,106 @@ public class Player extends Creature implements GMable {
     private void deleteGameItem(GameItem GI) {
         Loggin.debug("supprime GI %d", GI.getID());
         inventory.remove(GI.getID());
-        if(itemsByStats.get(GI.getItemStats()) == GI){
+        if (itemsByStats.get(GI.getItemStats()) == GI) {
             itemsByStats.remove(GI.getItemStats());
         }
-        if(wornItems.get(GI.getInventory().position) == GI){ //si équipement porté
+        if (wornItems.get(GI.getInventory().position) == GI) { //si équipement porté
             unequip(GI.getInventory().position);
         }
         GI.delete();
     }
-    
+
     /**
-     * Equipe l'item
-     * /!\ Ne pas utiliser directement (ne libère pas la place)
+     * Equipe l'item /!\ Ne pas utiliser directement (ne libère pas la place)
+     *
      * @param GI
-     * @param pos 
+     * @param pos
      * @return true si tout ce passe bien, false si déjà équipé item similaire
      */
-    private boolean equipGameItem(GameItem GI, byte pos){
-        if(!GI.isWearable() || !GI.canMove(pos) || wornItems.containsKey(pos)){
+    private boolean equipGameItem(GameItem GI, byte pos) {
+        if (!GI.isWearable() || !GI.canMove(pos) || wornItems.containsKey(pos)) {
             return false;
         }
         wornItems.put(pos, GI);
         loadStuffStats();
         CharacterEvents.onStatsChange(session, this);
         ObjectEvents.onWeightChange(session, this);
-        
-        if(pos == GameItem.POS_ARME || pos == GameItem.POS_CAPE || pos == GameItem.POS_BOUCLIER || pos == GameItem.POS_FAMILIER || pos == GameItem.POS_COIFFE){
+
+        if (pos == GameItem.POS_ARME || pos == GameItem.POS_CAPE || pos == GameItem.POS_BOUCLIER || pos == GameItem.POS_FAMILIER || pos == GameItem.POS_COIFFE) {
             ObjectEvents.onAccessoriesChange(this);
         }
         return true;
     }
-    
+
     /**
-     * Enlève un équipement de la liste des équipements portés et recharge les stats
-     * /!\ ne remet pas dans l'inventaire /!\
-     * @param pos 
+     * Enlève un équipement de la liste des équipements portés et recharge les
+     * stats /!\ ne remet pas dans l'inventaire /!\
+     *
+     * @param pos
      */
-    private void unequip(byte pos){
-        if(wornItems.remove(pos) == null){
+    private void unequip(byte pos) {
+        if (wornItems.remove(pos) == null) {
             return;
         }
-        
+
         loadStuffStats();
         CharacterEvents.onStatsChange(session, this);
         ObjectEvents.onWeightChange(session, this);
-        if(pos == GameItem.POS_ARME || pos == GameItem.POS_CAPE || pos == GameItem.POS_BOUCLIER || pos == GameItem.POS_FAMILIER || pos == GameItem.POS_COIFFE){
+        if (pos == GameItem.POS_ARME || pos == GameItem.POS_CAPE || pos == GameItem.POS_BOUCLIER || pos == GameItem.POS_FAMILIER || pos == GameItem.POS_COIFFE) {
             ObjectEvents.onAccessoriesChange(this);
         }
     }
-    
+
     /**
      * Libère la place pour un autre item et remet dans l'inventaire
-     * @param pos 
+     *
+     * @param pos
      */
-    private void itemFreePlace(byte pos){
-        if(pos == -1 || !wornItems.containsKey(pos)){
+    private void itemFreePlace(byte pos) {
+        if (pos == -1 || !wornItems.containsKey(pos)) {
             return;
         }
         GameItem GI = wornItems.remove(pos);
-        moveGameItem(GI, (byte)-1);
+        moveGameItem(GI, (byte) -1);
     }
 
     /**
      * Charge les stats du perso
      */
     private void loadStats() {
-        for (String data : _character.baseStats.split("\\|")) {
-            try {
-                String[] arr = data.split(";");
-                int elemID = Integer.parseInt(arr[0]);
-                int qu = Integer.parseInt(arr[1]);
-                baseStats.add(elemID, qu);
-            } catch (Exception e) {
+        if (_character.baseStats.isEmpty()) {
+            ClassData.setStartStats(this);
+        } else {
+            for (String data : _character.baseStats.split("\\|")) {
+                try {
+                    String[] arr = data.split(";");
+                    int elemID = Integer.parseInt(arr[0]);
+                    int qu = Integer.parseInt(arr[1]);
+                    baseStats.add(elemID, qu);
+                } catch (Exception e) {
+                }
             }
         }
-        ClassData.setBaseStats(this);
         loadStuffStats();
     }
-    
+
     /**
      * Charge les stats du stuff
      */
-    private void loadStuffStats(){
+    private void loadStuffStats() {
         stuffStats = new Stats();
-        for(GameItem GI : wornItems.values()){
+        for (GameItem GI : wornItems.values()) {
             stuffStats.addAll(GI.getItemStats().getStats());
         }
     }
-    
+
     /**
      * Retourne toute les stats du perso
-     * @return 
+     *
+     * @return
      */
     @Override
-    public Stats getTotalStats(){
+    public Stats getTotalStats() {
         Stats total = new Stats();
         return total.addAll(baseStats).addAll(stuffStats);
     }
@@ -374,10 +383,8 @@ public class Player extends Creature implements GMable {
         ASData.append("0,0").append("|");
         ASData.append(0).append("|").append(0).append("|").append(0).append("|");
         ASData.append(0).append("~").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append((false ? "1" : "0")).append("|");
-        int pdv = 100;
-        int pdvMax = 100;
 
-        ASData.append(pdv).append(",").append(pdvMax).append("|");
+        ASData.append(getPDVMax()).append(",").append(getPDVMax()).append("|");
         ASData.append(10000).append(",10000|");
 
         ASData.append(getInitiative()).append("|");
@@ -441,13 +448,13 @@ public class Player extends Creature implements GMable {
         //FIXME pnj suiveur ? 
         str.append(",18").append(";"); //title
         str.append(gfxID).append("^").append(100) //gfxID^size //FIXME ,GFXID pnj suiveur
-//                .append(",").append("1247") // mob suvieur1
-//                .append(",").append("1503") //mob suiveur2
-//                .append(",").append("1451") //mob suiveur 3
-//                .append(",").append("1186") // mob suiveur 4
-//                .append(",").append("8013") // MS5
-//                .append(",").append("8018") // MS6
-//                .append(",").append("8017") // MS7 ... Infini quoi
+                //                .append(",").append("1247") // mob suvieur1
+                //                .append(",").append("1503") //mob suiveur2
+                //                .append(",").append("1451") //mob suiveur 3
+                //                .append(",").append("1186") // mob suiveur 4
+                //                .append(",").append("8013") // MS5
+                //                .append(",").append("8018") // MS6
+                //                .append(",").append("8017") // MS7 ... Infini quoi
                 .append(";");
         str.append(sexe).append(";");
         str.append(0).append(","); //alignement
@@ -485,34 +492,35 @@ public class Player extends Creature implements GMable {
 
         return str.toString();
     }
-    
+
     /**
      * retourne le stuff pour les packets d'affichage
-     * @return 
+     *
+     * @return
      */
-    public String getGMStuff(){
+    public String getGMStuff() {
         StringBuilder s = new StringBuilder();
-        
-        if(wornItems.containsKey(GameItem.POS_ARME)){
+
+        if (wornItems.containsKey(GameItem.POS_ARME)) {
             s.append(Integer.toHexString(wornItems.get(GameItem.POS_ARME).getItemStats().getID()));
         }
         s.append(',');
-        if(wornItems.containsKey(GameItem.POS_COIFFE)){
+        if (wornItems.containsKey(GameItem.POS_COIFFE)) {
             s.append(Integer.toHexString(wornItems.get(GameItem.POS_COIFFE).getItemStats().getID()));
         }
         s.append(',');
-        if(wornItems.containsKey(GameItem.POS_CAPE)){
+        if (wornItems.containsKey(GameItem.POS_CAPE)) {
             s.append(Integer.toHexString(wornItems.get(GameItem.POS_CAPE).getItemStats().getID()));
         }
         s.append(',');
-        if(wornItems.containsKey(GameItem.POS_FAMILIER)){
+        if (wornItems.containsKey(GameItem.POS_FAMILIER)) {
             s.append(Integer.toHexString(wornItems.get(GameItem.POS_FAMILIER).getItemStats().getID()));
         }
         s.append(',');
-        if(wornItems.containsKey(GameItem.POS_BOUCLIER)){
+        if (wornItems.containsKey(GameItem.POS_BOUCLIER)) {
             s.append(wornItems.get(GameItem.POS_BOUCLIER).getItemStats().getID());
         }
-        
+
         return s.toString();
     }
 
@@ -526,6 +534,14 @@ public class Player extends Creature implements GMable {
         p += Math.ceil(getTotalStats().get(Element.CHANCE) / 10);
 
         return p;
+    }
+    
+    /**
+     * Retourne le nombre de pdv max du perso
+     * @return 
+     */
+    public int getPDVMax(){
+        return (level - 1) * ClassData.VITA_PER_LVL + ClassData.BASE_VITA + getTotalStats().get(Element.VITA);
     }
 
     /**
@@ -592,5 +608,29 @@ public class Player extends Creature implements GMable {
      */
     public Collection<GameItem> getInventory() {
         return inventory.values();
+    }
+    
+    /**
+     * Sauvegarde le personnage
+     */
+    public synchronized void save(){
+        Loggin.debug("Sauvegarde de %s", _character.name);
+        StringBuilder stats = new StringBuilder();
+        
+        for(Entry<Element, Integer> e : baseStats.getAll()){
+            int val = e.getValue();
+            if(val == 0){
+                continue;
+            }
+            stats.append(e.getKey().getId(false)).append(';').append(val).append('|');
+        }
+        
+        _character.baseStats = stats.toString();
+        
+        for(GameItem GI : inventory.values()){
+            DAOFactory.inventory().update(GI.getInventory());
+        }
+        
+        DAOFactory.character().update(_character);
     }
 }

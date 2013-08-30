@@ -4,6 +4,7 @@ import game.objects.Player;
 
 public class ClassData {
 
+    //stats
     public static final int BASE_PA = 6;
     public static final int BONUS_PA_LVL100 = 1;
     public static final int BASE_PM = 3;
@@ -12,6 +13,9 @@ public class ClassData {
     public static final int BASE_PODS = 1000;
     public static final int BASE_INVOC = 1;
     public static final int BASE_INIT = 100;
+    public static final int BASE_VITA = 50;
+    public static final int VITA_PER_LVL = 5;
+    //classes
     public static final int CLASS_FECA = 1;
     public static final int CLASS_OSAMODAS = 2;
     public static final int CLASS_ENUTROF = 3;
@@ -117,7 +121,7 @@ public class ClassData {
      * @param p
      * @return
      */
-    public static void setBaseStats(Player p) {
+    public static void setStartStats(Player p) {
         Stats s = p.getBaseStats();
         s.add(Stats.Element.PA, BASE_PA);
         if (p.getLevel() >= 100) {

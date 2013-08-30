@@ -21,6 +21,16 @@ public class RealmIoHandler extends MinaIoHandler {
         session.setAttribute("HC", HC);
         RealmPacketEnum.HELLO_CONNECTION.send(session, HC);
     }
+    
+    @Override
+    public void sessionClosed(IoSession session){
+        if(session.containsAttribute("account")){
+            Account acc = (Account)session.getAttribute("account");
+            if(acc != null){
+                acc.removeSession();
+            }
+        }
+    }
 
     @Override
     public void messageSent(IoSession session, Object message) {
