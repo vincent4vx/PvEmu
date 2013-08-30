@@ -7,7 +7,6 @@ import models.Account;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import server.MinaIoHandler;
-import models.Character;
 import server.events.*;
 
 public class GameIoHandler extends MinaIoHandler {
@@ -22,8 +21,12 @@ public class GameIoHandler extends MinaIoHandler {
         MapEvents.onRemoveMap(session);
 
         Player p = (Player) session.getAttribute("player");
-
+        
         if (p == null) {
+            Account acc = (Account)session.getAttribute("account");
+            if(acc != null){
+                acc.removeSession();
+            }
             return;
         }
 
