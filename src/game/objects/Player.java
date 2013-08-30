@@ -293,7 +293,7 @@ public class Player extends Creature implements GMable {
      * Charge les stats du perso
      */
     private void loadStats() {
-        if (_character.baseStats.isEmpty()) {
+        if (_character.baseStats == null || _character.baseStats.isEmpty()) {
             ClassData.setStartStats(this);
         } else {
             for (String data : _character.baseStats.split("\\|")) {

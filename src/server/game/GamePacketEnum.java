@@ -151,6 +151,10 @@ public enum GamePacketEnum {
      * Packet pour affichage des accessoires (coiffe cape arme bouclier et familier
      */
     OBJECT_ACCESSORIES("Oa"),
+    /**
+     * Cinématique du début
+     */
+    TUTORIAL_BEGIN("TB"),
     PONG("pong");
     private String packet;
     private Object param;

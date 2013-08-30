@@ -5,7 +5,9 @@
 package models;
 
 import game.World;
+import game.objects.GameItem;
 import game.objects.Player;
+import java.util.HashMap;
 import jelly.Jelly;
 import jelly.Loggin;
 import models.dao.DAOFactory;
@@ -48,12 +50,36 @@ public class Character implements jelly.database.Model {
         perso.append((color1 != -1 ? Integer.toHexString(color1) : "-1")).append(";");
         perso.append((color2 != -1 ? Integer.toHexString(color2) : "-1")).append(";");
         perso.append((color3 != -1 ? Integer.toHexString(color3) : "-1")).append(";");
-        perso.append(getPlayer().getGMStuff()).append(";");
+        perso.append(getAccessories()).append(";");
         perso.append(0).append(";");
         perso.append("1;");//ServerID
         perso.append(";");//DeathCount	this.deathCount;
         perso.append(";");//LevelMax
         return perso.toString();
+    }
+    
+    private String getAccessories(){
+        StringBuilder sb = new StringBuilder();
+        
+        HashMap<Byte, Integer> accessories = DAOFactory.inventory().getAccessoriesByPlayerId(id);
+        
+        if(accessories.containsKey(GameItem.POS_ARME)){
+            sb.append(Integer.toHexString(accessories.get(GameItem.POS_ARME)));
+        }
+        sb.append(',');
+        if(accessories.containsKey(GameItem.POS_COIFFE)){
+            sb.append(Integer.toHexString(accessories.get(GameItem.POS_COIFFE)));
+        }
+        sb.append(',');
+        if(accessories.containsKey(GameItem.POS_CAPE)){
+            sb.append(Integer.toHexString(accessories.get(GameItem.POS_CAPE)));
+        }
+        sb.append(',');
+        if(accessories.containsKey(GameItem.POS_FAMILIER)){
+            sb.append(Integer.toHexString(accessories.get(GameItem.POS_FAMILIER)));
+        }
+        
+        return sb.toString();
     }
 
     public Player getPlayer() {

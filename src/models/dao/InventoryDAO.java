@@ -1,9 +1,11 @@
 package models.dao;
 
+import game.objects.GameItem;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jelly.Loggin;
@@ -16,6 +18,7 @@ public class InventoryDAO extends DAO<InventoryEntry> {
     private PreparedStatement getByPlayerId = null;
     private PreparedStatement createStatement = null;
     private PreparedStatement updateStatement = null;
+    private PreparedStatement getAccessoriesByPlayerIdStatement = null;
 
     @Override
     protected String tableName() {
@@ -71,6 +74,36 @@ public class InventoryDAO extends DAO<InventoryEntry> {
             }
         } catch (SQLException ex) {
             Loggin.error("Impossible de charger l'inventaire de " + id, ex);
+        }
+        
+        return list;
+    }
+    
+    public HashMap<Byte, Integer> getAccessoriesByPlayerId(int id){
+        if(getAccessoriesByPlayerIdStatement == null){
+            getAccessoriesByPlayerIdStatement = Database.prepare(
+                    new StringBuilder().append("SELECT t.id AS aID, e.position AS aPOS FROM inventory_entries e ")
+                    .append("JOIN item_templates t ON e.item_id = t.id ")
+                    .append("WHERE (position = ").append(GameItem.POS_ARME)
+                    .append(" OR position = ").append(GameItem.POS_COIFFE)
+                    .append(" OR position = ").append(GameItem.POS_CAPE)
+                    .append(" OR position = ").append(GameItem.POS_FAMILIER)
+                    .append(") AND owner = ? AND owner_type = 1")
+                    .toString()
+            );
+        }
+        
+        HashMap<Byte, Integer> list = new HashMap<>();
+        
+        try {
+            getAccessoriesByPlayerIdStatement.setInt(1, id);
+            ResultSet RS = getAccessoriesByPlayerIdStatement.executeQuery();
+            
+            while(RS.next()){
+                list.put(RS.getByte("aPOS"), RS.getInt("aID"));
+            }
+        } catch (SQLException ex) {
+            Loggin.error("Impossible de charger les accéssoires du personnage " + id, ex);
         }
         
         return list;

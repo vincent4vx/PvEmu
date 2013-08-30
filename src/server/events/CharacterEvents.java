@@ -171,5 +171,6 @@ public class CharacterEvents {
 
         GamePacketEnum.CREATE_CHARACTER_OK.send(session);
         GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+        GamePacketEnum.TUTORIAL_BEGIN.send(session);
     }
 }

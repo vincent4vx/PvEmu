@@ -67,6 +67,10 @@ public class GameIoHandler extends MinaIoHandler {
                                 session.close(true);
                             }
                             break;
+                        case 'L':
+                            Account acc = (Account)session.getAttribute("account");
+                            GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+                            break;
                         case 'P': //name generator
                             CharacterEvents.onNameGenerator(session);
                             break;
