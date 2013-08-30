@@ -141,6 +141,7 @@ public final class GameMap {
      */
     public void removePlayer(Player p) {
         _players.remove(p.getID());
+        _gms.remove(p.getID());
         if (p.getCell() != null) {
             p.getCell()._players.remove(p.getID());
         }
