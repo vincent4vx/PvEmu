@@ -2,6 +2,7 @@ package jelly.utils;
 
 import game.objects.GameMap;
 import java.util.concurrent.atomic.AtomicReference;
+import jelly.Loggin;
 
 public class Pathfinding {
 
@@ -12,22 +13,28 @@ public class Pathfinding {
         //int Steps = 0;
         String path = pathRef.get();
         String newPath = "";
+        boolean stopBefore = false;
+        
         for (int i = 0; i < path.length(); i += 3) {
             String SmallPath = path.substring(i, i + 3);
             char dir = SmallPath.charAt(0);
             short dirCaseID = cellCode_To_ID(SmallPath.substring(1));
-            //_nSteps = 0;
+            
+            if(i + 3 == path.length()){ //on se trouve à une case de l'arrivé
+                if(map.getCellById(dirCaseID).getObj() != -1){ //on y trouve un objet intéractif
+                    Loggin.debug("IO %d trouvé", dirCaseID);
+                    stopBefore = true;              
+                }
+            }
 
-            String[] aPathInfos = ValidSinglePath(newPos, SmallPath, map, rSteps).split(":");
+            String[] aPathInfos = ValidSinglePath(newPos, SmallPath, map, rSteps, stopBefore).split(":");
             if (aPathInfos[0].equalsIgnoreCase("stop")) {
                 newPos = Short.parseShort(aPathInfos[1]);
-                //Steps += _nSteps;
                 newPath += dir + cellID_To_Code(newPos);
                 pathRef.set(newPath);
                 return rSteps.get();
             } else if (aPathInfos[0].equalsIgnoreCase("ok")) {
                 newPos = dirCaseID;
-                //Steps += _nSteps;
             } else {
                 pathRef.set(newPath);
                 return -1000;
@@ -38,7 +45,7 @@ public class Pathfinding {
         return rSteps.get();
     }
 
-    public static String ValidSinglePath(short CurrentPos, String Path, GameMap map, AtomicReference<Integer> rSteps) {
+    public static String ValidSinglePath(short CurrentPos, String Path, GameMap map, AtomicReference<Integer> rSteps, boolean stopBefore) {
         int steps = 0;
         char dir = Path.charAt(0);
         short dirCaseID = cellCode_To_ID(Path.substring(1));
@@ -46,11 +53,7 @@ public class Pathfinding {
         for (steps = 1; steps <= 64; steps++) {
 
             if (GetCellIDFromDirrection(lastPos, dir, map, false) == dirCaseID) {
-                /*if (map.getCellById(lastPos).isTrigger()) {
-                 return "stop:" + lastPos;
-                 }*/
-
-                if (map.getCellById(dirCaseID).isWalkable()) {
+                if (!stopBefore && map.getCellById(dirCaseID).isWalkable()) {
                     rSteps.set(rSteps.get() + steps);
                     return "ok:";
                 } else {
@@ -61,24 +64,6 @@ public class Pathfinding {
             } else {
                 lastPos = GetCellIDFromDirrection(lastPos, dir, map, false);
             }
-
-            /*if (fight != null && fight.isOccuped(lastPos)) {
-             return "no:";
-             }*/
-            /*if (fight != null) {
-             if (getEnemyFighterArround(lastPos, map, fight) != null)//Si ennemie proche
-             {
-             return "stop:" + lastPos;
-             }
-             for (Piege p : fight.get_traps()) {
-             int dist = getDistanceBetween(map, p.get_cell().getID(), lastPos);
-             if (dist <= p.get_size()) {
-             //on arrete le déplacement sur la 1ere case du piege
-             return "stop:" + lastPos;
-             }
-             }
-             }*/
-
         }
         return "no:";
     }

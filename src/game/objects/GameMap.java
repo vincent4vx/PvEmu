@@ -88,6 +88,14 @@ public final class GameMap {
                 a.performAction(p);
             }
         }
+        
+        /**
+         * Retourne l'id de l'objet sur la cellule
+         * @return 
+         */
+        public int getObj(){
+            return obj;
+        }
     }
     private MapModel _model;
     private ArrayList<Cell> _cells = new ArrayList<>(150); //300 cells. devrait allez pour la plupart des maps
