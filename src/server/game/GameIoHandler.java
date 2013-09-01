@@ -112,6 +112,9 @@ public class GameIoHandler extends MinaIoHandler {
                         case 'A': //commande admin
                             BasicEvents.onAdminCommand(session, packet.substring(2));
                             break;
+                        case 'S':
+                            BasicEvents.onSmiley(session, packet.substring(2));
+                            break;
                     }
                     break;
                 case 'c': //chat

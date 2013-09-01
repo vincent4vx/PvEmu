@@ -109,4 +109,14 @@ public class BasicEvents {
         String msg = String.format("<font color='#%s'><b>[%s]</b> %s</font>", Constants.COLOR_RED, name, message);
         GamePacketEnum.SERVER_MESSAGE.sendToPlayerList(players, msg);
     }
+    
+    public static void onSmiley(IoSession session, String packet){
+        Player p = (Player)session.getAttribute("player");
+        
+        if(p == null){
+            return;
+        }
+        
+        GamePacketEnum.CHAT_SMILEY.sendToMap(p.getMap(), new StringBuilder().append(p.getID()).append('|').append(packet));
+    }
 }

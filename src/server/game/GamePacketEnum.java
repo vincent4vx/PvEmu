@@ -119,6 +119,11 @@ public enum GamePacketEnum {
      */
     CHAT_CHANEL_REMOVE("cC-"),
     /**
+     * Affiche le smiley aux joueurs
+     * [id joueur] | [id smiley]
+     */
+    CHAT_SMILEY("cS"),
+    /**
      * écrit dans la console (150 caractères max)
      */
     BASIC_CONSOLE_WRITE("BAT2"),
