@@ -15,6 +15,7 @@ import models.Account;
 import models.Character;
 import models.InventoryEntry;
 import models.MapModel;
+import models.NpcQuestion;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import server.events.CharacterEvents;
@@ -47,6 +48,7 @@ public class Player extends Creature implements GMable {
      */
     private HashMap<Byte, GameItem> wornItems = new HashMap<>();
     private Stats stuffStats;
+    public NpcQuestion current_npc_question = null;
 
     public Player(Character c) {
         _character = c;

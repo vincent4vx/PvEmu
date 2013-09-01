@@ -134,10 +134,23 @@ public class GameIoHandler extends MinaIoHandler {
                 case 'p':
                     GamePacketEnum.PONG.send(session);
                     break;
-                case 'e': //environement
+                case 'e': //emotes
                     switch(packet.charAt(1)){
                         case 'D': //direction
                             EmotesEvents.onDirection(session, packet.substring(2));
+                            break;
+                    }
+                    break;
+                case 'D': //dialogs
+                    switch(packet.charAt(1)){
+                        case 'C':
+                            DialogEvents.onCreate(session, packet.substring(2));
+                            break;
+                        case 'V':
+                            DialogEvents.onLeave(session);
+                            break;
+                        case 'R':
+                            DialogEvents.onResponse(session, packet.substring(2));
                             break;
                     }
                     break;

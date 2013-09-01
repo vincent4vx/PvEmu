@@ -2,6 +2,7 @@ package game;
 
 import game.objects.Player;
 import jelly.Loggin;
+import server.events.DialogEvents;
 
 public class ActionsHandler {
 
@@ -44,9 +45,20 @@ public class ActionsHandler {
                     p.teleport(
                             Short.parseShort(a.args[0]),
                             Short.parseShort(a.args[1]));
-                } catch (NumberFormatException e) {
-                }
+                } catch (NumberFormatException e) {}
                 break;
+            case 1: //dialogue NPC
+                if(a.args.length < 1 || a.args[0].equalsIgnoreCase("DV")){
+                    DialogEvents.onLeave(p.getSession());
+                    return;
+                }
+                try{
+                    int id = Integer.parseInt(a.args[0]);
+                    DialogEvents.onSendQuestion(p.getSession(), id);
+                }catch(NumberFormatException e){}
+                break;
+            default:
+                Loggin.debug("ActionID %d inconnue (args = %s)", a.actionID, a.args);
         }
     }
 }

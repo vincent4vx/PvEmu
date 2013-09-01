@@ -166,6 +166,15 @@ public final class GameMap {
     public Collection<GMable> getGMables(){
         return _gms.values();
     }
+    
+    /**
+     * Retourn le GMable d'id indiqué
+     * @param id
+     * @return 
+     */
+    public GMable getGMable(int id){
+        return _gms.get(id);
+    }
 
     /**
      * Retourne la cellule par son ID, si elle existe

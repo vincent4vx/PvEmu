@@ -29,6 +29,7 @@ public class NpcTemplateDAO extends DAO<NpcTemplate> {
             T.color2 = RS.getInt("color2");
             T.color3 = RS.getInt("color3");
             T.accessories = RS.getString("accessories");
+            T.initQuestion = RS.getInt("initQuestion");
             
             npcById.put(T.id, T);
             

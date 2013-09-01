@@ -3,7 +3,9 @@ package game.objects;
 import game.objects.dep.GMable;
 import jelly.Loggin;
 import models.MapNpcs;
+import models.NpcQuestion;
 import models.NpcTemplate;
+import models.dao.DAOFactory;
 
 public class GameNpc implements GMable {
 
@@ -11,12 +13,15 @@ public class GameNpc implements GMable {
     private NpcTemplate _template;
     private byte orientation;
     private short cellID;
+    private NpcQuestion _question;
 
     public GameNpc(MapNpcs data, int id) {
         _template = data.getTemplate();
         this.id = id;
         orientation = data.orientation;
         cellID = data.cellid;
+        
+        _question = DAOFactory.question().getById(_template.initQuestion);
     }
 
     @Override
@@ -50,6 +55,14 @@ public class GameNpc implements GMable {
         //packet.append(_template.get_customArtWork());
         
         return packet.toString();
+    }
+    
+    /**
+     * Retourne la question principale du pnj
+     * @return 
+     */
+    public NpcQuestion getQuestion(){
+        return _question;
     }
 
     @Override

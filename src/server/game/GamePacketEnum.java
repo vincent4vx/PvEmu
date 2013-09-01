@@ -165,6 +165,22 @@ public enum GamePacketEnum {
      * id | direction
      */
     EMOTE_DIRECTION("eD"),
+    /**
+     * Débute le dialogue avec le npc (param = GM id)
+     */
+    DIALOG_CREATE("DCK"),
+    /**
+     * Erreur (dialogue introuvable)
+     */
+    DIALOG_CREATE_ERROR("DCE"),
+    /**
+     * Question + liste des réponses
+     */
+    DIALOG_QUESTION("DQ"),
+    /**
+     * Ferme le dialogue
+     */
+    DIALOG_LEAVE("DV"),
     PONG("pong");
     private String packet;
     private Object param;
@@ -188,6 +204,9 @@ public enum GamePacketEnum {
     public void send(IoSession session, Object param) {
         if (!Jelly.running) {
             return; //ne rien envoyer une fois off
+        }
+        if(session == null || session.isClosing()){
+            return;
         }
         session.write(packet + String.valueOf(param));
     }
@@ -238,6 +257,9 @@ public enum GamePacketEnum {
             if (P.getSession() == null) {
                 P.logout();
                 continue;
+            }
+            if(P.getSession().isClosing()){
+                return;
             }
             P.getSession().write(packet + String.valueOf(param));
         }

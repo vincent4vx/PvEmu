@@ -1,5 +1,6 @@
 package models.dao;
 
+
 public class DAOFactory {
 
     private static AccountDAO account = null;
@@ -10,6 +11,8 @@ public class DAOFactory {
     private static ItemTemplateDAO item = null;
     private static NpcTemplateDAO npcTemplate = null;
     private static MapNpcsDAO mapNpcs = null;
+    private static NpcQuestionDAO question = null;
+    private static NpcResponseActionDAO responseAction = null;
 
     public static AccountDAO account() {
         if (account == null) {
@@ -65,5 +68,19 @@ public class DAOFactory {
             mapNpcs = new MapNpcsDAO();
         }
         return mapNpcs;
+    }
+    
+    public static NpcQuestionDAO question(){
+        if(question == null){
+            question = new NpcQuestionDAO();
+        }
+        return question;
+    }
+    
+    public static NpcResponseActionDAO responseAction(){
+        if(responseAction == null){
+            responseAction = new NpcResponseActionDAO();
+        }
+        return responseAction;
     }
 }

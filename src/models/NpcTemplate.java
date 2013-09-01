@@ -9,6 +9,7 @@ public class NpcTemplate implements Model {
     public byte sex;
     public int color1, color2, color3;
     public String accessories;
+    public int initQuestion;
     
     
     @Override
