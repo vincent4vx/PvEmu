@@ -9,7 +9,6 @@ import game.objects.GameItem;
 import game.objects.Player;
 import java.util.HashMap;
 import jelly.Jelly;
-import jelly.Loggin;
 import models.dao.DAOFactory;
 
 /**
@@ -33,6 +32,7 @@ public class Character implements jelly.database.Model {
     public short startMap;
     public short startCell;
     public String baseStats;
+    public byte orientation = 0;
     private Player _player = null;
 
     /**

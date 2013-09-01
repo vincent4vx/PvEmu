@@ -4,6 +4,7 @@ import game.GameAction;
 import game.objects.Player;
 import java.util.concurrent.atomic.AtomicReference;
 import jelly.Loggin;
+import jelly.Utils;
 import jelly.utils.Pathfinding;
 import org.apache.mina.core.session.IoSession;
 import server.game.GamePacketEnum;
@@ -73,6 +74,7 @@ public class GameActionEvents {
                     short cellDest = Short.parseShort(args[1]);
                     MapEvents.onArrivedOnCell(session, cellDest);
                 }
+                p.orientation = (byte)GA.get("ori");
                 break;
         }
         GA.delete();
@@ -104,6 +106,7 @@ public class GameActionEvents {
         short cellDest = Pathfinding.cellCode_To_ID(rPath.get().substring(rPath.get().length() - 2));
 
         GA.attach("dest", cellDest);
+        GA.attach("ori", Utils.parseBase64Char(rPath.get().charAt(rPath.get().length()-3)));
         GA.save();
 
         for (Player P : p.getMap().getPlayers().values()) {

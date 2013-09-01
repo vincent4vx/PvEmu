@@ -33,7 +33,7 @@ public class Player extends Creature implements GMable {
     private String chanels = "*#$:?i^!%";
     private Account _account;
     public String restriction = "6bk";
-    public int orientation = 2;
+    public byte orientation = 2;
     /**
      * Liste des items par id
      */
@@ -56,6 +56,7 @@ public class Player extends Creature implements GMable {
         classID = c.classId;
         sexe = c.sexe;
         id = c.id;
+        orientation = c.orientation;
 
         colors[0] = c.color1 == -1 ? "-1" : Integer.toHexString(c.color1);
         colors[1] = c.color2 == -1 ? "-1" : Integer.toHexString(c.color2);
@@ -630,6 +631,8 @@ public class Player extends Creature implements GMable {
         for(GameItem GI : inventory.values()){
             DAOFactory.inventory().update(GI.getInventory());
         }
+        
+        _character.orientation = orientation;
         
         DAOFactory.character().update(_character);
     }

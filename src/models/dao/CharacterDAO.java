@@ -44,12 +44,13 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
             p.lastMap = RS.getShort("lastMap");
             p.lastCell = RS.getShort("lastCell");
             p.baseStats = RS.getString("baseStats");
+            p.orientation = RS.getByte("orientation");
 
             charactersById.put(p.id, p);
 
             return p;
         } catch (SQLException e) {
-            e.printStackTrace();
+            Loggin.error("Impossible de charger le personnage !", e);
             return null;
         }
     }
@@ -98,9 +99,8 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
     @Override
     public boolean update(Character P) {
         try {
-            Loggin.debug("Sauvegarde de %s", P.name);
             if (updateStatement == null) {
-                updateStatement = Database.prepare("UPDATE characters SET level = ?, gfxid = ?, lastMap = ?, lastCell = ?, startMap = ?, startCell = ?, baseStats = ? WHERE id = ?");
+                updateStatement = Database.prepare("UPDATE characters SET level = ?, gfxid = ?, lastMap = ?, lastCell = ?, startMap = ?, startCell = ?, baseStats = ?, orientation = ? WHERE id = ?");
             }
 
             updateStatement.setInt(1, P.level);
@@ -110,14 +110,15 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
             updateStatement.setShort(5, P.startMap);
             updateStatement.setShort(6, P.startCell);
             updateStatement.setString(7, P.baseStats);
+            updateStatement.setByte(8, P.orientation);
 
-            updateStatement.setInt(8, P.id);
+            updateStatement.setInt(9, P.id);
 
             updateStatement.execute();
 
             return true;
         } catch (SQLException e) {
-            e.printStackTrace();
+            Loggin.error("Impossible de sauvegarder le personnage " + P.name, e);
             return false;
         }
     }

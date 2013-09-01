@@ -94,10 +94,10 @@ public class Utils {
      * @return
      */
     public static String implode(String glue, String[] pieces) {
-        if(pieces == null || pieces.length < 1){
+        if (pieces == null || pieces.length < 1) {
             return "";
         }
-        
+
         StringBuilder b = new StringBuilder();
 
         for (String p : pieces) {
@@ -127,5 +127,22 @@ public class Utils {
      */
     public static char char_rand(String s) {
         return s.charAt(_rand.nextInt(s.length()));
+    }
+
+    /**
+     * Retourne la valeur du caractère c en base64
+     * @param c
+     * @return 
+     */
+    public static byte parseBase64Char(char c) {
+        char[] HASH = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+            't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
+            'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'};
+        for (byte a = 0; a < HASH.length; a++) {
+            if (HASH[a] == c) {
+                return a;
+            }
+        }
+        return -1;
     }
 }

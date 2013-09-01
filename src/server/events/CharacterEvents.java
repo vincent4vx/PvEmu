@@ -5,6 +5,7 @@ import game.objects.GameItem;
 import game.objects.Player;
 import game.objects.dep.ClassData;
 import jelly.Config;
+import jelly.Loggin;
 import jelly.Utils;
 import models.Account;
 import models.dao.DAOFactory;
@@ -43,7 +44,7 @@ public class CharacterEvents {
 
             GamePacketEnum.SELECT_CHARACTER_OK.send(session, param.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            Loggin.error("Impossible de sélectionner le personnage", e);
             GamePacketEnum.SELECT_CHARACTER_ERROR.send(session);
         }
     }

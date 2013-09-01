@@ -155,6 +155,11 @@ public enum GamePacketEnum {
      * Cinématique du début
      */
     TUTORIAL_BEGIN("TB"),
+    /**
+     * Change la direction du personnage
+     * id | direction
+     */
+    EMOTE_DIRECTION("eD"),
     PONG("pong");
     private String packet;
     private Object param;
