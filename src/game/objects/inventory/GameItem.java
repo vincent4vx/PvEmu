@@ -1,12 +1,9 @@
-package game.objects;
+package game.objects.inventory;
 
-import game.objects.dep.ItemStats;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jelly.Loggin;
 import models.InventoryEntry;
 import models.dao.DAOFactory;
-import server.events.ObjectEvents;
 
 public class GameItem implements Cloneable {
 
@@ -155,21 +152,14 @@ public class GameItem implements Cloneable {
     public static final byte POS_CANDY7 = 27;
     //FIN position
     //FIN constantes
-    private InventoryEntry _inventory;
+    private InventoryEntry _inventoryEntry;
     private ItemStats _itemStats;
     private int id;
-    private Player _owner = null;
 
     public GameItem(InventoryEntry I) {
-        _inventory = I;
+        _inventoryEntry = I;
         _itemStats = I.getItemStats();
         id = I.id;
-    }
-    
-    private void loadOwner(){    
-        if(_inventory.owner_type == 1){
-            _owner = DAOFactory.character().getById(_inventory.owner).getPlayer();
-        }
     }
 
     /**
@@ -179,28 +169,27 @@ public class GameItem implements Cloneable {
      * @param stats
      * @param qu
      */
-    public GameItem(Player owner, ItemStats stats, int qu, byte pos) {
-        _owner = owner;
-        _inventory = new InventoryEntry();
-        _inventory.item_id = stats.getID();
-        _inventory.owner = owner.getID();
-        _inventory.owner_type = 1;
-        _inventory.position = pos;
-        _inventory.stats = stats.statsToString();
-        _inventory.qu = qu;
-        DAOFactory.inventory().create(_inventory);
+    public GameItem(InventoryAble owner, ItemStats stats, int qu, byte pos) {
+        _inventoryEntry = new InventoryEntry();
+        _inventoryEntry.item_id = stats.getID();
+        _inventoryEntry.owner = owner.getID();
+        _inventoryEntry.owner_type = owner.getOwnerType();
+        _inventoryEntry.position = pos;
+        _inventoryEntry.stats = stats.statsToString();
+        _inventoryEntry.qu = qu;
+        DAOFactory.inventory().create(_inventoryEntry);
         _itemStats = stats;
         _itemStats.setPosition(pos);
-        id = _inventory.id;
-        ObjectEvents.onAdd(owner.getSession(), this);
+        id = _inventoryEntry.id;
+        //ObjectEvents.onAdd(owner.getSession(), this);
     }
 
     public ItemStats getItemStats() {
         return _itemStats;
     }
 
-    public InventoryEntry getInventory() {
-        return _inventory;
+    public InventoryEntry getInventoryEntry() {
+        return _inventoryEntry;
     }
 
     /**
@@ -217,9 +206,9 @@ public class GameItem implements Cloneable {
     public String toString() {
         StringBuilder ret = new StringBuilder();
 
-        ret.append(Integer.toHexString(id)).append('~').append(Integer.toHexString(_inventory.item_id)).append('~')
-                .append(Integer.toHexString(_inventory.qu)).append('~').append(_inventory.position == -1 ? "" : Integer.toHexString(_inventory.position))
-                .append('~').append(_inventory.stats);
+        ret.append(Integer.toHexString(id)).append('~').append(Integer.toHexString(_inventoryEntry.item_id)).append('~')
+                .append(Integer.toHexString(_inventoryEntry.qu)).append('~').append(_inventoryEntry.position == -1 ? "" : Integer.toHexString(_inventoryEntry.position))
+                .append('~').append(_inventoryEntry.stats);
 
         return ret.toString();
     }
@@ -230,7 +219,7 @@ public class GameItem implements Cloneable {
      * @return
      */
     public int getPods() {
-        return _itemStats.getTemplate().pods * _inventory.qu;
+        return _itemStats.getTemplate().pods * _inventoryEntry.qu;
     }
 
     /**
@@ -239,7 +228,7 @@ public class GameItem implements Cloneable {
      * @param pos
      * @return
      */
-    public boolean canMove(int pos) {
+    public boolean canMove(byte pos) {
         if (pos == -1) {
             return true;
         }
@@ -269,6 +258,12 @@ public class GameItem implements Cloneable {
                 return pos == POS_FAMILIER;
             case TYPE_DOFUS:
                 return pos == POS_DOFUS1 || pos == POS_DOFUS2 || pos == POS_DOFUS3 || pos == POS_DOFUS4 || pos == POS_DOFUS5 || pos == POS_DOFUS6;
+            case TYPE_POTION:
+            case TYPE_PAIN:
+            case TYPE_PARCHO_EXP:
+            case TYPE_BOOST_FOOD:
+            case TYPE_GELEE:
+                return pos >= 35 && pos <= 48;
             default:
                 return false;
         }
@@ -312,33 +307,22 @@ public class GameItem implements Cloneable {
     }
     
     /**
-     * Déplace l'objet et le sauvegarde
+     * Change la position
      * @param pos 
      */
-    public void move(byte pos){
-        if(!canMove(pos)){
-            return;
-        }
-        Loggin.debug("Move GI %d from %d to %d", id, _inventory.position, pos);
-        _inventory.position = pos;
+    public void changePos(byte pos){
+        _inventoryEntry.position = pos;
         _itemStats.setPosition(pos);
-        DAOFactory.inventory().update(_inventory);
-        if(_owner == null){
-            loadOwner();
-        }
-        ObjectEvents.onMove(_owner.getSession(), this);
+        DAOFactory.inventory().update(_inventoryEntry);
     }
     
     /**
      * Supprime l'objet
      */
     public void delete(){
-        DAOFactory.inventory().delete(_inventory);
+        DAOFactory.inventory().delete(_inventoryEntry);
+        _inventoryEntry = null;
         _itemStats = null;
-        if(_owner == null){
-            loadOwner();
-        }
-        ObjectEvents.onRemove(_owner.getSession(), id);
         id = 0;
     }
     
@@ -346,24 +330,17 @@ public class GameItem implements Cloneable {
      * Change la quantité d'objets
      * @param newQu 
      */
-    public void changeQuantity(int newQu, boolean sendPacket){
-        _inventory.qu = newQu;
-        DAOFactory.inventory().update(_inventory);
-        
-        if(sendPacket){
-            if(_owner == null){
-                loadOwner();
-            }
-            ObjectEvents.onQuantityChange(_owner.getSession(), this);
-        }
+    public void changeQuantity(int newQu){
+        _inventoryEntry.qu = newQu;
+        DAOFactory.inventory().update(_inventoryEntry);
     }
     
     /**
      * Ajoute des objets
      * @param qu 
      */
-    public void addQuantity(int qu, boolean sendPacket){
-        changeQuantity(_inventory.qu + qu, sendPacket);
+    public void addQuantity(int qu){
+        changeQuantity(_inventoryEntry.qu + qu);
     }
     
     /**

@@ -1,8 +1,8 @@
-package game.objects.dep;
+package game.objects.inventory;
 
+import game.objects.dep.Stats;
 import java.util.Map.Entry;
 import java.util.Objects;
-import jelly.Loggin;
 import jelly.Utils;
 import models.InventoryEntry;
 import models.ItemTemplate;
@@ -42,7 +42,7 @@ public class ItemStats implements Cloneable {
             
             max = min > max ? min : max;
             
-            int jet = useMax ? max : Utils.rand(min, max + 1);
+            int jet = useMax ? max : Utils.rand(min, max);
             
             this.stats.add(elemID, jet);
         }

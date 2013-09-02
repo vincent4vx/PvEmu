@@ -1,7 +1,7 @@
 package models;
 
-import game.objects.GameItem;
-import game.objects.dep.ItemStats;
+import game.objects.inventory.GameItem;
+import game.objects.inventory.ItemStats;
 import jelly.database.Model;
 
 public class InventoryEntry implements Model {

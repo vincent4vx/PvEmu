@@ -20,7 +20,7 @@ public class Utils {
             'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'};
 
         for (int i = 0; i < size; i++) {
-            b.append(chrs[rand(0, chrs.length)]);
+            b.append(chrs[rand(0, chrs.length - 1)]);
         }
 
         return b.toString();
@@ -34,11 +34,7 @@ public class Utils {
      * @return
      */
     public static int rand(int min, int max) {
-        double d = (double) Math.abs(_rand.nextInt()) / (double) 4294967296L;
-        d *= max;
-        d += min;
-
-        return (int) d;
+        return _rand.nextInt(max - min + 1) + min;
     }
 
     /**

@@ -5,7 +5,7 @@
 package models;
 
 import game.World;
-import game.objects.GameItem;
+import game.objects.inventory.GameItem;
 import game.objects.Player;
 import java.util.HashMap;
 import jelly.Jelly;

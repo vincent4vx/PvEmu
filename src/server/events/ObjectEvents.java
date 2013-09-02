@@ -1,6 +1,6 @@
 package server.events;
 
-import game.objects.GameItem;
+import game.objects.inventory.GameItem;
 import game.objects.Player;
 import jelly.Loggin;
 import org.apache.mina.core.session.IoSession;
@@ -17,14 +17,18 @@ public class ObjectEvents {
         String[] data = packet.split("\\|");
         int id;
         byte target;
+        int qu = 1;
         try{
             id = Integer.parseInt(data[0]);
             target = Byte.parseByte(data[1]);
+            if(data.length > 2){
+                qu = Integer.parseInt(data[2]);
+            }
         }catch(Exception e){
             return;
         }
         
-        boolean result = p.moveItem(id, 1, target);
+        boolean result = p.getInventory().moveItem(id, qu, target);
         
         if(!result){
             Loggin.debug("Erreur lors du déplacement de l'objet %d", id);
@@ -33,18 +37,18 @@ public class ObjectEvents {
         }
     }
     
-    public static void onMove(IoSession session, GameItem GI){
-        if(session == null || GI == null){
-            return;
-        }
-        GamePacketEnum.OBJECT_MOVE.send(session, new StringBuilder().append(GI.getID()).append('|').append(GI.getInventory().position));
-    }
-    
-    public static void onQuantityChange(IoSession session, GameItem obj){
+    public static void onMove(IoSession session, int objID, byte objPOS){
         if(session == null){
             return;
         }
-        GamePacketEnum.OBJECT_QUANTITY.send(session, new StringBuilder().append(obj.getID()).append('|').append(obj.getInventory().qu).toString());
+        GamePacketEnum.OBJECT_MOVE.send(session, new StringBuilder().append(objID).append('|').append(objPOS));
+    }
+    
+    public static void onQuantityChange(IoSession session, int objID, int objQU){
+        if(session == null){
+            return;
+        }
+        GamePacketEnum.OBJECT_QUANTITY.send(session, new StringBuilder().append(objID).append('|').append(objQU).toString());
     }
     
     /**

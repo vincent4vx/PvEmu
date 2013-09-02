@@ -1,19 +1,19 @@
 package game.objects;
 
-import game.objects.dep.ItemStats;
+import game.objects.inventory.GameItem;
 import game.objects.dep.ClassData;
 import game.objects.dep.Creature;
 import game.objects.dep.GMable;
 import game.objects.dep.Stats;
 import game.objects.dep.Stats.Element;
-import java.util.Collection;
+import game.objects.inventory.Inventory;
+import game.objects.inventory.InventoryAble;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import jelly.Loggin;
 import jelly.Utils;
 import models.Account;
 import models.Character;
-import models.InventoryEntry;
 import models.MapModel;
 import models.NpcQuestion;
 import models.dao.DAOFactory;
@@ -22,7 +22,8 @@ import server.events.CharacterEvents;
 import server.events.MapEvents;
 import server.events.ObjectEvents;
 
-public class Player extends Creature implements GMable {
+
+public class Player extends Creature implements GMable, InventoryAble {
 
     private Character _character;
     private byte classID;
@@ -35,18 +36,7 @@ public class Player extends Creature implements GMable {
     private Account _account;
     public String restriction = "6bk";
     public byte orientation = 2;
-    /**
-     * Liste des items par id
-     */
-    private HashMap<Integer, GameItem> inventory = new HashMap<>();
-    /**
-     * Liste des items par itemStats
-     */
-    private HashMap<ItemStats, GameItem> itemsByStats = new HashMap<>();
-    /**
-     * équipements portés Position => Item
-     */
-    private HashMap<Byte, GameItem> wornItems = new HashMap<>();
+    private Inventory _inventory;
     private Stats stuffStats;
     public NpcQuestion current_npc_question = null;
 
@@ -75,221 +65,8 @@ public class Player extends Creature implements GMable {
 
         _account = DAOFactory.account().getById(_character.accountId);
 
-        loadInventory();
+        _inventory = new Inventory(this);
         loadStats();
-    }
-
-    private void loadInventory() {
-        for (InventoryEntry I : DAOFactory.inventory().getByPlayerId(id)) {
-            GameItem GI = I.getGameItem();
-            inventory.put(I.id, GI);
-            itemsByStats.put(GI.getItemStats(), GI);
-
-            if (I.position != -1) { //si équipé
-                if (!GI.canMove(I.position)) { //si impossible à équiper on remet dans inventaire
-                    I.position = -1;
-                    DAOFactory.inventory().update(I);
-                    continue;
-                }
-                if (!GI.isWearable()) {//si ce n'est pa un équipement
-                    continue;
-                }
-                if (I.qu > 1) { //si + de 1
-                    int qu = I.qu - 1;
-                    /*GI.changeQuantity(1, false);
-                     addItem(I.getItemStats(), qu); //on les remet dans l'inventaire "normal"*/
-                    moveItem(I.id, qu, (byte) -1);
-                }
-                wornItems.put(I.position, GI);
-            }
-        }
-    }
-
-    /**
-     * Ajoute un item à l'inventaire (position -1)
-     *
-     * @param item
-     * @param qu
-     */
-    public void addItem(ItemStats item, int qu) {
-        if (item == null || qu < 1) {
-            return;
-        }
-        if (itemsByStats.containsKey(item)) { //item existe déjà, on augemente le nombre
-            itemsByStats.get(item).addQuantity(qu, true);
-        } else { //sinon, on crée les new objects
-            GameItem GI = new GameItem(this, item, qu, (byte) -1);
-            itemsByStats.put(item, GI);
-            inventory.put(GI.getID(), GI);
-        }
-    }
-
-    /**
-     * Déplace un item (packet Object Move)
-     *
-     * @param id
-     * @param qu
-     * @param pos
-     * @return
-     */
-    public boolean moveItem(int id, int qu, byte pos) {
-        if (qu < 1) {
-            return false;
-        }
-        if (!inventory.containsKey(id)) { //on n'a pas l'item dans son inventaire
-            return false;
-        }
-        GameItem GI = inventory.get(id);
-        InventoryEntry I = GI.getInventory();
-        if (I.position == pos) {
-            return false; //déplace au même endroit ?? (ne devrait pas arriver)
-        }
-        if (!GI.canMove(pos)) {
-            return false;
-        }
-        if (qu > I.qu) { //peu pas déplacer plus que ce que l'on a
-            qu = I.qu;
-        }
-        if (GI.isWearable() && qu > 1 && pos != -1) { //impossible d'équiper 2 fois le même item
-            return false;
-        }
-        if (qu == I.qu) { //si même qu, on déplace tout
-            return moveGameItem(GI, pos);
-        }
-        if (GI.isWearable() && pos != -1 && wornItems.containsKey(pos)) { //si un item déjà équipé
-            if (wornItems.get(pos).getItemStats().equals(GI.getItemStats())) {
-                return false; //sert à rien d'équiper 2 fois le même item
-            }
-            itemFreePlace(pos); //sinon libère le place
-        }
-        //sinon crée new GI
-        GameItem nGI = new GameItem(this, GI.getItemStats(), qu, pos);
-        inventory.put(nGI.getID(), nGI);
-        itemsByStats.put(nGI.getItemStats(), nGI);
-        GI.changeQuantity(I.qu - qu, true); //on change quantité
-        if (nGI.isWearable() && pos != -1) {
-            return equipGameItem(nGI, pos); //on équipe
-        }
-        return true;
-    }
-
-    /**
-     * Déplace un GameItem (TOUT les items qu'il comporte)
-     *
-     * @param GI
-     * @param pos
-     * @return false en erreur, true sinon
-     */
-    public boolean moveGameItem(GameItem GI, byte pos) {
-        if (GI == null) {
-            return false;
-        }
-        if (!GI.canMove(pos)) {
-            return false;
-        }
-        if (GI.isWearable()) { //si c'est un équipement
-            if (pos != -1 && GI.getInventory().qu > 1) { //impossible d'équiper 2 fois le même item
-                return false;
-            } else if (pos == -1) { //on vire l'équipement
-                unequip(GI.getInventory().position);
-            } else if (pos != -1 && wornItems.containsKey(pos)) { //place déjà prise
-                if (wornItems.get(pos).getItemStats().equals(GI.getItemStats())) {
-                    return false; //même stats, pas besoin de changer
-                }
-                itemFreePlace(pos); //sinon on libère l'ancien item
-            }
-            if (pos != -1) { //on équipe
-                if (!equipGameItem(GI, pos)) {
-                    return false;
-                }
-            }
-        }
-        //vérification OK, on le déplace
-        GameItem oGI = GI.clone(); //clone le GI pour ne pas le modifier
-        ItemStats IS = GI.getItemStats();
-        itemsByStats.remove(oGI.getItemStats());
-        IS.setPosition(pos);
-        if (itemsByStats.containsKey(IS)) { //si item déjà existant en inventaire
-            int qu = oGI.getInventory().qu;
-            deleteGameItem(oGI); //supprime l'ancien GI (évite duplications)
-            itemsByStats.get(IS).addQuantity(qu, true); //on ajoute la quantité
-            return true;
-        }
-        //sinon, simple transfert
-        GI.move(pos);
-        itemsByStats.put(IS, GI);
-        return true;
-    }
-
-    /**
-     * Supprime proprement le GameItem
-     *
-     * @param GI
-     */
-    private void deleteGameItem(GameItem GI) {
-        Loggin.debug("supprime GI %d", GI.getID());
-        inventory.remove(GI.getID());
-        if (itemsByStats.get(GI.getItemStats()) == GI) {
-            itemsByStats.remove(GI.getItemStats());
-        }
-        if (wornItems.get(GI.getInventory().position) == GI) { //si équipement porté
-            unequip(GI.getInventory().position);
-        }
-        GI.delete();
-    }
-
-    /**
-     * Equipe l'item /!\ Ne pas utiliser directement (ne libère pas la place)
-     *
-     * @param GI
-     * @param pos
-     * @return true si tout ce passe bien, false si déjà équipé item similaire
-     */
-    private boolean equipGameItem(GameItem GI, byte pos) {
-        if (!GI.isWearable() || !GI.canMove(pos) || wornItems.containsKey(pos)) {
-            return false;
-        }
-        wornItems.put(pos, GI);
-        loadStuffStats();
-        CharacterEvents.onStatsChange(session, this);
-        ObjectEvents.onWeightChange(session, this);
-
-        if (pos == GameItem.POS_ARME || pos == GameItem.POS_CAPE || pos == GameItem.POS_BOUCLIER || pos == GameItem.POS_FAMILIER || pos == GameItem.POS_COIFFE) {
-            ObjectEvents.onAccessoriesChange(this);
-        }
-        return true;
-    }
-
-    /**
-     * Enlève un équipement de la liste des équipements portés et recharge les
-     * stats /!\ ne remet pas dans l'inventaire /!\
-     *
-     * @param pos
-     */
-    private void unequip(byte pos) {
-        if (wornItems.remove(pos) == null) {
-            return;
-        }
-
-        loadStuffStats();
-        CharacterEvents.onStatsChange(session, this);
-        ObjectEvents.onWeightChange(session, this);
-        if (pos == GameItem.POS_ARME || pos == GameItem.POS_CAPE || pos == GameItem.POS_BOUCLIER || pos == GameItem.POS_FAMILIER || pos == GameItem.POS_COIFFE) {
-            ObjectEvents.onAccessoriesChange(this);
-        }
-    }
-
-    /**
-     * Libère la place pour un autre item et remet dans l'inventaire
-     *
-     * @param pos
-     */
-    private void itemFreePlace(byte pos) {
-        if (pos == -1 || !wornItems.containsKey(pos)) {
-            return;
-        }
-        GameItem GI = wornItems.remove(pos);
-        moveGameItem(GI, (byte) -1);
     }
 
     /**
@@ -317,8 +94,9 @@ public class Player extends Creature implements GMable {
      */
     private void loadStuffStats() {
         stuffStats = new Stats();
-        for (GameItem GI : wornItems.values()) {
-            stuffStats.addAll(GI.getItemStats().getStats());
+        for (GameItem GI : _inventory.getItemsByPos().values()) {
+            if(GI.isWearable())
+                stuffStats.addAll(GI.getItemStats().getStats());
         }
     }
 
@@ -503,6 +281,7 @@ public class Player extends Creature implements GMable {
      */
     public String getGMStuff() {
         StringBuilder s = new StringBuilder();
+        HashMap<Byte, GameItem> wornItems = _inventory.getItemsByPos();
 
         if (wornItems.containsKey(GameItem.POS_ARME)) {
             s.append(Integer.toHexString(wornItems.get(GameItem.POS_ARME).getItemStats().getID()));
@@ -598,19 +377,10 @@ public class Player extends Creature implements GMable {
 
     public int getUsedPods() {
         int pods = 0;
-        for (GameItem GI : inventory.values()) {
+        /*for (GameItem GI : inventory.values()) {
             pods += GI.getPods();
-        }
+        }*/
         return pods;
-    }
-
-    /**
-     * Retourne tout les items du joueur
-     *
-     * @return
-     */
-    public Collection<GameItem> getInventory() {
-        return inventory.values();
     }
     
     /**
@@ -630,12 +400,60 @@ public class Player extends Creature implements GMable {
         
         _character.baseStats = stats.toString();
         
-        for(GameItem GI : inventory.values()){
+        /*for(GameItem GI : inventory.values()){
             DAOFactory.inventory().update(GI.getInventory());
-        }
+        }*/
         
         _character.orientation = orientation;
         
         DAOFactory.character().update(_character);
+    }
+
+    @Override
+    public Inventory getInventory() {
+        return _inventory;
+    }
+
+    @Override
+    public byte getOwnerType() {
+        return 1;
+    }
+
+    @Override
+    public void onQuantityChange(int id, int qu) {
+        ObjectEvents.onQuantityChange(session, id, qu);
+    }
+
+    @Override
+    public void onAddItem(GameItem GI) {
+        ObjectEvents.onAdd(session, GI);
+    }
+
+    @Override
+    public void onDeleteItem(int id) {
+        ObjectEvents.onRemove(session, id);
+    }
+
+    @Override
+    public void onMoveItemSuccess(byte pos) {
+        if(_inventory.getItemByPos(pos).isWearable()){
+            loadStuffStats();
+            CharacterEvents.onStatsChange(session, this);
+            ObjectEvents.onWeightChange(session, this);
+        }
+        if(pos == GameItem.POS_ARME || pos == GameItem.POS_COIFFE || pos == GameItem.POS_CAPE || pos == GameItem.POS_FAMILIER){
+            ObjectEvents.onAccessoriesChange(this);
+        }
+    }
+
+    @Override
+    public void onMoveItem(int id, byte pos) {
+        ObjectEvents.onMove(session, id, pos);
+    }
+
+    @Override
+    public boolean canMoveItem(GameItem GI, int qu, byte pos) {
+        
+        return true;
     }
 }

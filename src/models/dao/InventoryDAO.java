@@ -1,13 +1,11 @@
 package models.dao;
 
-import game.objects.GameItem;
+import game.objects.inventory.GameItem;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jelly.Loggin;
 import jelly.database.DAO;
 import jelly.database.Database;
@@ -15,7 +13,7 @@ import models.InventoryEntry;
 
 public class InventoryDAO extends DAO<InventoryEntry> {
     
-    private PreparedStatement getByPlayerId = null;
+    private PreparedStatement getByOwnerStatement = null;
     private PreparedStatement createStatement = null;
     private PreparedStatement updateStatement = null;
     private PreparedStatement getAccessoriesByPlayerIdStatement = null;
@@ -50,16 +48,17 @@ public class InventoryDAO extends DAO<InventoryEntry> {
      * @param id
      * @return 
      */
-    public ArrayList<InventoryEntry> getByPlayerId(int id){
+    public ArrayList<InventoryEntry> getByOwner(byte type, int id){
         ArrayList<InventoryEntry> list = new ArrayList<>();
         
-        if(getByPlayerId == null){
-            getByPlayerId = Database.prepare("SELECT * FROM inventory_entries WHERE owner = ? AND owner_type = 1");
+        if(getByOwnerStatement == null){
+            getByOwnerStatement = Database.prepare("SELECT * FROM inventory_entries WHERE owner = ? AND owner_type = ?");
         }
         try {
-            getByPlayerId.setInt(1, id);
+            getByOwnerStatement.setInt(1, id);
+            getByOwnerStatement.setByte(2, type);
             
-            ResultSet RS = getByPlayerId.executeQuery();
+            ResultSet RS = getByOwnerStatement.executeQuery();
             
             while(RS.next()){
                 InventoryEntry I = createByResultSet(RS);

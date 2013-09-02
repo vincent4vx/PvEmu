@@ -1,7 +1,7 @@
 package server.events;
 
 import game.World;
-import game.objects.GameItem;
+import game.objects.inventory.GameItem;
 import game.objects.Player;
 import game.objects.dep.ClassData;
 import jelly.Config;
@@ -38,9 +38,10 @@ public class CharacterEvents {
                     .append(chr.sexe).append("|").append(chr.gfxid).append("|")
                     .append(Utils.implode("|", chr.getPlayer().getColors())).append("|");
             
-            for(GameItem GI : chr.getPlayer().getInventory()){
+            /*for(GameItem GI : chr.getPlayer().getInventory().getItems()){
                 param.append(GI.toString()).append(';');
-            }
+            }*/
+            param.append(chr.getPlayer().getInventory().toString());
 
             GamePacketEnum.SELECT_CHARACTER_OK.send(session, param.toString());
         } catch (Exception e) {

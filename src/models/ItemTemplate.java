@@ -1,6 +1,6 @@
 package models;
 
-import game.objects.dep.ItemStats;
+import game.objects.inventory.ItemStats;
 import jelly.database.Model;
 
 public class ItemTemplate implements Model {

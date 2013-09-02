@@ -3,7 +3,7 @@ package jelly;
 import game.World;
 import game.objects.GameMap;
 import game.objects.Player;
-import game.objects.dep.ItemStats;
+import game.objects.inventory.ItemStats;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ExecutorService;
@@ -174,7 +174,7 @@ public class Commands {
                         msg.append(" Avec les stats maximum !");
                     }
                     msg.append('\n');
-                    P.addItem(IS, qu);
+                    P.getInventory().addItem(IS, qu);
                     ChatEvents.onSendInfoMessage(P.getSession(), 21, String.valueOf(qu), String.valueOf(id));
                 }
                 display(errors.get(), session);
