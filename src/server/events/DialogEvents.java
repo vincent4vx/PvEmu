@@ -113,8 +113,17 @@ public class DialogEvents {
                 return;
             }
             
+            boolean close = true;
+            
             for(NpcResponseAction NRA : NRA_l){
                 NRA.getAction().performAction(p);
+                if(NRA.action_id == 1){
+                    close = false;
+                }
+            }
+            
+            if(close){
+                onLeave(session);
             }
         }catch(Exception e){
             onLeave(session);

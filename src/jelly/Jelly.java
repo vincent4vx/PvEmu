@@ -87,6 +87,8 @@ public class Jelly {
         Shell.println("\n====> Préchargement <====", GraphicRenditionEnum.BOLD);
         Shell.print("Chargement des maps : ", GraphicRenditionEnum.YELLOW);
         Shell.println(DAOFactory.map().getAll().size() + " maps chargées", GraphicRenditionEnum.GREEN);
+        Shell.print("Chargement des question : ", GraphicRenditionEnum.YELLOW);
+        Shell.println(DAOFactory.question().getAll().size() + " question chargées", GraphicRenditionEnum.GREEN);
         Shell.print("Chargement des pnj : ", GraphicRenditionEnum.YELLOW);
         Shell.println(DAOFactory.npcTemplate().getAll().size() + " templates chargées", GraphicRenditionEnum.GREEN);
         Shell.print("Chargement des comptes : ", GraphicRenditionEnum.YELLOW);
