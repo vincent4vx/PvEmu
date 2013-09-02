@@ -1,5 +1,8 @@
 package jelly;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 public class Utils {
@@ -140,5 +143,21 @@ public class Utils {
             }
         }
         return -1;
+    }
+    
+    public static String getUptime(){
+        StringBuilder ret = new StringBuilder();
+        
+        long time = System.currentTimeMillis() - Jelly.start;
+        int days = (int) (time / (1000 * 3600 * 24));
+        int hours = (int)(time / (1000 * 3600) % 24);
+        int minutes = (int)(time / (1000 * 60) % 60);
+        
+        if(days != 0){
+            ret.append(days).append(" jours ");
+        }
+        ret.append(hours).append("h ").append(minutes).append("min");
+        
+        return ret.toString();
     }
 }

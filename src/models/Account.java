@@ -98,6 +98,7 @@ public class Account implements jelly.database.Model {
     public void setSession(IoSession session) {
         _session = session;
         session.setAttribute("account", this);
+        waiting = false;
     }
 
     /**

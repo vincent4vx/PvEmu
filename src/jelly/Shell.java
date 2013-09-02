@@ -1,7 +1,14 @@
 package jelly;
 
+import game.World;
 import java.io.PrintStream;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadMXBean;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import org.fusesource.jansi.AnsiConsole;
+import server.game.GameIoHandler;
 
 public class Shell {
 
@@ -85,5 +92,43 @@ public class Shell {
         }
 
         return b.toString();
+    }
+    
+    public static void initGameStats(){
+        ScheduledExecutorService t = Executors.newSingleThreadScheduledExecutor();
+        t.scheduleAtFixedRate(
+                new Runnable(){
+                    @Override
+                    public void run(){
+                        ThreadMXBean TMB = ManagementFactory.getThreadMXBean();
+                        Shell.clear();
+                        Shell.println("\tStatistiques :", GraphicRenditionEnum.YELLOW);
+                        Shell.println("==========================\n", GraphicRenditionEnum.YELLOW);
+                        Shell.println("Informations sur les sockets");
+                        Shell.print("Nombre de packets reçus : ", GraphicRenditionEnum.YELLOW);
+                        Shell.println(String.valueOf(GameIoHandler.RECV), GraphicRenditionEnum.GREEN);
+                        Shell.print("Nombre de packets envoyés : ", GraphicRenditionEnum.YELLOW);
+                        Shell.println(String.valueOf(GameIoHandler.SENT), GraphicRenditionEnum.GREEN);
+                        Shell.print("Nombre de connexions : ", GraphicRenditionEnum.YELLOW);
+                        Shell.println(String.valueOf(GameIoHandler.CON), GraphicRenditionEnum.CYAN);
+                        
+                        Shell.println("\nInformations sur le système");
+                        Shell.print("Utilisation de la RAM : ", GraphicRenditionEnum.YELLOW);
+                        Shell.println(Runtime.getRuntime().totalMemory() / 1024 / 1024 + "Mo", GraphicRenditionEnum.BLUE);
+                        Shell.print("Nombre de threads actifs : ", GraphicRenditionEnum.YELLOW);
+                        Shell.println(String.valueOf(TMB.getThreadCount()), GraphicRenditionEnum.CYAN);
+                        
+                        Shell.println("\nInformations sur le jeu");
+                        Shell.print("Nombre de joueurs en ligne : ", GraphicRenditionEnum.YELLOW);
+                        Shell.println(String.valueOf(World.getOnlinePlayers().size()), GraphicRenditionEnum.GREEN);
+                        Shell.print("Uptime : ", GraphicRenditionEnum.YELLOW);
+                        Shell.println(Utils.getUptime(), GraphicRenditionEnum.YELLOW, GraphicRenditionEnum.BOLD);
+                        Shell.print("Nombre d'erreurs : ", GraphicRenditionEnum.YELLOW);
+                        Shell.println(String.valueOf(Loggin.ERROR_COUNT), GraphicRenditionEnum.RED);
+                    }
+                }, 
+                1, 
+                1, 
+                TimeUnit.SECONDS);
     }
 }

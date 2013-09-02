@@ -11,8 +11,13 @@ import server.events.*;
 
 public class GameIoHandler extends MinaIoHandler {
 
+    public static int SENT = 0;
+    public static int RECV = 0;
+    public static int CON = 0;
+
     @Override
     public void sessionCreated(IoSession session) throws Exception {
+        CON++;
         GamePacketEnum.HELLO_GAME.send(session);
     }
 
@@ -21,10 +26,10 @@ public class GameIoHandler extends MinaIoHandler {
         MapEvents.onRemoveMap(session);
 
         Player p = (Player) session.getAttribute("player");
-        
+
         if (p == null) {
-            Account acc = (Account)session.getAttribute("account");
-            if(acc != null){
+            Account acc = (Account) session.getAttribute("account");
+            if (acc != null) {
                 acc.removeSession();
             }
             return;
@@ -36,18 +41,20 @@ public class GameIoHandler extends MinaIoHandler {
 
     @Override
     public void messageSent(IoSession session, Object message) {
+        SENT++;
         Loggin.game("Send >> %s", message);
     }
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
+        RECV++;
         if (!Jelly.running) { //si serveur offline, on ne recoit rien
             return;
         }
         String packet = ((String) message).trim();
         if (packet.length() > 1) {
             Loggin.game("Recv << %s", packet);
-            if(!packet.startsWith("AT") && !session.containsAttribute("account")){
+            if (!packet.startsWith("AT") && !session.containsAttribute("account")) {
                 session.close(true);
                 return;
             }
@@ -55,24 +62,20 @@ public class GameIoHandler extends MinaIoHandler {
                 case 'A': //packet perso / compte
                     switch (packet.charAt(1)) {
                         case 'T': //attache account
-                            try {
-                                int id = Integer.parseInt(packet.substring(2));
-                                Account acc = DAOFactory.account().getById(id);
+                            int id = Integer.parseInt(packet.substring(2));
+                            Account acc = DAOFactory.account().getById(id);
 
-                                if (acc == null || !acc.isWaiting()) {
-                                    session.close(true);
-                                    return;
-                                }
-
-                                acc.setSession(session);
-                                GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
-                            } catch (Exception e) {
+                            if (acc == null || !acc.isWaiting()) {
                                 session.close(true);
+                                return;
                             }
+
+                            acc.setSession(session);
+                            GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
                             break;
                         case 'L':
-                            Account acc = (Account)session.getAttribute("account");
-                            GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+                            Account acc2 = (Account) session.getAttribute("account");
+                            GamePacketEnum.CHARCTERS_LIST.send(session, acc2.getCharactersList());
                             break;
                         case 'P': //name generator
                             CharacterEvents.onNameGenerator(session);
@@ -125,7 +128,7 @@ public class GameIoHandler extends MinaIoHandler {
                     }
                     break;
                 case 'O': //objets
-                    switch(packet.charAt(1)){
+                    switch (packet.charAt(1)) {
                         case 'M': //object move
                             ObjectEvents.onObjectMove(session, packet.substring(2));
                             break;
@@ -135,14 +138,14 @@ public class GameIoHandler extends MinaIoHandler {
                     GamePacketEnum.PONG.send(session);
                     break;
                 case 'e': //emotes
-                    switch(packet.charAt(1)){
+                    switch (packet.charAt(1)) {
                         case 'D': //direction
                             EmotesEvents.onDirection(session, packet.substring(2));
                             break;
                     }
                     break;
                 case 'D': //dialogs
-                    switch(packet.charAt(1)){
+                    switch (packet.charAt(1)) {
                         case 'C':
                             DialogEvents.onCreate(session, packet.substring(2));
                             break;

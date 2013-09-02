@@ -68,6 +68,7 @@ public class Jelly {
                 Jelly.close();
             }
         });
+        Shell.initGameStats();
     }
 
     private static void printAsciiLogo() {

@@ -20,8 +20,9 @@ public abstract class DAO<T extends Model> {
     protected abstract T createByResultSet(ResultSet RS);
 
     /**
-     * Cherche un élément par sa clé primaire.
-     * Ne pas utiliser directement, car n'enregistre pas les résultat
+     * Cherche un élément par sa clé primaire. Ne pas utiliser directement, car
+     * n'enregistre pas les résultat
+     *
      * @param pk
      * @return
      * @deprecated
@@ -44,15 +45,17 @@ public abstract class DAO<T extends Model> {
         }
 
         try {
-            findStatement.setInt(1, pk);
-            ResultSet RS = findStatement.executeQuery();
+            synchronized (findStatement) {
+                findStatement.setInt(1, pk);
+                ResultSet RS = findStatement.executeQuery();
 
-            if (!RS.next()) {
-                Loggin.debug("Impossible de trouver la pk %d dans la table %s", pk, tableName());
-                return null;
+                if (!RS.next()) {
+                    Loggin.debug("Impossible de trouver la pk %d dans la table %s", pk, tableName());
+                    return null;
+                }
+
+                return createByResultSet(RS);
             }
-
-            return createByResultSet(RS);
         } catch (SQLException e) {
             Loggin.error("Chargement impossible !", e);
             return null;

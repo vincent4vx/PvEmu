@@ -11,6 +11,7 @@ import java.util.logging.StreamHandler;
 import jelly.Shell.GraphicRenditionEnum;
 
 public class Loggin {
+    public static int ERROR_COUNT = 0;
 
     private final static Loggin self = new Loggin();
     private Logger realm;
@@ -82,6 +83,9 @@ public class Loggin {
         if (lvl == Level.INFO && !Jelly.DEBUG) {
             return;
         }
+        if(lvl != Level.INFO){
+            ERROR_COUNT++;
+        }
         self.realm.log(lvl, msg, ex);
         self.realm_handler.flush();
     }
@@ -124,6 +128,9 @@ public class Loggin {
         if (lvl == Level.INFO && !Jelly.DEBUG) {
             return;
         }
+        if(lvl != Level.INFO){
+            ERROR_COUNT++;
+        }
         self.game.log(lvl, msg, ex);
         self.game_handler.flush();
     }
@@ -149,6 +156,7 @@ public class Loggin {
      * @param ex 
      */
     public static void error(String msg, Throwable ex){
+        ERROR_COUNT++;
         self.errors.log(Level.WARNING, msg, ex);
         self.errors_handler.flush();
     }
