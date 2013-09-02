@@ -13,6 +13,10 @@ public enum GamePacketEnum {
      * Packet envoyé à la connexion
      */
     HELLO_GAME("HG"),
+    /**
+     * Erreur lors de l'attachement du compte
+     */
+    ACCOUNT_ATTACH_ERROR("ATE"),
     //Accounts packets
     /**
      * Liste des personnages

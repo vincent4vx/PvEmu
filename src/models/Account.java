@@ -1,7 +1,9 @@
 package models;
 
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import jelly.Config;
+import jelly.Loggin;
 import jelly.Utils;
 import models.dao.*;
 import org.apache.mina.core.session.IoSession;
@@ -18,6 +20,7 @@ public class Account implements jelly.database.Model {
     protected ArrayList<Character> _characters = null;
     private boolean waiting = false;
     private IoSession _session;
+    private String current_ip;
 
     public ArrayList<Character> getCharacters() {
         if (_characters == null) {
@@ -37,6 +40,7 @@ public class Account implements jelly.database.Model {
 
     public boolean passValid(String password, String key) {
         String decrypt = Utils.decryptPacket(password, key);
+        Loggin.debug("db : %s, decrypt : %s", pass, decrypt);
         return pass.equals(decrypt);
     }
 
@@ -77,8 +81,8 @@ public class Account implements jelly.database.Model {
      *
      * @return
      */
-    public boolean isWaiting() {
-        return waiting;
+    public boolean isWaiting(String ip) {
+        return waiting && ip.equals(current_ip);
     }
 
     /**
@@ -99,6 +103,8 @@ public class Account implements jelly.database.Model {
         _session = session;
         session.setAttribute("account", this);
         waiting = false;
+        InetSocketAddress ISA = (InetSocketAddress)session.getRemoteAddress();
+        current_ip = ISA.getAddress().getHostAddress();
     }
 
     /**

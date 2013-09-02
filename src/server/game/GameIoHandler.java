@@ -1,6 +1,7 @@
 package server.game;
 
 import game.objects.Player;
+import java.net.InetSocketAddress;
 import jelly.Jelly;
 import jelly.Loggin;
 import models.Account;
@@ -64,13 +65,23 @@ public class GameIoHandler extends MinaIoHandler {
                         case 'T': //attache account
                             int id = Integer.parseInt(packet.substring(2));
                             Account acc = DAOFactory.account().getById(id);
-
-                            if (acc == null || !acc.isWaiting()) {
+                            
+                            if(acc == null){
+                                GamePacketEnum.ACCOUNT_ATTACH_ERROR.send(session);
                                 session.close(true);
                                 return;
                             }
 
-                            acc.setSession(session);
+                            synchronized(acc){
+                                InetSocketAddress ISA = (InetSocketAddress)session.getRemoteAddress();
+                                if (!acc.isWaiting(ISA.getAddress().getHostAddress())) {
+                                    GamePacketEnum.ACCOUNT_ATTACH_ERROR.send(session);
+                                    session.close(true);
+                                    return;
+                                }
+
+                                acc.setSession(session);
+                            }
                             GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
                             break;
                         case 'L':

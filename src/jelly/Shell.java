@@ -100,6 +100,9 @@ public class Shell {
                 new Runnable(){
                     @Override
                     public void run(){
+                        if(Jelly.DEBUG){
+                            return;
+                        }
                         ThreadMXBean TMB = ManagementFactory.getThreadMXBean();
                         Shell.clear();
                         Shell.println("\tStatistiques :", GraphicRenditionEnum.YELLOW);
