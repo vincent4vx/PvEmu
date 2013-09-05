@@ -1,8 +1,12 @@
 package game;
 
 import game.objects.Player;
+import game.objects.dep.ClassData;
 import jelly.Loggin;
+import jelly.Utils;
+import server.events.ChatEvents;
 import server.events.DialogEvents;
+import server.events.GameActionEvents;
 
 public class ActionsHandler {
 
@@ -57,8 +61,15 @@ public class ActionsHandler {
                     DialogEvents.onSendQuestion(p.getSession(), id);
                 }catch(NumberFormatException e){}
                 break;
+            case 69: //téléportation astrub
+                GameActionEvents.onSendGameAction(p.getSession(), 0, 2, p.getID(), 7);
+                short[] mapData = ClassData.getStatuesPos(p.getClassID());
+                p.teleport(mapData[0], mapData[1]);
+                p.setStartPos(mapData);
+                ChatEvents.onSendInfoMessage(p.getSession(), 6);
+                break;
             default:
-                Loggin.debug("ActionID %d inconnue (args = %s)", a.actionID, a.args);
+                Loggin.debug("ActionID %d inconnue (args = %s)", a.actionID, Utils.implode(";", a.args));
         }
     }
 }

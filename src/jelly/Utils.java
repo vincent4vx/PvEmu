@@ -88,14 +88,14 @@ public class Utils {
      * @param pieces
      * @return
      */
-    public static String implode(String glue, String[] pieces) {
+    public static String implode(String glue, Object[] pieces) {
         if (pieces == null || pieces.length < 1) {
             return "";
         }
 
         StringBuilder b = new StringBuilder();
 
-        for (String p : pieces) {
+        for (Object p : pieces) {
             b.append(p).append(glue);
         }
 

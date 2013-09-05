@@ -115,4 +115,18 @@ public class GameActionEvents {
             }
         }
     }
+    
+    /**
+     * Envoi la GameAction au client
+     * @param session
+     * @param actionID
+     * @param params 
+     */
+    public static void onSendGameAction(IoSession session, int actionID, Object ... params){
+        if(session == null){
+            return;
+        }
+        
+        GamePacketEnum.GAME_ACTION.send(session, actionID + ";" + Utils.implode(";", params));
+    }
 }

@@ -355,6 +355,17 @@ public class Player extends Creature implements GMable, InventoryAble {
             MapEvents.onArrivedOnMap(session, mapID, cellID);
         }
     }
+    
+    /**
+     * Sauvegarde la start map indiqué :
+     * data = {mapID, cellID}
+     * @param data 
+     */
+    public void setStartPos(short[] data){
+        _character.startMap = data[0];
+        _character.startCell = data[1];
+        DAOFactory.character().update(_character);
+    }
 
     /**
      * Prépare la déconnexion
