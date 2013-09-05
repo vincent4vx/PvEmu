@@ -33,6 +33,8 @@ public class InteractiveObject {
                 p.setStartPos(new short[]{_map.getID(), _cell.getID()});
                 ChatEvents.onSendInfoMessage(p.getSession(), 6);
                 break;
+            default:
+                Loggin.debug("MapAction non reconnue : %d (map = %d, cell = %d, IO = %d)", action, _map.getID(), _cell.getID(), objID);
         }
     }
 

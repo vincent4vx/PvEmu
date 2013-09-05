@@ -3,8 +3,8 @@ package jelly;
 public class Constants {
 
     public final static String NAME = "PvEmu";
-    public final static String VERSION = "0.7.9a";
-    public final static int REV = 62;
+    public final static String VERSION = "0.8.0a";
+    public final static int REV = 64;
     public final static String DOFUS_VER = "1.29.1";
     public final static String CONFIG_FILE = "jelly.conf";
     public final static String COLOR_RED = "c10000";
