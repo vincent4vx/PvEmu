@@ -3,18 +3,17 @@ package game;
 import game.objects.Player;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import jelly.Loggin;
 
 public class GameAction {
 
     private static ConcurrentHashMap<Player, HashMap<Integer, GameAction>> actions = new ConcurrentHashMap<>();
     public Player _player;
     public int actionID;
-    public String args;
+    public Object[] args;
     public int id = 0;
     private HashMap<Object, Object> _attachement = new HashMap<>();
 
-    public GameAction(Player p, int actionID, String args) {
+    public GameAction(Player p, int actionID, Object[] args) {
         _player = p;
         this.actionID = actionID;
         this.args = args;

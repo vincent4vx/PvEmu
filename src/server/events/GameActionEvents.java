@@ -2,6 +2,7 @@ package server.events;
 
 import game.GameAction;
 import game.objects.Player;
+import game.objects.dep.ClassData;
 import java.util.concurrent.atomic.AtomicReference;
 import jelly.Loggin;
 import jelly.Utils;
@@ -22,7 +23,7 @@ public class GameActionEvents {
             actionID = Integer.parseInt(packet.substring(0, 3));
             String args = packet.substring(3);
 
-            GA = new GameAction(p, actionID, args);
+            GA = new GameAction(p, actionID, args.split(";"));
         } catch (Exception e) {
             e.printStackTrace();
             GamePacketEnum.GAME_ACTION_ERROR.send(session);
@@ -74,7 +75,17 @@ public class GameActionEvents {
                     short cellDest = Short.parseShort(args[1]);
                     MapEvents.onArrivedOnCell(session, cellDest);
                 }
-                p.orientation = (byte)GA.get("ori");
+                p.orientation = (byte) GA.get("ori");
+                break;
+            case 2:
+                switch ((int) GA.args[1]) {
+                    case 7: //téléportation incarnam => astrub
+                        short[] mapData = ClassData.getStatuesPos(p.getClassID());
+                        p.teleport(mapData[0], mapData[1]);
+                        p.setStartPos(mapData);
+                        ChatEvents.onSendInfoMessage(p.getSession(), 6);
+                        break;
+                }
                 break;
         }
         GA.delete();
@@ -88,7 +99,7 @@ public class GameActionEvents {
         }
 
 
-        AtomicReference<String> rPath = new AtomicReference<>(GA.args);
+        AtomicReference<String> rPath = new AtomicReference<>((String) GA.args[0]);
         int steps = Pathfinding.isValidPath(p.getMap(), p.getCell().getID(), rPath);
 
         Loggin.debug("Tentative de déplacement de %s de %d en %d étapes", new Object[]{p.getName(), p.getCell().getID(), steps});
@@ -106,7 +117,7 @@ public class GameActionEvents {
         short cellDest = Pathfinding.cellCode_To_ID(rPath.get().substring(rPath.get().length() - 2));
 
         GA.attach("dest", cellDest);
-        GA.attach("ori", Utils.parseBase64Char(rPath.get().charAt(rPath.get().length()-3)));
+        GA.attach("ori", Utils.parseBase64Char(rPath.get().charAt(rPath.get().length() - 3)));
         GA.save();
 
         for (Player P : p.getMap().getPlayers().values()) {
@@ -115,18 +126,38 @@ public class GameActionEvents {
             }
         }
     }
-    
+
     /**
      * Envoi la GameAction au client
+     *
      * @param session
      * @param actionID
-     * @param params 
+     * @param params
      */
-    public static void onSendGameAction(IoSession session, int actionID, Object ... params){
-        if(session == null){
+    private static void onSendGameAction(IoSession session, GameAction GA) {
+        if (session == null) {
             return;
         }
-        
-        GamePacketEnum.GAME_ACTION.send(session, actionID + ";" + Utils.implode(";", params));
+
+        GamePacketEnum.GAME_ACTION.send(session, GA.id + ";" + GA.actionID + ";" + Utils.implode(";", GA.args));
+    }
+
+    /**
+     * Crée une GA, la sauvegarde et l'envoi au client
+     *
+     * @param session
+     * @param actionID
+     * @param args
+     */
+    public static void onCreateGameAction(IoSession session, int actionID, Object... args) {
+        Player p = (Player) session.getAttribute("player");
+
+        if (p == null) {
+            return;
+        }
+
+        GameAction GA = new GameAction(p, actionID, args);
+        GA.save();
+        onSendGameAction(session, GA);
     }
 }
