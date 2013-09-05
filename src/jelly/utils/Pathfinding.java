@@ -12,7 +12,7 @@ public class Pathfinding {
         short newPos = cellID;
         //int Steps = 0;
         String path = pathRef.get();
-        String newPath = "";
+        StringBuilder newPath = new StringBuilder();
         boolean stopBefore = false;
         
         for (int i = 0; i < path.length(); i += 3) {
@@ -30,18 +30,18 @@ public class Pathfinding {
             String[] aPathInfos = ValidSinglePath(newPos, SmallPath, map, rSteps, stopBefore).split(":");
             if (aPathInfos[0].equalsIgnoreCase("stop")) {
                 newPos = Short.parseShort(aPathInfos[1]);
-                newPath += dir + cellID_To_Code(newPos);
-                pathRef.set(newPath);
+                newPath.append(dir).append(cellID_To_Code(newPos));
+                pathRef.set(newPath.toString());
                 return rSteps.get();
             } else if (aPathInfos[0].equalsIgnoreCase("ok")) {
                 newPos = dirCaseID;
             } else {
-                pathRef.set(newPath);
+                pathRef.set(newPath.toString());
                 return -1000;
             }
-            newPath += dir + cellID_To_Code(newPos);
+            newPath.append(dir).append(cellID_To_Code(newPos));
         }
-        pathRef.set(newPath);
+        pathRef.set(newPath.toString());
         return rSteps.get();
     }
 
