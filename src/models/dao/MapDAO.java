@@ -2,6 +2,7 @@ package models.dao;
 
 import java.sql.ResultSet;
 import java.util.HashMap;
+import jelly.Loggin;
 import jelly.database.DAO;
 import models.MapModel;
 
@@ -36,7 +37,7 @@ public class MapDAO extends DAO<MapModel> {
 
             return map;
         } catch (Exception e) {
-            e.printStackTrace();
+            Loggin.error("Impossible de charger la map !", e);
             return null;
         }
     }

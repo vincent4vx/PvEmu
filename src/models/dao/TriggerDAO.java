@@ -4,8 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jelly.Loggin;
 import jelly.database.DAO;
 import jelly.database.Database;
 import models.Trigger;
@@ -13,6 +12,10 @@ import models.Trigger;
 public class TriggerDAO extends DAO<Trigger> {
 
     private PreparedStatement getByMapIDStatement = null;
+    
+    public TriggerDAO(){
+        getByMapIDStatement = Database.prepare("SELECT * FROM triggers WHERE MapID = ?");
+    }
 
     @Override
     protected String tableName() {
@@ -32,16 +35,12 @@ public class TriggerDAO extends DAO<Trigger> {
 
             return t;
         } catch (Exception e) {
-            e.printStackTrace();
+            Loggin.error("Impossible de charger le trigger !", e);
             return null;
         }
     }
 
     public ArrayList<Trigger> getByMapID(int mapID) {
-        if (getByMapIDStatement == null) {
-            getByMapIDStatement = Database.prepare("SELECT * FROM triggers WHERE MapID = ?");
-        }
-
         ArrayList<Trigger> triggers = new ArrayList<>();
         try {
             getByMapIDStatement.setInt(1, mapID);
@@ -55,7 +54,7 @@ public class TriggerDAO extends DAO<Trigger> {
                 }
             }
         } catch (SQLException ex) {
-            Logger.getLogger(TriggerDAO.class.getName()).log(Level.WARNING, "Impossible de charger les triggers", ex);
+            Loggin.error("Erreur lors du chargement des triggers de la map " + mapID, ex);
         }
 
         return triggers;

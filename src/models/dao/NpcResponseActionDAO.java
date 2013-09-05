@@ -11,6 +11,10 @@ import models.NpcResponseAction;
 
 public class NpcResponseActionDAO extends DAO<NpcResponseAction> {
     private PreparedStatement findByResponseIdStatement = null;
+    
+    public NpcResponseActionDAO(){
+        findByResponseIdStatement = Database.prepare("SELECT * FROM npc_responses_actions WHERE response_id = ?");
+    }
 
     @Override
     protected String tableName() {
@@ -36,9 +40,6 @@ public class NpcResponseActionDAO extends DAO<NpcResponseAction> {
     public ArrayList<NpcResponseAction> getByResponseId(int id){
         ArrayList<NpcResponseAction> list = new ArrayList<>();
         
-        if(findByResponseIdStatement == null){
-            findByResponseIdStatement = Database.prepare("SELECT * FROM npc_responses_actions WHERE response_id = ?");
-        }
         try {
             findByResponseIdStatement.setInt(1, id);
             ResultSet RS = findByResponseIdStatement.executeQuery();

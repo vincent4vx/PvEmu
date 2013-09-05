@@ -11,6 +11,11 @@ public abstract class DAO<T extends Model> {
     protected PreparedStatement findStatement = null;
     protected PreparedStatement deleteStatement = null;
 
+    protected DAO() {
+        findStatement = Database.prepare("SELECT * FROM " + tableName() + " WHERE " + primaryKey() + " = ?");
+        deleteStatement = Database.prepare("DELETE FROM " + tableName() + " WHERE " + primaryKey() + " = ?");
+    }
+
     protected abstract String tableName();
 
     protected String primaryKey() {
@@ -31,17 +36,6 @@ public abstract class DAO<T extends Model> {
     public T find(int pk) {
         if (primaryKey().isEmpty()) {
             return null;
-        }
-
-        if (findStatement == null) {
-            StringBuilder query = new StringBuilder();
-            query.append("SELECT * FROM ");
-            query.append(tableName());
-            query.append(" WHERE ");
-            query.append(primaryKey());
-            query.append(" = ?");
-
-            findStatement = Database.prepare(query.toString());
         }
 
         try {
@@ -83,19 +77,10 @@ public abstract class DAO<T extends Model> {
                 return false;
             }
 
-            if (deleteStatement == null) {
-                StringBuilder query = new StringBuilder();
-                query.append("DELETE FROM ");
-                query.append(tableName());
-                query.append(" WHERE ");
-                query.append(primaryKey());
-                query.append(" = ?");
-
-                deleteStatement = Database.prepare(query.toString());
+            synchronized (deleteStatement) {
+                deleteStatement.setInt(1, pk);
+                return deleteStatement.execute();
             }
-
-            deleteStatement.setInt(1, pk);
-            return deleteStatement.execute();
         } catch (SQLException e) {
             return false;
         }

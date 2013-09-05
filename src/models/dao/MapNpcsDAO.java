@@ -4,8 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import jelly.Loggin;
 import jelly.database.DAO;
 import jelly.database.Database;
@@ -13,6 +11,10 @@ import models.MapNpcs;
 
 public class MapNpcsDAO extends DAO<MapNpcs> {
     private PreparedStatement getByMapIdStatement = null;
+    
+    public MapNpcsDAO(){
+        getByMapIdStatement = Database.prepare("SELECT * FROM map_npcs WHERE mapid = ?");
+    }
 
     @Override
     protected String tableName() {
@@ -39,9 +41,6 @@ public class MapNpcsDAO extends DAO<MapNpcs> {
     public ArrayList<MapNpcs> getByMapId(short mapID){
         ArrayList<MapNpcs> list = new ArrayList<>();
         
-        if(getByMapIdStatement == null){
-            getByMapIdStatement = Database.prepare("SELECT * FROM map_npcs WHERE mapid = ?");
-        }
         try {
             getByMapIdStatement.setShort(1, mapID);
             

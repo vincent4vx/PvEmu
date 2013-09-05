@@ -6,8 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jelly.Loggin;
 import jelly.database.Database;
 import models.Account;
 
@@ -16,6 +15,10 @@ public class AccountDAO extends DAO<Account> {
     private final Map<String, Account> accountsByName = new ConcurrentHashMap<>();
     private final Map<Integer, Account> accountsById = new ConcurrentHashMap<>();
     private PreparedStatement getByNameStatement = null;
+
+    public AccountDAO() {
+        getByNameStatement = Database.prepare("SELECT * FROM accounts WHERE account = ?");
+    }
 
     @Override
     protected String tableName() {
@@ -40,7 +43,7 @@ public class AccountDAO extends DAO<Account> {
 
             return a;
         } catch (SQLException e) {
-            e.printStackTrace();
+            Loggin.error("Impossible de charger le compte", e);
             return null;
         }
     }
@@ -63,19 +66,18 @@ public class AccountDAO extends DAO<Account> {
      */
     public Account getByName(String name) {
         if (!accountsByName.containsKey(name.toLowerCase())) {
-            if (getByNameStatement == null) {
-                getByNameStatement = Database.prepare("SELECT * FROM accounts WHERE account = ?");
-            }
             try {
-                getByNameStatement.setString(1, name);
-                ResultSet RS = getByNameStatement.executeQuery();
-                if (RS.next()) {
-                    return createByResultSet(RS);
-                } else {
-                    return null;
+                synchronized (getByNameStatement) {
+                    getByNameStatement.setString(1, name);
+                    ResultSet RS = getByNameStatement.executeQuery();
+                    if (RS.next()) {
+                        return createByResultSet(RS);
+                    } else {
+                        return null;
+                    }
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(AccountDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Loggin.error("Impossible de charge le compte " + name, ex);
                 return null;
             }
         }
