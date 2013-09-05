@@ -17,7 +17,7 @@ public final class GameMap {
 
         protected GameMap _map;
         protected boolean walkable;
-        protected int obj;
+        protected InteractiveObject obj;
         protected boolean canSight = true;
         protected ConcurrentHashMap<Integer, Player> _players = new ConcurrentHashMap<>();
         protected short id;
@@ -31,7 +31,7 @@ public final class GameMap {
             canSight = ((parseHashChar(CellData.charAt(0))) & 1) != 0;
             int layerObject2 = (((parseHashChar(CellData.charAt(0))) & 2) << 12) + (((parseHashChar(CellData.charAt(7))) & 1) << 12) + ((parseHashChar(CellData.charAt(8))) << 6) + parseHashChar(CellData.charAt(9));
             boolean layerObject2Interactive = (((parseHashChar(CellData.charAt(7))) & 2) >> 1) != 0;
-            obj = (layerObject2Interactive ? layerObject2 : -1);
+            obj = (layerObject2Interactive ? new InteractiveObject(layerObject2, this, _map) : null);
         }
 
         private static byte parseHashChar(char c) {
@@ -93,7 +93,7 @@ public final class GameMap {
          * Retourne l'id de l'objet sur la cellule
          * @return 
          */
-        public int getObj(){
+        public InteractiveObject getObj(){
             return obj;
         }
     }

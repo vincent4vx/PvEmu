@@ -21,8 +21,8 @@ public class Pathfinding {
             short dirCaseID = cellCode_To_ID(SmallPath.substring(1));
             
             if(i + 3 == path.length()){ //on se trouve à une case de l'arrivé
-                if(map.getCellById(dirCaseID).getObj() != -1){ //on y trouve un objet intéractif
-                    Loggin.debug("IO %d trouvé", dirCaseID);
+                if(map.getCellById(dirCaseID).getObj() != null){ //on y trouve un objet intéractif
+                    Loggin.debug("IO %d trouvé", map.getCellById(dirCaseID).getObj().getID());
                     stopBefore = true;              
                 }
             }

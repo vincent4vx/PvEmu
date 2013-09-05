@@ -1,5 +1,7 @@
 package game;
 
+import game.objects.GameMap;
+import game.objects.InteractiveObject;
 import game.objects.Player;
 import game.objects.dep.ClassData;
 import java.util.Collection;
@@ -99,6 +101,20 @@ public class GameActionHandler {
                     if(!Pathfinding.isAdjacentCells(p.getCell().getID(), cellID)){
                         Loggin.debug("Personnage trop loin pour effectuer l'action !");
                     }
+                    
+                    GameMap.Cell cell = p.getMap().getCellById(cellID);
+                    
+                    if(cell == null){
+                        return;
+                    }
+                    
+                    InteractiveObject IO = cell.getObj();
+                    
+                    if(IO == null){
+                        return;
+                    }
+                    
+                    IO.startAction(p, action);
                     break;
             }
         }
