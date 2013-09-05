@@ -116,4 +116,23 @@ public class Pathfinding {
         int char1 = cellID / 64, char2 = cellID % 64;
         return HASH[char1] + "" + HASH[char2];
     }
+    
+    /**
+     * Calcule si deux cellules sont adjacentes
+     * @param cell1
+     * @param cell2
+     * @return 
+     */
+    public static boolean isAdjacentCells(short cell1, short cell2){
+        if(cell1 == cell2){
+            return false;
+        }
+        
+        short d = (short) Math.abs(cell1-cell2);
+        
+        if(d == 14 || d == 15){
+            return true;
+        }
+        return false;
+    }
 }

@@ -1,5 +1,6 @@
 package game.objects;
 
+import game.GameActionHandler;
 import game.objects.inventory.GameItem;
 import game.objects.dep.ClassData;
 import game.objects.dep.Creature;
@@ -38,6 +39,7 @@ public class Player extends Creature implements GMable, InventoryAble {
     public byte orientation = 2;
     private Inventory _inventory;
     private Stats stuffStats;
+    private GameActionHandler actions = new GameActionHandler();
     public NpcQuestion current_npc_question = null;
 
     public Player(Character c) {
@@ -463,5 +465,13 @@ public class Player extends Creature implements GMable, InventoryAble {
     public boolean canMoveItem(GameItem GI, int qu, byte pos) {
         
         return true;
+    }
+    
+    /**
+     * Retourne le GameActionHandler du joueur
+     * @return 
+     */
+    public GameActionHandler getActions(){
+        return actions;
     }
 }

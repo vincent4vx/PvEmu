@@ -1,8 +1,7 @@
 package server.events;
 
-import game.GameAction;
+import game.GameActionHandler.GameAction;
 import game.objects.Player;
-import game.objects.dep.ClassData;
 import java.util.concurrent.atomic.AtomicReference;
 import jelly.Loggin;
 import jelly.Utils;
@@ -23,9 +22,8 @@ public class GameActionEvents {
             actionID = Integer.parseInt(packet.substring(0, 3));
             String args = packet.substring(3);
 
-            GA = new GameAction(p, actionID, args.split(";"));
+            GA = new GameAction(p.getActions(), actionID, args.split(";"));
         } catch (Exception e) {
-            e.printStackTrace();
             GamePacketEnum.GAME_ACTION_ERROR.send(session);
             return;
         }
@@ -33,6 +31,9 @@ public class GameActionEvents {
         switch (actionID) {
             case 1: //déplacement
                 onMoveAction(session, GA);
+                break;
+            case 500: //action sur la map
+                onMapAction(p, GA);
                 break;
             default:
                 Loggin.debug("GameAction non géré : %d", new Object[]{actionID});
@@ -59,14 +60,14 @@ public class GameActionEvents {
             return;
         }
 
-        GameAction GA = GameAction.get(p, actionID);
+        GameAction GA = p.getActions().get(actionID);
 
         if (GA == null) {
             Loggin.debug("GameAction %d non trouvée !", new Object[]{actionID});
             return;
         }
 
-        switch (GA.actionID) {
+        /*switch (GA.actionID) {
             case 1: //déplacement
                 if (ok) {
                     short cellDest = (Short) GA.get("dest");
@@ -77,7 +78,7 @@ public class GameActionEvents {
                 }
                 p.orientation = (byte) GA.get("ori");
                 break;
-            case 2:
+            case 2: //cinématiques
                 switch ((int) GA.args[1]) {
                     case 7: //téléportation incarnam => astrub
                         short[] mapData = ClassData.getStatuesPos(p.getClassID());
@@ -87,7 +88,8 @@ public class GameActionEvents {
                         break;
                 }
                 break;
-        }
+        }*/
+        GA.apply(p, ok, args);
         GA.delete();
     }
 
@@ -126,6 +128,16 @@ public class GameActionEvents {
             }
         }
     }
+    
+    private static void onMapAction(Player p, GameAction GA){
+        short cellID = Short.parseShort((String)GA.args[0]);
+        
+        if(Pathfinding.isAdjacentCells(p.getCell().getID(), cellID)){
+            GA.apply(p, true, null);
+        }else{
+            GA.save();
+        }
+    }
 
     /**
      * Envoi la GameAction au client
@@ -156,7 +168,7 @@ public class GameActionEvents {
             return;
         }
 
-        GameAction GA = new GameAction(p, actionID, args);
+        GameAction GA = new GameAction(p.getActions(), actionID, args);
         GA.save();
         onSendGameAction(session, GA);
     }
