@@ -399,6 +399,7 @@ public class Player extends Creature implements GMable, InventoryAble {
         }
         
         _character.baseStats = stats.toString();
+        _inventory.save();
         
         _character.orientation = orientation;
         

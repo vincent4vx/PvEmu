@@ -185,4 +185,13 @@ public class Inventory {
         
         return sb.toString();
     }
+    
+    /**
+     * Sauvegarde l'inventaire
+     */
+    public void save(){
+        for(GameItem GI : items.values()){
+            DAOFactory.inventory().update(GI.getInventoryEntry());
+        }
+    }
 }
