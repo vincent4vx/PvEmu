@@ -63,6 +63,10 @@ public enum GamePacketEnum {
      */
     CHARACTER_RESTRICTION("AR", "6bk"),
     /**
+     * Erreur lors de la suppression du personnage
+     */
+    CHARACTER_DELETE_ERROR("ADE"),
+    /**
      * information sur la map courrante id | date | key
      */
     MAP_DATA("GDM|"),

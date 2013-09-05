@@ -1,9 +1,8 @@
 package models;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
+import java.util.HashMap;
 import jelly.Config;
-import jelly.Loggin;
 import jelly.Utils;
 import models.dao.*;
 import org.apache.mina.core.session.IoSession;
@@ -17,12 +16,12 @@ public class Account implements jelly.database.Model {
     public byte level;
     public String question;
     public String response;
-    protected ArrayList<Character> _characters = null;
+    protected HashMap<Integer, Character> _characters = null;
     private boolean waiting = false;
     private IoSession _session;
     private String current_ip;
 
-    public ArrayList<Character> getCharacters() {
+    public HashMap<Integer, Character> getCharacters() {
         if (_characters == null) {
             _characters = DAOFactory.character().getByAccountId(id);
         }
@@ -35,12 +34,11 @@ public class Account implements jelly.database.Model {
      * @param c
      */
     public void addCharacter(Character c) {
-        getCharacters().add(c);
+        getCharacters().put(c.id, c);
     }
 
     public boolean passValid(String password, String key) {
         String decrypt = Utils.decryptPacket(password, key);
-        Loggin.debug("db : %s, decrypt : %s", pass, decrypt);
         return pass.equals(decrypt);
     }
 
@@ -58,11 +56,28 @@ public class Account implements jelly.database.Model {
         StringBuilder packet = new StringBuilder();
 
         packet.append(getCharacters().size());
-        for (Character c : getCharacters()) {
+        for (Character c : getCharacters().values()) {
             packet.append(c.getForALK());
         }
 
         return packet.toString();
+    }
+    
+    /**
+     * Sélectionne un personnage du compte
+     * @param id
+     * @return 
+     */
+    public Character getCharacter(int id){
+        return getCharacters().get(id);
+    }
+    
+    /**
+     * Supprime le personnage
+     * @param id 
+     */
+    public void deleteCharacter(int id){
+        DAOFactory.character().delete(_characters.remove(id));
     }
 
     public String onSelectServer() {

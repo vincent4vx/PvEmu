@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import jelly.Loggin;
 import models.Character;
@@ -169,8 +170,8 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
      * @param accountId
      * @return
      */
-    public ArrayList<Character> getByAccountId(int accountId) {
-        ArrayList<Character> players = new ArrayList<>();
+    public HashMap<Integer, Character> getByAccountId(int accountId) {
+        HashMap<Integer, Character> players = new HashMap<>();
 
         try {
             synchronized (getByAccountId) {
@@ -180,7 +181,7 @@ public class CharacterDAO extends jelly.database.DAO<Character> {
                 while (RS.next()) {
                     Character c = createByResultSet(RS);
                     if (c != null) {
-                        players.add(c);
+                        players.put(c.id, c);
                     }
                 }
             }

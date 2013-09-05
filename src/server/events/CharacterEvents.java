@@ -1,7 +1,6 @@
 package server.events;
 
 import game.World;
-import game.objects.inventory.GameItem;
 import game.objects.Player;
 import game.objects.dep.ClassData;
 import jelly.Config;
@@ -17,18 +16,26 @@ public class CharacterEvents {
     public static void onCharacterSelected(IoSession session, String packet) {
 
         try {
+            Account acc = (Account)session.getAttribute("account");
+            
+            if(acc == null){
+                return;
+            }
+            
             int id = Integer.parseInt(packet.substring(2));
-            models.Character chr = DAOFactory.character().getById(id);
+            models.Character chr = acc.getCharacter(id);
 
             if (chr == null) {
                 GamePacketEnum.SELECT_CHARACTER_ERROR.send(session);
                 return;
             }
+            
+            Player p = chr.getPlayer();
 
-            session.setAttribute("player", chr.getPlayer());
+            session.setAttribute("player", p);
             chr.getPlayer().setSession(session);
 
-            World.addOnline(chr.getPlayer());
+            World.addOnline(p);
 
             //génération du packet ASK
             StringBuilder param = new StringBuilder();
@@ -36,12 +43,9 @@ public class CharacterEvents {
             param.append(chr.id).append("|").append(chr.name).append("|")
                     .append(chr.level).append("|").append(chr.classId).append("|")
                     .append(chr.sexe).append("|").append(chr.gfxid).append("|")
-                    .append(Utils.implode("|", chr.getPlayer().getColors())).append("|");
+                    .append(Utils.implode("|", p.getColors())).append("|");
             
-            /*for(GameItem GI : chr.getPlayer().getInventory().getItems()){
-                param.append(GI.toString()).append(';');
-            }*/
-            param.append(chr.getPlayer().getInventory().toString());
+            param.append(p.getInventory().toString());
 
             GamePacketEnum.SELECT_CHARACTER_OK.send(session, param.toString());
         } catch (Exception e) {
@@ -174,5 +178,42 @@ public class CharacterEvents {
         GamePacketEnum.CREATE_CHARACTER_OK.send(session);
         GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
         GamePacketEnum.TUTORIAL_BEGIN.send(session);
+    }
+    
+    public static void onDelete(IoSession session, String packet){
+        Account acc = (Account)session.getAttribute("account");
+        
+        if(acc == null){
+            return;
+        }
+        
+        String response = "";
+        int id = 0;
+        
+        try{
+            String[] data = packet.split("\\|");
+            id = Integer.parseInt(data[0]);
+            if(data.length > 1){
+                response = data[1];
+            }
+        }catch(Exception e){
+            GamePacketEnum.CHARACTER_DELETE_ERROR.send(session);
+            return;
+        }
+        
+        models.Character chr = acc.getCharacter(id);
+        
+        if(chr == null){
+            GamePacketEnum.CHARACTER_DELETE_ERROR.send(session);
+            return;
+        }
+        
+        if(chr.level >= 20 && !response.equalsIgnoreCase(acc.response)){
+            GamePacketEnum.CHARACTER_DELETE_ERROR.send(session);
+            return;
+        }
+        
+        acc.deleteCharacter(id);
+        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
     }
 }

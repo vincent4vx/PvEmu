@@ -97,6 +97,9 @@ public class GameIoHandler extends MinaIoHandler {
                         case 'S': //character selected
                             CharacterEvents.onCharacterSelected(session, packet);
                             break;
+                        case 'D': //delete
+                            CharacterEvents.onDelete(session, packet.substring(2));
+                            break;
                     }
                     break;
                 case 'G': //game packets
