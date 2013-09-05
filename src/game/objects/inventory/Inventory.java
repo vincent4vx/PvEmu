@@ -91,7 +91,7 @@ public class Inventory {
         }
         
         if(qu == GI.getInventoryEntry().qu){
-            moveGameItem(GI, pos);
+            GI = moveGameItem(GI, pos);
         }else{
             GameItem nGI = new GameItem(owner, GI.getItemStats(), qu, pos);
             GI.addQuantity(-qu);
@@ -99,7 +99,7 @@ public class Inventory {
             addGameItem(nGI);
         }
         
-        owner.onMoveItemSuccess(pos);
+        owner.onMoveItemSuccess(GI, pos);
         return true;
     }
     
@@ -108,7 +108,7 @@ public class Inventory {
      * @param GI
      * @param pos 
      */
-    public void moveGameItem(GameItem GI, byte pos){
+    public GameItem moveGameItem(GameItem GI, byte pos){
         byte lastPos = GI.getInventoryEntry().position;
         
         if(lastPos != -1){
@@ -124,12 +124,14 @@ public class Inventory {
             owner.onQuantityChange(oGI.getID(), oGI.getInventoryEntry().qu);
             GI.changePos(lastPos);
             deleteGameItem(GI);
+            return oGI;
         }else{
             if(pos != -1){
                 itemsByPos.put(pos, GI);
             }
             itemsByStats.put(GI.getItemStats(), GI);
             owner.onMoveItem(GI.getID(), pos);
+            return GI;
         }
     }
     

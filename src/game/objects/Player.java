@@ -400,10 +400,6 @@ public class Player extends Creature implements GMable, InventoryAble {
         
         _character.baseStats = stats.toString();
         
-        /*for(GameItem GI : inventory.values()){
-            DAOFactory.inventory().update(GI.getInventory());
-        }*/
-        
         _character.orientation = orientation;
         
         DAOFactory.character().update(_character);
@@ -435,13 +431,13 @@ public class Player extends Creature implements GMable, InventoryAble {
     }
 
     @Override
-    public void onMoveItemSuccess(byte pos) {
-        if(_inventory.getItemByPos(pos).isWearable()){
+    public void onMoveItemSuccess(GameItem GI, byte pos) {
+        if(GI.isWearable()){
             loadStuffStats();
             CharacterEvents.onStatsChange(session, this);
             ObjectEvents.onWeightChange(session, this);
         }
-        if(pos == GameItem.POS_ARME || pos == GameItem.POS_COIFFE || pos == GameItem.POS_CAPE || pos == GameItem.POS_FAMILIER){
+        if(GI.isWearable() && (pos == GameItem.POS_ARME || pos == GameItem.POS_COIFFE || pos == GameItem.POS_CAPE || pos == GameItem.POS_FAMILIER || pos == -1)){
             ObjectEvents.onAccessoriesChange(this);
         }
     }

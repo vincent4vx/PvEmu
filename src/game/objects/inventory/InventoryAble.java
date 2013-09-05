@@ -18,7 +18,7 @@ public interface InventoryAble {
     public void onQuantityChange(int id, int qu);
     public void onAddItem(GameItem GI);
     public void onDeleteItem(int id);
-    public void onMoveItemSuccess(byte pos);
+    public void onMoveItemSuccess(GameItem GI, byte pos);
     public void onMoveItem(int id, byte pos);
     public boolean canMoveItem(GameItem GI, int qu, byte pos);
 }
