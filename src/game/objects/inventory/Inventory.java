@@ -163,6 +163,15 @@ public class Inventory {
     }
     
     /**
+     * Retourne l'item
+     * @param id
+     * @return 
+     */
+    public GameItem getItemById(int id){
+        return items.get(id);
+    }
+    
+    /**
      * Indique si la place est disponible ou non (déjà prise)
      * @param pos
      * @return 

@@ -189,6 +189,52 @@ public enum GamePacketEnum {
      * Ferme le dialogue
      */
     DIALOG_LEAVE("DV"),
+    /**
+     * Erreur lors de l'échange
+     * params : 
+     *  - O déjà en echange
+     *  - T artisan trop loins de l'atelier
+     *  - J outils non équipé
+     *  - S non abo
+     *  - I action impossible
+     */
+    EXCHANGE_ERROR("ERE", "I"),
+    /**
+     * Requête d'échange OK
+     * param : [lanceur] | [cible] | [type]
+     */
+    EXCHANGE_REQUEST_OK("ERK"),
+    /**
+     * Echange accepté, début de l'échange
+     */
+    EXCHANGE_CREATE_OK("ECK"),
+    /**
+     * Impossible d'accpeter l'échange
+     */
+    EXCHANGE_CREATE_ERROR("ECE"),
+    /**
+     * Stop l'échange en cours
+     */
+    EXCHANGE_LEAVE("EV"),
+    /**
+     * Erreur lors du déplacement de l'objet
+     */
+    EXCHANGE_MOVE_ERROR("EME"),
+    /**
+     * Si échange accepté ou non
+     * param : [0/1][player]
+     */
+    EXCHANGE_OK("EK"),
+    /**
+     * Movement OK
+     * param : [type][+/-][itemID]|[qu]
+     */
+    EXCHANGE_LOCAL_MOVE_OK("EMK"),
+    /**
+     * Mouvement OK
+     * param : [type][+/-][itemID]|[qu]|[templateID]|[stats]
+     */
+    EXCHANGE_DISTANT_MOVE_OK("EmK"),
     PONG("pong");
     private String packet;
     private Object param;

@@ -171,6 +171,22 @@ public class GameIoHandler extends MinaIoHandler {
                             break;
                     }
                     break;
+                case 'E': //exchange
+                    switch(packet.charAt(1)){
+                        case 'R':
+                            ExchangeEvents.onRequest(session, packet.substring(2));
+                            break;
+                        case 'A':
+                            ExchangeEvents.onAccept(session);
+                            break;
+                        case 'V':
+                            ExchangeEvents.onLeave(session);
+                            break;
+                        case 'M':
+                            ExchangeEvents.onMove(session, packet.substring(2));
+                            break;
+                    }
+                    break;
             }
         }
     }

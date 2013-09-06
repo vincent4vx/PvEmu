@@ -41,6 +41,7 @@ public class Player extends Creature implements GMable, InventoryAble {
     private Stats stuffStats;
     private GameActionHandler actions = new GameActionHandler();
     public NpcQuestion current_npc_question = null;
+    private Exchange _exchange = null;
 
     public Player(Character c) {
         _character = c;
@@ -473,5 +474,27 @@ public class Player extends Creature implements GMable, InventoryAble {
      */
     public GameActionHandler getActions(){
         return actions;
+    }
+    
+    /**
+     * Retourne l'échange en cours (si il existe)
+     * @return 
+     */
+    public Exchange getExchange(){
+        return _exchange;
+    }
+    
+    public void startExchange(Player target){
+        _exchange = new Exchange(this, target);
+    }
+    
+    /**
+     * Arrête l'échange en cours
+     */
+    public void stopExchange(){
+        if(_exchange == null){
+            return;
+        }
+        _exchange = null;
     }
 }
