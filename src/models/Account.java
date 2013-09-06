@@ -79,16 +79,12 @@ public class Account implements jelly.database.Model {
     public void deleteCharacter(int id){
         DAOFactory.character().delete(_characters.remove(id));
     }
-
-    public String onSelectServer() {
-        StringBuilder param = new StringBuilder();
-
-        param.append(Config.getString("ip", "127.0.0.1")).append(":");
-        param.append(Config.getString("game_port", "5555")).append(";");
-        param.append(id);
+    
+    /**
+     * Met le compte en attente
+     */
+    public void setWaiting(){
         waiting = true;
-
-        return param.toString();
     }
 
     /**

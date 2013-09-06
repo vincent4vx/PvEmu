@@ -8,6 +8,7 @@ import models.Account;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import server.MinaIoHandler;
+import server.events.AccountEvents;
 
 /**
  *
@@ -81,9 +82,10 @@ public class RealmIoHandler extends MinaIoHandler {
                         case 'A':
                             switch (packet.charAt(1)) {
                                 case 'x':
-                                    Account acc = (Account) session.getAttribute("account");
-                                    RealmPacketEnum.SELECT_SERVER.send(session, acc.onSelectServer());
-                                    session.close(true);
+                                    RealmPacketEnum.SERVER_LIST.send(session);
+                                    break;
+                                case 'X':
+                                    AccountEvents.onServerSelected(session, packet.substring(2));
                                     break;
                             }
                             break;

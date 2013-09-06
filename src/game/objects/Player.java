@@ -11,6 +11,7 @@ import game.objects.inventory.Inventory;
 import game.objects.inventory.InventoryAble;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import jelly.Constants;
 import jelly.Loggin;
 import jelly.Utils;
 import models.Account;
@@ -225,12 +226,16 @@ public class Player extends Creature implements GMable, InventoryAble {
         StringBuilder str = new StringBuilder();
 
         str.append(curCell.getID()).append(";").append(orientation).append(";");
-        str.append("0").append(";");//FIXME:?
+        
+        if(Constants.DOFUS_VER_ID >= 1200){
+            str.append("0").append(";");//FIXME: BonusValue /!\ uniquement à partir de Dofus 1.20 /!\
+        }
+        
         str.append(id).append(";").append(name).append(";").append(classID);
 
         //30^100,1247;
         //FIXME pnj suiveur ? 
-        str.append(",18").append(";"); //title
+        str.append("").append(";"); //title
         str.append(gfxID).append("^").append(100) //gfxID^size //FIXME ,GFXID pnj suiveur
                 //                .append(",").append("1247") // mob suvieur1
                 //                .append(",").append("1503") //mob suiveur2

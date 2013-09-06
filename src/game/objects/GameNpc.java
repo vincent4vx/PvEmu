@@ -1,6 +1,7 @@
 package game.objects;
 
 import game.objects.dep.GMable;
+import jelly.Constants;
 import jelly.Loggin;
 import models.MapNpcs;
 import models.NpcQuestion;
@@ -34,7 +35,11 @@ public class GameNpc implements GMable {
         
         packet.append(cellID).append(";");
         packet.append(orientation).append(";");
-        packet.append("0").append(";");
+        
+        if(Constants.DOFUS_VER_ID >= 1200){
+            packet.append("0").append(";");
+        }
+        
         packet.append(id).append(";");
         packet.append(_template.id).append(";");
         packet.append("-4").append(";");//type = NPC
