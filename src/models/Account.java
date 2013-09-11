@@ -1,9 +1,11 @@
 package models;
 
+import game.objects.Player;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
-import jelly.Config;
+import java.util.concurrent.ConcurrentHashMap;
 import jelly.Utils;
+import jelly.utils.Crypt;
 import models.dao.*;
 import org.apache.mina.core.session.IoSession;
 
@@ -17,9 +19,15 @@ public class Account implements jelly.database.Model {
     public String question;
     public String response;
     protected HashMap<Integer, Character> _characters = null;
-    private boolean waiting = false;
     private IoSession _session;
     private String current_ip;
+    
+    /**
+     * Compte en attente de connexion au game
+     */
+    private static ConcurrentHashMap<String, Account> pendingAccounts = new ConcurrentHashMap<>();
+    private String waitingTicket = null;
+    private Player waitingCharacter = null;
 
     public HashMap<Integer, Character> getCharacters() {
         if (_characters == null) {
@@ -38,8 +46,9 @@ public class Account implements jelly.database.Model {
     }
 
     public boolean passValid(String password, String key) {
-        String decrypt = Utils.decryptPacket(password, key);
-        return pass.equals(decrypt);
+        //String decrypt = Utils.decryptPacket(password, key);
+        String cryptPass = Crypt.encodePacket(pass, key);
+        return password.equals(cryptPass);
     }
 
     /**
@@ -48,7 +57,6 @@ public class Account implements jelly.database.Model {
      * @return
      */
     public String getCharactersList() {
-        waiting = false;
         if (getCharacters().isEmpty()) {
             return "0";
         }
@@ -81,10 +89,22 @@ public class Account implements jelly.database.Model {
     }
     
     /**
-     * Met le compte en attente
+     * Met le compte en attente et retourne le ticket de sécurité
      */
-    public void setWaiting(){
-        waiting = true;
+    public String setWaiting(){
+        waitingTicket = Utils.str_aleat(6);
+        pendingAccounts.put(waitingTicket, this);
+        
+        return waitingTicket;
+    }
+    
+    /**
+     * Retourne le compte en attente ayant pour ticket "ticket"
+     * @param ticket
+     * @return 
+     */
+    public static Account getWaitingAccount(String ticket){
+        return pendingAccounts.get(ticket);
     }
 
     /**
@@ -93,7 +113,35 @@ public class Account implements jelly.database.Model {
      * @return
      */
     public boolean isWaiting(String ip) {
-        return waiting && ip.equals(current_ip);
+        return waitingTicket != null && ip.equals(current_ip);
+    }
+    
+    /**
+     * Supprime le compte de la liste des comptes en attente
+     */
+    public void removeWaiting(){
+        pendingAccounts.remove(waitingTicket);
+        waitingTicket = null;
+        
+    }
+    
+    /**
+     * Met en attente le personnage (Dofus < 1.10.0)
+     * @param p 
+     */
+    public void setWaitingCharacter(Player p){
+        waitingCharacter = p;
+    }
+    
+    /**
+     * Retourne le personnage en attente et le retire de la mise en attente
+     * (Dofus < 1.10.0)
+     * @return 
+     */
+    public Player getWaitingCharacter(){
+        Player p = waitingCharacter;
+        waitingCharacter = null;
+        return p;
     }
 
     /**
@@ -113,7 +161,6 @@ public class Account implements jelly.database.Model {
     public void setSession(IoSession session) {
         _session = session;
         session.setAttribute("account", this);
-        waiting = false;
         InetSocketAddress ISA = (InetSocketAddress)session.getRemoteAddress();
         current_ip = ISA.getAddress().getHostAddress();
     }

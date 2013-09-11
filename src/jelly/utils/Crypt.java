@@ -1,5 +1,8 @@
 package jelly.utils;
 
+import jelly.Constants;
+import jelly.Loggin;
+
 public class Crypt {
 
     public final static char[] HASH = {
@@ -44,7 +47,11 @@ public class Crypt {
     }
 
     public static String encodePacket(String packet, String key) {
+        if(Constants.DOFUS_VER_ID < 1100){
+            return oldCryptPassword(packet, key);
+        }
         StringBuilder encode = new StringBuilder();
+
         encode.append("#1");
 
         for (int i = 0; i < packet.length(); i++) {
@@ -62,6 +69,9 @@ public class Crypt {
     }
 
     public static String decodePacket(String packet, String key) {
+        if (Constants.DOFUS_VER_ID < 1100) {
+            return "";
+        }
         packet = packet.substring(2);
         StringBuilder decode = new StringBuilder();
 
@@ -82,6 +92,23 @@ public class Crypt {
         }
 
         return decode.toString();
+    }
+
+    public static String oldCryptPassword(String pwd, String key) {
+        pwd = pwd + "\n";
+        int _loc6 = pwd.length();
+        int _loc7 = key.length();
+        String _loc2 = "";
+        for (int _loc1 = 0; _loc1 < _loc7; ++_loc1) {
+            _loc2 = _loc2 + HASH[(pwd.charAt(_loc1 % _loc6) ^ key.charAt(_loc1 % 32)) % 64];
+        } // end of for
+        int _loc4 = _loc2.length();
+        pwd = _loc2;
+        _loc2 = "";
+        for (int _loc1 = 0; _loc1 < _loc4; ++_loc1) {
+            _loc2 = _loc2 + HASH[(pwd.charAt(_loc4 - _loc1 - 1) ^ key.charAt((_loc1 + 8) % 32)) % 64];
+        } // end of for
+        return (_loc2);
     }
 
     private static int getHASHIndex(char c) {

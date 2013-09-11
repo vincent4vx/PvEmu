@@ -3,6 +3,7 @@ package server.game;
 import java.io.IOException;
 import java.util.logging.Level;
 import jelly.Config;
+import jelly.Constants;
 import jelly.Loggin;
 import jelly.Shell;
 import jelly.Shell.GraphicRenditionEnum;
@@ -22,7 +23,7 @@ public class GameServer {
             Shell.print("Ok", Shell.GraphicRenditionEnum.GREEN);
             Shell.println(" (port " + Config.getInt("game_port", 443) + ")");
 
-            if (Config.getBool("CRYPT_IP")) {
+            if (Config.getBool("CRYPT_IP") || Constants.DOFUS_VER_ID < 1200) {
                 String ip = Crypt.CryptIP(Config.getString("ip", "127.0.0.1"));
                 String port = Crypt.CryptPort(Config.getInt("game_port", 5555));
                 CRYPT_IP = ip + port;

@@ -4,50 +4,72 @@ import game.World;
 import game.objects.Player;
 import game.objects.dep.ClassData;
 import jelly.Config;
+import jelly.Constants;
 import jelly.Loggin;
 import jelly.Utils;
 import models.Account;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import server.game.GamePacketEnum;
+import server.game.GameServer;
 
 public class CharacterEvents {
 
     public static void onCharacterSelected(IoSession session, String packet) {
 
         try {
-            Account acc = (Account)session.getAttribute("account");
+            Account acc = (Account) session.getAttribute("account");
+
+            if (acc == null) {
+                return;
+            }
+
+            int id, svr = 0;
             
-            if(acc == null){
+            try{
+                String[] data = packet.split("\\|");
+                
+                id = Integer.parseInt(data[0]);
+                
+                if(data.length == 2){
+                    svr = Integer.parseInt(data[1]);
+                }
+            }catch(Exception e){
+                GamePacketEnum.SELECT_CHARACTER_ERROR.send(session);
                 return;
             }
             
-            int id = Integer.parseInt(packet.substring(2));
             models.Character chr = acc.getCharacter(id);
 
             if (chr == null) {
                 GamePacketEnum.SELECT_CHARACTER_ERROR.send(session);
                 return;
             }
-            
+
             Player p = chr.getPlayer();
 
-            session.setAttribute("player", p);
-            chr.getPlayer().setSession(session);
+            if (Constants.DOFUS_VER_ID >= 1100) { //pour dofus "récents" : connecte directement le pesonnage
+                session.setAttribute("player", p);
+                chr.getPlayer().setSession(session);
 
-            World.addOnline(p);
+                World.addOnline(p);
 
-            //génération du packet ASK
-            StringBuilder param = new StringBuilder();
+                //génération du packet ASK
+                StringBuilder param = new StringBuilder();
 
-            param.append(chr.id).append("|").append(chr.name).append("|")
-                    .append(chr.level).append("|").append(chr.classId).append("|")
-                    .append(chr.sexe).append("|").append(chr.gfxid).append("|")
-                    .append(Utils.implode("|", p.getColors())).append("|");
-            
-            param.append(p.getInventory().toString());
+                param.append('|').append(chr.id).append("|").append(chr.name).append("|")
+                        .append(chr.level).append("|").append(chr.classId).append("|")
+                        .append(chr.sexe).append("|").append(chr.gfxid).append("|")
+                        .append(Utils.implode("|", p.getColors())).append("|");
 
-            GamePacketEnum.SELECT_CHARACTER_OK.send(session, param.toString());
+                param.append(p.getInventory().toString());
+
+                GamePacketEnum.SELECT_CHARACTER_OK.send(session, param.toString());
+            } else { //vielles version (cf: 1.09.1), envoit les ids du game
+                String ticket = acc.setWaiting();
+                GamePacketEnum.SELECT_CHARACTER_OK.send(session, GameServer.CRYPT_IP + ticket);
+                acc.setWaitingCharacter(p);
+            }
         } catch (Exception e) {
             Loggin.error("Impossible de sélectionner le personnage", e);
             GamePacketEnum.SELECT_CHARACTER_ERROR.send(session);
@@ -69,9 +91,9 @@ public class CharacterEvents {
         ChatEvents.onSendErrorMessage(session, 89);
         MapEvents.onArrivedInGame(session);
     }
-    
-    public static void onStatsChange(IoSession session, Player p){
-        GamePacketEnum.STATS_PACKET.send(session, p.getStatsPacket());    
+
+    public static void onStatsChange(IoSession session, Player p) {
+        GamePacketEnum.STATS_PACKET.send(session, p.getStatsPacket());
     }
 
     private static Player getPlayer(IoSession session) {
@@ -179,40 +201,40 @@ public class CharacterEvents {
         GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
         GamePacketEnum.TUTORIAL_BEGIN.send(session);
     }
-    
-    public static void onDelete(IoSession session, String packet){
-        Account acc = (Account)session.getAttribute("account");
-        
-        if(acc == null){
+
+    public static void onDelete(IoSession session, String packet) {
+        Account acc = (Account) session.getAttribute("account");
+
+        if (acc == null) {
             return;
         }
-        
+
         String response = "";
         int id = 0;
-        
-        try{
+
+        try {
             String[] data = packet.split("\\|");
             id = Integer.parseInt(data[0]);
-            if(data.length > 1){
+            if (data.length > 1) {
                 response = data[1];
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             GamePacketEnum.CHARACTER_DELETE_ERROR.send(session);
             return;
         }
-        
+
         models.Character chr = acc.getCharacter(id);
-        
-        if(chr == null){
+
+        if (chr == null) {
             GamePacketEnum.CHARACTER_DELETE_ERROR.send(session);
             return;
         }
-        
-        if(chr.level >= 20 && !response.equalsIgnoreCase(acc.response)){
+
+        if (chr.level >= 20 && !response.equalsIgnoreCase(acc.response)) {
             GamePacketEnum.CHARACTER_DELETE_ERROR.send(session);
             return;
         }
-        
+
         acc.deleteCharacter(id);
         GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
     }

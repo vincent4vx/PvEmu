@@ -54,7 +54,7 @@ public class GameIoHandler extends MinaIoHandler {
         }
         String packet = ((String) message).trim();
         if (packet.length() > 1) {
-            Loggin.game("Recv << %s", packet);
+            Loggin.game("Recv << " + packet);
             if (!packet.startsWith("AT") && !session.containsAttribute("account")) {
                 session.close(true);
                 return;
@@ -63,30 +63,10 @@ public class GameIoHandler extends MinaIoHandler {
                 case 'A': //packet perso / compte
                     switch (packet.charAt(1)) {
                         case 'T': //attache account
-                            int id = Integer.parseInt(packet.substring(2));
-                            Account acc = DAOFactory.account().getById(id);
-                            
-                            if(acc == null){
-                                GamePacketEnum.ACCOUNT_ATTACH_ERROR.send(session);
-                                session.close(true);
-                                return;
-                            }
-
-                            synchronized(acc){
-                                InetSocketAddress ISA = (InetSocketAddress)session.getRemoteAddress();
-                                if (!acc.isWaiting(ISA.getAddress().getHostAddress())) {
-                                    GamePacketEnum.ACCOUNT_ATTACH_ERROR.send(session);
-                                    session.close(true);
-                                    return;
-                                }
-
-                                acc.setSession(session);
-                            }
-                            GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+                            AccountEvents.onAttach(session, packet.substring(2));
                             break;
                         case 'L':
-                            Account acc2 = (Account) session.getAttribute("account");
-                            GamePacketEnum.CHARCTERS_LIST.send(session, acc2.getCharactersList());
+                            AccountEvents.onCharactersList(session);
                             break;
                         case 'P': //name generator
                             CharacterEvents.onNameGenerator(session);

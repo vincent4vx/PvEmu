@@ -9,6 +9,7 @@ import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import server.MinaIoHandler;
 import server.events.AccountEvents;
+import server.events.CharacterEvents;
 
 /**
  *
@@ -86,6 +87,16 @@ public class RealmIoHandler extends MinaIoHandler {
                                     break;
                                 case 'X':
                                     AccountEvents.onServerSelected(session, packet.substring(2));
+                                    break;
+                                case 'L':
+                                    if(Constants.DOFUS_VER_ID < 1100){
+                                        AccountEvents.onCharactersList(session);
+                                    }
+                                    break;
+                                case 'S':
+                                    if(Constants.DOFUS_VER_ID < 1100){
+                                        CharacterEvents.onCharacterSelected(session, packet.substring(2));
+                                    }
                                     break;
                             }
                             break;

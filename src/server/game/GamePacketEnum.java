@@ -17,6 +17,11 @@ public enum GamePacketEnum {
      * Erreur lors de l'attachement du compte
      */
     ACCOUNT_ATTACH_ERROR("ATE"),
+    /**
+     * Attachement OK, envois data du perso
+     * (dofus < 1.10.0)
+     */
+    ACCOUNT_ATTACH_OK("ATK"),
     //Accounts packets
     /**
      * Liste des personnages
@@ -49,7 +54,7 @@ public enum GamePacketEnum {
     /**
      * sélection du personnage Ok
      */
-    SELECT_CHARACTER_OK("ASK|"),
+    SELECT_CHARACTER_OK("ASK"),
     /**
      * Jeu Ok (param = name)
      */

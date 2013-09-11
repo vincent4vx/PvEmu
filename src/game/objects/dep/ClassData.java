@@ -1,6 +1,7 @@
 package game.objects.dep;
 
 import game.objects.Player;
+import java.util.TreeMap;
 
 public class ClassData {
 
@@ -114,15 +115,16 @@ public class ClassData {
 
         return new short[]{mapID, cellID};
     }
-    
+
     /**
      * Retourne la map de la statue à astrub
+     *
      * @param classID
-     * @return 
+     * @return
      */
-    public static short[] getStatuesPos(byte classID){
+    public static short[] getStatuesPos(byte classID) {
         short mapID, cellID;
-        switch(classID){
+        switch (classID) {
             case CLASS_FECA:
                 mapID = 7398;
                 cellID = 284;
@@ -175,7 +177,7 @@ public class ClassData {
                 mapID = 7427;
                 cellID = 267;
         }
-        
+
         return new short[]{mapID, cellID};
     }
 
@@ -200,4 +202,71 @@ public class ClassData {
             s.add(Stats.Element.PROSPEC, PROS_BONUS_ENU);
         }
     }
+
+    /*public static TreeMap<Integer, SortStats> getStartSorts(int classID) {
+        TreeMap<Integer, SortStats> start = new TreeMap<Integer, SortStats>();
+        switch (classID) {
+            case CLASS_FECA:
+                start.put(3, World.getSort(3).getStatsByLevel(1));//Attaque Naturelle
+                start.put(6, World.getSort(6).getStatsByLevel(1));//Armure Terrestre
+                start.put(17, World.getSort(17).getStatsByLevel(1));//Glyphe Agressif
+                break;
+            case CLASS_SRAM:
+                start.put(61, World.getSort(61).getStatsByLevel(1));//Sournoiserie
+                start.put(72, World.getSort(72).getStatsByLevel(1));//Invisibilité
+                start.put(65, World.getSort(65).getStatsByLevel(1));//Piege sournois
+                break;
+            case CLASS_ENIRIPSA:
+                start.put(125, World.getSort(125).getStatsByLevel(1));//Mot Interdit
+                start.put(128, World.getSort(128).getStatsByLevel(1));//Mot de Frayeur
+                start.put(121, World.getSort(121).getStatsByLevel(1));//Mot Curatif
+                break;
+            case CLASS_ECAFLIP:
+                start.put(102, World.getSort(102).getStatsByLevel(1));//Pile ou Face
+                start.put(103, World.getSort(103).getStatsByLevel(1));//Chance d'ecaflip
+                start.put(105, World.getSort(105).getStatsByLevel(1));//Bond du felin
+                break;
+            case CLASS_CRA:
+                start.put(161, World.getSort(161).getStatsByLevel(1));//Fleche Magique
+                start.put(169, World.getSort(169).getStatsByLevel(1));//Fleche de Recul
+                start.put(164, World.getSort(164).getStatsByLevel(1));//Fleche Empoisonnée(ex Fleche chercheuse)
+                break;
+            case CLASS_IOP:
+                start.put(143, World.getSort(143).getStatsByLevel(1));//Intimidation
+                start.put(141, World.getSort(141).getStatsByLevel(1));//Pression
+                start.put(142, World.getSort(142).getStatsByLevel(1));//Bond
+                break;
+            case CLASS_SADIDA:
+                start.put(183, World.getSort(183).getStatsByLevel(1));//Ronce
+                start.put(200, World.getSort(200).getStatsByLevel(1));//Poison Paralysant
+                start.put(193, World.getSort(193).getStatsByLevel(1));//La bloqueuse
+                break;
+            case CLASS_OSAMODAS:
+                start.put(34, World.getSort(34).getStatsByLevel(1));//Invocation de tofu
+                start.put(21, World.getSort(21).getStatsByLevel(1));//Griffe Spectrale
+                start.put(23, World.getSort(23).getStatsByLevel(1));//Cri de l'ours
+                break;
+            case CLASS_XELOR:
+                start.put(82, World.getSort(82).getStatsByLevel(1));//Contre
+                start.put(81, World.getSort(81).getStatsByLevel(1));//Ralentissement
+                start.put(83, World.getSort(83).getStatsByLevel(1));//Aiguille
+                break;
+            case CLASS_PANDAWA:
+                start.put(686, World.getSort(686).getStatsByLevel(1));//Picole
+                start.put(692, World.getSort(692).getStatsByLevel(1));//Gueule de bois
+                start.put(687, World.getSort(687).getStatsByLevel(1));//Poing enflammé
+                break;
+            case CLASS_ENUTROF:
+                start.put(51, World.getSort(51).getStatsByLevel(1));//Lancer de Piece
+                start.put(43, World.getSort(43).getStatsByLevel(1));//Lancer de Pelle
+                start.put(41, World.getSort(41).getStatsByLevel(1));//Sac animé
+                break;
+            case CLASS_SACRIEUR:
+                start.put(432, World.getSort(432).getStatsByLevel(1));//Pied du Sacrieur
+                start.put(431, World.getSort(431).getStatsByLevel(1));//Chatiment Forcé
+                start.put(434, World.getSort(434).getStatsByLevel(1));//Attirance
+                break;
+        }
+        return start;
+    }*/
 }
