@@ -74,6 +74,7 @@ public class AccountEvents {
             }
 
             World.addOnline(p);
+            p.setSession(session);
 
             //génération du packet ASK
             StringBuilder param = new StringBuilder();
