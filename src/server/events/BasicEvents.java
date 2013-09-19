@@ -5,10 +5,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.concurrent.atomic.AtomicReference;
 import jelly.Commands;
 import jelly.Constants;
-import jelly.Loggin;
 import models.Account;
 import org.apache.mina.core.session.IoSession;
 import server.game.GamePacketEnum;
@@ -43,6 +41,10 @@ public class BasicEvents {
         GamePacketEnum.BASIC_DATE.send(session, p.toString());
         GamePacketEnum.BASIC_TIME.send(session, String.valueOf(actDate.getTime() + 3600000));
     }
+    
+    public static void onPrompt(IoSession session){
+        GamePacketEnum.BASIC_CONSOLE_PROMPT.send(session, Constants.NAME);
+    }
 
     public static void onMessage(IoSession session, String packet) {
         Player p = (Player) session.getAttribute("player");
@@ -52,6 +54,20 @@ public class BasicEvents {
         }
 
         String[] args = packet.split("\\|");
+        
+        if(args.length < 2){
+            return;
+        }
+        
+        if(args[1].charAt(0) == '!'){
+            switch(args[1].toLowerCase()){
+                case "!console":
+                    session.write("BAPtest");
+                    session.write("BAT2Welcome !");
+                    break;
+            }
+            return;
+        }
 
         switch (args[0]) {
             case "*": //canal noir (map)

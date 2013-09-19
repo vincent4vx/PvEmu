@@ -141,6 +141,10 @@ public enum GamePacketEnum {
      */
     BASIC_CONSOLE_WRITE("BAT2"),
     /**
+     * 
+     */
+    BASIC_CONSOLE_PROMPT("BAP"),
+    /**
      * Message serveur (utilisé par console admin)
      */
     SERVER_MESSAGE("cs"),
@@ -173,6 +177,10 @@ public enum GamePacketEnum {
      * Cinématique du début
      */
     TUTORIAL_BEGIN("TB"),
+    /**
+     * Création du tuto (pour Dofus 1.9)
+     */
+    TUTORIAL_CREATE("TC"),
     /**
      * Change la direction du personnage
      * id | direction

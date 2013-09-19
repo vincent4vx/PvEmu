@@ -86,10 +86,20 @@ public class CharacterEvents {
         GamePacketEnum.GAME_CREATE_OK.send(session, p.getName());
         onStatsChange(session, p);
         ObjectEvents.onWeightChange(session, p);
-        GamePacketEnum.CHAT_CHANEL_ADD.send(session, p.getChanels());
+        if(Constants.DOFUS_VER_ID >= 1100){
+            GamePacketEnum.CHAT_CHANEL_ADD.send(session, p.getChanels());
+        }
         GamePacketEnum.CHARACTER_RESTRICTION.send(session, p.restriction);
         ChatEvents.onSendErrorMessage(session, 89);
         MapEvents.onArrivedInGame(session);
+        
+        if(Constants.DOFUS_VER_ID < 1100){
+            BasicEvents.onDate(session);
+            
+            if(p.getAccount().level > 0){
+                BasicEvents.onPrompt(session);
+            }
+        }
     }
 
     public static void onStatsChange(IoSession session, Player p) {

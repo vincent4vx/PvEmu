@@ -236,7 +236,7 @@ public class Player extends Creature implements GMable, InventoryAble {
         //30^100,1247;
         //FIXME pnj suiveur ? 
         str.append("").append(";"); //title
-        str.append(gfxID).append("^").append(100) //gfxID^size //FIXME ,GFXID pnj suiveur
+        str.append(gfxID);//.append("^").append(100) //gfxID^size //FIXME ,GFXID pnj suiveur
                 //                .append(",").append("1247") // mob suvieur1
                 //                .append(",").append("1503") //mob suiveur2
                 //                .append(",").append("1451") //mob suiveur 3
@@ -244,7 +244,10 @@ public class Player extends Creature implements GMable, InventoryAble {
                 //                .append(",").append("8013") // MS5
                 //                .append(",").append("8018") // MS6
                 //                .append(",").append("8017") // MS7 ... Infini quoi
-                .append(";");
+        if(Constants.DOFUS_VER_ID >= 1100){
+           str.append('^').append(100); //size
+        }
+        str.append(";");
         str.append(sexe).append(";");
         str.append(0).append(","); //alignement
         str.append("0").append(",");//FIXME:?

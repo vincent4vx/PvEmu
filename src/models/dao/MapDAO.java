@@ -2,6 +2,7 @@ package models.dao;
 
 import java.sql.ResultSet;
 import java.util.HashMap;
+import jelly.Constants;
 import jelly.Loggin;
 import jelly.database.DAO;
 import models.MapModel;
@@ -25,7 +26,11 @@ public class MapDAO extends DAO<MapModel> {
             map.width = RS.getByte("width");
             map.heigth = RS.getByte("heigth");
             map.places = RS.getString("places");
-            map.key = RS.getString("key");
+            
+            if(Constants.DOFUS_VER_ID >= 1100){
+                map.key = RS.getString("key");
+            }
+            
             map.mapData = RS.getString("mapData");
             map.monsters = RS.getString("monsters");
             //map.capabilities = RS.getByte("capabilities");

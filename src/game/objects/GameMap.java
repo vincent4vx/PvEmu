@@ -5,6 +5,7 @@ import game.objects.dep.GMable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import jelly.Constants;
 import jelly.Loggin;
 import models.MapModel;
 import models.MapNpcs;
@@ -207,7 +208,10 @@ public final class GameMap {
     public String getMapDataPacket() {
         if (mapDataPacket == null) {
             StringBuilder p = new StringBuilder();
-            p.append(id).append("|").append(_model.date).append("|").append(_model.key);
+            p.append(id).append("|").append(_model.date);
+            if(Constants.DOFUS_VER_ID >= 1100){
+                p.append("|").append(_model.key);
+            }
             mapDataPacket = p.toString();
         }
         return mapDataPacket;
