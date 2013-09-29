@@ -3,7 +3,7 @@ package com.oldofus.game.objects.dep;
 public interface GMable {
     /**
      * Données pour affichage sur map
-     * @return 
+     * @return Le param du packet sous forme de string
      */
     public String getGMData();
     

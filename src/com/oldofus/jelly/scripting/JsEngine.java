@@ -31,6 +31,7 @@ public class JsEngine {
                     "var oldofus = Packages.com.oldofus;"
                     + "var jelly = oldofus.jelly;"
                     + "importPackage(jelly);"
+                    + "importPackage(java.lang);"
             );
         } catch (ScriptException ex) {
             Logger.getLogger(JsEngine.class.getName()).log(Level.SEVERE, null, ex);

@@ -2,6 +2,11 @@ package com.oldofus.jelly.scripting.hooks;
 
 import com.oldofus.game.objects.Player;
 
+/**
+ * Gère les callback pour les packets des joueurs
+ * @author vincent
+ * @since 0.11
+ */
 public class PlayerHooks {
     /**
      * Callback pour packet GM
@@ -18,7 +23,6 @@ public class PlayerHooks {
      */
     public static void registerGMHook(GMHook hook){
         _GMHook = hook;
-        hook.call(null);
     }
     
     /**

@@ -6,13 +6,14 @@ import com.oldofus.jelly.Loggin;
 import com.oldofus.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import com.oldofus.network.game.GamePacketEnum;
+import com.oldofus.network.generators.PlayerGenerator;
 
 public class MapEvents {
 
     /**
      * Affiche le perso sur la map (à appeler après GameMap.addPlayer())
      *
-     * @param session
+     * @param session sender
      */
     public static void onAddMap(IoSession session) {
         Player p = (Player) session.getAttribute("player");
@@ -21,7 +22,7 @@ public class MapEvents {
             return;
         }
 
-        GamePacketEnum.MAP_ADD_PLAYER.sendToMap(p.getMap(), p.getGMData());
+        GamePacketEnum.MAP_ADD_PLAYER.sendToMap(p.getMap(), PlayerGenerator.generateGM(p));
         
         for(GMable Ga : p.getMap().getGMables()){
             if(Ga == p){
@@ -34,7 +35,7 @@ public class MapEvents {
     /**
      * Retire le joueur de la map (ne pas appeler GameMap.removePlayer())
      *
-     * @param session
+     * @param session target
      */
     public static void onRemoveMap(IoSession session) {
         Player p = (Player) session.getAttribute("player");
@@ -55,9 +56,9 @@ public class MapEvents {
     /**
      * Utilisé en cas de changement de maps
      *
-     * @param session
-     * @param mapID
-     * @param cellID
+     * @param session sender
+     * @param mapID map d'arrivée
+     * @param cellID cellule d'arrivée
      */
     public static void onArrivedOnMap(IoSession session, short mapID, short cellID) {
         Player p = (Player) session.getAttribute("player");
@@ -82,7 +83,7 @@ public class MapEvents {
     /**
      * En cas d'arrivé IG
      *
-     * @param session
+     * @param session target
      */
     public static void onArrivedInGame(IoSession session) {
         Player p = (Player) session.getAttribute("player");
@@ -101,7 +102,7 @@ public class MapEvents {
     /**
      * Packet GI : charge les données de la map
      *
-     * @param session
+     * @param session target
      */
     public static void onInitialize(IoSession session) {
         onAddMap(session);
@@ -111,8 +112,8 @@ public class MapEvents {
     /**
      * Arrivé sur une cellule après déplacement (gestion des triggers)
      *
-     * @param session
-     * @param cellID
+     * @param session target / sender
+     * @param cellID cellule d'arrivée
      */
     public static void onArrivedOnCell(IoSession session, short cellID) {
         Player p = (Player) session.getAttribute("player");
@@ -125,7 +126,7 @@ public class MapEvents {
         p.setCell(p.getMap().getCellById(cellID));
         p.getCell().addPlayer(p);
 
-        Loggin.debug("Joueur %s arrivé sur la cellule %d avec succès !", new Object[]{p.getName(), cellID});
+        Loggin.debug("Joueur %s arrivé sur la cellule %d avec succès !", p.getName(), cellID);
 
         p.getCell().performCellAction(p);
     }
