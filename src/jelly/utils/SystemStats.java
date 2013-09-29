@@ -53,26 +53,26 @@ public class SystemStats {
         lastNanoTime = time;
         lastCpuTime = cpuTime;
         
-        return cpuDiff / timeDiff;
+        return cpuDiff / timeDiff / Runtime.getRuntime().availableProcessors();
     }
 
     public static void printStats() {
         Shell.println("Statistiques :", Shell.GraphicRenditionEnum.YELLOW);
         Shell.println("==========================\n", Shell.GraphicRenditionEnum.YELLOW);
         Shell.println("Informations sur les sockets");
-        Shell.print("Nombre de packets reçus : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print("Nombre de packets reçus   : ", Shell.GraphicRenditionEnum.YELLOW);
         Shell.println(String.valueOf(GameIoHandler.RECV), Shell.GraphicRenditionEnum.GREEN);
         Shell.print("Nombre de packets envoyés : ", Shell.GraphicRenditionEnum.YELLOW);
         Shell.println(String.valueOf(GameIoHandler.SENT), Shell.GraphicRenditionEnum.GREEN);
-        Shell.print("Nombre de connexions : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print("Nombre de connexions      : ", Shell.GraphicRenditionEnum.YELLOW);
         Shell.println(String.valueOf(GameIoHandler.CON), Shell.GraphicRenditionEnum.CYAN);
 
         Shell.println("\nInformations sur le système");
-        Shell.print("Utilisation de la RAM : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print("Utilisation de la RAM    : ", Shell.GraphicRenditionEnum.YELLOW);
         Shell.println(getRamUsage() + "Mo", Shell.GraphicRenditionEnum.BLUE);
         Shell.print("Nombre de threads actifs : ", Shell.GraphicRenditionEnum.YELLOW);
         Shell.println(String.valueOf(getThreadCount()), Shell.GraphicRenditionEnum.CYAN);
-        Shell.print("Utilisation du CPU : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print("Utilisation du CPU       : ", Shell.GraphicRenditionEnum.YELLOW);
         
         double cpu = getCpuUsage() * 100;
         String msg = String.valueOf(cpu).substring(0, 4) + "%";
@@ -93,9 +93,9 @@ public class SystemStats {
         Shell.println("\nInformations sur le jeu");
         Shell.print("Nombre de joueurs en ligne : ", Shell.GraphicRenditionEnum.YELLOW);
         Shell.println(String.valueOf(World.getOnlinePlayers().size()), Shell.GraphicRenditionEnum.GREEN);
-        Shell.print("Uptime : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print("Uptime                     : ", Shell.GraphicRenditionEnum.YELLOW);
         Shell.println(Utils.getUptime(), Shell.GraphicRenditionEnum.YELLOW, Shell.GraphicRenditionEnum.BOLD);
-        Shell.print("Nombre d'erreurs : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print("Nombre d'erreurs           : ", Shell.GraphicRenditionEnum.YELLOW);
         Shell.println(String.valueOf(Loggin.ERROR_COUNT), Shell.GraphicRenditionEnum.RED);
     }
     
