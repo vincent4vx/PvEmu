@@ -1,4 +1,4 @@
-package server.game;
+package network.game;
 
 import game.World;
 import game.objects.GameMap;

@@ -1,4 +1,4 @@
-package server.events;
+package network.events;
 
 import game.objects.Player;
 import java.text.DateFormat;
@@ -9,7 +9,7 @@ import jelly.Commands;
 import jelly.Constants;
 import models.Account;
 import org.apache.mina.core.session.IoSession;
-import server.game.GamePacketEnum;
+import network.game.GamePacketEnum;
 
 public class BasicEvents {
 

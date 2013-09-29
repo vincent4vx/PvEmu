@@ -29,7 +29,7 @@ public class JsEngine {
         try {
             engine.eval("importPackage(Packages.jelly);"
                     + "importPackage(Packages.game);"
-                    + "importPackage(Packages.server);"
+                    + "importPackage(Packages.network);"
                     + "importPackage(Packages.models);"
             );
         } catch (ScriptException ex) {

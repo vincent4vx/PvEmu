@@ -1,4 +1,4 @@
-package server.events;
+package network.events;
 
 import game.World;
 import game.objects.Player;
@@ -10,8 +10,8 @@ import jelly.Utils;
 import models.Account;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
-import server.game.GamePacketEnum;
-import server.game.GameServer;
+import network.game.GamePacketEnum;
+import network.game.GameServer;
 
 public class CharacterEvents {
 

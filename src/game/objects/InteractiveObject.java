@@ -2,7 +2,7 @@ package game.objects;
 
 import game.objects.GameMap.Cell;
 import jelly.Loggin;
-import server.events.ChatEvents;
+import network.events.ChatEvents;
 
 public class InteractiveObject {
     private int objID;

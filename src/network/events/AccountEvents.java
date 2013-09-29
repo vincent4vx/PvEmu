@@ -1,4 +1,4 @@
-package server.events;
+package network.events;
 
 import game.World;
 import game.objects.Player;
@@ -8,9 +8,9 @@ import jelly.Constants;
 import jelly.Utils;
 import models.Account;
 import org.apache.mina.core.session.IoSession;
-import server.game.GamePacketEnum;
-import server.game.GameServer;
-import server.realm.RealmPacketEnum;
+import network.game.GamePacketEnum;
+import network.game.GameServer;
+import network.realm.RealmPacketEnum;
 
 public class AccountEvents {
     //TODO : data correspond à l'id du Game Server (à utiliser en cas de multi-serveurs)

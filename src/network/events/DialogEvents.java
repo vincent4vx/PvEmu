@@ -1,4 +1,4 @@
-package server.events;
+package network.events;
 
 import game.objects.GameNpc;
 import game.objects.Player;
@@ -8,7 +8,7 @@ import models.NpcQuestion;
 import models.NpcResponseAction;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
-import server.game.GamePacketEnum;
+import network.game.GamePacketEnum;
 
 public class DialogEvents {
     public static void onCreate(IoSession session, String packet){

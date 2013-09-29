@@ -1,5 +1,14 @@
-package server.game;
+package network.game;
 
+import network.events.DialogEvents;
+import network.events.MapEvents;
+import network.events.EmotesEvents;
+import network.events.ExchangeEvents;
+import network.events.GameActionEvents;
+import network.events.ObjectEvents;
+import network.events.BasicEvents;
+import network.events.AccountEvents;
+import network.events.CharacterEvents;
 import game.objects.Player;
 import java.net.InetSocketAddress;
 import jelly.Jelly;
@@ -7,8 +16,7 @@ import jelly.Loggin;
 import models.Account;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
-import server.MinaIoHandler;
-import server.events.*;
+import network.MinaIoHandler;
 
 public class GameIoHandler extends MinaIoHandler {
 

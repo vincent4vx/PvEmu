@@ -13,9 +13,9 @@ import jelly.Shell.GraphicRenditionEnum;
 import models.ItemTemplate;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
-import server.events.BasicEvents;
-import server.events.ChatEvents;
-import server.game.GamePacketEnum;
+import network.events.BasicEvents;
+import network.events.ChatEvents;
+import network.game.GamePacketEnum;
 
 public class Commands {
     private final static ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());

@@ -1,8 +1,8 @@
-package server.events;
+package network.events;
 
 import jelly.Utils;
 import org.apache.mina.core.session.IoSession;
-import server.game.GamePacketEnum;
+import network.game.GamePacketEnum;
 
 public class ChatEvents {
     public static void onSendInfoMessage(IoSession session, int msgID, Object ... args){

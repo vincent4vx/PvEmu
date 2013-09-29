@@ -6,10 +6,11 @@ import java.lang.management.ThreadMXBean;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import jelly.Jelly;
 import jelly.Loggin;
 import jelly.Shell;
 import jelly.Utils;
-import server.game.GameIoHandler;
+import network.game.GameIoHandler;
 
 public class SystemStats {
 
@@ -106,6 +107,9 @@ public class SystemStats {
                 new Runnable(){
                     @Override
                     public void run(){
+                        if(Jelly.DEBUG){
+                            return;
+                        }
                         Shell.clear();
                         printStats();
                     }

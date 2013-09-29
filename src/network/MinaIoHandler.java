@@ -1,4 +1,4 @@
-package server;
+package network;
 
 import jelly.Loggin;
 import models.Account;

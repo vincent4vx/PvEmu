@@ -1,8 +1,8 @@
-package server.events;
+package network.events;
 
 import game.objects.Player;
 import org.apache.mina.core.session.IoSession;
-import server.game.GamePacketEnum;
+import network.game.GamePacketEnum;
 
 public class EmotesEvents {
     public static void onDirection(IoSession session, String packet){

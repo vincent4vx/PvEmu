@@ -1,11 +1,11 @@
-package server.events;
+package network.events;
 
 import game.objects.Player;
 import game.objects.dep.GMable;
 import jelly.Loggin;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
-import server.game.GamePacketEnum;
+import network.game.GamePacketEnum;
 
 public class MapEvents {
 

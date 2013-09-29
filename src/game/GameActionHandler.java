@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import jelly.Loggin;
 import jelly.utils.Pathfinding;
-import server.events.ChatEvents;
-import server.events.MapEvents;
+import network.events.ChatEvents;
+import network.events.MapEvents;
 
 public class GameActionHandler {
 

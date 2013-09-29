@@ -1,4 +1,4 @@
-package server.realm;
+package network.realm;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -6,7 +6,7 @@ import jelly.Config;
 import jelly.Loggin;
 import jelly.Shell;
 import jelly.Shell.GraphicRenditionEnum;
-import server.MinaServer;
+import network.MinaServer;
 
 public class RealmServer {
 

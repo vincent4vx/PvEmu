@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.fusesource.jansi.AnsiConsole;
-import server.game.GameIoHandler;
+import network.game.GameIoHandler;
 
 public class Shell {
 

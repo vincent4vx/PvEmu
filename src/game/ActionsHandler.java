@@ -3,8 +3,8 @@ package game;
 import game.objects.Player;
 import jelly.Loggin;
 import jelly.Utils;
-import server.events.DialogEvents;
-import server.events.GameActionEvents;
+import network.events.DialogEvents;
+import network.events.GameActionEvents;
 
 public class ActionsHandler {
 

@@ -7,8 +7,8 @@ import jelly.database.Database;
 import jelly.scripting.API;
 import jelly.utils.SystemStats;
 import models.dao.DAOFactory;
-import server.game.GameServer;
-import server.realm.RealmServer;
+import network.game.GameServer;
+import network.realm.RealmServer;
 
 public class Jelly {
 

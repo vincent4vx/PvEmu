@@ -1,4 +1,4 @@
-package server.realm;
+package network.realm;
 
 import jelly.Config;
 import jelly.Constants;

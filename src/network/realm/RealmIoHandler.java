@@ -1,4 +1,4 @@
-package server.realm;
+package network.realm;
 
 import jelly.Constants;
 import jelly.Jelly;
@@ -7,9 +7,9 @@ import jelly.Utils;
 import models.Account;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
-import server.MinaIoHandler;
-import server.events.AccountEvents;
-import server.events.CharacterEvents;
+import network.MinaIoHandler;
+import network.events.AccountEvents;
+import network.events.CharacterEvents;
 
 /**
  *

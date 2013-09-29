@@ -20,9 +20,9 @@ import models.MapModel;
 import models.NpcQuestion;
 import models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
-import server.events.CharacterEvents;
-import server.events.MapEvents;
-import server.events.ObjectEvents;
+import network.events.CharacterEvents;
+import network.events.MapEvents;
+import network.events.ObjectEvents;
 
 
 public class Player extends Creature implements GMable, InventoryAble {

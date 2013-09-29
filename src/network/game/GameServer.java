@@ -1,4 +1,4 @@
-package server.game;
+package network.game;
 
 import java.io.IOException;
 import java.util.logging.Level;
@@ -8,7 +8,7 @@ import jelly.Loggin;
 import jelly.Shell;
 import jelly.Shell.GraphicRenditionEnum;
 import jelly.utils.Crypt;
-import server.MinaServer;
+import network.MinaServer;
 
 public class GameServer {
 
