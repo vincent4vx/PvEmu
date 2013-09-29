@@ -5,6 +5,7 @@ import game.objects.dep.Stats;
 import jelly.Shell.GraphicRenditionEnum;
 import jelly.database.Database;
 import jelly.scripting.API;
+import jelly.utils.SystemStats;
 import models.dao.DAOFactory;
 import server.game.GameServer;
 import server.realm.RealmServer;
@@ -70,7 +71,7 @@ public class Jelly {
                 Jelly.close();
             }
         });
-        Shell.initGameStats();
+        SystemStats.displayStatsAtFixedRate();
     }
 
     private static void printAsciiLogo() {
