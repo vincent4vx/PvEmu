@@ -3,7 +3,7 @@ package jelly;
 public class Constants {
 
     public final static String NAME = "PvEmu";
-    public final static String VERSION = "0.10.1a";
+    public final static String VERSION = "0.11.0a";
     public final static int REV = 68;
     public final static String DOFUS_VER = "1.9.1";
     public final static int DOFUS_VER_ID = 1091;

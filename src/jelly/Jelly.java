@@ -4,6 +4,7 @@ import game.World;
 import game.objects.dep.Stats;
 import jelly.Shell.GraphicRenditionEnum;
 import jelly.database.Database;
+import jelly.scripting.API;
 import models.dao.DAOFactory;
 import server.game.GameServer;
 import server.realm.RealmServer;
@@ -61,6 +62,7 @@ public class Jelly {
         }
         RealmServer.start();
         GameServer.start();
+        API.initialise();
         Shell.println("Serveur lancé en " + (System.currentTimeMillis() - start) + "ms", GraphicRenditionEnum.GREEN, GraphicRenditionEnum.BOLD);
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
