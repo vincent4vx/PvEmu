@@ -52,7 +52,7 @@ public final class GameMap {
             return -1;
         }
 
-        public short getID() {
+        public Short getID() {
             return id;
         }
 

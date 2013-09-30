@@ -13,7 +13,7 @@ public interface InventoryAble {
      * @return 
      */
     public byte getOwnerType();
-    public int getID();
+    public Integer getID();
     
     public void onQuantityChange(int id, int qu);
     public void onAddItem(GameItem GI);

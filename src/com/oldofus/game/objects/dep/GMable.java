@@ -11,5 +11,5 @@ public interface GMable {
      * Retourne l'id sur map
      * @return 
      */
-    public int getID();
+    public Integer getID();
 }

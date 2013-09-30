@@ -70,11 +70,11 @@ public abstract class Creature {
         return init;
     }
 
-    public int getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
-    public int getGfxID() {
+    public Integer getGfxID() {
         return gfxID;
     }
 

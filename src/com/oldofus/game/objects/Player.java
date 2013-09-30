@@ -38,7 +38,7 @@ public class Player extends Creature implements GMable, InventoryAble {
     private String chanels = "*#$:?i^!%";
     private Account _account;
     public String restriction = "6bk";
-    public byte orientation = 2;
+    public Byte orientation = 2;
     private Inventory _inventory;
     private Stats stuffStats;
     private GameActionHandler actions = new GameActionHandler();
@@ -134,11 +134,11 @@ public class Player extends Creature implements GMable, InventoryAble {
         _character.lastCell = cell.getID();
     }
 
-    public byte getClassID() {
+    public Byte getClassID() {
         return classID;
     }
 
-    public byte getSexe() {
+    public Byte getSexe() {
         return sexe;
     }
 
@@ -147,7 +147,7 @@ public class Player extends Creature implements GMable, InventoryAble {
     }
 
     @Override
-    public int getID() {
+    public Integer getID() {
         return id;
     }
 
