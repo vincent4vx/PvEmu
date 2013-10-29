@@ -37,4 +37,31 @@ public class PlayerHooks {
         
         return _GMHook.call(p);
     }
+    
+    public interface AsHook{
+        public String call(Player p);
+    }
+    
+    private static AsHook _AsHook = null;
+    
+    /**
+     * Packet As (stats)
+     * @param hook callback générant le packet, prend comme parametre le joueur
+     */
+    public static void registerAsHook(AsHook hook){
+        _AsHook = hook;
+    }
+    
+    /**
+     * Appel du hook si possible
+     * @param p le joueur cible
+     * @return packet généré, ou null si pas de callback
+     */
+    public static String callAsHook(Player p){
+        if(_AsHook == null){
+            return null;
+        }
+        
+        return _AsHook.call(p);
+    }
 }

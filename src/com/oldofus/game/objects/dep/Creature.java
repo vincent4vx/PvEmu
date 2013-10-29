@@ -45,7 +45,7 @@ public abstract class Creature {
      *
      * @return
      */
-    public int getInitiative() {
+    public Integer getInitiative() {
         int fact = 4;
         int pvmax = 100;
         int pv = 100;

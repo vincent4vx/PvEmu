@@ -12,6 +12,7 @@ import com.oldofus.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import com.oldofus.network.game.GamePacketEnum;
 import com.oldofus.network.game.GameServer;
+import com.oldofus.network.generators.PlayerGenerator;
 
 public class CharacterEvents {
 
@@ -103,7 +104,7 @@ public class CharacterEvents {
     }
 
     public static void onStatsChange(IoSession session, Player p) {
-        GamePacketEnum.STATS_PACKET.send(session, p.getStatsPacket());
+        GamePacketEnum.STATS_PACKET.send(session, PlayerGenerator.generateAs(p));
     }
 
     private static Player getPlayer(IoSession session) {

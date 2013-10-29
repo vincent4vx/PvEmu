@@ -1,0 +1,1 @@
+Shell.println("Hello World !", Shell.GraphicRenditionEnum.RED);

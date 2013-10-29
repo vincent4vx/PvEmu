@@ -135,7 +135,7 @@ public class Stats{
      * @param e
      * @return
      */
-    public int get(Element e) {
+    public Integer get(Element e) {
         if (e != null && stats.containsKey(e)) {
             return stats.get(e);
         }
@@ -148,7 +148,7 @@ public class Stats{
      * @param elemId
      * @return
      */
-    public int get(int elemId) {
+    public Integer get(int elemId) {
         Element e = intToElement.get(elemId);
         return get(e);
     }

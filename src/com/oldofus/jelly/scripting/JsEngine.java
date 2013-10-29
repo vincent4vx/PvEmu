@@ -26,7 +26,7 @@ public final class JsEngine {
      */
     private final static int JAVA_VERSION = Context.VERSION_1_7;
     /**
-     * Optimisation de rhino. Un nombre trop élever peut coser
+     * Optimisation de rhino. Un nombre trop élever peut causer
      * des problèmes et ralenti la compilation.
      * Une nombre trop faible n'optimise pas le code
      * 
@@ -52,6 +52,7 @@ public final class JsEngine {
         eval(
                 "var oldofus = Packages.com.oldofus;"
                 + "var jelly = oldofus.jelly;"
+                + "var game = oldofus.game;"
                 + "importPackage(jelly);"
                 + "importPackage(java.lang);"
                 + "importClass(jelly.scripting.API);"
@@ -86,7 +87,8 @@ public final class JsEngine {
         try{
             cache.put(scriptName, context.compileReader(new FileReader(scriptFile), scriptName, 1, null));
         }catch(Exception e){
-            
+            Loggin.error("Impossible de compiler le script " + scriptName, e);
+            return;
         }
         
         Loggin.debug("Compilation du script '%s'", scriptName);

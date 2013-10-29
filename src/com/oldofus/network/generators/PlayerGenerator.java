@@ -5,6 +5,7 @@
 package com.oldofus.network.generators;
 
 import com.oldofus.game.objects.Player;
+import com.oldofus.game.objects.dep.Stats;
 import com.oldofus.jelly.Constants;
 import com.oldofus.jelly.Utils;
 import com.oldofus.jelly.scripting.hooks.PlayerHooks;
@@ -89,5 +90,71 @@ public class PlayerGenerator {
         str.append(";");
 
         return str.toString();
+    }
+
+    public static String generateAs(Player p) {
+        
+        {
+            String packet;
+            if((packet = PlayerHooks.callAsHook(p)) != null){
+                return packet;
+            }
+        }
+        
+        StringBuilder ASData = new StringBuilder();
+        ASData.append("0,0").append("|");
+        ASData.append(0).append("|").append(0).append("|").append(0).append("|");
+        ASData.append(0).append("~").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append((false ? "1" : "0")).append("|");
+
+        ASData.append(p.getPDVMax()).append(",").append(p.getPDVMax()).append("|");
+        ASData.append(10000).append(",10000|");
+
+        ASData.append(p.getInitiative()).append("|");
+        ASData.append(p.getProspection()).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.PA)).append(",").append(p.getStuffStats().get(Stats.Element.PA)).append(",").append(0).append(",").append(0).append(",").append(p.getTotalStats().get(Stats.Element.PA)).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.PM)).append(",").append(p.getStuffStats().get(Stats.Element.PM)).append(",").append(0).append(",").append(0).append(",").append(p.getTotalStats().get(Stats.Element.PM)).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.FORCE)).append(",").append(p.getStuffStats().get(Stats.Element.FORCE)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.VITA)).append(",").append(p.getStuffStats().get(Stats.Element.VITA)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.SAGESSE)).append(",").append(p.getStuffStats().get(Stats.Element.SAGESSE)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.CHANCE)).append(",").append(p.getStuffStats().get(Stats.Element.CHANCE)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.AGILITE)).append(",").append(p.getStuffStats().get(Stats.Element.AGILITE)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.INTEL)).append(",").append(p.getStuffStats().get(Stats.Element.INTEL)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.PO)).append(",").append(p.getStuffStats().get(Stats.Element.PO)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.INVOC)).append(",").append(p.getStuffStats().get(Stats.Element.INVOC)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.DOMMAGE)).append(",").append(p.getStuffStats().get(Stats.Element.DOMMAGE)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|"); //PDOM ?
+        ASData.append("0,0,0,0|");//Maitrise ?
+        ASData.append(p.getBaseStats().get(Stats.Element.PERDOM)).append(",").append(p.getStuffStats().get(Stats.Element.PERDOM)).append("," + "0").append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.SOIN)).append(",").append(p.getStuffStats().get(Stats.Element.SOIN)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.TRAP_DOM)).append(",").append(p.getStuffStats().get(Stats.Element.TRAP_DOM)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.TRAP_PERDOM)).append(",").append(p.getStuffStats().get(Stats.Element.TRAP_PERDOM)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|"); //?
+        ASData.append(p.getBaseStats().get(Stats.Element.CC)).append(",").append(p.getStuffStats().get(Stats.Element.CC)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(p.getBaseStats().get(Stats.Element.EC)).append(",").append(p.getStuffStats().get(Stats.Element.EC)).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+        ASData.append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append("|");
+
+
+        return ASData.toString();
     }
 }
