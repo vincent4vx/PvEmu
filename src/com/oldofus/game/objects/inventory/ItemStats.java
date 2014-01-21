@@ -1,6 +1,7 @@
 package com.oldofus.game.objects.inventory;
 
 import com.oldofus.game.objects.dep.Stats;
+import com.oldofus.jelly.Loggin;
 import java.util.Map.Entry;
 import java.util.Objects;
 import com.oldofus.jelly.Utils;
@@ -34,17 +35,21 @@ public class ItemStats implements Cloneable {
             if(e.isEmpty()){
                 continue;
             }
-            String[] elem_data = e.split("#");
+            String[] elem_data = Utils.split(e, "#");//e.split("#");
             
-            int elemID = Integer.parseInt(elem_data[0], 16);
-            int min = Integer.parseInt(elem_data[1], 16);
-            int max = Integer.parseInt(elem_data[2], 16);
-            
-            max = min > max ? min : max;
-            
-            int jet = useMax ? max : Utils.rand(min, max);
-            
-            this.stats.add(elemID, (short)jet);
+            try{
+                int elemID = Integer.parseInt(elem_data[0], 16);
+                int min = Integer.parseInt(elem_data[1], 16);
+                int max = Integer.parseInt(elem_data[2], 16);
+
+                max = min > max ? min : max;
+
+                int jet = useMax ? max : Utils.rand(min, max);
+
+                this.stats.add(elemID, (short)jet);
+            }catch(NumberFormatException ex){
+                Loggin.error("Cannot parse stats of item " + _template.id + " (" + e + ")", ex);
+            }
         }
     }
     

@@ -1,5 +1,6 @@
 package com.oldofus.jelly;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class Utils {
@@ -155,5 +156,89 @@ public class Utils {
         ret.append(hours).append("h ").append(minutes).append("min");
         
         return ret.toString();
+    }
+    
+    /**
+     * Sépare une chaine en sous chaines, délimité par une chaine de caractère A
+     * utiliser à la place de String.split (quand il n'y a pas besoin de regexp,
+     * soit 99% du temps), car ~50% plus rapide
+     *
+     * @param str Chaine à découper
+     * @param delimiter séparateur
+     * @param limit Nombre de sous chaine maximum (taille maximal du tableau de
+     * fin)
+     * @return la chaine explosé
+     */
+    public static String[] split(String str, String delimiter, int limit) {
+        ArrayList<String> splited = new ArrayList<String>();
+
+        int last = 0, pos, step = 0;
+
+        if (limit < 1) {
+            limit = Integer.MAX_VALUE; //devrait suffire amplement x)
+        }
+
+        while ((pos = str.indexOf(delimiter, last)) != -1 && ++step < limit) {
+            splited.add(str.substring(last, pos));
+            last = pos + 1;
+        }
+
+        splited.add(str.substring(last));
+
+        String[] ret = new String[splited.size()];
+        return splited.toArray(ret);
+    }
+
+    /**
+     * Sépare une chaine en sous chaines, délimité par une chaine de caractère A
+     * utiliser à la place de String.split (quand il n'y a pas besoin de regexp,
+     * soit 99% du temps), car ~50% plus rapide
+     *
+     * @param str Chaine à découper
+     * @param delimiter séparateur
+     * @return la chaine explosé
+     */
+    public static String[] split(String str, String delimiter) {
+        return split(str, delimiter, 0);
+    }
+
+    /**
+     * Concatène les élément d'un tableau, en les séparant par un séparateur
+     *
+     * @param pieces Pièces à joindre
+     * @param separator Séparateur
+     * @return élément concatété
+     */
+    public static String join(String[] pieces, String separator) {
+        StringBuilder str = new StringBuilder(pieces.length * 16); //allocation de mémoire "assez" large pour éviter un resize
+
+        for (int i = 0; i < pieces.length; ++i) {
+            if (i > 0) {
+                str.append(separator);
+            }
+
+            str.append(pieces[i]);
+        }
+
+        return str.toString();
+    }
+
+    /**
+     * Génère une chaine aléatoire
+     *
+     * @param size Taille de la chaine
+     * @return une chaine aléatoire
+     */
+    public static String stringAleat(int size) {
+        String alphabet = "abcdefghijklmnopqrstuvwxyz";
+        Random rand = new Random();
+
+        StringBuilder str = new StringBuilder(size);
+
+        for (int i = 0; i < size; ++i) {
+            str.append(alphabet.charAt(rand.nextInt(alphabet.length())));
+        }
+
+        return str.toString();
     }
 }
