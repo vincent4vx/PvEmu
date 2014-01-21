@@ -43,5 +43,5 @@ PlayerHooks.registerAsHook(function(player){
         packet += player.getInitiative() + '|';
         packet += player.getProspection();
 
-        return packet.toString();
+        return packet;
 });
