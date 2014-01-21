@@ -51,6 +51,8 @@ public class CharacterDAO extends com.oldofus.jelly.database.DAO<Character> {
             p.level = RS.getShort("level");
             p.lastMap = RS.getShort("lastMap");
             p.lastCell = RS.getShort("lastCell");
+            p.startMap = RS.getShort("startMap");
+            p.startCell = RS.getShort("startCell");
             p.baseStats = RS.getString("baseStats");
             p.orientation = RS.getByte("orientation");
 
