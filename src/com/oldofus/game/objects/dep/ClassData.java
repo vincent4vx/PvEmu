@@ -6,16 +6,16 @@ import java.util.TreeMap;
 public class ClassData {
 
     //stats
-    public static final int BASE_PA = 6;
-    public static final int BONUS_PA_LVL100 = 1;
-    public static final int BASE_PM = 3;
-    public static final int BASE_PROS = 100;
-    public static final int PROS_BONUS_ENU = 20;
-    public static final int BASE_PODS = 1000;
-    public static final int BASE_INVOC = 1;
-    public static final int BASE_INIT = 100;
-    public static final int BASE_VITA = 50;
-    public static final int VITA_PER_LVL = 5;
+    public static final short BASE_PA = 6;
+    public static final short BONUS_PA_LVL100 = 1;
+    public static final short BASE_PM = 3;
+    public static final short BASE_PROS = 100;
+    public static final short PROS_BONUS_ENU = 20;
+    public static final short BASE_PODS = 1000;
+    public static final short BASE_INVOC = 1;
+    public static final short BASE_INIT = 100;
+    public static final short BASE_VITA = 50;
+    public static final short VITA_PER_LVL = 5;
     //classes
     public static final byte CLASS_FECA = 1;
     public static final byte CLASS_OSAMODAS = 2;
@@ -39,8 +39,8 @@ public class ClassData {
      * @param sexe
      * @return
      */
-    public static int getCharacterGfxID(byte classID, byte sexe) {
-        return classID * 10 + sexe;
+    public static Short getCharacterGfxID(byte classID, byte sexe) {
+        return (short)(classID * 10 + sexe);
     }
 
     /**
@@ -49,8 +49,8 @@ public class ClassData {
      * @param c
      * @return
      */
-    public static int getCharacterGfxID(com.oldofus.models.Character c) {
-        return c.classId * 10 + c.sexe;
+    public static Short getCharacterGfxID(com.oldofus.models.Character c) {
+        return (short)(c.classId * 10 + c.sexe);
     }
 
     /**

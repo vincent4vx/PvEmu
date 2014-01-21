@@ -85,7 +85,7 @@ public class Player extends Creature implements GMable, InventoryAble {
                 try {
                     String[] arr = data.split(";");
                     int elemID = Integer.parseInt(arr[0]);
-                    int qu = Integer.parseInt(arr[1]);
+                    short qu = Short.parseShort(arr[1]);
                     baseStats.add(elemID, qu);
                 } catch (Exception e) {
                 }
@@ -219,8 +219,8 @@ public class Player extends Creature implements GMable, InventoryAble {
      *
      * @return
      */
-    public Integer getProspection() {
-        int p = getTotalStats().get(Element.PROSPEC);
+    public Short getProspection() {
+        short p = getTotalStats().get(Element.PROSPEC);
         p += Math.ceil(getTotalStats().get(Element.CHANCE) / 10);
 
         return p;
@@ -230,8 +230,8 @@ public class Player extends Creature implements GMable, InventoryAble {
      * Retourne le nombre de pdv max du perso
      * @return 
      */
-    public Integer getPDVMax(){
-        return (level - 1) * ClassData.VITA_PER_LVL + ClassData.BASE_VITA + getTotalStats().get(Element.VITA);
+    public Short getPDVMax(){
+        return (short)((level - 1) * ClassData.VITA_PER_LVL + ClassData.BASE_VITA + getTotalStats().get(Element.VITA));
     }
 
     /**
@@ -309,7 +309,7 @@ public class Player extends Creature implements GMable, InventoryAble {
         Loggin.debug("Sauvegarde de %s", _character.name);
         StringBuilder stats = new StringBuilder();
         
-        for(Entry<Element, Integer> e : baseStats.getAll()){
+        for(Entry<Element, Short> e : baseStats.getAll()){
             int val = e.getValue();
             if(val == 0){
                 continue;

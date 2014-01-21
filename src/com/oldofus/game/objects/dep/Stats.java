@@ -75,7 +75,7 @@ public class Stats{
         }
     }
     private static final HashMap<Integer, Element> intToElement = new HashMap<>();
-    private ConcurrentHashMap<Element, Integer> stats = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Element, Short> stats = new ConcurrentHashMap<>();
 
     /**
      * Ajoute qu Element aux stats courentes
@@ -84,7 +84,7 @@ public class Stats{
      * @param qu
      * @return
      */
-    public Stats add(Element e, int qu) {
+    public Stats add(Element e, short qu) {
         if (stats.containsKey(e)) {
             qu += stats.get(e);
         }
@@ -101,12 +101,12 @@ public class Stats{
      * @param qu
      * @return
      */
-    public Stats add(int elemId, int qu) {
+    public Stats add(int elemId, short qu) {
         Element e = intToElement.get(elemId);
 
         if (e != null) {
             if (e.isRemove(elemId)) {
-                qu = -qu;
+                qu = (short)-qu;
             }
             add(e, qu);
         }else{
@@ -122,7 +122,7 @@ public class Stats{
      * @return 
      */
     public Stats addAll(Stats other){
-        for(Entry<Element, Integer> entry : other.stats.entrySet()){
+        for(Entry<Element, Short> entry : other.stats.entrySet()){
             add(entry.getKey(), entry.getValue());
         }
         
@@ -135,7 +135,7 @@ public class Stats{
      * @param e
      * @return
      */
-    public Integer get(Element e) {
+    public Short get(Element e) {
         if (e != null && stats.containsKey(e)) {
             return stats.get(e);
         }
@@ -148,7 +148,7 @@ public class Stats{
      * @param elemId
      * @return
      */
-    public Integer get(int elemId) {
+    public Short get(int elemId) {
         Element e = intToElement.get(elemId);
         return get(e);
     }
@@ -157,7 +157,7 @@ public class Stats{
      * Retourne toute les stats, pour for-each
      * @return 
      */
-    public Set<Entry<Element, Integer>> getAll(){
+    public Set<Entry<Element, Short>> getAll(){
         return stats.entrySet();
     }
 

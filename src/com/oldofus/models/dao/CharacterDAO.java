@@ -46,9 +46,9 @@ public class CharacterDAO extends com.oldofus.jelly.database.DAO<Character> {
             p.color1 = RS.getInt("color1");
             p.color2 = RS.getInt("color2");
             p.color3 = RS.getInt("color3");
-            p.gfxid = RS.getInt("gfxid");
+            p.gfxid = RS.getShort("gfxid");
             p.sexe = RS.getByte("sexe");
-            p.level = RS.getInt("level");
+            p.level = RS.getShort("level");
             p.lastMap = RS.getShort("lastMap");
             p.lastCell = RS.getShort("lastCell");
             p.baseStats = RS.getString("baseStats");

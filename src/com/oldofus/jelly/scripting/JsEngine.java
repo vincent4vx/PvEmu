@@ -2,7 +2,6 @@ package com.oldofus.jelly.scripting;
 import com.oldofus.jelly.Loggin;
 import java.io.File;
 import java.io.FileReader;
-import javax.script.ScriptException;
 import java.util.HashMap;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ImporterTopLevel;

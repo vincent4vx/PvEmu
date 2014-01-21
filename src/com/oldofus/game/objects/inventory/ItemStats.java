@@ -44,7 +44,7 @@ public class ItemStats implements Cloneable {
             
             int jet = useMax ? max : Utils.rand(min, max);
             
-            this.stats.add(elemID, jet);
+            this.stats.add(elemID, (short)jet);
         }
     }
     
@@ -97,7 +97,7 @@ public class ItemStats implements Cloneable {
         
         StringBuilder s = new StringBuilder();
         
-        for(Entry<Stats.Element, Integer> curElem : stats.getAll()){
+        for(Entry<Stats.Element, Short> curElem : stats.getAll()){
             int jet = curElem.getValue();
             if(jet == 0){
                 continue;

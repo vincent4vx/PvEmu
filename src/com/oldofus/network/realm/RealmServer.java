@@ -20,14 +20,14 @@ public class RealmServer {
             Shell.print("Ok", GraphicRenditionEnum.GREEN);
             Shell.println(" (port " + Config.getInt("realm_port", 443) + ")");
         } catch (IOException ex) {
-            Loggin.realm("Impossible de lancer le serveur de Realm (port : " + Config.getInt("realm_port", 443) + ")", Level.SEVERE, null);
+            Loggin.realm("Impossible de lancer le serveur de Realm (port : %d)", Level.SEVERE, Config.getInt("realm_port", 443));
             System.exit(1);
         }
     }
 
     public static void start() {
         if (instance != null) {
-            Loggin.realm("Serveur de Realm déjà lancé !", Level.WARNING, null);
+            Loggin.realm("Serveur de Realm déjà lancé !", Level.WARNING);
         }
         instance = new RealmServer();
     }

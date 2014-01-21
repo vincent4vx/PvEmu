@@ -20,11 +20,11 @@ public class Character implements com.oldofus.jelly.database.Model {
     public int id;
     public String name;
     public int accountId;
-    public int level = 1;
+    public short level = 1;
     public int color1;
     public int color2;
     public int color3;
-    public int gfxid;
+    public short gfxid;
     public byte sexe;
     public byte classId;
     public short lastMap;

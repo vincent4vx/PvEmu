@@ -30,14 +30,14 @@ public class GameServer {
                 Shell.println("GameServer IP crypté en " + CRYPT_IP, GraphicRenditionEnum.BLUE);
             }
         } catch (IOException ex) {
-            Loggin.game("Impossible de lancer le serveur de Game (port : " + Config.getInt("game_port", 5555) + ")", Level.SEVERE, null);
+            Loggin.game("Impossible de lancer le serveur de Game (port : " + Config.getInt("game_port", 5555) + ")", Level.SEVERE);
             System.exit(1);
         }
     }
 
     public static void start() {
         if (instance != null) {
-            Loggin.game("Serveur de Game déjà lancé !", Level.WARNING, null);
+            Loggin.game("Serveur de Game déjà lancé !", Level.WARNING);
         }
         instance = new GameServer();
     }
