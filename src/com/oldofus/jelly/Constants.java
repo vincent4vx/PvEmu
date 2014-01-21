@@ -3,8 +3,8 @@ package com.oldofus.jelly;
 public class Constants {
 
     public final static String NAME = "PvEmu";
-    public final static String VERSION = "0.11.7a";
-    public final static int REV = 75;
+    public final static String VERSION = "0.11.10a";
+    public final static int REV = 81;
     public final static String DOFUS_VER = "1.9.1";
     public final static int DOFUS_VER_ID = 1091;
     public final static int SERV_ID = 1;
