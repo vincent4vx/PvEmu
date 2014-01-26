@@ -2,7 +2,7 @@ package com.oldofus.network.events;
 
 import com.oldofus.game.objects.GameNpc;
 import com.oldofus.game.objects.Player;
-import com.oldofus.game.objects.dep.GMable;
+import com.oldofus.game.objects.map.GMable;
 import java.util.ArrayList;
 import com.oldofus.models.NpcQuestion;
 import com.oldofus.models.NpcResponseAction;

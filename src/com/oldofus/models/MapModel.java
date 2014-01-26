@@ -1,6 +1,6 @@
 package com.oldofus.models;
 
-import com.oldofus.game.objects.GameMap;
+import com.oldofus.game.objects.map.GameMap;
 import com.oldofus.jelly.database.Model;
 
 public class MapModel implements Model {

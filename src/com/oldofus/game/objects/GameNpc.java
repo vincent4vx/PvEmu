@@ -1,6 +1,6 @@
 package com.oldofus.game.objects;
 
-import com.oldofus.game.objects.dep.GMable;
+import com.oldofus.game.objects.map.GMable;
 import com.oldofus.jelly.Constants;
 import com.oldofus.jelly.Loggin;
 import com.oldofus.models.MapNpcs;

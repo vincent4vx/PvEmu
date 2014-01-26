@@ -1,4 +1,4 @@
-package com.oldofus.game.objects.dep;
+package com.oldofus.game.objects.map;
 
 public interface GMable {
     /**

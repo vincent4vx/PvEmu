@@ -1,9 +1,10 @@
 package com.oldofus.game;
 
-import com.oldofus.game.objects.GameMap;
-import com.oldofus.game.objects.InteractiveObject;
+import com.oldofus.game.objects.map.GameMap;
+import com.oldofus.game.objects.map.InteractiveObject;
 import com.oldofus.game.objects.Player;
 import com.oldofus.game.objects.dep.ClassData;
+import com.oldofus.game.objects.map.MapCell;
 import java.util.Collection;
 import java.util.HashMap;
 import com.oldofus.jelly.Loggin;
@@ -102,7 +103,7 @@ public class GameActionHandler {
                         Loggin.debug("Personnage trop loin pour effectuer l'action !");
                     }
                     
-                    GameMap.Cell cell = p.getMap().getCellById(cellID);
+                    MapCell cell = p.getMap().getCellById(cellID);
                     
                     if(cell == null){
                         return;

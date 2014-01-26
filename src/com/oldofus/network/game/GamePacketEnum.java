@@ -1,7 +1,7 @@
 package com.oldofus.network.game;
 
 import com.oldofus.game.World;
-import com.oldofus.game.objects.GameMap;
+import com.oldofus.game.objects.map.GameMap;
 import com.oldofus.game.objects.Player;
 import java.util.Collection;
 import com.oldofus.jelly.Jelly;

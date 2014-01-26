@@ -1,7 +1,7 @@
 package com.oldofus.network.events;
 
 import com.oldofus.game.objects.Player;
-import com.oldofus.game.objects.dep.GMable;
+import com.oldofus.game.objects.map.GMable;
 import com.oldofus.jelly.Loggin;
 import com.oldofus.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;

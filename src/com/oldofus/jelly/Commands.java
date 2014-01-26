@@ -1,7 +1,7 @@
 package com.oldofus.jelly;
 
 import com.oldofus.game.World;
-import com.oldofus.game.objects.GameMap;
+import com.oldofus.game.objects.map.GameMap;
 import com.oldofus.game.objects.Player;
 import com.oldofus.game.objects.inventory.ItemStats;
 import java.util.ArrayList;

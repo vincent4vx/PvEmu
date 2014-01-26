@@ -1,6 +1,6 @@
 package com.oldofus.jelly.utils;
 
-import com.oldofus.game.objects.GameMap;
+import com.oldofus.game.objects.map.GameMap;
 import java.util.concurrent.atomic.AtomicReference;
 import com.oldofus.jelly.Loggin;
 

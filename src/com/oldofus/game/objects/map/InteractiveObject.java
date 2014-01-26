@@ -1,15 +1,17 @@
-package com.oldofus.game.objects;
+package com.oldofus.game.objects.map;
 
-import com.oldofus.game.objects.GameMap.Cell;
+import com.oldofus.game.objects.Player;
+import com.oldofus.game.objects.map.GameMap;
+import com.oldofus.game.objects.map.MapCell;
 import com.oldofus.jelly.Loggin;
 import com.oldofus.network.events.ChatEvents;
 
 public class InteractiveObject {
     private int objID;
     private GameMap _map;
-    private Cell _cell;
+    private MapCell _cell;
     
-    public InteractiveObject(int objID, Cell cell, GameMap map){
+    public InteractiveObject(int objID, MapCell cell, GameMap map){
         this.objID = objID;
         _cell = cell;
         _map = map;

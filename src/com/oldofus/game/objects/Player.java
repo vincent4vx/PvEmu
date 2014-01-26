@@ -1,14 +1,16 @@
 package com.oldofus.game.objects;
 
+import com.oldofus.game.objects.map.GameMap;
 import com.oldofus.game.GameActionHandler;
 import com.oldofus.game.objects.inventory.GameItem;
 import com.oldofus.game.objects.dep.ClassData;
 import com.oldofus.game.objects.dep.Creature;
-import com.oldofus.game.objects.dep.GMable;
+import com.oldofus.game.objects.map.GMable;
 import com.oldofus.game.objects.dep.Stats;
 import com.oldofus.game.objects.dep.Stats.Element;
 import com.oldofus.game.objects.inventory.Inventory;
 import com.oldofus.game.objects.inventory.InventoryAble;
+import com.oldofus.game.objects.map.MapCell;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import com.oldofus.jelly.Constants;
@@ -33,7 +35,7 @@ public class Player extends Creature implements GMable, InventoryAble {
     private byte sexe;
     private int id;
     private GameMap curMap;
-    private GameMap.Cell curCell;
+    private MapCell curCell;
     private IoSession session = null;
     private String chanels = "*#$:?i^!%";
     private Account _account;
@@ -133,11 +135,11 @@ public class Player extends Creature implements GMable, InventoryAble {
         _character.lastMap = map.getID();
     }
 
-    public GameMap.Cell getCell() {
+    public MapCell getCell() {
         return curCell;
     }
 
-    public void setCell(GameMap.Cell cell) {
+    public void setCell(MapCell cell) {
         curCell = cell;
         _character.lastCell = cell.getID();
     }
