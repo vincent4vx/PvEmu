@@ -57,10 +57,7 @@ public class Jelly {
         start = System.currentTimeMillis();
         Config.load();
         Database.connect();
-        Stats.loadElements();
-        if (Config.getBool("preload")) {
-            preload();
-        }
+        World.instance().create(Config.getBool("preload"));
         RealmServer.start();
         GameServer.start();
         API.initialise();
@@ -85,24 +82,6 @@ public class Jelly {
                 + "                 __/ |\n"
                 + "                |___/\n",
                 GraphicRenditionEnum.YELLOW, GraphicRenditionEnum.BOLD);
-    }
-
-    private static void preload() {
-        Shell.println("\n====> Préchargement <====", GraphicRenditionEnum.BOLD);
-        Shell.print("Chargement des maps : ", GraphicRenditionEnum.YELLOW);
-        Shell.println(DAOFactory.map().getAll().size() + " maps chargées", GraphicRenditionEnum.GREEN);
-        Shell.print("Chargement des question : ", GraphicRenditionEnum.YELLOW);
-        Shell.println(DAOFactory.question().getAll().size() + " question chargées", GraphicRenditionEnum.GREEN);
-        Shell.print("Chargement des pnj : ", GraphicRenditionEnum.YELLOW);
-        Shell.println(DAOFactory.npcTemplate().getAll().size() + " templates chargées", GraphicRenditionEnum.GREEN);
-        Shell.print("Chargement des comptes : ", GraphicRenditionEnum.YELLOW);
-        Shell.println(DAOFactory.account().getAll().size() + " comptes chargés", GraphicRenditionEnum.GREEN);
-        Shell.print("Chargement des personnages : ", GraphicRenditionEnum.YELLOW);
-        Shell.println(DAOFactory.character().getAll().size() + " personnages chargées", GraphicRenditionEnum.GREEN);
-        Shell.print("Execution du GC : ", GraphicRenditionEnum.YELLOW);
-        System.gc();
-        Shell.println("Ok", GraphicRenditionEnum.GREEN);
-        Shell.println("");
     }
 
     private static void close() {
