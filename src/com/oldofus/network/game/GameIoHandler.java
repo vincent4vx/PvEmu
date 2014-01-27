@@ -83,7 +83,7 @@ public class GameIoHandler extends MinaIoHandler {
                             CharacterEvents.onCharacterAdd(session, packet.substring(2));
                             break;
                         case 'S': //character selected
-                            CharacterEvents.onCharacterSelected(session, packet);
+                            CharacterEvents.onCharacterSelected(session, packet.substring(2));
                             break;
                         case 'D': //delete
                             CharacterEvents.onDelete(session, packet.substring(2));
