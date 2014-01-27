@@ -3,6 +3,7 @@ package com.oldofus.network.events;
 import com.oldofus.game.objects.GameNpc;
 import com.oldofus.game.objects.Player;
 import com.oldofus.game.objects.map.GMable;
+import com.oldofus.jelly.Utils;
 import java.util.ArrayList;
 import com.oldofus.models.NpcQuestion;
 import com.oldofus.models.NpcResponseAction;
@@ -97,7 +98,7 @@ public class DialogEvents {
         }
         
         try{
-            String params[] = packet.split("\\|");
+            String params[] = Utils.split(packet, "|");//packet.split("\\|");
             int qID = Integer.parseInt(params[0]);
             int rID = Integer.parseInt(params[1]);
             

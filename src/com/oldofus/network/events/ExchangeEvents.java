@@ -2,6 +2,7 @@ package com.oldofus.network.events;
 
 import com.oldofus.game.objects.Player;
 import com.oldofus.game.objects.inventory.ItemStats;
+import com.oldofus.jelly.Utils;
 import org.apache.mina.core.session.IoSession;
 import com.oldofus.network.game.GamePacketEnum;
 
@@ -17,7 +18,7 @@ public class ExchangeEvents {
         int action, id;
 
         try {
-            String[] param = data.split("\\|");
+            String[] param = Utils.split(data, "|");//data.split("\\|");
             action = Integer.parseInt(param[0]);
             id = Integer.parseInt(param[1]);
         } catch (Exception e) {
@@ -95,7 +96,7 @@ public class ExchangeEvents {
             case 'O': //échange d'objets
                 int itemID, qu;
                 try{
-                    String[] params = data.substring(2).split("\\|");
+                    String[] params = Utils.split(data.substring(2), "|");//data.substring(2).split("\\|");
                     itemID = Integer.parseInt(params[0]);
                     qu = Integer.parseInt(params[1]);
                 }catch(Exception e){

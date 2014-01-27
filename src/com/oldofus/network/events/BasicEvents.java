@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Date;
 import com.oldofus.jelly.Commands;
 import com.oldofus.jelly.Constants;
+import com.oldofus.jelly.Utils;
 import com.oldofus.models.Account;
 import org.apache.mina.core.session.IoSession;
 import com.oldofus.network.game.GamePacketEnum;
@@ -53,7 +54,7 @@ public class BasicEvents {
             return;
         }
 
-        String[] args = packet.split("\\|");
+        String[] args = Utils.split(packet, "|");//packet.split("\\|");
         
         if(args.length < 2){
             return;
@@ -95,7 +96,7 @@ public class BasicEvents {
     }
     
     public static void onWriteConsole(IoSession session, String msg){
-        for (String line : msg.split("\n")) {
+        for (String line : Utils.split(msg, "\n")/*msg.split("\n")*/) {
             if (line.isEmpty()) {
                 break;
             }

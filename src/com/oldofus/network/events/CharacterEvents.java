@@ -28,7 +28,7 @@ public class CharacterEvents {
             int id, svr = 0;
             
             try{
-                String[] data = packet.split("\\|");
+                String[] data = Utils.split(packet, "|");//packet.split("\\|");
                 
                 id = Integer.parseInt(data[0]);
                 
@@ -174,7 +174,7 @@ public class CharacterEvents {
             return;
         }
 
-        String[] arr_data = packet.split("\\|");
+        String[] arr_data = Utils.split(packet, "|");//packet.split("\\|");
 
         try {
             if (DAOFactory.character().countByAccount(acc.id) >= Config.getInt("char_per_account", 5)) {
@@ -224,7 +224,7 @@ public class CharacterEvents {
         int id = 0;
 
         try {
-            String[] data = packet.split("\\|");
+            String[] data = Utils.split(packet, "|");//packet.split("\\|");
             id = Integer.parseInt(data[0]);
             if (data.length > 1) {
                 response = data[1];

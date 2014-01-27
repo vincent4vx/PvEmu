@@ -3,6 +3,7 @@ package com.oldofus.network.events;
 import com.oldofus.game.objects.inventory.GameItem;
 import com.oldofus.game.objects.Player;
 import com.oldofus.jelly.Loggin;
+import com.oldofus.jelly.Utils;
 import org.apache.mina.core.session.IoSession;
 import com.oldofus.network.game.GamePacketEnum;
 
@@ -14,7 +15,7 @@ public class ObjectEvents {
             return;
         }
         
-        String[] data = packet.split("\\|");
+        String[] data = Utils.split(packet, "|");//packet.split("\\|");
         int id;
         byte target;
         int qu = 1;

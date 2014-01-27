@@ -22,7 +22,7 @@ public class GameActionEvents {
             actionID = Integer.parseInt(packet.substring(0, 3));
             String args = packet.substring(3);
 
-            GA = new GameAction(p.getActions(), actionID, args.split(";"));
+            GA = new GameAction(p.getActions(), actionID, Utils.split(args, ";")/*args.split(";")*/);
         } catch (Exception e) {
             GamePacketEnum.GAME_ACTION_ERROR.send(session);
             return;
@@ -36,7 +36,7 @@ public class GameActionEvents {
                 onMapAction(p, GA);
                 break;
             default:
-                Loggin.debug("GameAction non géré : %d", new Object[]{actionID});
+                Loggin.debug("GameAction non géré : %d", actionID);
                 GamePacketEnum.GAME_ACTION_ERROR.send(session);
         }
     }
@@ -54,7 +54,7 @@ public class GameActionEvents {
         String[] args;
 
         try {
-            args = packet.substring(1).split("\\|");
+            args = Utils.split(packet.substring(1), "|");//packet.substring(1).split("\\|");
             actionID = Integer.parseInt(args[0]);
         } catch (Exception e) {
             return;
