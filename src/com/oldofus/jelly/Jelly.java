@@ -109,13 +109,12 @@ public class Jelly {
         if (running) {
             running = false;
             Shell.println("Arrêt du serveur en cours...", GraphicRenditionEnum.RED);
-            /*World.save();
-            World.kickAll();*/
             World.instance().destroy();
             Database.close();
             RealmServer.stop();
             GameServer.stop();
             Shell.println("JellyEmu : arrêt", GraphicRenditionEnum.RED);
+            Shell.flush();
         }else{
             Shell.println("Serveur déjà en cours d'arrêt...", GraphicRenditionEnum.RED);
         }

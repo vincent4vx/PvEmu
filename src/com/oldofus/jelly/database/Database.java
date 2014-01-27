@@ -133,7 +133,7 @@ public class Database {
             self.db.close();
             Shell.println("ok", GraphicRenditionEnum.GREEN);
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            Loggin.error("Unable to close database", ex);
         }
     }
 }

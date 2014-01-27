@@ -24,6 +24,7 @@ public class MinaServer {
                 "\n\000")));
         _acceptor.setHandler(handler);
         _acceptor.bind(new InetSocketAddress(port));
+        _acceptor.setCloseOnDeactivation(true);
     }
 
     public NioSocketAcceptor getAcceptor() {
@@ -36,12 +37,12 @@ public class MinaServer {
                 if (session == null || session.isClosing()) {
                     continue;
                 }
-                session.close(true);
+                session.close(true).awaitUninterruptibly();
             }
-           /* _acceptor.unbind();
-            _acceptor.dispose(false);*/
+            _acceptor.unbind();
+            _acceptor.dispose(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            Loggin.error("Unable to stop the MinaServer", e);
         }
     }
 }

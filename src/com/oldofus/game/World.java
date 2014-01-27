@@ -113,14 +113,16 @@ public class World {
      * Déconnecte TOUTE les personnes connectés (avant de fermer le serveur)
      */
     public void kickAll() {
+        Shell.print("Déconnexion des clients: ", GraphicRenditionEnum.RED);
         try {
             for (Player P : online.values()) {
                 if (P.getSession() != null) {
-                    P.getSession().close(true);
+                    P.getSession().close(true).awaitUninterruptibly();
                 } else {
                     P.logout();
                 }
             }
+            Shell.println("Ok !", GraphicRenditionEnum.GREEN);
         } catch (Exception e) {
             Loggin.error("World.kickAll()", e);
         }

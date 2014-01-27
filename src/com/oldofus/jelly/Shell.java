@@ -54,23 +54,23 @@ public class Shell {
         }
     }
 
-    public static void clear() {
+    public static synchronized void clear() {
         AnsiConsole.out.print("\033[H\033[2J");
     }
 
-    public static void setTitle(String title) {
+    public static synchronized void setTitle(String title) {
         AnsiConsole.out.append("\033]0;").append(title).append("\007");
     }
 
-    public static void print(String message, GraphicRenditionEnum... srgs) {
+    public static synchronized void print(String message, GraphicRenditionEnum... srgs) {
         AnsiConsole.out.print(generateAnsiCode(message, srgs));
     }
 
-    public static void println(String message, GraphicRenditionEnum... srgs) {
+    public static synchronized void println(String message, GraphicRenditionEnum... srgs) {
         AnsiConsole.out.println(generateAnsiCode(message, srgs));
     }
 
-    public static void eraseLine() {
+    public static synchronized void eraseLine() {
         AnsiConsole.out.print(ESC + "K");
     }
 
@@ -92,5 +92,10 @@ public class Shell {
         }
 
         return b.toString();
+    }
+    
+    public static synchronized void flush(){
+        AnsiConsole.err.flush();
+        AnsiConsole.out.flush();
     }
 }
