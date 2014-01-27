@@ -95,7 +95,7 @@ public class Character implements com.oldofus.jelly.database.Model {
         }
 
         _player.getAccount().removeSession();
-        World.removeOnline(_player);
+        World.instance().removeOnline(_player);
         _player.getSession().removeAttribute("player");
         _player.getSession().removeAttribute("account");
         _player.setSession(null);

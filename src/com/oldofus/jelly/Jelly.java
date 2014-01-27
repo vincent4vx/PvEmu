@@ -105,12 +105,13 @@ public class Jelly {
         Shell.println("");
     }
 
-    public static void close() {
+    private static void close() {
         if (running) {
             running = false;
             Shell.println("Arrêt du serveur en cours...", GraphicRenditionEnum.RED);
-            World.save();
-            World.kickAll();
+            /*World.save();
+            World.kickAll();*/
+            World.instance().destroy();
             Database.close();
             RealmServer.stop();
             GameServer.stop();

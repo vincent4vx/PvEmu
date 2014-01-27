@@ -73,7 +73,7 @@ public class AccountEvents {
                 return;
             }
 
-            World.addOnline(p);
+            World.instance().addOnline(p);
             p.setSession(session);
 
             //génération du packet ASK

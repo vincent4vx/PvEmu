@@ -15,7 +15,6 @@ import com.oldofus.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import com.oldofus.network.events.BasicEvents;
 import com.oldofus.network.events.ChatEvents;
-import com.oldofus.network.game.GamePacketEnum;
 
 public class Commands {
     private final static ExecutorService pool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
@@ -129,7 +128,7 @@ public class Commands {
         switch (command) {
             case "save":
                 display("Début de la sauvegarde...", session);
-                World.save();
+                World.instance().save();
                 display("Sauvegarde terminé !", session);
                 break;
             case "!getitem":
@@ -319,14 +318,14 @@ public class Commands {
                             continue;
                         }
                     }
-                    players.addAll(World.getOnlinePlayers(c, level));
+                    players.addAll(World.instance().getOnlinePlayers(c, level));
                 } else if (id.equalsIgnoreCase("#all")) {
-                    players.addAll(World.getOnlinePlayers());
+                    players.addAll(World.instance().getOnlinePlayers());
                 } else {
                     err.append("\nErreur : identifieur invalide : ").append(id);
                 }
             } else {
-                Player p = World.getOnlinePlayer(id.trim());
+                Player p = World.instance().getOnlinePlayer(id.trim());
                 if (p == null) {
                     err.append("Erreur : le joueur ").append(id).append(" n'existe pas, ou n'est pas connecté !");
                     continue;

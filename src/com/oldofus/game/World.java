@@ -1,26 +1,37 @@
 package com.oldofus.game;
 
 import com.oldofus.game.objects.Player;
+import com.oldofus.jelly.Loggin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
-import com.oldofus.jelly.Loggin;
 import com.oldofus.jelly.Shell;
 import com.oldofus.jelly.Shell.GraphicRenditionEnum;
 import com.oldofus.jelly.database.Database;
 import com.oldofus.models.dao.DAOFactory;
 
+/**
+ * classe "registre"
+ * @note singleton
+ * @author vincent
+ */
 public class World {
+    private static final World instance = new World();
 
-    private static ConcurrentHashMap<String, Player> _online = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Player> online  = new ConcurrentHashMap<>();
+    
+    /**
+     * Constructeur privé (singleton)
+     */
+    private World(){}
 
     /**
      * Ajoute un joueur dans la liste des joueurs en ligne
      *
      * @param p
      */
-    public static void addOnline(Player p) {
-        _online.put(p.getName().toLowerCase(), p);
+    public void addOnline(Player p) {
+        online.put(p.getName().toLowerCase(), p);
     }
 
     /**
@@ -28,8 +39,8 @@ public class World {
      *
      * @param p
      */
-    public static void removeOnline(Player p) {
-        _online.remove(p.getName().toLowerCase());
+    public void removeOnline(Player p) {
+        online.remove(p.getName().toLowerCase());
     }
 
     /**
@@ -37,8 +48,8 @@ public class World {
      *
      * @return
      */
-    public static Collection<Player> getOnlinePlayers() {
-        return _online.values();
+    public Collection<Player> getOnlinePlayers() {
+        return online.values();
     }
 
     /**
@@ -49,10 +60,10 @@ public class World {
      * @param level
      * @return
      */
-    public static Collection<Player> getOnlinePlayers(char c, byte level) {
+    public Collection<Player> getOnlinePlayers(char c, byte level) {
         Collection<Player> players = new ArrayList<>();
 
-        for (Player P : _online.values()) {
+        for (Player P : online.values()) {
             switch (c) {
                 case '+':
                     if (P.getAccount().level > level) {
@@ -81,17 +92,17 @@ public class World {
      * @param name
      * @return
      */
-    public static Player getOnlinePlayer(String name) {
-        return _online.get(name.toLowerCase());
+    public Player getOnlinePlayer(String name) {
+        return online.get(name.toLowerCase());
     }
 
     /**
      * Sauvegarde le monde
      */
-    public static void save() {
+    public void save() {
         Database.setAutocommit(true);
         Shell.println("Sauvegarde des personnages...", GraphicRenditionEnum.YELLOW);
-        for (Player P : _online.values()) {
+        for (Player P : online.values()) {
             DAOFactory.character().update(P.getCharacter());
         }
         Shell.println("Sauvegarde terminé !", GraphicRenditionEnum.GREEN);
@@ -101,9 +112,9 @@ public class World {
     /**
      * Déconnecte TOUTE les personnes connectés (avant de fermer le serveur)
      */
-    public static void kickAll() {
+    public void kickAll() {
         try {
-            for (Player P : _online.values()) {
+            for (Player P : online.values()) {
                 if (P.getSession() != null) {
                     P.getSession().close(true);
                 } else {
@@ -111,6 +122,20 @@ public class World {
                 }
             }
         } catch (Exception e) {
+            Loggin.error("World.kickAll()", e);
         }
+    }
+    
+    /**
+     * Détruit le monde
+     */
+    public void destroy(){
+        Shell.println("Destruction du monde...", GraphicRenditionEnum.RED);
+        save();
+        kickAll();
+    }
+    
+    public static World instance(){
+        return instance;
     }
 }

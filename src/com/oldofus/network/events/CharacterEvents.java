@@ -53,7 +53,7 @@ public class CharacterEvents {
                 session.setAttribute("player", p);
                 chr.getPlayer().setSession(session);
 
-                World.addOnline(p);
+                World.instance().addOnline(p);
 
                 //génération du packet ASK
                 StringBuilder param = new StringBuilder();

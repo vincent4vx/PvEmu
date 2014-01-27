@@ -296,9 +296,10 @@ public enum GamePacketEnum {
 
     /**
      * Envoit le packet à tous les joueurs connectés
+     * @param param packet à envoyer
      */
     public void sendToAll(Object param) {
-        sendToPlayerList(World.getOnlinePlayers(), param);
+        sendToPlayerList(World.instance().getOnlinePlayers(), param);
     }
 
     /**

@@ -93,7 +93,7 @@ public class SystemStats {
 
         Shell.println("\nInformations sur le jeu");
         Shell.print("Nombre de joueurs en ligne : ", Shell.GraphicRenditionEnum.YELLOW);
-        Shell.println(String.valueOf(World.getOnlinePlayers().size()), Shell.GraphicRenditionEnum.GREEN);
+        Shell.println(String.valueOf(World.instance().getOnlinePlayers().size()), Shell.GraphicRenditionEnum.GREEN);
         Shell.print("Uptime                     : ", Shell.GraphicRenditionEnum.YELLOW);
         Shell.println(Utils.getUptime(), Shell.GraphicRenditionEnum.YELLOW, Shell.GraphicRenditionEnum.BOLD);
         Shell.print("Nombre d'erreurs           : ", Shell.GraphicRenditionEnum.YELLOW);
