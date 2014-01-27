@@ -13,9 +13,7 @@ import com.oldofus.game.objects.inventory.InventoryAble;
 import com.oldofus.game.objects.map.MapCell;
 import java.util.HashMap;
 import java.util.Map.Entry;
-import com.oldofus.jelly.Constants;
 import com.oldofus.jelly.Loggin;
-import com.oldofus.jelly.Utils;
 import com.oldofus.models.Account;
 import com.oldofus.models.Character;
 import com.oldofus.models.MapModel;
@@ -298,9 +296,9 @@ public class Player extends Creature implements GMable, InventoryAble {
 
     public int getUsedPods() {
         int pods = 0;
-        /*for (GameItem GI : inventory.values()) {
+        for (GameItem GI : _inventory.getItems()) {
             pods += GI.getPods();
-        }*/
+        }
         return pods;
     }
     
