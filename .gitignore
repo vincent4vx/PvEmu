@@ -2,3 +2,7 @@
 /build/
 /test/
 /*.log*
+/nbproject/
+/build.xml
+/*.old
+/manifest.mf
