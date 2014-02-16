@@ -6,7 +6,7 @@ import org.pvemu.jelly.Loggin;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.game.GamePacketEnum;
-import org.pvemu.network.generators.GeneratorsFactory;
+import org.pvemu.network.generators.GeneratorsRegistry;
 import org.pvemu.network.generators.PlayerGenerator;
 
 public class MapEvents {
@@ -23,7 +23,7 @@ public class MapEvents {
             return;
         }
 
-        GamePacketEnum.MAP_ADD_PLAYER.sendToMap(p.getMap(), GeneratorsFactory.getPlayer().generateGM(p));
+        GamePacketEnum.MAP_ADD_PLAYER.sendToMap(p.getMap(), GeneratorsRegistry.getPlayer().generateGM(p));
         
         for(GMable Ga : p.getMap().getGMables()){
             if(Ga == p){

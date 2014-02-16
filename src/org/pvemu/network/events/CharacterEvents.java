@@ -12,7 +12,7 @@ import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.GameServer;
-import org.pvemu.network.generators.GeneratorsFactory;
+import org.pvemu.network.generators.GeneratorsRegistry;
 import org.pvemu.network.generators.PlayerGenerator;
 
 public class CharacterEvents {
@@ -105,7 +105,7 @@ public class CharacterEvents {
     }
 
     public static void onStatsChange(IoSession session, Player p) {
-        GamePacketEnum.STATS_PACKET.send(session, GeneratorsFactory.getPlayer().generateAs(p));
+        GamePacketEnum.STATS_PACKET.send(session, GeneratorsRegistry.getPlayer().generateAs(p));
     }
 
     private static Player getPlayer(IoSession session) {

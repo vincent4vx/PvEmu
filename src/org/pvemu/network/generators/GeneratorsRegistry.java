@@ -10,7 +10,7 @@ package org.pvemu.network.generators;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class GeneratorsFactory {
+public class GeneratorsRegistry {
     private static PlayerGenerator player = null;
     
     public static PlayerGenerator getPlayer(){

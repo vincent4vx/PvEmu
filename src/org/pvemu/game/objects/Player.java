@@ -23,7 +23,7 @@ import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.events.CharacterEvents;
 import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.events.ObjectEvents;
-import org.pvemu.network.generators.GeneratorsFactory;
+import org.pvemu.network.generators.GeneratorsRegistry;
 import org.pvemu.network.generators.PlayerGenerator;
 
 
@@ -180,7 +180,7 @@ public class Player extends Creature implements GMable, InventoryAble {
     @Override
     @Deprecated
     public String getGMData() {
-        return GeneratorsFactory.getPlayer().generateGM(this);
+        return GeneratorsRegistry.getPlayer().generateGM(this);
     }
 
     /**
