@@ -8,8 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.pvemu.jelly.Utils;
 import org.pvemu.jelly.utils.Crypt;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.jelly.filters.AbstractFilterable;
 
-public class Account implements org.pvemu.jelly.database.Model {
+public class Account extends AbstractFilterable implements org.pvemu.jelly.database.Model {
 
     public int id;
     public String account;
@@ -18,22 +19,22 @@ public class Account implements org.pvemu.jelly.database.Model {
     public byte level;
     public String question;
     public String response;
-    protected HashMap<Integer, Character> _characters = null;
-    private IoSession _session;
+    protected HashMap<Integer, Character> characters = null;
+    private IoSession session;
     private String current_ip;
     
     /**
      * Compte en attente de connexion au game
      */
-    private static ConcurrentHashMap<String, Account> pendingAccounts = new ConcurrentHashMap<>();
+    static final private ConcurrentHashMap<String, Account> pendingAccounts = new ConcurrentHashMap<>();
     private String waitingTicket = null;
     private Player waitingCharacter = null;
 
     public HashMap<Integer, Character> getCharacters() {
-        if (_characters == null) {
-            _characters = DAOFactory.character().getByAccountId(id);
+        if (characters == null) {
+            characters = DAOFactory.character().getByAccountId(id);
         }
-        return _characters;
+        return characters;
     }
 
     /**
@@ -85,11 +86,12 @@ public class Account implements org.pvemu.jelly.database.Model {
      * @param id 
      */
     public void deleteCharacter(int id){
-        DAOFactory.character().delete(_characters.remove(id));
+        DAOFactory.character().delete(characters.remove(id));
     }
     
     /**
      * Met le compte en attente et retourne le ticket de sécurité
+     * @return L'id aléatoire du compte
      */
     public String setWaiting(){
         waitingTicket = Utils.str_aleat(6);
@@ -107,10 +109,14 @@ public class Account implements org.pvemu.jelly.database.Model {
         return pendingAccounts.get(ticket);
     }
 
+    public String getCurrent_ip() {
+        return current_ip;
+    }
+
     /**
      * Si le compte est en attente de connexion au game server
-     *
-     * @return
+     * @param ip ip qui doit correspondre à l'ip courrante du compte
+     * @return true si il est en attente, false sinon
      */
     public boolean isWaiting(String ip) {
         return waitingTicket != null && ip.equals(current_ip);
@@ -150,7 +156,7 @@ public class Account implements org.pvemu.jelly.database.Model {
      * @return
      */
     public IoSession getSession() {
-        return _session;
+        return session;
     }
 
     /**
@@ -159,7 +165,7 @@ public class Account implements org.pvemu.jelly.database.Model {
      * @param session
      */
     public void setSession(IoSession session) {
-        _session = session;
+        this.session = session;
         session.setAttribute("account", this);
         InetSocketAddress ISA = (InetSocketAddress)session.getRemoteAddress();
         current_ip = ISA.getAddress().getHostAddress();
@@ -169,7 +175,7 @@ public class Account implements org.pvemu.jelly.database.Model {
      * lors de la déconnexion, supprime la session
      */
     public void removeSession() {
-        _session = null;
+        session = null;
     }
 
     @Override
