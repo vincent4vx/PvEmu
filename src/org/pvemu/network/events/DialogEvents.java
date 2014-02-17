@@ -9,11 +9,12 @@ import org.pvemu.models.NpcQuestion;
 import org.pvemu.models.NpcResponseAction;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 
 public class DialogEvents {
     public static void onCreate(IoSession session, String packet){
-        Player p = (Player)session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
         if(p == null){
             return;
@@ -56,7 +57,7 @@ public class DialogEvents {
     }
     
     public static void onSendQuestion(IoSession session, int qID){
-        Player p = (Player)session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
         if(p == null || p.current_npc_question == null){
             return;
@@ -74,7 +75,7 @@ public class DialogEvents {
     }
     
     public static void onLeave(IoSession session){
-        Player p = (Player)session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
         if(p == null){
                 return;
@@ -86,7 +87,7 @@ public class DialogEvents {
     }
     
     public static void onResponse(IoSession session, String packet){
-        Player p = (Player)session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
         if(p == null){
             return;

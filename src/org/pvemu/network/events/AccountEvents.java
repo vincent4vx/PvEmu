@@ -8,6 +8,7 @@ import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Utils;
 import org.pvemu.models.Account;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.GameServer;
 import org.pvemu.network.realm.RealmPacketEnum;
@@ -16,7 +17,7 @@ public class AccountEvents {
     //TODO : data correspond à l'id du Game Server (à utiliser en cas de multi-serveurs)
 
     public static void onServerSelected(IoSession session, String data) {
-        Account acc = (Account) session.getAttribute("account");
+        Account acc = SessionAttributes.ACCOUNT.getValue(session);//(Account) session.getAttribute("account");
 
         if (acc == null) {
             session.close(true);
@@ -34,7 +35,7 @@ public class AccountEvents {
     }
 
     public static void onCharactersList(IoSession session) {
-        Account acc = (Account) session.getAttribute("account");
+        Account acc = SessionAttributes.ACCOUNT.getValue(session);//(Account) session.getAttribute("account");
 
         if (acc == null) {
             return;
@@ -67,7 +68,8 @@ public class AccountEvents {
             GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
         } else {
             Player p = acc.getWaitingCharacter();
-            session.setAttribute("player", p);
+            //session.setAttribute("player", p);
+            SessionAttributes.PLAYER.setValue(p, session);
             
             if(p == null){
                 return;

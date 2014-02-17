@@ -5,11 +5,12 @@ import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.Utils;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 
 public class ObjectEvents {
     public static void onObjectMove(IoSession session, String packet){
-        Player p = (Player)session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
         if(p == null){
             return;
@@ -66,7 +67,7 @@ public class ObjectEvents {
             return;
         }
         
-        Player p = (Player)session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
         if(p == null){
             return;
@@ -81,7 +82,7 @@ public class ObjectEvents {
             return;
         }
         
-        Player p = (Player)session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
         if(p == null){
             return;

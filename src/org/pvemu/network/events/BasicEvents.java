@@ -10,6 +10,7 @@ import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Utils;
 import org.pvemu.models.Account;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 
 public class BasicEvents {
@@ -48,7 +49,7 @@ public class BasicEvents {
     }
 
     public static void onMessage(IoSession session, String packet) {
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
             return;
@@ -81,7 +82,7 @@ public class BasicEvents {
     }
 
     public static void onAdminCommand(IoSession session, String command) {
-        Account acc = (Account) session.getAttribute("account");
+        Account acc = SessionAttributes.ACCOUNT.getValue(session);//(Account) session.getAttribute("account");
 
         if (acc == null) {
             session.close(false);
@@ -117,7 +118,7 @@ public class BasicEvents {
         String name = "Système";
 
         if (session != null) {
-            Player p = (Player) session.getAttribute("player");
+            Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
             if (p != null) {
                 name = p.getName();
             }
@@ -128,7 +129,7 @@ public class BasicEvents {
     }
     
     public static void onSmiley(IoSession session, String packet){
-        Player p = (Player)session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
         if(p == null){
             return;

@@ -8,6 +8,7 @@ import org.pvemu.models.Account;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.MinaIoHandler;
+import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.events.AccountEvents;
 import org.pvemu.network.events.CharacterEvents;
 
@@ -20,7 +21,8 @@ public class RealmIoHandler extends MinaIoHandler {
     @Override
     public void sessionCreated(IoSession session) throws Exception {
         String HC = Utils.str_aleat(32);
-        session.setAttribute("HC", HC);
+        //session.setAttribute("HC", HC);
+        SessionAttributes.CONNEXION_KEY.setValue(HC, session);
         RealmPacketEnum.HELLO_CONNECTION.send(session, HC);
     }
     
@@ -61,7 +63,7 @@ public class RealmIoHandler extends MinaIoHandler {
                     String username = data[0].trim();
                     String pass = data[1].trim();
                     Account acc = DAOFactory.account().getByName(username);
-                    if (acc == null || !acc.passValid(pass, (String) session.getAttribute("HC"))) {
+                    if (acc == null || !acc.passValid(pass, SessionAttributes.CONNEXION_KEY.getValue(session)/*(String) session.getAttribute("HC")*/)) {
                         RealmPacketEnum.LOGIN_ERROR.send(session);
                         session.close(true);
                         return;

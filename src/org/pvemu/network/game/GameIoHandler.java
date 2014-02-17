@@ -17,6 +17,7 @@ import org.pvemu.models.Account;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.MinaIoHandler;
+import org.pvemu.network.SessionAttributes;
 
 public class GameIoHandler extends MinaIoHandler {
 
@@ -34,10 +35,10 @@ public class GameIoHandler extends MinaIoHandler {
     public void sessionClosed(IoSession session) throws Exception {
         MapEvents.onRemoveMap(session);
 
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
-            Account acc = (Account) session.getAttribute("account");
+            Account acc = SessionAttributes.ACCOUNT.getValue(session);//(Account) session.getAttribute("account");
             if (acc != null) {
                 acc.removeSession();
             }
@@ -63,7 +64,7 @@ public class GameIoHandler extends MinaIoHandler {
         String packet = ((String) message).trim();
         if (packet.length() > 1) {
             Loggin.game("Recv << " + packet);
-            if (!packet.startsWith("AT") && !session.containsAttribute("account")) {
+            if (!packet.startsWith("AT") && !SessionAttributes.ACCOUNT.exists(session)/*session.containsAttribute("account")*/) {
                 session.close(true);
                 return;
             }

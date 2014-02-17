@@ -5,6 +5,7 @@ import org.pvemu.game.objects.map.GMable;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
 import org.pvemu.network.generators.PlayerGenerator;
@@ -17,7 +18,7 @@ public class MapEvents {
      * @param session sender
      */
     public static void onAddMap(IoSession session) {
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
             return;
@@ -39,7 +40,7 @@ public class MapEvents {
      * @param session target
      */
     public static void onRemoveMap(IoSession session) {
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
             return;
@@ -62,7 +63,7 @@ public class MapEvents {
      * @param cellID cellule d'arrivée
      */
     public static void onArrivedOnMap(IoSession session, short mapID, short cellID) {
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
             return;
@@ -87,7 +88,7 @@ public class MapEvents {
      * @param session target
      */
     public static void onArrivedInGame(IoSession session) {
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
             session.close(true);
@@ -117,7 +118,7 @@ public class MapEvents {
      * @param cellID cellule d'arrivée
      */
     public static void onArrivedOnCell(IoSession session, short cellID) {
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
             return;

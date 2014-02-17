@@ -9,6 +9,7 @@ import org.pvemu.jelly.Utils;
 import org.pvemu.jelly.utils.Crypt;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.jelly.filters.AbstractFilterable;
+import org.pvemu.network.SessionAttributes;
 
 public class Account extends AbstractFilterable implements org.pvemu.jelly.database.Model {
 
@@ -166,7 +167,8 @@ public class Account extends AbstractFilterable implements org.pvemu.jelly.datab
      */
     public void setSession(IoSession session) {
         this.session = session;
-        session.setAttribute("account", this);
+        //session.setAttribute("account", this);
+        SessionAttributes.ACCOUNT.setValue(this, session);
         InetSocketAddress ISA = (InetSocketAddress)session.getRemoteAddress();
         current_ip = ISA.getAddress().getHostAddress();
     }

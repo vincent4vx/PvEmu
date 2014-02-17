@@ -7,12 +7,13 @@ import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.Utils;
 import org.pvemu.jelly.utils.Pathfinding;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 
 public class GameActionEvents {
 
     public static void onGameAction(IoSession session, String packet) {
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
         if (p == null) {
             return;
         }
@@ -44,7 +45,7 @@ public class GameActionEvents {
     public static void onGK(IoSession session, String packet) {
         boolean ok = packet.charAt(0) == 'K';
 
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
             return;
@@ -94,7 +95,7 @@ public class GameActionEvents {
     }
 
     private static void onMoveAction(IoSession session, GameAction GA) {
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
             return;
@@ -162,7 +163,7 @@ public class GameActionEvents {
      * @param args
      */
     public static void onCreateGameAction(IoSession session, int actionID, Object... args) {
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
             return;

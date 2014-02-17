@@ -20,7 +20,7 @@ public class SessionAttributes<T> {
     static final public SessionAttributes<Player> PLAYER = new SessionAttributes<>();
     
     /**
-     * Constructeur privée
+     * Constructeur privé
      */
     private SessionAttributes(){}
     
@@ -40,5 +40,14 @@ public class SessionAttributes<T> {
      */
     public void setValue(T value, IoSession session){
         session.setAttribute(this, value);
+    }
+    
+    /**
+     * Teste si une valeur est stocké dans la session
+     * @param session la session courante
+     * @return true si l'information existe, false sinon
+     */
+    public boolean exists(IoSession session){
+        return session.containsAttribute(this);
     }
 }

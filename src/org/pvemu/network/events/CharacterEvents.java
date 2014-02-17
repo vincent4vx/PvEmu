@@ -10,6 +10,7 @@ import org.pvemu.jelly.Utils;
 import org.pvemu.models.Account;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.GameServer;
 import org.pvemu.network.generators.GeneratorsRegistry;
@@ -20,7 +21,7 @@ public class CharacterEvents {
     public static void onCharacterSelected(IoSession session, String packet) {
 
         try {
-            Account acc = (Account) session.getAttribute("account");
+            Account acc = SessionAttributes.ACCOUNT.getValue(session);//(Account) session.getAttribute("account");
 
             if (acc == null) {
                 return;
@@ -51,7 +52,8 @@ public class CharacterEvents {
             Player p = chr.getPlayer();
 
             if (Constants.DOFUS_VER_ID >= 1100) { //pour dofus "récents" : connecte directement le pesonnage
-                session.setAttribute("player", p);
+                //session.setAttribute("player", p);
+                SessionAttributes.PLAYER.setValue(p, session);
                 chr.getPlayer().setSession(session);
 
                 World.instance().addOnline(p);
@@ -79,7 +81,7 @@ public class CharacterEvents {
     }
 
     public static void onGameCreate(IoSession session) {
-        Player p = getPlayer(session);
+        Player p = SessionAttributes.PLAYER.getValue(session);//getPlayer(session);
 
         if (p == null) {
             return;
@@ -108,6 +110,7 @@ public class CharacterEvents {
         GamePacketEnum.STATS_PACKET.send(session, GeneratorsRegistry.getPlayer().generateAs(p));
     }
 
+    @Deprecated
     private static Player getPlayer(IoSession session) {
         Player p = (Player) session.getAttribute("player");
 
@@ -169,7 +172,7 @@ public class CharacterEvents {
 
     public static void onCharacterAdd(IoSession session, String packet) {
 
-        Account acc = (Account) session.getAttribute("account");
+        Account acc = SessionAttributes.ACCOUNT.getValue(session);//(Account) session.getAttribute("account");
 
         if (acc == null) {
             return;
@@ -215,7 +218,7 @@ public class CharacterEvents {
     }
 
     public static void onDelete(IoSession session, String packet) {
-        Account acc = (Account) session.getAttribute("account");
+        Account acc = SessionAttributes.ACCOUNT.getValue(session);//(Account) session.getAttribute("account");
 
         if (acc == null) {
             return;

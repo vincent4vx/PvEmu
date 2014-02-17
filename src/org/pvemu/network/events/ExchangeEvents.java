@@ -4,12 +4,13 @@ import org.pvemu.game.objects.Player;
 import org.pvemu.game.objects.inventory.ItemStats;
 import org.pvemu.jelly.Utils;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 
 public class ExchangeEvents {
 
     public static void onRequest(IoSession session, String data) {
-        Player p = (Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
             return;
@@ -50,7 +51,7 @@ public class ExchangeEvents {
     }
     
     public static void onAccept(IoSession session){
-        Player p = (Player)session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
         if(p == null){
             return;
@@ -66,7 +67,7 @@ public class ExchangeEvents {
     }
     
     public static void onLeave(IoSession session){
-        Player p = (Player)session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
         if(p == null){
             return;
@@ -86,7 +87,7 @@ public class ExchangeEvents {
     }
     
     public static void onMove(IoSession session, String data){
-        Player p = (Player)session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
         if(p == null || p.getExchange() == null){
             return;

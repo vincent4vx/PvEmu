@@ -47,4 +47,4 @@ var PlayerGenerator = JavaAdapter(generators.PlayerGenerator, {
     }
 });
 
-generators.GeneratorsFactory.setPlayer(PlayerGenerator);
+generators.GeneratorsRegistry.setPlayer(PlayerGenerator);
