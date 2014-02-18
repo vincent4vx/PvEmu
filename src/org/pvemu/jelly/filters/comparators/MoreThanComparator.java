@@ -18,10 +18,10 @@ public class MoreThanComparator<T extends Comparable> extends Comparator<T> {
 
     @Override
     public boolean compare(T other) {
-        if(defaultValue == null)
+        if(other == null)
             return false;
         
-        return defaultValue.compareTo(other) == 1;
+        return other.compareTo(defaultValue) > 0;
     }
     
 }

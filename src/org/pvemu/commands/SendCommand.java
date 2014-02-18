@@ -9,6 +9,9 @@ package org.pvemu.commands;
 import org.pvemu.game.World;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Utils;
+import org.pvemu.jelly.filters.AskerFilter;
+import org.pvemu.jelly.filters.Filter;
+import org.pvemu.jelly.filters.comparators.MoreThanComparator;
 
 /**
  *
@@ -41,6 +44,14 @@ public class SendCommand extends Command {
         
         p.getSession().write(Utils.join(packet, " "));
         asker.write("Packet envoyé !");
+    }
+
+    @Override
+    public Filter conditions() {
+        AskerFilter filter = new AskerFilter();
+        filter.setLevel(new MoreThanComparator((byte)3));
+        
+        return filter;
     }
     
 }

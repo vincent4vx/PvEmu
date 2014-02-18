@@ -55,9 +55,7 @@ public class HelpCommand extends Command {
         }
         
         for(Command cmd : commands){
-            if(asker.corresponds(cmd.conditions())){
-                asker.write(cmd.title());
-            }
+            asker.write(cmd.title());
         }
     }
     
