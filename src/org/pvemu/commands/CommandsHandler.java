@@ -20,6 +20,7 @@ public class CommandsHandler {
     private CommandsHandler() {
         registerCommand(new EchoCommand());
         registerCommand(new HelpCommand());
+        registerCommand(new SendCommand());
     }
     
     /**
@@ -53,7 +54,8 @@ public class CommandsHandler {
      * @param asker the Asker
      */
     final public void execute(String commandLine, Asker asker){
-        String[] args = commandLine.split("\\s+");
+        //String[] args = commandLine.split("\\s+");
+        String[] args = parseCommand(commandLine, asker);
         
         Command cmd = commands.get(args[0]);
         
@@ -63,6 +65,22 @@ public class CommandsHandler {
         }
         
         cmd.perform(args, asker);
+    }
+    
+    private String[] parseCommand(String command, Asker asker){
+        String[] args = command.split("\\s+");
+        
+        for(int i = 0; i < args.length; ++i){
+            if(args[i].charAt(0) == '%'){
+                switch(args[i]){
+                    case "%me":
+                        args[i] = asker.name();
+                        break;
+                }
+            }
+        }
+        
+        return args;
     }
     
     /**

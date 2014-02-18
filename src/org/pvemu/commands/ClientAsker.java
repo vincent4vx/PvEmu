@@ -9,6 +9,7 @@ package org.pvemu.commands;
 import org.pvemu.jelly.filters.AccountFilter;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.models.Account;
+import org.pvemu.network.SessionAttributes;
 
 /**
  *
@@ -27,6 +28,9 @@ abstract public class ClientAsker implements Asker {
 
     @Override
     public String name() {
+        if(account.getSession() != null && SessionAttributes.PLAYER.exists(account.getSession()))
+            return SessionAttributes.PLAYER.getValue(account.getSession()).getName();
+        
         return account.pseudo;
     }
 
