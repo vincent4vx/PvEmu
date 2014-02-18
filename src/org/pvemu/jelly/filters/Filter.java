@@ -14,8 +14,8 @@ import java.util.Collection;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 abstract public class Filter<T extends Filterable> {
-    public boolean corresponds(Object obj) throws UnsupportedOperationException{
-        throw new UnsupportedOperationException("Filtre '" + this.getClass().getName() + "' invalide pour la classe '" + obj.getClass().getName() + "'");
+    public boolean corresponds(Object obj){
+        return false;
     }
     
     abstract public boolean corresponds(T obj);

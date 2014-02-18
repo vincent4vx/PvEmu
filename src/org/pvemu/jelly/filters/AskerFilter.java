@@ -6,30 +6,18 @@
 
 package org.pvemu.jelly.filters;
 
+import org.pvemu.commands.Asker;
 import org.pvemu.jelly.filters.comparators.Comparator;
 import org.pvemu.jelly.filters.comparators.YesComparator;
-import org.pvemu.models.Account;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class AccountFilter extends Filter<Account> {
-    
-    private Comparator<Integer> id = new YesComparator<>();
+public class AskerFilter extends Filter<Asker> {
+
     private Comparator<Byte> level = new YesComparator<>();
     private Comparator<String> name = new YesComparator<>();
-    private Comparator<String> pseudo = new YesComparator<>();
-
-    /**
-     * Set the value of pseudo
-     *
-     * @param pseudo new value of pseudo
-     */
-    public void setPseudo(Comparator<String> pseudo) {
-        this.pseudo = pseudo;
-    }
-
 
     /**
      * Set the value of name
@@ -50,22 +38,10 @@ public class AccountFilter extends Filter<Account> {
         this.level = level;
     }
 
-
-    /**
-     * Set the value of id
-     *
-     * @param id new value of id
-     */
-    public void setId(Comparator<Integer> id) {
-        this.id = id;
-    }
-
-
     @Override
-    public boolean corresponds(Account acc){
-        return id.compare(acc.id)
-                && pseudo.compare(acc.pseudo)
-                && level.compare(acc.level)
-                && name.compare(acc.account);
+    public boolean corresponds(Asker obj) {
+        return name.compare(obj.name())
+                && level.compare(obj.level());
     }
+    
 }
