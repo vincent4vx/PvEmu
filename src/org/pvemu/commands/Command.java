@@ -6,6 +6,8 @@
 
 package org.pvemu.commands;
 
+import org.pvemu.jelly.filters.Filter;
+import org.pvemu.jelly.filters.YesFilter;
 import org.pvemu.models.Account;
 
 /**
@@ -19,5 +21,23 @@ abstract public class Command {
      */
     abstract public String name();
     
-    abstract public void perform(String[] args, Account acc);
+    abstract public void perform(String[] args, Asker asker);
+    
+    public String title(){
+        return name();
+    }
+    
+    public String info(){
+        return "Pas d'informations disponible.";
+    }
+    
+    public String[] usage(){
+        return new String[]{
+            "Commande non documenté."
+        };
+    }
+    
+    public Filter conditions(){
+        return new YesFilter();
+    }
 }

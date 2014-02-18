@@ -138,8 +138,21 @@ public enum GamePacketEnum {
     CHAT_SMILEY("cS"),
     /**
      * écrit dans la console (150 caractères max)
+     * @deprecated 
      */
     BASIC_CONSOLE_WRITE("BAT2"),
+    /**
+     * Ecris dans la console un message d'erreur
+     */
+    CONSOLE_WRITE_ERROR("BAT1"),
+    /**
+     * Ecris dans la console un message de succès
+     */
+    CONSOLE_WRITE_OK("BAT2"),
+    /**
+     * Ecris dans la console un message de debug
+     */
+    CONSOLE_WRITE_DEBUG("BAT0"),
     /**
      * 
      */

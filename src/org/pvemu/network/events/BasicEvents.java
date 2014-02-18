@@ -10,6 +10,8 @@ import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Utils;
 import org.pvemu.models.Account;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.commands.CommandsHandler;
+import org.pvemu.commands.ConsoleAsker;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 
@@ -93,7 +95,8 @@ public class BasicEvents {
             return;
         }
 
-        Commands.exec(command, acc.level, session);
+        //Commands.exec(command, acc.level, session);
+        CommandsHandler.instance().execute(command, new ConsoleAsker(acc));
     }
     
     public static void onWriteConsole(IoSession session, String msg){
