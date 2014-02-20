@@ -14,7 +14,7 @@ import org.pvemu.jelly.filters.comparators.YesComparator;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class AskerFilter extends Filter<Asker> {
+public class AskerFilter<T extends Asker> extends Filter<T> {
 
     private Comparator<Byte> level = new YesComparator<>();
     private Comparator<String> name = new YesComparator<>();
@@ -39,7 +39,7 @@ public class AskerFilter extends Filter<Asker> {
     }
 
     @Override
-    public boolean corresponds(Asker obj) {
+    public boolean corresponds(T obj) {
         return name.compare(obj.name())
                 && level.compare(obj.level());
     }
