@@ -21,6 +21,8 @@ public class CommandsHandler {
         registerCommand(new EchoCommand());
         registerCommand(new HelpCommand());
         registerCommand(new SendCommand());
+        registerCommand(new AliasCommand());
+        registerCommand(new ExitCommand());
     }
     
     /**

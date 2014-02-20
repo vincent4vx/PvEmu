@@ -7,6 +7,8 @@
 package org.pvemu.commands;
 
 import org.pvemu.jelly.Utils;
+import org.pvemu.jelly.filters.ConsoleAskerFilter;
+import org.pvemu.jelly.filters.Filter;
 
 /**
  *
@@ -23,13 +25,22 @@ public class EchoCommand extends Command {
     public String[] usage(){
         return new String[]{
             "Affiche un texte.",
-            "echo [text] [...] : affiche les paramètres donnés séparés par un espace"
+            "echo {texte ...} : affiche les paramètres donnés séparés par un espace"
         };
     }
 
     @Override
     public void perform(String[] args, Asker asker) {
-        asker.write(Utils.join(args, " "));
+        String[] params = new String[args.length - 1];
+        System.arraycopy(args, 1, params, 0, params.length);
+        asker.write(Utils.join(params, " "));
     }
+
+    @Override
+    public Filter conditions() {
+        return new ConsoleAskerFilter();
+    }
+    
+    
     
 }

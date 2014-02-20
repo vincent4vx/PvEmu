@@ -27,10 +27,6 @@ abstract public class Command {
         return name();
     }
     
-    public String info(){
-        return "Pas d'informations disponible.";
-    }
-    
     public String[] usage(){
         return new String[]{
             "Commande non documenté."
