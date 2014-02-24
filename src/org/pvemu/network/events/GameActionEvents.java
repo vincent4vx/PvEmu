@@ -94,7 +94,8 @@ public class GameActionEvents {
         GA.delete();
     }
 
-    private static void onMoveAction(IoSession session, GameAction GA) {
+    @Deprecated
+    public static void onMoveAction(IoSession session, GameAction GA) {
         Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
         if (p == null) {
@@ -130,7 +131,8 @@ public class GameActionEvents {
         }
     }
     
-    private static void onMapAction(Player p, GameAction GA){
+    @Deprecated
+    public static void onMapAction(Player p, GameAction GA){
         short cellID = Short.parseShort((String)GA.args[0]);
         
         if(Pathfinding.isAdjacentCells(p.getCell().getID(), cellID)){
@@ -147,7 +149,8 @@ public class GameActionEvents {
      * @param actionID
      * @param params
      */
-    private static void onSendGameAction(IoSession session, GameAction GA) {
+    @Deprecated
+    public static void onSendGameAction(IoSession session, GameAction GA) {
         if (session == null) {
             return;
         }
