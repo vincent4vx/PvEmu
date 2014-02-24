@@ -7,6 +7,7 @@
 package org.pvemu.network.game.input;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.chat.ChatHandler;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Utils;
 import org.pvemu.network.InputPacket;
@@ -26,7 +27,7 @@ public class MessagePacket implements InputPacket {
 
     @Override
     public void perform(String extra, IoSession session) {
-        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);
 
         if (p == null) {
             return;
@@ -38,25 +39,7 @@ public class MessagePacket implements InputPacket {
             return;
         }
         
-        if(args[1].charAt(0) == '!'){
-            switch(args[1].toLowerCase()){
-                case "!console":
-                    session.write("BAPtest");
-                    session.write("BAT2Welcome !");
-                    break;
-            }
-            return;
-        }
-
-        switch (args[0]) {
-            case "*": //canal noir (map)
-                StringBuilder b = new StringBuilder();
-                b.append("|").append(p.getID()).append("|").append(p.getName()).append("|").append(args[1]);
-                String msg = b.toString();
-                GamePacketEnum.CHAT_MESSAGE_OK.sendToMap(p.getMap(), msg);
-                break;
-        }
-        
+        ChatHandler.instance().parse(args, p);
     }
     
 }

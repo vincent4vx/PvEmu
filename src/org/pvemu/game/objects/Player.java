@@ -20,6 +20,8 @@ import org.pvemu.models.MapModel;
 import org.pvemu.models.NpcQuestion;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.jelly.filters.Filter;
+import org.pvemu.jelly.filters.Filterable;
 import org.pvemu.network.events.CharacterEvents;
 import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.events.ObjectEvents;
@@ -27,7 +29,7 @@ import org.pvemu.network.generators.GeneratorsRegistry;
 import org.pvemu.network.generators.PlayerGenerator;
 
 
-public class Player extends Creature implements GMable, InventoryAble {
+public class Player extends Creature implements GMable, InventoryAble, Filterable {
 
     private Character _character;
     private byte classID;
@@ -402,5 +404,10 @@ public class Player extends Creature implements GMable, InventoryAble {
             return;
         }
         _exchange = null;
+    }
+
+    @Override
+    public boolean corresponds(Filter filter) {
+        return filter.corresponds(this);
     }
 }
