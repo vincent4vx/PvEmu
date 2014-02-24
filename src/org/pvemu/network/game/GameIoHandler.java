@@ -18,6 +18,7 @@ import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.MinaIoHandler;
 import org.pvemu.network.SessionAttributes;
+import org.pvemu.network.game.input.GameInputHandler;
 
 public class GameIoHandler extends MinaIoHandler {
 
@@ -69,7 +70,7 @@ public class GameIoHandler extends MinaIoHandler {
                 return;
             }
             switch (packet.charAt(0)) {
-                case 'A': //packet perso / compte
+                /*case 'A': //packet perso / compte
                     switch (packet.charAt(1)) {
                         case 'T': //attache account
                             AccountEvents.onAttach(session, packet.substring(2));
@@ -90,7 +91,7 @@ public class GameIoHandler extends MinaIoHandler {
                             CharacterEvents.onDelete(session, packet.substring(2));
                             break;
                     }
-                    break;
+                    break;*/
                 case 'G': //game packets
                     switch (packet.charAt(1)) {
                         case 'C': //game create
@@ -177,6 +178,7 @@ public class GameIoHandler extends MinaIoHandler {
                     }
                     break;
             }
+            GameInputHandler.instance().parsePacket(packet, session);
         }
     }
 }

@@ -9,8 +9,7 @@ import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.MinaIoHandler;
 import org.pvemu.network.SessionAttributes;
-import org.pvemu.network.events.AccountEvents;
-import org.pvemu.network.events.CharacterEvents;
+import org.pvemu.network.realm.input.RealmInputHandler;
 
 /**
  *
@@ -21,7 +20,6 @@ public class RealmIoHandler extends MinaIoHandler {
     @Override
     public void sessionCreated(IoSession session) throws Exception {
         String HC = Utils.str_aleat(32);
-        //session.setAttribute("HC", HC);
         SessionAttributes.CONNEXION_KEY.setValue(HC, session);
         RealmPacketEnum.HELLO_CONNECTION.send(session, HC);
     }
@@ -81,7 +79,7 @@ public class RealmIoHandler extends MinaIoHandler {
                         session.close(false);
                     }
                 } else {
-                    switch (packet.charAt(0)) {
+                    /*switch (packet.charAt(0)) {
                         case 'A':
                             switch (packet.charAt(1)) {
                                 case 'x':
@@ -102,7 +100,8 @@ public class RealmIoHandler extends MinaIoHandler {
                                     break;
                             }
                             break;
-                    }
+                    }*/
+                    RealmInputHandler.instance().parsePacket(packet, session);
                 }
             }
         }

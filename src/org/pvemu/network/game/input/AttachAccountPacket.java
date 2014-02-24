@@ -1,54 +1,41 @@
-package org.pvemu.network.events;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
+package org.pvemu.network.game.input;
+
+import java.net.InetSocketAddress;
+import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.World;
 import org.pvemu.game.objects.Player;
-import java.net.InetSocketAddress;
-import org.pvemu.jelly.Config;
 import org.pvemu.jelly.Constants;
+import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.Utils;
 import org.pvemu.models.Account;
-import org.apache.mina.core.session.IoSession;
+import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
-import org.pvemu.network.game.GameServer;
-import org.pvemu.network.realm.RealmPacketEnum;
 
-public class AccountEvents {
-    //TODO : data correspond à l'id du Game Server (à utiliser en cas de multi-serveurs)
+/**
+ *
+ * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
+ */
+public class AttachAccountPacket implements InputPacket {
 
-    public static void onServerSelected(IoSession session, String data) {
-        Account acc = SessionAttributes.ACCOUNT.getValue(session);//(Account) session.getAttribute("account");
-
-        if (acc == null) {
-            session.close(true);
-            return;
-        }
-
-        String ticket = acc.setWaiting(); //plus sécurisé que l'id du compte... Retourne un id aléatoire
-
-        if (Config.getBool("CRYPT_IP") || Constants.DOFUS_VER_ID <= 1200) {
-            RealmPacketEnum.SELECT_SERVER_CRYPT.send(session, GameServer.CRYPT_IP + ticket);
-        } else {
-            String p = Config.getString("ip", "127.0.0.1") + ";" + Config.getString("game_port", "5555") + ";" + ticket;
-            RealmPacketEnum.SELECT_SERVER.send(session, p);
-        }
+    @Override
+    public String id() {
+        return "AT";
     }
 
-    public static void onCharactersList(IoSession session) {
-        Account acc = SessionAttributes.ACCOUNT.getValue(session);//(Account) session.getAttribute("account");
-
-        if (acc == null) {
-            return;
-        }
-
-        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
-    }
-
-/*    public static void onAttach(IoSession session, String ticket) {
-        Account acc = Account.getWaitingAccount(ticket);
+    @Override
+    public void perform(String extra, IoSession session) {
+        Account acc = Account.getWaitingAccount(extra);
 
         if (acc == null) {
             GamePacketEnum.ACCOUNT_ATTACH_ERROR.send(session);
+            Loggin.debug("not exists");
             session.close(true);
             return;
         }
@@ -56,6 +43,7 @@ public class AccountEvents {
         InetSocketAddress ISA = (InetSocketAddress) session.getRemoteAddress();
         if (!acc.isWaiting(ISA.getAddress().getHostAddress())) {
             GamePacketEnum.ACCOUNT_ATTACH_ERROR.send(session);
+            Loggin.debug("bad ip");
             session.close(true);
             return;
         }
@@ -68,7 +56,6 @@ public class AccountEvents {
             GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
         } else {
             Player p = acc.getWaitingCharacter();
-            //session.setAttribute("player", p);
             SessionAttributes.PLAYER.setValue(p, session);
             
             if(p == null){
@@ -90,5 +77,6 @@ public class AccountEvents {
             
             GamePacketEnum.ACCOUNT_ATTACH_OK.send(session, param);
         }
-    }*/
+    }
+    
 }

@@ -95,7 +95,7 @@ public class Account extends AbstractFilterable implements org.pvemu.jelly.datab
      * @return L'id aléatoire du compte
      */
     public String setWaiting(){
-        waitingTicket = Utils.str_aleat(6);
+        waitingTicket = Utils.str_aleat(32);
         pendingAccounts.put(waitingTicket, this);
         
         return waitingTicket;
