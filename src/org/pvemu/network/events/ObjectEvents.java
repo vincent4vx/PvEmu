@@ -1,6 +1,6 @@
 package org.pvemu.network.events;
 
-import org.pvemu.game.objects.inventory.GameItem;
+import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.Utils;
@@ -91,10 +91,10 @@ public class ObjectEvents {
         GamePacketEnum.OBJECT_REMOVE.send(session, id);
     }
     
-    public static void onAccessoriesChange(Player P){
+    /*public static void onAccessoriesChange(Player P){
         if(P == null){
             return;
         }
         GamePacketEnum.OBJECT_ACCESSORIES.sendToMap(P.getMap(), new StringBuilder().append(P.getID()).append('|').append(P.getGMStuff()).toString());
-    }
+    }*/
 }

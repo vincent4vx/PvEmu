@@ -1,7 +1,7 @@
 package org.pvemu.network.events;
 
 import org.pvemu.game.objects.Player;
-import org.pvemu.game.objects.inventory.ItemStats;
+import org.pvemu.game.objects.item.ItemStats;
 import org.pvemu.jelly.Utils;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.SessionAttributes;

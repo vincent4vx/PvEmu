@@ -13,6 +13,28 @@ package org.pvemu.network.game.output;
 public class GameSendersRegistry {
     
     private static InformativeMessageSender informativeMessage = null;
+    private static ObjectSender object = null;
+
+    /**
+     * Get the value of object
+     *
+     * @return the value of object
+     */
+    public static ObjectSender getObject() {
+        if(object == null)
+            object = new ObjectSender();
+        return object;
+    }
+
+    /**
+     * Set the value of object
+     *
+     * @param object new value of object
+     */
+    public static void setObject(ObjectSender object) {
+        GameSendersRegistry.object = object;
+    }
+
 
     /**
      * Get the value of informativeMessage

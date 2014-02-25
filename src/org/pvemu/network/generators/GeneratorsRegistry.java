@@ -12,8 +12,29 @@ package org.pvemu.network.generators;
  */
 public class GeneratorsRegistry {
     private static PlayerGenerator player = null;
-    
     private static InformativeMessageGenerator informativeMessage = null;
+    private static ObjectGenerator object = null;
+
+    /**
+     * Get the value of object
+     *
+     * @return the value of object
+     */
+    public static ObjectGenerator getObject() {
+        if(object == null)
+            object = new ObjectGenerator();
+        return object;
+    }
+
+    /**
+     * Set the value of object
+     *
+     * @param object new value of object
+     */
+    public static void setObject(ObjectGenerator object) {
+        GeneratorsRegistry.object = object;
+    }
+
 
     /**
      * Get the value of informativeMessage

@@ -4,8 +4,10 @@
  */
 package org.pvemu.network.generators;
 
+import java.util.HashMap;
 import org.pvemu.game.objects.Player;
 import org.pvemu.game.objects.dep.Stats;
+import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Utils;
 
@@ -61,7 +63,7 @@ public class PlayerGenerator {
         }
         //str.append(_lvl).append(";");
         str.append(Utils.implode(";", p.getColors())).append(";");
-        str.append(p.getGMStuff()).append(";"); //stuff
+        str.append(generateGMStuff(p)).append(";"); //stuff
          /*if (hasEquiped(10054) || hasEquiped(10055) || hasEquiped(10056) || hasEquiped(10058) || hasEquiped(10061) || hasEquiped(10102)) {
          str.append(3).append(";");
          } else {*/
@@ -83,6 +85,33 @@ public class PlayerGenerator {
         str.append(";");
 
         return str.toString();
+    }
+    
+    public String generateGMStuff(Player p){
+        StringBuilder s = new StringBuilder();
+        HashMap<Byte, GameItem> wornItems = p.getInventory().getItemsByPos();
+
+        if (wornItems.containsKey(GameItem.POS_ARME)) {
+            s.append(Integer.toHexString(wornItems.get(GameItem.POS_ARME).getItemStats().getID()));
+        }
+        s.append(',');
+        if (wornItems.containsKey(GameItem.POS_COIFFE)) {
+            s.append(Integer.toHexString(wornItems.get(GameItem.POS_COIFFE).getItemStats().getID()));
+        }
+        s.append(',');
+        if (wornItems.containsKey(GameItem.POS_CAPE)) {
+            s.append(Integer.toHexString(wornItems.get(GameItem.POS_CAPE).getItemStats().getID()));
+        }
+        s.append(',');
+        if (wornItems.containsKey(GameItem.POS_FAMILIER)) {
+            s.append(Integer.toHexString(wornItems.get(GameItem.POS_FAMILIER).getItemStats().getID()));
+        }
+        s.append(',');
+        if (wornItems.containsKey(GameItem.POS_BOUCLIER)) {
+            s.append(wornItems.get(GameItem.POS_BOUCLIER).getItemStats().getID());
+        }
+
+        return s.toString();
     }
 
     public String generateAs(Player p) {        
