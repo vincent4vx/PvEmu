@@ -17,6 +17,7 @@ import org.pvemu.network.events.ChatEvents;
 import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.events.ObjectEvents;
 import org.pvemu.network.game.GamePacketEnum;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -44,7 +45,8 @@ public class CreateGamePacket implements InputPacket {
             GamePacketEnum.CHAT_CHANEL_ADD.send(session, p.getChanels());
         }
         GamePacketEnum.CHARACTER_RESTRICTION.send(session, p.restriction);
-        ChatEvents.onSendErrorMessage(session, 89);
+        //ChatEvents.onSendErrorMessage(session, 89);
+        GameSendersRegistry.getInformativeMessage().error(session, 89);
         MapEvents.onArrivedInGame(session);
         
         if(Constants.DOFUS_VER_ID < 1100){

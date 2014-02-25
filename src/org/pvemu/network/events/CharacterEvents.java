@@ -81,7 +81,7 @@ public class CharacterEvents {
     }
 
     public static void onGameCreate(IoSession session) {
-        Player p = SessionAttributes.PLAYER.getValue(session);//getPlayer(session);
+/*        Player p = SessionAttributes.PLAYER.getValue(session);//getPlayer(session);
 
         if (p == null) {
             return;
@@ -103,7 +103,7 @@ public class CharacterEvents {
             if(p.getAccount().level > 0){
                 BasicEvents.onPrompt(session);
             }
-        }
+        }*/
     }
 
     public static void onStatsChange(IoSession session, Player p) {

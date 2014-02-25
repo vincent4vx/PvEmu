@@ -11,6 +11,7 @@ import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Pathfinding;
 import org.pvemu.network.events.ChatEvents;
 import org.pvemu.network.events.MapEvents;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 public class GameActionHandler {
 
@@ -90,7 +91,8 @@ public class GameActionHandler {
                             short[] mapData = ClassData.getStatuesPos(p.getClassID());
                             p.teleport(mapData[0], mapData[1]);
                             p.setStartPos(mapData);
-                            ChatEvents.onSendInfoMessage(p.getSession(), 6);
+                            //ChatEvents.onSendInfoMessage(p.getSession(), 6);
+                            GameSendersRegistry.getInformativeMessage().info(p.getSession(), 6);
                             break;
                     }
                     break;

@@ -13,6 +13,27 @@ package org.pvemu.network.generators;
 public class GeneratorsRegistry {
     private static PlayerGenerator player = null;
     
+    private static InformativeMessageGenerator informativeMessage = null;
+
+    /**
+     * Get the value of informativeMessage
+     *
+     * @return the value of informativeMessage
+     */
+    public static InformativeMessageGenerator getInformativeMessage() {
+        return informativeMessage;
+    }
+
+    /**
+     * Set the value of informativeMessage
+     *
+     * @param informativeMessage new value of informativeMessage
+     */
+    public static void setInformativeMessage(InformativeMessageGenerator informativeMessage) {
+        GeneratorsRegistry.informativeMessage = informativeMessage;
+    }
+
+    
     public static PlayerGenerator getPlayer(){
         if(player == null)
             player = new PlayerGenerator();

@@ -1,10 +1,8 @@
 package org.pvemu.game.objects.map;
 
 import org.pvemu.game.objects.Player;
-import org.pvemu.game.objects.map.GameMap;
-import org.pvemu.game.objects.map.MapCell;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.network.events.ChatEvents;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 public class InteractiveObject {
     private int objID;
@@ -33,7 +31,8 @@ public class InteractiveObject {
         switch(action){
             case 44: //sauvegarde de la position
                 p.setStartPos(new short[]{_map.getID(), _cell.getID()});
-                ChatEvents.onSendInfoMessage(p.getSession(), 6);
+                //ChatEvents.onSendInfoMessage(p.getSession(), 6);
+                GameSendersRegistry.getInformativeMessage().info(p.getSession(), 6);
                 break;
             default:
                 Loggin.debug("MapAction non reconnue : %d (map = %d, cell = %d, IO = %d)", action, _map.getID(), _cell.getID(), objID);

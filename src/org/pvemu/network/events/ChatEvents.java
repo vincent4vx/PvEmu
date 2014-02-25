@@ -5,7 +5,7 @@ import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.game.GamePacketEnum;
 
 public class ChatEvents {
-    public static void onSendInfoMessage(IoSession session, int msgID, Object ... args){
+/*    public static void onSendInfoMessage(IoSession session, int msgID, Object ... args){
         GamePacketEnum.INFORMATION_MESSAGE.send(session, new StringBuilder().append(msgID).append(';').append(Utils.implode("~", args)));
     }
     
@@ -15,5 +15,5 @@ public class ChatEvents {
     
     public static void onSendPvpMessage(IoSession session, int msgID, Object ... args){
         GamePacketEnum.PVP_INFORMATION_MESSAGE.send(session, new StringBuilder().append(msgID).append(';').append(Utils.implode("~", args)));
-    }
+    }*/
 }
