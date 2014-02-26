@@ -1,6 +1,6 @@
 package org.pvemu.game.objects;
 
-import org.pvemu.game.objects.inventory.GameItem;
+import org.pvemu.game.objects.item.GameItem;
 import java.util.HashMap;
 
 public class Exchange {

@@ -17,6 +17,7 @@ import org.pvemu.models.Account;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -53,7 +54,8 @@ public class AttachAccountPacket implements InputPacket {
         acc.removeWaiting();
 
         if (Constants.DOFUS_VER_ID >= 1100) {
-            GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+            //GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+            GameSendersRegistry.getAccount().charactersList(session, acc);
         } else {
             Player p = acc.getWaitingCharacter();
             SessionAttributes.PLAYER.setValue(p, session);

@@ -12,6 +12,7 @@ import org.pvemu.models.Account;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -59,7 +60,8 @@ public class DeleteCharacterPacket implements InputPacket {
         }
 
         acc.deleteCharacter(id);
-        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+//        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+        GameSendersRegistry.getAccount().charactersList(session, acc);
         
     }
     

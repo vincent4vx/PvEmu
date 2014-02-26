@@ -1,5 +1,7 @@
 package org.pvemu.game.objects.inventory;
 
+import org.pvemu.game.objects.item.GameItem;
+
 
 public interface InventoryAble {
     /**

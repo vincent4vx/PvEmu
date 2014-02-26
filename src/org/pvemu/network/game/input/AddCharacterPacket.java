@@ -15,6 +15,7 @@ import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -71,7 +72,8 @@ public class AddCharacterPacket implements InputPacket {
         }
 
         GamePacketEnum.CREATE_CHARACTER_OK.send(session);
-        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+        //GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+        GameSendersRegistry.getAccount().charactersList(session, acc);
         GamePacketEnum.TUTORIAL_BEGIN.send(session);
 
     }

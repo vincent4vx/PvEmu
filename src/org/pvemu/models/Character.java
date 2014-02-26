@@ -5,7 +5,7 @@
 package org.pvemu.models;
 
 import org.pvemu.game.World;
-import org.pvemu.game.objects.inventory.GameItem;
+import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.Player;
 import java.util.HashMap;
 import org.pvemu.jelly.Jelly;
@@ -40,7 +40,7 @@ public class Character implements org.pvemu.jelly.database.Model {
      *
      * @return
      */
-    public String getForALK() {
+    /*public String getForALK() {
         StringBuilder perso = new StringBuilder();
         perso.append("|");
         perso.append(id).append(";");
@@ -56,9 +56,10 @@ public class Character implements org.pvemu.jelly.database.Model {
         perso.append(";");//DeathCount	this.deathCount;
         perso.append(";");//LevelMax
         return perso.toString();
-    }
+    }*/
     
-    private String getAccessories(){
+    @Deprecated
+    public String getAccessories(){
         StringBuilder sb = new StringBuilder();
         
         HashMap<Byte, Integer> accessories = DAOFactory.inventory().getAccessoriesByPlayerId(id);

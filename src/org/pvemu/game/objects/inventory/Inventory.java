@@ -1,5 +1,7 @@
 package org.pvemu.game.objects.inventory;
 
+import org.pvemu.game.objects.item.ItemStats;
+import org.pvemu.game.objects.item.GameItem;
 import java.util.Collection;
 import java.util.HashMap;
 import org.pvemu.jelly.Loggin;

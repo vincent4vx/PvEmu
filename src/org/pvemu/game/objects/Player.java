@@ -2,7 +2,7 @@ package org.pvemu.game.objects;
 
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.GameActionHandler;
-import org.pvemu.game.objects.inventory.GameItem;
+import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.dep.ClassData;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.map.GMable;
@@ -25,6 +25,7 @@ import org.pvemu.jelly.filters.Filterable;
 import org.pvemu.network.events.CharacterEvents;
 import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.events.ObjectEvents;
+import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
 import org.pvemu.network.generators.PlayerGenerator;
 
@@ -185,37 +186,38 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
         return GeneratorsRegistry.getPlayer().generateGM(this);
     }
 
-    /**
-     * retourne le stuff pour les packets d'affichage
-     *
-     * @return
-     */
-    public String getGMStuff() {
-        StringBuilder s = new StringBuilder();
-        HashMap<Byte, GameItem> wornItems = _inventory.getItemsByPos();
-
-        if (wornItems.containsKey(GameItem.POS_ARME)) {
-            s.append(Integer.toHexString(wornItems.get(GameItem.POS_ARME).getItemStats().getID()));
-        }
-        s.append(',');
-        if (wornItems.containsKey(GameItem.POS_COIFFE)) {
-            s.append(Integer.toHexString(wornItems.get(GameItem.POS_COIFFE).getItemStats().getID()));
-        }
-        s.append(',');
-        if (wornItems.containsKey(GameItem.POS_CAPE)) {
-            s.append(Integer.toHexString(wornItems.get(GameItem.POS_CAPE).getItemStats().getID()));
-        }
-        s.append(',');
-        if (wornItems.containsKey(GameItem.POS_FAMILIER)) {
-            s.append(Integer.toHexString(wornItems.get(GameItem.POS_FAMILIER).getItemStats().getID()));
-        }
-        s.append(',');
-        if (wornItems.containsKey(GameItem.POS_BOUCLIER)) {
-            s.append(wornItems.get(GameItem.POS_BOUCLIER).getItemStats().getID());
-        }
-
-        return s.toString();
-    }
+//    /**
+//     * retourne le stuff pour les packets d'affichage
+//     *
+//     * @return
+//     */
+//    @Deprecated
+//    public String getGMStuff() {
+//        StringBuilder s = new StringBuilder();
+//        HashMap<Byte, GameItem> wornItems = _inventory.getItemsByPos();
+//
+//        if (wornItems.containsKey(GameItem.POS_ARME)) {
+//            s.append(Integer.toHexString(wornItems.get(GameItem.POS_ARME).getItemStats().getID()));
+//        }
+//        s.append(',');
+//        if (wornItems.containsKey(GameItem.POS_COIFFE)) {
+//            s.append(Integer.toHexString(wornItems.get(GameItem.POS_COIFFE).getItemStats().getID()));
+//        }
+//        s.append(',');
+//        if (wornItems.containsKey(GameItem.POS_CAPE)) {
+//            s.append(Integer.toHexString(wornItems.get(GameItem.POS_CAPE).getItemStats().getID()));
+//        }
+//        s.append(',');
+//        if (wornItems.containsKey(GameItem.POS_FAMILIER)) {
+//            s.append(Integer.toHexString(wornItems.get(GameItem.POS_FAMILIER).getItemStats().getID()));
+//        }
+//        s.append(',');
+//        if (wornItems.containsKey(GameItem.POS_BOUCLIER)) {
+//            s.append(wornItems.get(GameItem.POS_BOUCLIER).getItemStats().getID());
+//        }
+//
+//        return s.toString();
+//    }
 
     /**
      * Retourne la propection du joueur
@@ -361,7 +363,8 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
             ObjectEvents.onWeightChange(session, this);
         }
         if(GI.isWearable() && (pos == GameItem.POS_ARME || pos == GameItem.POS_COIFFE || pos == GameItem.POS_CAPE || pos == GameItem.POS_FAMILIER || pos == -1)){
-            ObjectEvents.onAccessoriesChange(this);
+            //ObjectEvents.onAccessoriesChange(this);
+            GameSendersRegistry.getObject().accessories(this);
         }
     }
 

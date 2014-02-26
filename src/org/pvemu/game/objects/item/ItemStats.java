@@ -1,4 +1,4 @@
-package org.pvemu.game.objects.inventory;
+package org.pvemu.game.objects.item;
 
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.jelly.Loggin;

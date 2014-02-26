@@ -58,7 +58,7 @@ public class Account extends AbstractFilterable implements org.pvemu.jelly.datab
      *
      * @return
      */
-    public String getCharactersList() {
+    /*public String getCharactersList() {
         if (getCharacters().isEmpty()) {
             return "0";
         }
@@ -71,7 +71,7 @@ public class Account extends AbstractFilterable implements org.pvemu.jelly.datab
         }
 
         return packet.toString();
-    }
+    }*/
     
     /**
      * Sélectionne un personnage du compte

@@ -14,6 +14,28 @@ public class GeneratorsRegistry {
     private static PlayerGenerator player = null;
     private static InformativeMessageGenerator informativeMessage = null;
     private static ObjectGenerator object = null;
+    private static AccountGenerator account = null;
+
+    /**
+     * Get the value of account
+     *
+     * @return the value of account
+     */
+    public static AccountGenerator getAccount() {
+        if(account == null)
+            account = new AccountGenerator();
+        return account;
+    }
+
+    /**
+     * Set the value of account
+     *
+     * @param account new value of account
+     */
+    public static void setAccount(AccountGenerator account) {
+        GeneratorsRegistry.account = account;
+    }
+
 
     /**
      * Get the value of object

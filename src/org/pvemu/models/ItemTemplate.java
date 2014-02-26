@@ -1,6 +1,6 @@
 package org.pvemu.models;
 
-import org.pvemu.game.objects.inventory.ItemStats;
+import org.pvemu.game.objects.item.ItemStats;
 import org.pvemu.jelly.database.Model;
 
 public class ItemTemplate implements Model {

@@ -14,6 +14,28 @@ public class GameSendersRegistry {
     
     private static InformativeMessageSender informativeMessage = null;
     private static ObjectSender object = null;
+    private static AccountSender account = null;
+
+    /**
+     * Get the value of account
+     *
+     * @return the value of account
+     */
+    public static AccountSender getAccount() {
+        if(account == null)
+            account = new AccountSender();
+        return account;
+    }
+
+    /**
+     * Set the value of account
+     *
+     * @param account new value of account
+     */
+    public static void setAccount(AccountSender account) {
+        GameSendersRegistry.account = account;
+    }
+
 
     /**
      * Get the value of object

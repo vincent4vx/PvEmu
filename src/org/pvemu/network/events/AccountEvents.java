@@ -11,6 +11,7 @@ import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.GameServer;
+import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.realm.RealmPacketEnum;
 
 public class AccountEvents {
@@ -41,7 +42,8 @@ public class AccountEvents {
             return;
         }
 
-        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+        //GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+        GameSendersRegistry.getAccount().charactersList(session, acc);
     }
 
 /*    public static void onAttach(IoSession session, String ticket) {

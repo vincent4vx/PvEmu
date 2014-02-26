@@ -1,6 +1,6 @@
 package org.pvemu.models.dao;
 
-import org.pvemu.game.objects.inventory.GameItem;
+import org.pvemu.game.objects.item.GameItem;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

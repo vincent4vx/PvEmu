@@ -6,7 +6,8 @@
 
 package org.pvemu.network.game.output;
 
-import org.pvemu.game.objects.Player;
+import org.apache.mina.core.session.IoSession;
+import org.pvemu.models.Account;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
@@ -14,11 +15,8 @@ import org.pvemu.network.generators.GeneratorsRegistry;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class ObjectSender {
-    public void accessories(Player player){
-        GamePacketEnum.OBJECT_ACCESSORIES.sendToMap(
-                player.getMap(), 
-                GeneratorsRegistry.getObject().generateUpdateAccessories(player)
-        );
+public class AccountSender {
+    public void charactersList(IoSession session, Account acc){
+        GamePacketEnum.CHARCTERS_LIST.send(session, GeneratorsRegistry.getAccount().generateCharactersList(acc));
     }
 }

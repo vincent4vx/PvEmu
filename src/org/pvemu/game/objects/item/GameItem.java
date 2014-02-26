@@ -1,7 +1,8 @@
-package org.pvemu.game.objects.inventory;
+package org.pvemu.game.objects.item;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.pvemu.game.objects.inventory.InventoryAble;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.dao.DAOFactory;
 
@@ -123,126 +124,7 @@ public class GameItem implements Cloneable {
     public static final byte TYPE_FRAGM_AME_SHUSHU = 115;
     public static final byte TYPE_POTION_FAMILIER = 116;
     //FIN types
-    
-    public static enum Type{
-        NONE/* = 0*/,
-        AMULETTE/* = 1*/,
-        ARC/* = 2*/,
-        BAGUETTE/* = 3*/,
-        BATON/* = 4*/,
-        DAGUES/* = 5*/,
-        EPEE/* = 6*/,
-        MARTEAU/* = 7*/,
-        PELLE/* = 8*/,
-        ANNEAU/* = 9*/,
-        CEINTURE/* = 10*/,
-        BOTTES/* = 11*/,
-        POTION/* = 12*/,
-        PARCHO_EXP/* = 13*/,
-        DONS/* = 14*/,
-        RESSOURCE/* = 15*/,
-        COIFFE/* = 16*/,
-        CAPE/* = 17*/,
-        FAMILIER/* = 18*/,
-        HACHE/* = 19*/,
-        OUTIL/* = 20*/,
-        PIOCHE/* = 21*/,
-        FAUX/* = 22*/,
-        DOFUS/* = 23*/,
-        QUETES/* = 24*/,
-        DOCUMENT/* = 25*/,
-        FM_POTION/* = 26*/,
-        TRANSFORM/* = 27*/,
-        BOOST_FOOD/* = 28*/,
-        BENEDICTION/* = 29*/,
-        MALEDICTION/* = 30*/,
-        RP_BUFF/* = 31*/,
-        PERSO_SUIVEUR/* = 32*/,
-        PAIN/* = 33*/,
-        CEREALE/* = 34*/,
-        FLEUR/* = 35*/,
-        PLANTE/* = 36*/,
-        BIERE/* = 37*/,
-        BOIS/* = 38*/,
-        MINERAIS/* = 39*/,
-        ALLIAGE/* = 40*/,
-        POISSON/* = 41*/,
-        BONBON/* = 42*/,
-        POTION_OUBLIE/* = 43*/,
-        POTION_METIER/* = 44*/,
-        POTION_SORT/* = 45*/,
-        FRUIT/* = 46*/,
-        OS/* = 47*/,
-        POUDRE/* = 48*/,
-        COMESTI_POISSON/* = 49*/,
-        PIERRE_PRECIEUSE/* = 50*/,
-        PIERRE_BRUTE/* = 51*/,
-        FARINE/* = 52*/,
-        PLUME/* = 53*/,
-        POIL/* = 54*/,
-        ETOFFE/* = 55*/,
-        CUIR/* = 56*/,
-        LAINE/* = 57*/,
-        GRAINE/* = 58*/,
-        PEAU/* = 59*/,
-        HUILE/* = 60*/,
-        PELUCHE/* = 61*/,
-        POISSON_VIDE/* = 62*/,
-        VIANDE/* = 63*/,
-        VIANDE_CONSERVEE/* = 64*/,
-        QUEUE/* = 65*/,
-        METARIA/* = 66*/,
-        LEGUME/* = 68*/,
-        VIANDE_COMESTIBLE/* = 69*/,
-        TEINTURE/* = 70*/,
-        EQUIP_ALCHIMIE/* = 71*/,
-        OEUF_FAMILIER/* = 72*/,
-        MAITRISE/* = 73*/,
-        FEE_ARTIFICE/* = 74*/,
-        PARCHEMIN_SORT/* = 75*/,
-        PARCHEMIN_CARAC/* = 76*/,
-        CERTIFICAT_CHANIL/* = 77*/,
-        RUNE_FORGEMAGIE/* = 78*/,
-        BOISSON/* = 79*/,
-        OBJET_MISSION/* = 80*/,
-        SAC_DOS/* = 81*/,
-        BOUCLIER/* = 82*/,
-        PIERRE_AME/* = 83*/,
-        CLEFS/* = 84*/,
-        PIERRE_AME_PLEINE/* = 85*/,
-        POPO_OUBLI_PERCEP/* = 86*/,
-        PARCHO_RECHERCHE/* = 87*/,
-        PIERRE_MAGIQUE/* = 88*/,
-        CADEAUX/* = 89*/,
-        FANTOME_FAMILIER/* = 90*/,
-        DRAGODINDE/* = 91*/,
-        BOUFTOU/* = 92*/,
-        OBJET_ELEVAGE/* = 93*/,
-        OBJET_UTILISABLE/* = 94*/,
-        PLANCHE/* = 95*/,
-        ECORCE/* = 96*/,
-        CERTIF_MONTURE/* = 97*/,
-        RACINE/* = 98*/,
-        FILET_CAPTURE/* = 99*/,
-        SAC_RESSOURCE/* = 100*/,
-        UNKNOWN/* = 101*/,
-        ARBALETE/* = 102*/,
-        PATTE/* = 103*/,
-        AILE/* = 104*/,
-        OEUF/* = 105*/,
-        OREILLE/* = 106*/,
-        CARAPACE/* = 107*/,
-        BOURGEON/* = 108*/,
-        OEIL/* = 109*/,
-        GELEE/* = 110*/,
-        COQUILLE/* = 111*/,
-        PRISME/* = 112*/,
-        OBJET_VIVANT/* = 113*/,
-        ARME_MAGIQUE/* = 114*/,
-        FRAGM_AME_SHUSHU/* = 115*/,
-        POTION_FAMILIER/* = 116*/
-    }
-    
+        
     //Constants positision
     public static final byte POS_NO_EQUIPED = -1;
     public static final byte POS_AMULETTE = 0;
@@ -272,13 +154,13 @@ public class GameItem implements Cloneable {
     public static final byte POS_CANDY7 = 27;
     //FIN position
     //FIN constantes
-    private InventoryEntry _inventoryEntry;
-    private ItemStats _itemStats;
+    private InventoryEntry inventoryEntry;
+    private ItemStats itemStats;
     private int id;
 
     public GameItem(InventoryEntry I) {
-        _inventoryEntry = I;
-        _itemStats = I.getItemStats();
+        inventoryEntry = I;
+        itemStats = I.getItemStats();
         id = I.id;
     }
 
@@ -290,26 +172,26 @@ public class GameItem implements Cloneable {
      * @param qu
      */
     public GameItem(InventoryAble owner, ItemStats stats, int qu, byte pos) {
-        _inventoryEntry = new InventoryEntry();
-        _inventoryEntry.item_id = stats.getID();
-        _inventoryEntry.owner = owner.getID();
-        _inventoryEntry.owner_type = owner.getOwnerType();
-        _inventoryEntry.position = pos;
-        _inventoryEntry.stats = stats.statsToString();
-        _inventoryEntry.qu = qu;
-        DAOFactory.inventory().create(_inventoryEntry);
-        _itemStats = stats;
-        _itemStats.setPosition(pos);
-        id = _inventoryEntry.id;
+        inventoryEntry = new InventoryEntry();
+        inventoryEntry.item_id = stats.getID();
+        inventoryEntry.owner = owner.getID();
+        inventoryEntry.owner_type = owner.getOwnerType();
+        inventoryEntry.position = pos;
+        inventoryEntry.stats = stats.statsToString();
+        inventoryEntry.qu = qu;
+        DAOFactory.inventory().create(inventoryEntry);
+        itemStats = stats;
+        itemStats.setPosition(pos);
+        id = inventoryEntry.id;
         //ObjectEvents.onAdd(owner.getSession(), this);
     }
 
     public ItemStats getItemStats() {
-        return _itemStats;
+        return itemStats;
     }
 
     public InventoryEntry getInventoryEntry() {
-        return _inventoryEntry;
+        return inventoryEntry;
     }
 
     /**
@@ -326,9 +208,9 @@ public class GameItem implements Cloneable {
     public String toString() {
         StringBuilder ret = new StringBuilder();
 
-        ret.append(Integer.toHexString(id)).append('~').append(Integer.toHexString(_inventoryEntry.item_id)).append('~')
-                .append(Integer.toHexString(_inventoryEntry.qu)).append('~').append(_inventoryEntry.position == -1 ? "" : Integer.toHexString(_inventoryEntry.position))
-                .append('~').append(_inventoryEntry.stats);
+        ret.append(Integer.toHexString(id)).append('~').append(Integer.toHexString(inventoryEntry.item_id)).append('~')
+                .append(Integer.toHexString(inventoryEntry.qu)).append('~').append(inventoryEntry.position == -1 ? "" : Integer.toHexString(inventoryEntry.position))
+                .append('~').append(inventoryEntry.stats);
 
         return ret.toString();
     }
@@ -339,7 +221,7 @@ public class GameItem implements Cloneable {
      * @return
      */
     public int getPods() {
-        return _itemStats.getTemplate().pods * _inventoryEntry.qu;
+        return itemStats.getTemplate().pods * inventoryEntry.qu;
     }
 
     /**
@@ -352,7 +234,7 @@ public class GameItem implements Cloneable {
         if (pos == POS_NO_EQUIPED) {
             return true;
         }
-        switch (_itemStats.getTemplate().type) {
+        switch (itemStats.getTemplate().type) {
             case TYPE_AMULETTE:
                 return pos == POS_AMULETTE;
             case TYPE_ARC:
@@ -395,7 +277,7 @@ public class GameItem implements Cloneable {
      * @return
      */
     public boolean isWearable() {
-        switch (_itemStats.getTemplate().type) {
+        switch (itemStats.getTemplate().type) {
             case TYPE_AMULETTE:
             case TYPE_ARC:
             case TYPE_BAGUETTE:
@@ -431,18 +313,18 @@ public class GameItem implements Cloneable {
      * @param pos 
      */
     public void changePos(byte pos){
-        _inventoryEntry.position = pos;
-        _itemStats.setPosition(pos);
-        DAOFactory.inventory().update(_inventoryEntry);
+        inventoryEntry.position = pos;
+        itemStats.setPosition(pos);
+        DAOFactory.inventory().update(inventoryEntry);
     }
     
     /**
      * Supprime l'objet
      */
     public void delete(){
-        DAOFactory.inventory().delete(_inventoryEntry);
-        _inventoryEntry = null;
-        _itemStats = null;
+        DAOFactory.inventory().delete(inventoryEntry);
+        inventoryEntry = null;
+        itemStats = null;
         id = 0;
     }
     
@@ -451,8 +333,8 @@ public class GameItem implements Cloneable {
      * @param newQu 
      */
     public void changeQuantity(int newQu){
-        _inventoryEntry.qu = newQu;
-        DAOFactory.inventory().update(_inventoryEntry);
+        inventoryEntry.qu = newQu;
+        DAOFactory.inventory().update(inventoryEntry);
     }
     
     /**
@@ -460,7 +342,7 @@ public class GameItem implements Cloneable {
      * @param qu 
      */
     public void addQuantity(int qu){
-        changeQuantity(_inventoryEntry.qu + qu);
+        changeQuantity(inventoryEntry.qu + qu);
     }
     
     /**
@@ -471,7 +353,7 @@ public class GameItem implements Cloneable {
     public GameItem clone(){
         try {
             GameItem clone = (GameItem)super.clone();
-            clone._itemStats = _itemStats.clone();
+            clone.itemStats = itemStats.clone();
             
             return clone;
         } catch (CloneNotSupportedException ex) {

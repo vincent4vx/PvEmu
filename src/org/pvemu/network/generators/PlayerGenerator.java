@@ -63,7 +63,7 @@ public class PlayerGenerator {
         }
         //str.append(_lvl).append(";");
         str.append(Utils.implode(";", p.getColors())).append(";");
-        str.append(generateGMStuff(p)).append(";"); //stuff
+        str.append(generateAccessories(p)).append(";"); //stuff
          /*if (hasEquiped(10054) || hasEquiped(10055) || hasEquiped(10056) || hasEquiped(10058) || hasEquiped(10061) || hasEquiped(10102)) {
          str.append(3).append(";");
          } else {*/
@@ -87,7 +87,7 @@ public class PlayerGenerator {
         return str.toString();
     }
     
-    public String generateGMStuff(Player p){
+    public String generateAccessories(Player p){
         StringBuilder s = new StringBuilder();
         HashMap<Byte, GameItem> wornItems = p.getInventory().getItemsByPos();
 

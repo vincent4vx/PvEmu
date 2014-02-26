@@ -13,6 +13,7 @@ import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.GameServer;
+import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
 import org.pvemu.network.generators.PlayerGenerator;
 
@@ -213,7 +214,8 @@ public class CharacterEvents {
         }
 
         GamePacketEnum.CREATE_CHARACTER_OK.send(session);
-        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+//        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+        GameSendersRegistry.getAccount().charactersList(session, acc);
         GamePacketEnum.TUTORIAL_BEGIN.send(session);
     }
 
@@ -251,6 +253,7 @@ public class CharacterEvents {
         }
 
         acc.deleteCharacter(id);
-        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+//        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
+        GameSendersRegistry.getAccount().charactersList(session, acc);
     }
 }

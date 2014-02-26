@@ -13,10 +13,10 @@ import org.pvemu.game.objects.Player;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class ObjectGenerator {
-    public String generateAccessories(Player player){
+    public String generateUpdateAccessories(Player player){
         return new StringBuilder().append(player.getID())
                 .append('|')
-                .append(GeneratorsRegistry.getPlayer().generateGMStuff(player))
+                .append(GeneratorsRegistry.getPlayer().generateAccessories(player))
                 .toString();
     }
 }
