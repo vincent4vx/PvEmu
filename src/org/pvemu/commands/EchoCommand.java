@@ -6,7 +6,7 @@
 
 package org.pvemu.commands;
 
-import org.pvemu.jelly.Utils;
+import org.pvemu.jelly.utils.Utils;
 import org.pvemu.jelly.filters.ConsoleAskerFilter;
 import org.pvemu.jelly.filters.Filter;
 

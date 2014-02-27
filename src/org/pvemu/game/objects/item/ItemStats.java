@@ -4,7 +4,7 @@ import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.jelly.Loggin;
 import java.util.Map.Entry;
 import java.util.Objects;
-import org.pvemu.jelly.Utils;
+import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
 import org.pvemu.models.dao.DAOFactory;

@@ -1,6 +1,5 @@
 package org.pvemu.game;
 
-import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.InteractiveObject;
 import org.pvemu.game.objects.Player;
 import org.pvemu.game.objects.dep.ClassData;
@@ -9,7 +8,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Pathfinding;
-import org.pvemu.network.events.ChatEvents;
 import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.game.output.GameSendersRegistry;
 

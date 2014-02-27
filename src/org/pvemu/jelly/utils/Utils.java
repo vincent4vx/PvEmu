@@ -1,7 +1,8 @@
-package org.pvemu.jelly;
+package org.pvemu.jelly.utils;
 
 import java.util.ArrayList;
 import java.util.Random;
+import org.pvemu.jelly.Jelly;
 
 public class Utils {
 

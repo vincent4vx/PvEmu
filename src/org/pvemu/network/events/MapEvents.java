@@ -10,6 +10,7 @@ import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
 import org.pvemu.network.generators.PlayerGenerator;
 
+@Deprecated
 public class MapEvents {
 
     /**
@@ -17,6 +18,7 @@ public class MapEvents {
      *
      * @param session sender
      */
+    @Deprecated
     public static void onAddMap(IoSession session) {
         Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
@@ -39,6 +41,7 @@ public class MapEvents {
      *
      * @param session target
      */
+    @Deprecated
     public static void onRemoveMap(IoSession session) {
         Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
@@ -62,6 +65,7 @@ public class MapEvents {
      * @param mapID map d'arrivée
      * @param cellID cellule d'arrivée
      */
+    @Deprecated
     public static void onArrivedOnMap(IoSession session, short mapID, short cellID) {
         Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
 
@@ -99,16 +103,6 @@ public class MapEvents {
 
         GamePacketEnum.MAP_DATA.send(session, p.getMap().getMapDataPacket());
         GamePacketEnum.MAP_FIGHT_COUNT.send(session);
-    }
-
-    /**
-     * Packet GI : charge les données de la map
-     *
-     * @param session target
-     */
-    public static void onInitialize(IoSession session) {
-        onAddMap(session);
-        GamePacketEnum.MAP_LOADED.send(session);
     }
 
     /**

@@ -8,7 +8,7 @@ package org.pvemu.commands;
 
 import org.pvemu.game.World;
 import org.pvemu.game.objects.Player;
-import org.pvemu.jelly.Utils;
+import org.pvemu.jelly.utils.Utils;
 import org.pvemu.jelly.filters.AskerFilter;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.comparators.MoreThanComparator;

@@ -6,6 +6,7 @@
 
 package org.pvemu.jelly;
 
+import org.pvemu.jelly.utils.Utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -28,6 +29,8 @@ public class Config {
     final static public ConfigItem<Integer> REALM_PORT       = new ConfigIntItem("REALM_PORT", 443);
     
     final static public ConfigItem<Integer> CHAR_PER_ACCOUNT = new ConfigIntItem("CHAR_PER_ACCOUNT", 5);
+    
+    final static public ConfigItem<Boolean> PRELOAD          = new ConfigBoolItem("PRELOAD", false);
     
     final static private HashMap<String, ConfigItem> items = new HashMap<>();
     

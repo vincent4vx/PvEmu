@@ -1,12 +1,10 @@
 package org.pvemu.jelly;
 
 import org.pvemu.game.World;
-import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.jelly.Shell.GraphicRenditionEnum;
 import org.pvemu.jelly.database.Database;
 import org.pvemu.jelly.scripting.API;
 import org.pvemu.jelly.utils.SystemStats;
-import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.game.GameServer;
 import org.pvemu.network.realm.RealmServer;
 
@@ -47,7 +45,7 @@ public class Jelly {
                         System.out.println("Arguments manquants");
                         return;
                     }
-                    OldConfig.set(args[1], args[2]);
+                    //OldConfig.set(args[1], args[2]);
                     break;
             }
         }
@@ -55,10 +53,10 @@ public class Jelly {
 
     private static void start() {
         start = System.currentTimeMillis();
-        OldConfig.load();
+        Config.load();
         API.initialise();
         Database.connect();
-        World.instance().create(OldConfig.getBool("preload"));
+        World.instance().create(Config.PRELOAD.getValue());
         RealmServer.start();
         GameServer.start();
         Shell.println("Serveur lancé en " + (System.currentTimeMillis() - start) + "ms", GraphicRenditionEnum.GREEN, GraphicRenditionEnum.BOLD);

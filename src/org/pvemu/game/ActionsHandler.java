@@ -2,7 +2,7 @@ package org.pvemu.game;
 
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.Utils;
+import org.pvemu.jelly.utils.Utils;
 import org.pvemu.network.events.DialogEvents;
 import org.pvemu.network.events.GameActionEvents;
 

@@ -6,7 +6,7 @@
 
 package org.pvemu.network.generators;
 
-import org.pvemu.jelly.Utils;
+import org.pvemu.jelly.utils.Utils;
 
 /**
  *

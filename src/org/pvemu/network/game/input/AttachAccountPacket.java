@@ -12,7 +12,7 @@ import org.pvemu.game.World;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.Utils;
+import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.Account;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;

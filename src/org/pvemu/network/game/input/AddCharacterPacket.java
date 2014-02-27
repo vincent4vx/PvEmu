@@ -9,7 +9,7 @@ package org.pvemu.network.game.input;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.dep.ClassData;
 import org.pvemu.jelly.Config;
-import org.pvemu.jelly.Utils;
+import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.Account;
 import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.InputPacket;

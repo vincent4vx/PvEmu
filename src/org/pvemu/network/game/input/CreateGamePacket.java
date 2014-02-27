@@ -13,7 +13,6 @@ import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.events.BasicEvents;
 import static org.pvemu.network.events.CharacterEvents.onStatsChange;
-import org.pvemu.network.events.ChatEvents;
 import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.events.ObjectEvents;
 import org.pvemu.network.game.GamePacketEnum;

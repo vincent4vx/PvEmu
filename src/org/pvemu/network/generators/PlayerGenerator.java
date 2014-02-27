@@ -9,7 +9,7 @@ import org.pvemu.game.objects.Player;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.jelly.Constants;
-import org.pvemu.jelly.Utils;
+import org.pvemu.jelly.utils.Utils;
 
 /**
  * Génère les packets pour les joueurs

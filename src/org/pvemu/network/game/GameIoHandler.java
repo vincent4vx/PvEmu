@@ -1,23 +1,13 @@
 package org.pvemu.network.game;
 
-import org.pvemu.network.events.DialogEvents;
-import org.pvemu.network.events.MapEvents;
-import org.pvemu.network.events.EmotesEvents;
-import org.pvemu.network.events.ExchangeEvents;
-import org.pvemu.network.events.GameActionEvents;
-import org.pvemu.network.events.ObjectEvents;
-import org.pvemu.network.events.BasicEvents;
-import org.pvemu.network.events.AccountEvents;
-import org.pvemu.network.events.CharacterEvents;
 import org.pvemu.game.objects.Player;
-import java.net.InetSocketAddress;
 import org.pvemu.jelly.Jelly;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.Account;
-import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.MinaIoHandler;
 import org.pvemu.network.SessionAttributes;
+import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.game.input.GameInputHandler;
 
 public class GameIoHandler extends MinaIoHandler {

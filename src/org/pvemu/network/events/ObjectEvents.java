@@ -2,42 +2,12 @@ package org.pvemu.network.events;
 
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.Player;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.Utils;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 
+@Deprecated
 public class ObjectEvents {
-    public static void onObjectMove(IoSession session, String packet){
-        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
-        
-        if(p == null){
-            return;
-        }
-        
-        String[] data = Utils.split(packet, "|");//packet.split("\\|");
-        int id;
-        byte target;
-        int qu = 1;
-        try{
-            id = Integer.parseInt(data[0]);
-            target = Byte.parseByte(data[1]);
-            if(data.length > 2){
-                qu = Integer.parseInt(data[2]);
-            }
-        }catch(Exception e){
-            return;
-        }
-        
-        boolean result = p.getInventory().moveItem(id, qu, target);
-        
-        if(!result){
-            Loggin.debug("Erreur lors du déplacement de l'objet %d", id);
-        }else{
-            Loggin.debug("Déplacement de l'objet %d OK !", id);
-        }
-    }
     
     public static void onMove(IoSession session, int objID, byte objPOS){
         if(session == null){
@@ -90,11 +60,4 @@ public class ObjectEvents {
         
         GamePacketEnum.OBJECT_REMOVE.send(session, id);
     }
-    
-    /*public static void onAccessoriesChange(Player P){
-        if(P == null){
-            return;
-        }
-        GamePacketEnum.OBJECT_ACCESSORIES.sendToMap(P.getMap(), new StringBuilder().append(P.getID()).append('|').append(P.getGMStuff()).toString());
-    }*/
 }
