@@ -40,7 +40,7 @@ public class AddCharacterPacket implements InputPacket {
         String[] arr_data = Utils.split(extra, "|");//packet.split("\\|");
 
         try {
-            if (DAOFactory.character().countByAccount(acc.id) >= Config.getInt("char_per_account", 5)) {
+            if (DAOFactory.character().countByAccount(acc.id) >= Config.CHAR_PER_ACCOUNT.getValue()) {
                 GamePacketEnum.CREATE_CHARACTER_FULL.send(session);
                 return;
             }

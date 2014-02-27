@@ -9,8 +9,6 @@ import java.sql.SQLException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.Shell;
 import org.pvemu.jelly.Shell.GraphicRenditionEnum;
@@ -28,13 +26,13 @@ public class Database {
             StringBuilder dsn = new StringBuilder();
 
             dsn.append("jdbc:mysql://");
-            dsn.append(Config.getString("db_host"));
-            dsn.append("/").append(Config.getString("db_name"));
+            dsn.append(Config.DB_HOST.getValue());
+            dsn.append("/").append(Config.DB_NAME.getValue());
 
             db = DriverManager.getConnection(
                     dsn.toString(),
-                    Config.getString("db_user"),
-                    Config.getString("db_pass"));
+                    Config.DB_USER.getValue(),
+                    Config.DB_PASS.getValue());
 
             scheduledCommit = Executors.newSingleThreadScheduledExecutor();
             scheduledCommit.scheduleAtFixedRate(
@@ -53,12 +51,12 @@ public class Database {
                             }
                         }
                     },
-                    Config.getInt("db_commit_time", 60),
-                    Config.getInt("db_commit_time", 60), TimeUnit.SECONDS
+                    Config.DB_COMMIT_TIME.getValue(),
+                    Config.DB_COMMIT_TIME.getValue(), TimeUnit.SECONDS
             );
             Shell.println("Ok", GraphicRenditionEnum.GREEN);
         } catch (SQLException ex) {
-            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, "Connexion impossible", ex);
+            Loggin.error("Connexion à la base de donnée impossible.", ex);
             System.exit(1);
         }
     }

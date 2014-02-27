@@ -1,6 +1,5 @@
 package org.pvemu.network.realm;
 
-import org.pvemu.jelly.Config;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Jelly;
 import org.apache.mina.core.session.IoSession;

@@ -19,18 +19,18 @@ public class GameServer {
     private GameServer() {
         try {
             Shell.print("Lancement du Game : ", Shell.GraphicRenditionEnum.YELLOW);
-            _server = new MinaServer(Config.getInt("GAME_PORT", 5555), new GameIoHandler());
+            _server = new MinaServer(Config.GAME_PORT.getValue(), new GameIoHandler());
             Shell.print("Ok", Shell.GraphicRenditionEnum.GREEN);
-            Shell.println(" (port " + Config.getInt("game_port", 443) + ")");
+            Shell.println(" (port " + Config.GAME_PORT.getValue() + ")");
 
-            if (Config.getBool("CRYPT_IP") || Constants.DOFUS_VER_ID < 1200) {
-                String ip = Crypt.CryptIP(Config.getString("ip", "127.0.0.1"));
-                String port = Crypt.CryptPort(Config.getInt("game_port", 5555));
+            if (Config.CRYPT_IP.getValue() || Constants.DOFUS_VER_ID < 1200) {
+                String ip = Crypt.CryptIP(Config.IP.getValue());
+                String port = Crypt.CryptPort(Config.GAME_PORT.getValue());
                 CRYPT_IP = ip + port;
                 Shell.println("GameServer IP crypté en " + CRYPT_IP, GraphicRenditionEnum.BLUE);
             }
         } catch (IOException ex) {
-            Loggin.game("Impossible de lancer le serveur de Game (port : " + Config.getInt("game_port", 5555) + ")", Level.SEVERE);
+            Loggin.game("Impossible de lancer le serveur de Game (port : " + Config.GAME_PORT.getValue().toString() + ")", Level.SEVERE);
             System.exit(1);
         }
     }

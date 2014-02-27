@@ -1,211 +1,139 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
 package org.pvemu.jelly;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import org.pvemu.jelly.Shell.GraphicRenditionEnum;
 
+/**
+ *
+ * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
+ */
 public class Config {
+    final static public ConfigItem<String> DB_HOST           = new ConfigStringItem("DB_HOST", "127.0.0.1");
+    final static public ConfigItem<String> DB_USER           = new ConfigStringItem("DB_USER", "root");
+    final static public ConfigItem<String> DB_PASS           = new ConfigStringItem("DB_PASS", "");
+    final static public ConfigItem<String> DB_NAME           = new ConfigStringItem("DB_NAME", "pvemu");
+    final static public ConfigItem<Integer> DB_COMMIT_TIME   = new ConfigIntItem("DB_COMMIT_TIME", 600);
+    
+    final static public ConfigItem<Boolean> CRYPT_IP         = new ConfigBoolItem("CRYPT_IP", false);
+    final static public ConfigItem<String> IP                = new ConfigStringItem("IP", "127.0.0.1");
+    final static public ConfigItem<Integer> GAME_PORT        = new ConfigIntItem("GAME_PORT", 5555);
+    final static public ConfigItem<Integer> REALM_PORT       = new ConfigIntItem("REALM_PORT", 443);
+    
+    final static public ConfigItem<Integer> CHAR_PER_ACCOUNT = new ConfigIntItem("CHAR_PER_ACCOUNT", 5);
+    
+    final static private HashMap<String, ConfigItem> items = new HashMap<>();
+    
+    abstract static public class ConfigItem<T>{
+        protected String name;
+        protected T value;
 
-    private static Config self = null;
-    private final HashMap<String, String> configData = new HashMap<>();
-
-    public static String getString(String param, String defaultValue) {
-        if (!self.configData.containsKey(param.toLowerCase())) {
-            return defaultValue;
-        }
-        return self.configData.get(param.toLowerCase());
-    }
-
-    public static String getString(String param) {
-        return getString(param, "");
-    }
-
-    public static int getInt(String param, int defaultValue) {
-        if (self.configData.containsKey(param.toLowerCase())) {
-            try {
-                return Integer.parseInt(self.configData.get(param.toLowerCase()));
-            } catch (Exception e) {
-                return defaultValue;
-            }
-        }
-        return defaultValue;
-    }
-
-    public static int getInt(String param) {
-        return getInt(param, 0);
-    }
-
-    public static boolean getBool(String param) {
-        if (!self.configData.containsKey(param.toLowerCase())) {
-            return false;
+        protected ConfigItem(String name, T value) {
+            this.name = name;
+            this.value = value;
+            items.put(name.toUpperCase(), this);
         }
 
-        String value = self.configData.get(param.toLowerCase());
-
-        switch (value) {
-            case "0":
-            case "off":
-            case "no":
-            case "false":
-            case "non":
-                return false;
-            case "1":
-            case "on":
-            case "yes":
-            case "true":
-            case "oui":
-                return true;
-            default:
-                return false;
+        public T getValue() {
+            return value;
         }
+        
+        abstract protected void setValue(String value) throws Exception;
+        
     }
+    
+    static private class ConfigStringItem extends ConfigItem<String>{
 
-    private Config() {
-        Shell.print("Chargement de la configuration : ", GraphicRenditionEnum.YELLOW);
+        public ConfigStringItem(String name, String value) {
+            super(name, value);
+        }
+
+        @Override
+        protected void setValue(String value) {
+            this.value = value;
+        }
+        
+    }
+    
+    static private class ConfigIntItem extends ConfigItem<Integer>{
+
+        public ConfigIntItem(String name, Integer value) {
+            super(name, value);
+        }
+
+        @Override
+        protected void setValue(String value) {
+            this.value = Integer.parseInt(value);
+        }
+        
+    }
+    
+    static private class ConfigBoolItem extends ConfigItem<Boolean>{
+
+        public ConfigBoolItem(String name, Boolean value) {
+            super(name, value);
+        }
+
+        @Override
+        protected void setValue(String value) {
+            this.value = Boolean.parseBoolean(value);
+        }
+        
+    }
+    
+    static public void load(){
+        Shell.print("Chargement de la configuration : ", Shell.GraphicRenditionEnum.YELLOW);
+        
         File f = new File(Constants.CONFIG_FILE);
 
-        if (!f.exists()) {
-            create(f);
-        }
-
         try {
-            FileReader FW = new FileReader(f);
-            BufferedReader file = new BufferedReader(FW);
+            FileReader FR = new FileReader(f);
+            BufferedReader file = new BufferedReader(FR);
             String line;
-            String param;
-            String value;
 
-            while ((line = file.readLine()) != null) {
+            while ((line = file.readLine().trim()) != null) {
+                if(line.charAt(0) == '#'){ //comment line
+                    continue;
+                }
+                
+                String param, value;
+                
                 try {
-                    param = line.split("=")[0].toLowerCase().trim();
-                    value = line.split("=")[1].toLowerCase().trim();
+                    String[] split = Utils.split(line, "=");
+                    param = split[0].toUpperCase().trim();
+                    value = split[1].trim();
                 } catch (ArrayIndexOutOfBoundsException e) {
                     continue;
                 }
 
-                configData.put(param, value);
+                ConfigItem item = items.get(param);
+                
+                if(item == null){
+                    Loggin.debug("Item de configuration '%s' introuvable.", param);
+                    continue;
+                }
+                
+                try{
+                    item.setValue(value);
+                }catch(Exception e){
+                    Loggin.error("Valeur '" + value + "' incorrecte pour '" + param + "'", e);
+                }
             }
 
             file.close();
-            FW.close();
-            Shell.println("Ok", GraphicRenditionEnum.GREEN);
+            FR.close();
+            Shell.println("Ok", Shell.GraphicRenditionEnum.GREEN);
         } catch (Exception ex) {
             System.out.println("Erreur lors du chargement");
             System.exit(1);
         }
-    }
 
-    public static void load() {
-        if (self == null) {
-            self = new Config();
-        }
-    }
-
-    public static void set(String param, String value) {
-        param = param.trim().toUpperCase();
-
-        File f = new File(Constants.CONFIG_FILE);
-        File tmp = new File("~" + Constants.CONFIG_FILE);
-
-        if (!f.exists()) {
-            create(f);
-        }
-
-        try {
-            FileWriter FW = new FileWriter(tmp);
-            BufferedReader BR = new BufferedReader(new FileReader(f));
-
-            String line;
-            String[] splited;
-            boolean found = false;
-            while ((line = BR.readLine()) != null) {
-                splited = line.split("=");
-                if (splited.length == 2 && splited[0].trim().toUpperCase().equals(param)) {
-                    FW.append(param).append("=").append(value.trim());
-                    found = true;
-                } else {
-                    FW.append(line).append(System.lineSeparator());
-                }
-            }
-            BR.close();
-
-            if (!found) {
-                FW.append(param).append("=").append(value.trim());
-            }
-            FW.flush();
-            f.renameTo(new File(Constants.CONFIG_FILE + ".old"));
-            tmp.renameTo(f);
-
-        } catch (Exception ex) {
-            Logger.getLogger(Config.class.getName()).log(Level.SEVERE, "Chargement impossible du fichier de configuration", ex);
-        }
-    }
-
-    private static void create(File file) {
-        try {
-            file.createNewFile();
-            file.setReadable(true, false);
-            file.setWritable(true, false);
-            if (!file.canWrite()) {
-                System.exit(1);
-            }
-
-            FileWriter FW = new FileWriter(file);
-            FW.write(
-                    "#####################################\n"
-                    + "# Fichier de configuration de Jelly #\n"
-                    + "# By v4vx                           #\n"
-                    + "#                       Version 0.1 #\n"
-                    + "#####################################\n"
-                    + "\n"
-                    + "\n"
-                    + "\n"
-                    + "\n"
-                    + "#############################\n"
-                    + "###Configuration de la bdd###\n"
-                    + "#############################\n"
-                    + "\n"
-                    + "#IP de la base de données\n"
-                    + "DB_HOST=127.0.0.1\n"
-                    + "\n"
-                    + "#Utilisateur\n"
-                    + "DB_USER=root\n"
-                    + "\n"
-                    + "#mot de passe\n"
-                    + "DB_PASS=\n"
-                    + "\n"
-                    + "#Nom de la bdd\n"
-                    + "DB_NAME=jelly\n"
-                    + "\n"
-                    + "\n"
-                    + "##############################\n"
-                    + "###Configuration du serveur###\n"
-                    + "##############################\n"
-                    + "\n"
-                    + "#Port du serveur de connexion (à bien noter dans le config.xml de dofus)\n"
-                    + "REALM_PORT=444\n"
-                    + "#Ip de jeu, la même que dans config.xml\n"
-                    + "GAME_IP=127.0.0.1\n"
-                    + "#Port de jeu (quelconque, mais inutilisé !)\n"
-                    + "GAME_PORT=5555\n"
-                    + "\n\n"
-                    + "########################\n"
-                    + "###Performances & co.###\n"
-                    + "########################\n"
-                    + "\n"
-                    + "PRELOAD_MAPS=false\n"
-                    + "PRELOAD_ACCOUNTS=false\n"
-                    + "FREE_UNUSED_ACCOUNTS=true");
-            FW.flush();
-            FW.close();
-
-        } catch (Exception e) {
-            System.exit(1);
-        }
     }
 }

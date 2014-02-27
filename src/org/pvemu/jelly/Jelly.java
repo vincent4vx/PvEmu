@@ -47,7 +47,7 @@ public class Jelly {
                         System.out.println("Arguments manquants");
                         return;
                     }
-                    Config.set(args[1], args[2]);
+                    OldConfig.set(args[1], args[2]);
                     break;
             }
         }
@@ -55,10 +55,10 @@ public class Jelly {
 
     private static void start() {
         start = System.currentTimeMillis();
-        Config.load();
+        OldConfig.load();
         API.initialise();
         Database.connect();
-        World.instance().create(Config.getBool("preload"));
+        World.instance().create(OldConfig.getBool("preload"));
         RealmServer.start();
         GameServer.start();
         Shell.println("Serveur lancé en " + (System.currentTimeMillis() - start) + "ms", GraphicRenditionEnum.GREEN, GraphicRenditionEnum.BOLD);
