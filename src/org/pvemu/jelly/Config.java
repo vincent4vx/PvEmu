@@ -17,6 +17,8 @@ import java.util.HashMap;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class Config {
+    final static private HashMap<String, ConfigItem> items = new HashMap<>();
+    
     final static public ConfigItem<String> DB_HOST           = new ConfigStringItem("DB_HOST", "127.0.0.1");
     final static public ConfigItem<String> DB_USER           = new ConfigStringItem("DB_USER", "root");
     final static public ConfigItem<String> DB_PASS           = new ConfigStringItem("DB_PASS", "");
@@ -31,8 +33,6 @@ public class Config {
     final static public ConfigItem<Integer> CHAR_PER_ACCOUNT = new ConfigIntItem("CHAR_PER_ACCOUNT", 5);
     
     final static public ConfigItem<Boolean> PRELOAD          = new ConfigBoolItem("PRELOAD", false);
-    
-    final static private HashMap<String, ConfigItem> items = new HashMap<>();
     
     abstract static public class ConfigItem<T>{
         protected String name;
@@ -101,8 +101,9 @@ public class Config {
             BufferedReader file = new BufferedReader(FR);
             String line;
 
-            while ((line = file.readLine().trim()) != null) {
-                if(line.charAt(0) == '#'){ //comment line
+            while ((line = file.readLine()) != null) {
+                line = line.trim();
+                if(line.isEmpty() || line.charAt(0) == '#'){ //comment line
                     continue;
                 }
                 
@@ -134,7 +135,7 @@ public class Config {
             FR.close();
             Shell.println("Ok", Shell.GraphicRenditionEnum.GREEN);
         } catch (Exception ex) {
-            System.out.println("Erreur lors du chargement");
+            Loggin.error("Erreur lors du chargement de la config", ex);
             System.exit(1);
         }
 

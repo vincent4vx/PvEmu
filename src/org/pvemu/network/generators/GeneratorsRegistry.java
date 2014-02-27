@@ -64,6 +64,8 @@ public class GeneratorsRegistry {
      * @return the value of informativeMessage
      */
     public static InformativeMessageGenerator getInformativeMessage() {
+        if(informativeMessage == null)
+            informativeMessage = new InformativeMessageGenerator();
         return informativeMessage;
     }
 
