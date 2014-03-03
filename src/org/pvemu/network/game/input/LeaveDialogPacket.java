@@ -20,7 +20,7 @@ public class LeaveDialogPacket implements InputPacket {
 
     @Override
     public String id() {
-        return "DL";
+        return "DV";
     }
 
     @Override
