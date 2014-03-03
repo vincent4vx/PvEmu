@@ -82,7 +82,12 @@ public enum GamePacketEnum {
     /**
      * Ajoute un joueur
      */
-    MAP_ADD_PLAYER("GM|+"),
+    @Deprecated
+    MAP_ADD("GM|+"),
+    /**
+     * modifie les éléments de la map (les GMable)
+     */
+    MAP_ELEM("GM"),
     /**
      * Supprime un élément de la map
      */

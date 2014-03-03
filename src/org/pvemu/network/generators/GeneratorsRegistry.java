@@ -15,6 +15,28 @@ public class GeneratorsRegistry {
     private static InformativeMessageGenerator informativeMessage = null;
     private static ObjectGenerator object = null;
     private static AccountGenerator account = null;
+    private static MapGenerator map = null;
+
+    /**
+     * Get the value of map
+     *
+     * @return the value of map
+     */
+    public static MapGenerator getMap() {
+        if(map == null)
+            map = new MapGenerator();
+        return map;
+    }
+
+    /**
+     * Set the value of map
+     *
+     * @param map new value of map
+     */
+    public static void setMap(MapGenerator map) {
+        GeneratorsRegistry.map = map;
+    }
+
 
     /**
      * Get the value of account

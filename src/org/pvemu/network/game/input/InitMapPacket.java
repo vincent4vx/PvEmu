@@ -7,9 +7,11 @@
 package org.pvemu.network.game.input;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.objects.Player;
 import org.pvemu.network.InputPacket;
-import static org.pvemu.network.events.MapEvents.onAddMap;
+import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -24,7 +26,13 @@ public class InitMapPacket implements InputPacket {
 
     @Override
     public void perform(String extra, IoSession session) {
-        onAddMap(session);
+        Player player = SessionAttributes.PLAYER.getValue(session);
+        
+        if(player == null)
+            return;
+        
+        GameSendersRegistry.getMap().addGMable(player.getMap(), player);
+        GameSendersRegistry.getMap().getAllGMable(player.getMap(), session);
         GamePacketEnum.MAP_LOADED.send(session);
     }
     

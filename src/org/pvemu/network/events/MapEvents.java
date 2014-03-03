@@ -1,40 +1,15 @@
 package org.pvemu.network.events;
 
 import org.pvemu.game.objects.Player;
-import org.pvemu.game.objects.map.GMable;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
-import org.pvemu.network.generators.GeneratorsRegistry;
-import org.pvemu.network.generators.PlayerGenerator;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 @Deprecated
 public class MapEvents {
-
-    /**
-     * Affiche le perso sur la map (à appeler après GameMap.addPlayer())
-     *
-     * @param session sender
-     */
-    @Deprecated
-    public static void onAddMap(IoSession session) {
-        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
-
-        if (p == null) {
-            return;
-        }
-
-        GamePacketEnum.MAP_ADD_PLAYER.sendToMap(p.getMap(), GeneratorsRegistry.getPlayer().generateGM(p));
-        
-        for(GMable Ga : p.getMap().getGMables()){
-            if(Ga == p){
-                continue; //pas besoin d'envoyer 2 fois le même packet
-            }
-            GamePacketEnum.MAP_ADD_PLAYER.send(session, Ga.getGMData());
-        }
-    }
 
     /**
      * Retire le joueur de la map (ne pas appeler GameMap.removePlayer())
@@ -49,11 +24,7 @@ public class MapEvents {
             return;
         }
 
-        for (Player P : p.getMap().getPlayers().values()) {
-            if (P.getSession() != null) {
-                GamePacketEnum.MAP_REMOVE.send(P.getSession(), String.valueOf(p.getID()));
-            }
-        }
+        GameSendersRegistry.getMap().removeGMable(p.getMap(), p);
 
         p.getMap().removePlayer(p);
     }

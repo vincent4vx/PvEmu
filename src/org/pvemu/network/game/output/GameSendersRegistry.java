@@ -15,6 +15,28 @@ public class GameSendersRegistry {
     private static InformativeMessageSender informativeMessage = null;
     private static ObjectSender object = null;
     private static AccountSender account = null;
+    private static MapSender map = null;
+
+    /**
+     * Get the value of map
+     *
+     * @return the value of map
+     */
+    public static MapSender getMap() {
+        if(map == null)
+            map = new MapSender();
+        return map;
+    }
+
+    /**
+     * Set the value of map
+     *
+     * @param map new value of map
+     */
+    public static void setMap(MapSender map) {
+        GameSendersRegistry.map = map;
+    }
+
 
     /**
      * Get the value of account
