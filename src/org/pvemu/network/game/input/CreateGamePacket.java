@@ -7,13 +7,13 @@
 package org.pvemu.network.game.input;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Constants;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.events.BasicEvents;
 import static org.pvemu.network.events.CharacterEvents.onStatsChange;
-import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.events.ObjectEvents;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -44,9 +44,9 @@ public class CreateGamePacket implements InputPacket {
             GamePacketEnum.CHAT_CHANEL_ADD.send(session, p.getChanels());
         }
         GamePacketEnum.CHARACTER_RESTRICTION.send(session, p.restriction);
-        //ChatEvents.onSendErrorMessage(session, 89);
         GameSendersRegistry.getInformativeMessage().error(session, 89);
-        MapEvents.onArrivedInGame(session);
+        //MapEvents.onArrivedInGame(session);
+        ActionsRegistry.getMap().addPlayer(p.getMap(), p);
         
         if(Constants.DOFUS_VER_ID < 1100){
             BasicEvents.onDate(session);

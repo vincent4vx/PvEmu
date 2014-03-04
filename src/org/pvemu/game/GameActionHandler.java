@@ -6,9 +6,9 @@ import org.pvemu.game.objects.dep.ClassData;
 import org.pvemu.game.objects.map.MapCell;
 import java.util.Collection;
 import java.util.HashMap;
+import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Pathfinding;
-import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 public class GameActionHandler {
@@ -66,10 +66,11 @@ public class GameActionHandler {
                 case 1: //déplacement
                     if (success) {
                         short cellDest = (Short) get("dest");
-                        MapEvents.onArrivedOnCell(p.getSession(), cellDest);
+                        //MapEvents.onArrivedOnCell(p.getSession(), cellDest);
+                        ActionsRegistry.getPlayer().arrivedOnCell(p, p.getMap().getCellById(cellDest));
                     } else {
                         short cellDest = Short.parseShort(data[1]);
-                        MapEvents.onArrivedOnCell(p.getSession(), cellDest);
+                        ActionsRegistry.getPlayer().arrivedOnCell(p, p.getMap().getCellById(cellDest));
                     }
                     p.orientation = (byte) get("ori");
                     
@@ -87,7 +88,8 @@ public class GameActionHandler {
                     switch ((int)args[1]) {
                         case 7: //téléportation incarnam => astrub
                             short[] mapData = ClassData.getStatuesPos(p.getClassID());
-                            p.teleport(mapData[0], mapData[1]);
+                            //p.teleport(mapData[0], mapData[1]);
+                            ActionsRegistry.getPlayer().teleport(p, mapData[0], mapData[1]);
                             p.setStartPos(mapData);
                             //ChatEvents.onSendInfoMessage(p.getSession(), 6);
                             GameSendersRegistry.getInformativeMessage().info(p.getSession(), 6);

@@ -27,4 +27,14 @@ public class MapGenerator {
     public String generateSingleGM(GMable ga){
         return "|+" + ga.getGMData();
     }
+    
+    public String generateMapData(GameMap map){
+        StringBuilder sb = new StringBuilder(12 + map.getModel().key.length());
+        sb.append(map.getID()).append('|').append(map.getModel().date);
+        
+        if(!map.getModel().key.isEmpty())
+            sb.append('|').append(map.getModel().key);
+        
+        return sb.toString();
+    }
 }

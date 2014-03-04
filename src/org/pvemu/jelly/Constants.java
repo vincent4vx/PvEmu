@@ -3,8 +3,8 @@ package org.pvemu.jelly;
 public class Constants {
 
     public final static String NAME = "PvEmu";
-    public final static String VERSION = "0.17.4a";
-    public final static int REV = 113;
+    public final static String VERSION = "0.18.1a";
+    public final static int REV = 114;
     public final static String DOFUS_VER = "1.29.1";
     public final static int DOFUS_VER_ID = 1291;
     public final static int SERV_ID = 1;

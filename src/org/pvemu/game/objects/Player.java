@@ -11,7 +11,6 @@ import org.pvemu.game.objects.dep.Stats.Element;
 import org.pvemu.game.objects.inventory.Inventory;
 import org.pvemu.game.objects.inventory.InventoryAble;
 import org.pvemu.game.objects.map.MapCell;
-import java.util.HashMap;
 import java.util.Map.Entry;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.Account;
@@ -23,11 +22,9 @@ import org.apache.mina.core.session.IoSession;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.Filterable;
 import org.pvemu.network.events.CharacterEvents;
-import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.events.ObjectEvents;
 import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
-import org.pvemu.network.generators.PlayerGenerator;
 
 
 public class Player extends Creature implements GMable, InventoryAble, Filterable {
@@ -254,19 +251,6 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
 
     public void removeChanel(char c) {
         chanels = chanels.replace(String.valueOf(c), "");
-    }
-
-    /**
-     * Téléporte le personnage
-     *
-     * @param mapID
-     * @param cellID
-     */
-    public void teleport(short mapID, short cellID) {
-        if (GameMap.isValidDest(mapID, cellID)) {
-            MapEvents.onRemoveMap(session);
-            MapEvents.onArrivedOnMap(session, mapID, cellID);
-        }
     }
     
     /**

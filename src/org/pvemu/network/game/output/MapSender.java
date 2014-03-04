@@ -28,4 +28,12 @@ public class MapSender {
     public void removeGMable(GameMap map, GMable ga){
         GamePacketEnum.MAP_REMOVE.sendToMap(map, ga.getID());
     }
+    
+    public void mapData(GameMap map, IoSession session){
+        GamePacketEnum.MAP_DATA.send(session, GeneratorsRegistry.getMap().generateMapData(map));
+    }
+    
+    public void fightCount(GameMap map, IoSession session){
+        GamePacketEnum.MAP_FIGHT_COUNT.send(session);
+    }
 }

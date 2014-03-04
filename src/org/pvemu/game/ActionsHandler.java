@@ -1,5 +1,6 @@
 package org.pvemu.game;
 
+import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
@@ -44,7 +45,8 @@ public class ActionsHandler {
                 }
                 Loggin.debug("Téléportation de %s vers map : %s; cell : %s", new Object[]{p.getName(), a.args[0], a.args[1]});
                 try {
-                    p.teleport(
+                    ActionsRegistry.getPlayer().teleport(
+                            p,
                             Short.parseShort(a.args[0]),
                             Short.parseShort(a.args[1]));
                 } catch (NumberFormatException e) {}

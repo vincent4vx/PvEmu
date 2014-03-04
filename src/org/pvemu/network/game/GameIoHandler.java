@@ -5,9 +5,9 @@ import org.pvemu.jelly.Jelly;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.Account;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.network.MinaIoHandler;
 import org.pvemu.network.SessionAttributes;
-import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.game.input.GameInputHandler;
 
 public class GameIoHandler extends MinaIoHandler {
@@ -24,12 +24,13 @@ public class GameIoHandler extends MinaIoHandler {
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
-        MapEvents.onRemoveMap(session);
-
-        Player p = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
+        Player p = SessionAttributes.PLAYER.getValue(session);
+        
+        if(p != null)
+            ActionsRegistry.getMap().removePlayer(p.getMap(), p);
 
         if (p == null) {
-            Account acc = SessionAttributes.ACCOUNT.getValue(session);//(Account) session.getAttribute("account");
+            Account acc = SessionAttributes.ACCOUNT.getValue(session);
             if (acc != null) {
                 acc.removeSession();
             }

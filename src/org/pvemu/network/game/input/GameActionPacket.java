@@ -14,7 +14,6 @@ import org.pvemu.jelly.utils.Utils;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.events.GameActionEvents;
-import org.pvemu.network.events.MapEvents;
 import org.pvemu.network.game.GamePacketEnum;
 
 /**

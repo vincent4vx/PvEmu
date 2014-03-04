@@ -14,24 +14,24 @@ import org.pvemu.models.Trigger;
 import org.pvemu.models.dao.DAOFactory;
 
 public final class GameMap {
-    private MapModel _model;
-    private ArrayList<MapCell> _cells = new ArrayList<>(150); //300 cells. devrait allez pour la plupart des maps
+    final private MapModel model;
+    final private ArrayList<MapCell> cells = new ArrayList<>(150); //300 cells. devrait allez pour la plupart des maps
     short id;
-    private ConcurrentHashMap<Integer, Player> _players = new ConcurrentHashMap<>();
+    final private ConcurrentHashMap<Integer, Player> players = new ConcurrentHashMap<>();
     private String mapDataPacket = null;
-    private ConcurrentHashMap<Integer, GMable> _gms = new ConcurrentHashMap<>();
+    final private ConcurrentHashMap<Integer, GMable> gms = new ConcurrentHashMap<>();
     private int lastGMId = 0;
 
     public GameMap(MapModel model) {
-        _model = model;
-        id = _model.id;
+        this.model = model;
+        id = this.model.id;
 
-        for (int f = 0; f < _model.mapData.length(); f += 10) {
-            String CellData = _model.mapData.substring(f, f + 10);
-            _cells.add(new MapCell(this, (short) (f / 10), CellData));
+        for (int f = 0; f < this.model.mapData.length(); f += 10) {
+            String CellData = this.model.mapData.substring(f, f + 10);
+            cells.add(new MapCell(this, (short) (f / 10), CellData));
         }
         
-        _model.mapData = null;
+        this.model.mapData = null;
 
         for (Trigger T : DAOFactory.trigger().getByMapID(id)) {
             MapCell cell = getCellById(T.cellID);
@@ -43,7 +43,7 @@ public final class GameMap {
         
         for(MapNpcs MN : DAOFactory.mapNpcs().getByMapId(id)){
             lastGMId--;
-            _gms.put(lastGMId, new GameNpc(MN, lastGMId));
+            gms.put(lastGMId, new GameNpc(MN, lastGMId));
         }
     }
 
@@ -54,8 +54,8 @@ public final class GameMap {
      * @param cellID
      */
     public void addPlayer(Player p, short cellID) {
-        _players.put(p.getID(), p);
-        _gms.put(p.getID(), p);
+        players.put(p.getID(), p);
+        gms.put(p.getID(), p);
         getCellById(cellID)._players.put(p.getID(), p);
     }
 
@@ -65,15 +65,15 @@ public final class GameMap {
      * @param p
      */
     public void removePlayer(Player p) {
-        _players.remove(p.getID());
-        _gms.remove(p.getID());
+        players.remove(p.getID());
+        gms.remove(p.getID());
         if (p.getCell() != null) {
             p.getCell()._players.remove(p.getID());
         }
     }
 
     public ConcurrentHashMap<Integer, Player> getPlayers() {
-        return _players;
+        return players;
     }
     
     /**
@@ -81,7 +81,11 @@ public final class GameMap {
      * @return 
      */
     public Collection<GMable> getGMables(){
-        return _gms.values();
+        return gms.values();
+    }
+
+    public MapModel getModel() {
+        return model;
     }
     
     /**
@@ -90,7 +94,7 @@ public final class GameMap {
      * @return 
      */
     public GMable getGMable(int id){
-        return _gms.get(id);
+        return gms.get(id);
     }
 
     /**
@@ -100,20 +104,20 @@ public final class GameMap {
      * @return
      */
     public MapCell getCellById(short id) {
-        if (_cells.size() < id) {
-            Loggin.debug("CellID invalide : %d, max : %d", id, _cells.size());
+        if (cells.size() < id) {
+            Loggin.debug("CellID invalide : %d, max : %d", id, cells.size());
             return null;
         }
 
-        return _cells.get(id);
+        return cells.get(id);
     }
 
     public byte getWidth() {
-        return _model.width;
+        return model.width;
     }
 
     public byte getHeigth() {
-        return _model.heigth;
+        return model.heigth;
     }
 
     /**
@@ -121,17 +125,17 @@ public final class GameMap {
      *
      * @return
      */
-    public String getMapDataPacket() {
+    /*public String getMapDataPacket() {
         if (mapDataPacket == null) {
             StringBuilder p = new StringBuilder();
-            p.append(id).append("|").append(_model.date);
+            p.append(id).append("|").append(model.date);
             if(Constants.DOFUS_VER_ID >= 1100){
-                p.append("|").append(_model.key);
+                p.append("|").append(model.key);
             }
             mapDataPacket = p.toString();
         }
         return mapDataPacket;
-    }
+    }*/
 
     /**
      * Vérifie si la destination est valide ou non
@@ -147,11 +151,11 @@ public final class GameMap {
             return false;
         }
 
-        if (map._cells.size() < cellID) { //cellule inexistante
+        if (map.cells.size() < cellID) { //cellule inexistante
             return false;
         }
 
-        return map._cells.get(cellID).isWalkable();
+        return map.cells.get(cellID).isWalkable();
     }
 
     public short getID() {
