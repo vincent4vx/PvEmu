@@ -23,6 +23,7 @@ public class CommandsHandler {
         registerCommand(new SendCommand());
         registerCommand(new AliasCommand());
         registerCommand(new ExitCommand());
+        registerCommand(new ExecCommand());
     }
     
     /**

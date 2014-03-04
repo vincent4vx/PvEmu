@@ -9,7 +9,7 @@ import org.mozilla.javascript.Script;
 import org.mozilla.javascript.Scriptable;
 
 public final class JsEngine {
-    private Context context;
+    //private Context context;
     private Scriptable scope;
     /**
      * Le path (relatif ou absolu) vers les scripts
@@ -40,13 +40,17 @@ public final class JsEngine {
     private HashMap<String, Script> cache = new HashMap<>();
     
     public JsEngine(){
-        context = Context.enter();
-        context.setLanguageVersion(JAVA_VERSION);
-        context.setOptimizationLevel(OPTIMIZATION_LEVEL);
-        context.getWrapFactory().setJavaPrimitiveWrap(false);
-        
-        scope = new ImporterTopLevel(context);
-        
+        Context context = Context.enter();
+        try{
+            context.setLanguageVersion(JAVA_VERSION);
+            context.setOptimizationLevel(OPTIMIZATION_LEVEL);
+            context.getWrapFactory().setJavaPrimitiveWrap(false);
+
+            //scope = context.initStandardObjects();
+            scope = new ImporterTopLevel(context);
+        }finally{
+            Context.exit();
+        }
         
         eval(
                 "var pvemu = Packages.org.pvemu;"
@@ -60,6 +64,7 @@ public final class JsEngine {
                 + "importPackage(commands);"
                 + "var actions = pvemu.actions;"
                 + "importPackage(actions);"
+                + "importPackage(jelly.utils);"
         );
     }
     
@@ -78,22 +83,27 @@ public final class JsEngine {
      * @throws Exception en cas d'erreur sur le script ou sur le fichier
      */
     public void loadScript(File file) throws Exception{
-        if(!COMPILE_SCRIPTS){
-            context.evaluateReader(scope, new FileReader(file), file.getName(), 1, null);
-            return;
+        try{
+            Context context = Context.enter();
+            if(!COMPILE_SCRIPTS){
+                context.evaluateReader(scope, new FileReader(file), file.getName(), 1, null);
+                return;
+            }
+
+            if(!cache.containsKey(file.getName())){
+                compileScript(file, context);
+            }
+            cache.get(file.getName()).exec(context, scope);
+        }finally{
+            Context.exit();
         }
-        
-        if(!cache.containsKey(file.getName())){
-            compileScript(file);
-        }
-        cache.get(file.getName()).exec(context, scope);
     }
     
     /**
      * Compile le fichier de script
      * @param scriptName nom du script à compiler
      */
-    private void compileScript(File file){        
+    private void compileScript(File file, Context context){        
         try{
             cache.put(file.getName(), context.compileReader(new FileReader(file), file.getName(), 1, null));
         }catch(Exception e){
@@ -109,6 +119,11 @@ public final class JsEngine {
      * @param code le code à exécuter
      */
     public void eval(String code){
-        context.evaluateString(scope, code, "<internal>", 1, null);
+        try{
+            Context context = Context.enter();
+            context.evaluateString(scope, code, "<internal>", 1, null);
+        }finally{
+            Context.exit();
+        }
     }
 }

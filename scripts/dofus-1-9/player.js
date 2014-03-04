@@ -13,8 +13,8 @@ var PlayerGenerator = JavaAdapter(generators.PlayerGenerator, {
                 + '0,'
                 + '0,'
                 + player.getID() + ';'
-                + jelly.Utils.implode(';', player.getColors()) + ';'
-                + player.getGMStuff() + ';'
+                + Utils.implode(';', player.getColors()) + ';'
+                + this.generateAccessories(player) + ';'
                 + (player.getLevel() > 99 ? '1' : '0') + ';' //aura
                 + ';' //emote
                 + ';' //emote timer
