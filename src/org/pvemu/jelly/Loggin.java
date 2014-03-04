@@ -160,6 +160,17 @@ public class Loggin {
         self.errors.log(Level.WARNING, msg, ex);
         self.errors_handler.flush();
     }
+    
+    /**
+     * Log pour les erreur quelconques, sans execption
+     * @param msg
+     * @param args 
+     */
+    static public void warning(String msg, Object... args){
+        ++ERROR_COUNT;
+        self.errors.log(Level.WARNING, String.format(msg, args));
+        self.errors_handler.flush();
+    }
 
     private static class ConsoleFormatter extends Formatter {
 

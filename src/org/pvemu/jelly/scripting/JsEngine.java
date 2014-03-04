@@ -14,7 +14,7 @@ public final class JsEngine {
     /**
      * Le path (relatif ou absolu) vers les scripts
      */
-    private final static String PATH = "scripts/";
+    final static String PATH = "scripts/";
     /**
      * Extension du javascript
      */
@@ -56,6 +56,10 @@ public final class JsEngine {
                 + "importPackage(jelly);"
                 + "importPackage(java.lang);"
                 + "importClass(jelly.scripting.API);"
+                + "var commands = pvemu.commands;"
+                + "importPackage(commands);"
+                + "var actions = pvemu.actions;"
+                + "importPackage(actions);"
         );
     }
     
@@ -65,33 +69,39 @@ public final class JsEngine {
      * @throws Exception en cas d'erreur sur le script ou sur le fichier
      */
     public void loadScript(String name) throws Exception{
+        loadScript(new File(PATH + name + EXT));
+    }
+    
+        /**
+     * Charge un fichier de script js
+     * @param file fichier de script
+     * @throws Exception en cas d'erreur sur le script ou sur le fichier
+     */
+    public void loadScript(File file) throws Exception{
         if(!COMPILE_SCRIPTS){
-            File script = new File(PATH + name + EXT);
-            context.evaluateReader(scope, new FileReader(script), name + EXT, 1, null);
+            context.evaluateReader(scope, new FileReader(file), file.getName(), 1, null);
             return;
         }
         
-        if(!cache.containsKey(name)){
-            compileScript(name);
+        if(!cache.containsKey(file.getName())){
+            compileScript(file);
         }
-        cache.get(name).exec(context, scope);
+        cache.get(file.getName()).exec(context, scope);
     }
     
     /**
      * Compile le fichier de script
      * @param scriptName nom du script à compiler
      */
-    private void compileScript(String scriptName){
-        File scriptFile = new File(PATH + scriptName + EXT);
-        
+    private void compileScript(File file){        
         try{
-            cache.put(scriptName, context.compileReader(new FileReader(scriptFile), scriptName + EXT, 1, null));
+            cache.put(file.getName(), context.compileReader(new FileReader(file), file.getName(), 1, null));
         }catch(Exception e){
-            Loggin.error("Impossible de compiler le script '" + scriptName + "'", e);
+            Loggin.error("Impossible de compiler le script '" + file.getName() + "'", e);
             return;
         }
         
-        Loggin.debug("Compilation du script '%s'", scriptName);
+        Loggin.debug("Compilation du script '%s'", file.getName());
     }
     
     /**

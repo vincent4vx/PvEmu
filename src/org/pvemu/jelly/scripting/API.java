@@ -1,5 +1,6 @@
 package org.pvemu.jelly.scripting;
 
+import java.io.File;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.Shell;
 
@@ -19,6 +20,22 @@ public class API {
             engine.loadScript(script_name);
         } catch (Exception ex) {
             Loggin.error("Erreur lors de l'execution du script '" + script_name + "'", ex);
+        }
+    }
+    
+    static public void execDir(String dirname){
+        File dir = new File(JsEngine.PATH + dirname);
+        
+        if(!dir.isDirectory()){
+            Loggin.warning("Répertoire '%s' inexistant !", dirname);
+        }
+        
+        for(File file : dir.listFiles()){
+            try {
+                engine.loadScript(file);
+            } catch (Exception ex) {
+                Loggin.error("Impossible de charger le fichier de script " + file.getName(), ex);
+            }
         }
     }
     
