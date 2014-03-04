@@ -126,7 +126,6 @@ game.chat.ChatHandler.instance().registerChannel({
         return '&'; //[id] du canal (BM[id]|[message])
     },
     post: function(msg, player){
-        packet.append('|').append(player.getID()).append('|').append(player.getName()).append('|').append(msg);
         GamePacketEnum.CHAT_MESSAGE_OK.sendToAll('|' + player.getID() + '|' + player.getName() + '|' + msg);
         Shell.println("Message envoyé à tous !");
     },
