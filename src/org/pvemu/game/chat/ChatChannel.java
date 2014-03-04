@@ -13,7 +13,7 @@ import org.pvemu.jelly.filters.Filter;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public interface ChatChanel {
+public interface ChatChannel {
     /**
      * Get the chanel id
      * @return chanel id

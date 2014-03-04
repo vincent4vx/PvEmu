@@ -15,22 +15,18 @@ import org.pvemu.network.game.GamePacketEnum;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class RecruitmentChanel implements ChatChanel {
+public class MapChannel implements ChatChannel {
 
     @Override
     public String id() {
-        return "?";
+        return "*";
     }
 
     @Override
     public void post(String msg, Player player) {
         StringBuilder packet = new StringBuilder(msg.length() + 20);
-        packet.append('?').append('|')
-                .append(player.getID()).append('|')
-                .append(player.getName()).append('|')
-                .append(msg);
-        
-        GamePacketEnum.CHAT_MESSAGE_OK.sendToAll(packet.toString());
+        packet.append('|').append(player.getID()).append('|').append(player.getName()).append('|').append(msg);
+        GamePacketEnum.CHAT_MESSAGE_OK.sendToMap(player.getMap(), packet.toString());
     }
 
     @Override

@@ -16,34 +16,34 @@ import org.pvemu.jelly.Loggin;
  */
 final public class ChatHandler {
     final static private ChatHandler instance = new ChatHandler();
-    final private HashMap<String, ChatChanel> chanels = new HashMap<>();
+    final private HashMap<String, ChatChannel> channels = new HashMap<>();
     
     private ChatHandler(){
-        registerChanel(new MapChanel());
-        registerChanel(new RecruitmentChanel());
+        registerChannel(new MapChannel());
+        registerChannel(new RecruitmentChannel());
     }
     
     public void parse(String[] args, Player player){
-        ChatChanel chanel = chanels.get(args[0]);
+        ChatChannel channel = channels.get(args[0]);
         
-        if(chanel == null){
-            Loggin.debug("Cannal de discution '%s' non trouvé !", args[0]);
+        if(channel == null){
+            Loggin.debug("Canal de discution '%s' non trouvé !", args[0]);
             return;
         }
             
-        if(!player.corresponds(chanel.conditions())){
+        if(!player.corresponds(channel.conditions())){
             return;
         }
         
-        chanel.post(args[1], player);
+        channel.post(args[1], player);
     }
     
     /**
      * Add a new chanel to chat system
-     * @param chanel the chanel to add
+     * @param channel the chanel to add
      */
-    public void registerChanel(ChatChanel chanel){
-        chanels.put(chanel.id(), chanel);
+    public void registerChannel(ChatChannel channel){
+        channels.put(channel.id(), channel);
     }
     
     static public ChatHandler instance(){
