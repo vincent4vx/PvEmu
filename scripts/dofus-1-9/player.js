@@ -25,7 +25,7 @@ var PlayerGenerator = JavaAdapter(generators.PlayerGenerator, {
     generateAs: function(player){
             var packet = '';
 
-            packet += '0' + '|' + '0' + '|' + '150' + '|'; //min xp | cur xp | max xp
+            packet += '0' + '|' + '0' + '|' + '150' + '|'; //cur xp | min xp | max xp
             packet += player.getPDVMax() + '|' + player.getPDVMax() + '|'; //cur pvd | max pdv
             packet += player.getTotalStats().get(Element.PA) + '|' + player.getTotalStats().get(Element.PM) + '|';
             packet += 18765 + '|'; //kamas
