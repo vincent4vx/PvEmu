@@ -9,7 +9,7 @@ import org.pvemu.game.objects.map.GMable;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.dep.Stats.Element;
 import org.pvemu.game.objects.inventory.Inventory;
-import org.pvemu.game.objects.inventory.InventoryAble;
+import org.pvemu.game.objects.inventory.Inventoryable;
 import org.pvemu.game.objects.map.MapCell;
 import java.util.Map.Entry;
 import org.pvemu.jelly.Loggin;
@@ -19,41 +19,36 @@ import org.pvemu.models.MapModel;
 import org.pvemu.models.NpcQuestion;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.Filterable;
 import org.pvemu.network.events.CharacterEvents;
-import org.pvemu.network.events.ObjectEvents;
+//import org.pvemu.network.events.ObjectEvents;
 import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
 
-public class Player extends Creature implements GMable, InventoryAble, Filterable {
+public class Player extends Creature implements GMable, Inventoryable, Filterable {
 
-    private Character _character;
-    private byte classID;
-    private byte sexe;
-    private int id;
+    final private Character character;
     private GameMap curMap;
     private MapCell curCell;
     private IoSession session = null;
     private String chanels = "*#$:?i^!%";
-    private Account _account;
+    final private Account account;
     public String restriction = "6bk";
     public Byte orientation = 2;
-    private Inventory _inventory;
+    final private Inventory inventory;
     private Stats stuffStats;
-    private GameActionHandler actions = new GameActionHandler();
+    final private GameActionHandler actions = new GameActionHandler();
     public NpcQuestion current_npc_question = null;
     private Exchange _exchange = null;
 
     public Player(Character c) {
-        _character = c;
+        character = c;
         gfxID = c.gfxid;
         level = c.level;
         name = c.name;
-        classID = c.classId;
-        sexe = c.sexe;
-        id = c.id;
         orientation = c.orientation;
 
         colors[0] = c.color1 == -1 ? "-1" : Integer.toHexString(c.color1);
@@ -69,9 +64,9 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
             curCell = curMap.getCellById(c.lastCell);
         }
 
-        _account = DAOFactory.account().getById(_character.accountId);
+        account = DAOFactory.account().getById(character.accountId);
 
-        _inventory = new Inventory(this);
+        inventory = new Inventory(this);
         loadStats();
     }
 
@@ -79,10 +74,10 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
      * Charge les stats du perso
      */
     private void loadStats() {
-        if (_character.baseStats == null || _character.baseStats.isEmpty()) {
+        if (character.baseStats == null || character.baseStats.isEmpty()) {
             ClassData.setStartStats(this);
         } else {
-            for (String data : _character.baseStats.split("\\|")) {
+            for (String data : character.baseStats.split("\\|")) {
                 try {
                     String[] arr = data.split(";");
                     int elemID = Integer.parseInt(arr[0]);
@@ -98,11 +93,15 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
     /**
      * Charge les stats du stuff
      */
-    private void loadStuffStats() {
+    public void loadStuffStats() {
         stuffStats = new Stats();
-        for (GameItem GI : _inventory.getItemsByPos().values()) {
-            if(GI.isWearable())
-                stuffStats.addAll(GI.getItemStats().getStats());
+        for (byte pos : inventory.getItemsByPos().keySet()) {
+            if(!ItemPosition.getByPosID(pos).isWearPlace())
+                continue;
+            
+            for(GameItem item : inventory.getItemsOnPos(pos)){
+                stuffStats.addAll(item.getStats());
+            }
         }
     }
 
@@ -131,7 +130,7 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
 
     public void setMap(GameMap map) {
         curMap = map;
-        _character.lastMap = map.getID();
+        character.lastMap = map.getID();
     }
 
     public MapCell getCell() {
@@ -140,24 +139,24 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
 
     public void setCell(MapCell cell) {
         curCell = cell;
-        _character.lastCell = cell.getID();
+        character.lastCell = cell.getID();
     }
 
     public Byte getClassID() {
-        return classID;
+        return character.classId;
     }
 
     public Byte getSexe() {
-        return sexe;
+        return character.sexe;
     }
 
     public Character getCharacter() {
-        return _character;
+        return character;
     }
 
     @Override
     public Integer getID() {
-        return id;
+        return character.id;
     }
 
     public IoSession getSession() {
@@ -169,7 +168,7 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
     }
 
     public Account getAccount() {
-        return _account;
+        return account;
     }
 
     /**
@@ -242,7 +241,7 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
      * @return
      */
     public String getChanels() {
-        return chanels + (_account.level > 0 ? "@¤" : "");
+        return chanels + (account.level > 0 ? "@¤" : "");
     }
 
     public void addChanel(char c) {
@@ -259,16 +258,16 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
      * @param data 
      */
     public void setStartPos(short[] data){
-        _character.startMap = data[0];
-        _character.startCell = data[1];
-        DAOFactory.character().update(_character);
+        character.startMap = data[0];
+        character.startCell = data[1];
+        DAOFactory.character().update(character);
     }
 
     /**
      * Prépare la déconnexion
      */
     public void logout() {
-        _character.logout();
+        character.logout();
     }
 
     /**
@@ -285,8 +284,8 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
 
     public int getUsedPods() {
         int pods = 0;
-        for (GameItem GI : _inventory.getItems()) {
-            pods += GI.getPods();
+        for (GameItem item : inventory.getItems()) {
+            pods += item.getPods();
         }
         return pods;
     }
@@ -295,7 +294,7 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
      * Sauvegarde le personnage
      */
     public synchronized void save(){
-        Loggin.debug("Sauvegarde de %s", _character.name);
+        Loggin.debug("Sauvegarde de %s", character.name);
         StringBuilder stats = new StringBuilder();
         
         for(Entry<Element, Short> e : baseStats.getAll()){
@@ -306,17 +305,17 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
             stats.append(e.getKey().getId(false)).append(';').append(val).append('|');
         }
         
-        _character.baseStats = stats.toString();
-        _inventory.save();
+        character.baseStats = stats.toString();
+        inventory.save();
         
-        _character.orientation = orientation;
+        character.orientation = orientation;
         
-        DAOFactory.character().update(_character);
+        DAOFactory.character().update(character);
     }
 
     @Override
     public Inventory getInventory() {
-        return _inventory;
+        return inventory;
     }
 
     @Override
@@ -324,13 +323,13 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
         return 1;
     }
 
-    @Override
+    /*@Override
     public void onQuantityChange(int id, int qu) {
         ObjectEvents.onQuantityChange(session, id, qu);
     }
 
     @Override
-    public void onAddItem(GameItem GI) {
+    public void onAddItem(OldGameItem GI) {
         ObjectEvents.onAdd(session, GI);
     }
 
@@ -340,13 +339,13 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
     }
 
     @Override
-    public void onMoveItemSuccess(GameItem GI, byte pos) {
+    public void onMoveItemSuccess(OldGameItem GI, byte pos) {
         if(GI.isWearable()){
             loadStuffStats();
             CharacterEvents.onStatsChange(session, this);
             ObjectEvents.onWeightChange(session, this);
         }
-        if(GI.isWearable() && (pos == GameItem.POS_ARME || pos == GameItem.POS_COIFFE || pos == GameItem.POS_CAPE || pos == GameItem.POS_FAMILIER || pos == -1)){
+        if(GI.isWearable() && (pos == OldGameItem.POS_ARME || pos == OldGameItem.POS_COIFFE || pos == OldGameItem.POS_CAPE || pos == OldGameItem.POS_FAMILIER || pos == -1)){
             //ObjectEvents.onAccessoriesChange(this);
             GameSendersRegistry.getObject().accessories(this);
         }
@@ -355,13 +354,7 @@ public class Player extends Creature implements GMable, InventoryAble, Filterabl
     @Override
     public void onMoveItem(int id, byte pos) {
         ObjectEvents.onMove(session, id, pos);
-    }
-
-    @Override
-    public boolean canMoveItem(GameItem GI, int qu, byte pos) {
-        
-        return true;
-    }
+    }*/
     
     /**
      * Retourne le GameActionHandler du joueur

@@ -1,7 +1,5 @@
 package org.pvemu.models;
 
-import org.pvemu.game.objects.item.GameItem;
-import org.pvemu.game.objects.item.ItemStats;
 import org.pvemu.jelly.database.Model;
 
 public class InventoryEntry implements Model {
@@ -15,30 +13,30 @@ public class InventoryEntry implements Model {
     
     public static final byte OWNER_PLAYER = 1;
     
-    private GameItem gameItem = null;
-    private ItemStats itemStats = null;
+    /*private OldGameItem gameItem = null;
+    private ItemStats itemStats = null;*/
     
     /**
      * génère l'item
      * @return 
      */
-    public ItemStats getItemStats(){
+    /*public ItemStats getItemStats(){
         if(itemStats == null){
             itemStats = new ItemStats(this);
         }
         return itemStats;
-    }
+    }*/
     
     /**
      * Génère l'item utilisable IG
      * @return 
      */
-    public GameItem getGameItem(){
+    /*public OldGameItem getGameItem(){
         if(gameItem == null){
-            gameItem = new GameItem(this);
+            gameItem = new OldGameItem(this);
         }
         return gameItem;
-    }
+    }*/
     
     @Override
     public int getPk() {

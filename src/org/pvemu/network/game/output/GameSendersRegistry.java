@@ -16,6 +16,28 @@ public class GameSendersRegistry {
     private static ObjectSender object = null;
     private static AccountSender account = null;
     private static MapSender map = null;
+    private static PlayerSender player = null;
+
+    /**
+     * Get the value of player
+     *
+     * @return the value of player
+     */
+    public static PlayerSender getPlayer() {
+        if(player == null)
+            player = new PlayerSender();
+        return player;
+    }
+
+    /**
+     * Set the value of player
+     *
+     * @param player new value of player
+     */
+    public static void setPlayer(PlayerSender player) {
+        GameSendersRegistry.player = player;
+    }
+
 
     /**
      * Get the value of map

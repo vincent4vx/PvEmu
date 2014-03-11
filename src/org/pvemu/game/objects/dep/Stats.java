@@ -1,9 +1,10 @@
 package org.pvemu.game.objects.dep;
 
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.Shell;
 import org.pvemu.jelly.Shell.GraphicRenditionEnum;
@@ -39,8 +40,9 @@ public class Stats{
         PODS(new int[]{158}, new int[]{159}),
         PROSPEC(new int[]{176}, new int[]{177}),
         INVOC(new int[]{182}, new int[]{}),;
-        private int[] add_id;
-        private int[] rem_id;
+        
+        final private int[] add_id;
+        final private int[] rem_id;
 
         Element(int[] add_id, int[] rem_id) {
             this.add_id = add_id;
@@ -74,8 +76,17 @@ public class Stats{
             return -1;
         }
     }
+    
     private static final HashMap<Integer, Element> intToElement = new HashMap<>();
-    private ConcurrentHashMap<Element, Short> stats = new ConcurrentHashMap<>();
+    final private EnumMap<Element, Short> stats;
+    
+    public Stats(){
+        stats = new EnumMap<>(Element.class);
+    }
+    
+    public Stats(Stats other){
+        stats = new EnumMap<>(other.stats);
+    }
 
     /**
      * Ajoute qu Element aux stats courentes
@@ -176,4 +187,24 @@ public class Stats{
         }
         Shell.println(num + " éléments chargées !", GraphicRenditionEnum.GREEN);
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 37 * hash + Objects.hashCode(this.stats);
+        return hash;
+    }   
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Stats other = (Stats) obj;
+        return Objects.equals(this.stats, other.stats);
+    }
+    
 }

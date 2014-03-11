@@ -4,10 +4,11 @@
  */
 package org.pvemu.network.generators;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import org.pvemu.game.objects.Player;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
+import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.utils.Utils;
 
@@ -89,29 +90,45 @@ public class PlayerGenerator {
     
     public String generateAccessories(Player p){
         StringBuilder s = new StringBuilder();
-        HashMap<Byte, GameItem> wornItems = p.getInventory().getItemsByPos();
+        //HashMap<Byte, OldGameItem> wornItems = p.getInventory().getItemsByPos();
 
-        if (wornItems.containsKey(GameItem.POS_ARME)) {
-            s.append(Integer.toHexString(wornItems.get(GameItem.POS_ARME).getItemStats().getID()));
+        /*if (wornItems.containsKey(OldGameItem.POS_ARME) {
+            s.append(Integer.toHexString(wornItems.get(OldGameItem.POS_ARME).getItemStats().getID()));
         }
         s.append(',');
-        if (wornItems.containsKey(GameItem.POS_COIFFE)) {
-            s.append(Integer.toHexString(wornItems.get(GameItem.POS_COIFFE).getItemStats().getID()));
+        if (wornItems.containsKey(OldGameItem.POS_COIFFE)) {
+            s.append(Integer.toHexString(wornItems.get(OldGameItem.POS_COIFFE).getItemStats().getID()));
         }
         s.append(',');
-        if (wornItems.containsKey(GameItem.POS_CAPE)) {
-            s.append(Integer.toHexString(wornItems.get(GameItem.POS_CAPE).getItemStats().getID()));
+        if (wornItems.containsKey(OldGameItem.POS_CAPE)) {
+            s.append(Integer.toHexString(wornItems.get(OldGameItem.POS_CAPE).getItemStats().getID()));
         }
         s.append(',');
-        if (wornItems.containsKey(GameItem.POS_FAMILIER)) {
-            s.append(Integer.toHexString(wornItems.get(GameItem.POS_FAMILIER).getItemStats().getID()));
+        if (wornItems.containsKey(OldGameItem.POS_FAMILIER)) {
+            s.append(Integer.toHexString(wornItems.get(OldGameItem.POS_FAMILIER).getItemStats().getID()));
         }
         s.append(',');
-        if (wornItems.containsKey(GameItem.POS_BOUCLIER)) {
-            s.append(wornItems.get(GameItem.POS_BOUCLIER).getItemStats().getID());
+        if (wornItems.containsKey(OldGameItem.POS_BOUCLIER)) {
+            s.append(wornItems.get(OldGameItem.POS_BOUCLIER).getItemStats().getID());
+        }*/
+        
+        for(ItemPosition pos : ItemPosition.getAccessoriePositions()){
+            ArrayList<GameItem> items = p.getInventory().getItemsOnPos(pos);
+            
+            if(!items.isEmpty())
+                s.append(Integer.toHexString(items.get(0).getTemplate().id));
+            
+            s.append(',');
         }
 
         return s.toString();
+    }
+    
+    public String generateUpdateAccessories(Player player){
+        return new StringBuilder().append(player.getID())
+                .append('|')
+                .append(generateAccessories(player))
+                .toString();
     }
 
     public String generateAs(Player p) {        
@@ -170,5 +187,17 @@ public class PlayerGenerator {
 
 
         return ASData.toString();
+    }
+    
+    public String generateWeightUsed(Player player){
+        return new StringBuilder(10).append(player.getUsedPods()).append('|').append(player.getTotalPods()).toString();
+    }
+    
+    public String generateSelectionOk(Player player){
+        return new StringBuilder(50).append('|').append(player.getID()).append("|").append(player.getName()).append("|")
+                    .append(player.getLevel()).append("|").append(player.getClassID()).append("|")
+                    .append(player.getSexe()).append("|").append(player.getGfxID()).append("|")
+                    .append(Utils.implode("|", player.getColors())).append("|")
+                    .append(GeneratorsRegistry.getObject().generateInventory(player.getInventory())).toString();
     }
 }

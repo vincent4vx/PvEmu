@@ -16,6 +16,28 @@ public class GeneratorsRegistry {
     private static ObjectGenerator object = null;
     private static AccountGenerator account = null;
     private static MapGenerator map = null;
+    private static CharacterGenerator character = null;
+
+    /**
+     * Get the value of character
+     *
+     * @return the value of character
+     */
+    public static CharacterGenerator getCharacter() {
+        if(character == null)
+            character = new CharacterGenerator();
+        return character;
+    }
+
+    /**
+     * Set the value of character
+     *
+     * @param character new value of character
+     */
+    public static void setCharacter(CharacterGenerator character) {
+        GeneratorsRegistry.character = character;
+    }
+
 
     /**
      * Get the value of map

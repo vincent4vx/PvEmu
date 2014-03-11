@@ -4,12 +4,14 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.objects.item;
+package org.pvemu.actions;
+
+import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.item.GameItem;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public interface Wearable {
-    
+public class ObjectActions {
 }

@@ -31,7 +31,7 @@ public class AccountGenerator {
             sb.append((c.color1 != -1 ? Integer.toHexString(c.color1) : "-1")).append(';');
             sb.append((c.color2 != -1 ? Integer.toHexString(c.color2) : "-1")).append(';');
             sb.append((c.color3 != -1 ? Integer.toHexString(c.color3) : "-1")).append(';');
-            sb.append(c.getAccessories()).append(';');
+            sb.append(GeneratorsRegistry.getCharacter().generateAccessories(c)).append(';');
             sb.append(0).append(';');
             sb.append("1;");//ServerID
             sb.append(';');//DeathCount	this.deathCount;

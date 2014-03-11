@@ -6,7 +6,8 @@
 
 package org.pvemu.network.game.output;
 
-import org.pvemu.game.objects.Player;
+import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
@@ -15,10 +16,29 @@ import org.pvemu.network.generators.GeneratorsRegistry;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class ObjectSender {
-    public void accessories(Player player){
-        GamePacketEnum.OBJECT_ACCESSORIES.sendToMap(
-                player.getMap(), 
-                GeneratorsRegistry.getObject().generateUpdateAccessories(player)
+    
+    public void moveItem(GameItem item, IoSession session){
+        GamePacketEnum.OBJECT_MOVE.send(
+                session,
+                GeneratorsRegistry.getObject().generateMoveItem(item)
         );
+    }
+    
+    public void quantityChange(GameItem item, IoSession session){
+        GamePacketEnum.OBJECT_QUANTITY.send(
+                session,
+                GeneratorsRegistry.getObject().generateQuantityChange(item)
+        );
+    }
+    
+    public void addItem(GameItem item, IoSession session){
+        GamePacketEnum.OBJECT_ADD_OK.send(
+                session,
+                GeneratorsRegistry.getObject().generateInventoryEntry(item.getEntry())
+        );
+    }
+    
+    public void removeItem(GameItem item, IoSession session){
+        GamePacketEnum.OBJECT_REMOVE.send(session, item.getID());
     }
 }

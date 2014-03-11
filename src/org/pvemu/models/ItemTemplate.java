@@ -1,6 +1,6 @@
 package org.pvemu.models;
 
-import org.pvemu.game.objects.item.ItemStats;
+//import org.pvemu.game.objects.item.ItemStats;
 import org.pvemu.jelly.database.Model;
 
 public class ItemTemplate implements Model {
@@ -15,13 +15,13 @@ public class ItemTemplate implements Model {
     public String condition;
     public String weaponData;
     
-    public ItemStats createItem(){
+/*    public ItemStats createItem(){
         return new ItemStats(this);
     }
     
     public ItemStats createItem(boolean max){
         return new ItemStats(this, max);
-    }
+    }*/
 
     @Override
     public int getPk() {

@@ -14,6 +14,25 @@ public class ActionsRegistry {
     
     private static MapActions map = new MapActions();
     private static PlayerActions player = new PlayerActions();
+    private static ObjectActions object = new ObjectActions();
+
+    /**
+     * Get the value of object
+     *
+     * @return the value of object
+     */
+    public static ObjectActions getObject() {
+        return object;
+    }
+
+    /**
+     * Set the value of object
+     *
+     * @param object new value of object
+     */
+    public static void setObject(ObjectActions object) {
+        ActionsRegistry.object = object;
+    }
 
     /**
      * Get the value of player

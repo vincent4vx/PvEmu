@@ -8,10 +8,13 @@ package org.pvemu.network.game.input;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.inventory.Inventory.MoveState;
+import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -46,13 +49,38 @@ public class MoveObjectPacket implements InputPacket {
             return;
         }
         
-        boolean result = p.getInventory().moveItem(id, qu, target);
+        //boolean result = p.getInventory().moveItem(id, qu, target);
+        GameItem item = p.getInventory().getItemById(id);
         
-        if(!result){
-            Loggin.debug("Erreur lors du déplacement de l'objet %d", id);
-        }else{
-            Loggin.debug("Déplacement de l'objet %d OK !", id);
+        if(item == null){
+            Loggin.debug("objet %d introuvable", id);
+            return;
         }
+        
+        MoveState state = p.getInventory().moveItem(item, qu, target);
+        
+        if(state == MoveState.ERROR){
+            Loggin.debug("Impossible de déplacer l'item %d", id);
+            return;
+        }
+        
+        if(state == MoveState.ADD){
+            GameSendersRegistry.getObject().addItem(item, session);
+        }else if(state == MoveState.STACK){
+            GameSendersRegistry.getObject().quantityChange(item, session);
+        }else if(state == MoveState.MOVE){
+            GameSendersRegistry.getObject().moveItem(item, session);
+        }
+        
+        if(item.isWearable()){
+            p.loadStuffStats();
+            GameSendersRegistry.getPlayer().weightUsed(p, session);
+            
+            if(item.isAccessorie())
+                GameSendersRegistry.getPlayer().accessories(p);
+        }
+        
+        Loggin.debug("Objet %d déplacé avec succès !", id);
         
     }
     

@@ -5,7 +5,7 @@
 package org.pvemu.models;
 
 import org.pvemu.game.World;
-import org.pvemu.game.objects.item.GameItem;
+//import org.pvemu.game.objects.item.OldGameItem;
 import org.pvemu.game.objects.Player;
 import java.util.HashMap;
 import org.pvemu.jelly.Jelly;
@@ -58,30 +58,30 @@ public class Character implements org.pvemu.jelly.database.Model {
         return perso.toString();
     }*/
     
-    @Deprecated
+    /*@Deprecated
     public String getAccessories(){
         StringBuilder sb = new StringBuilder();
         
         HashMap<Byte, Integer> accessories = DAOFactory.inventory().getAccessoriesByPlayerId(id);
         
-        if(accessories.containsKey(GameItem.POS_ARME)){
-            sb.append(Integer.toHexString(accessories.get(GameItem.POS_ARME)));
+        if(accessories.containsKey(OldGameItem.POS_ARME)){
+            sb.append(Integer.toHexString(accessories.get(OldGameItem.POS_ARME)));
         }
         sb.append(',');
-        if(accessories.containsKey(GameItem.POS_COIFFE)){
-            sb.append(Integer.toHexString(accessories.get(GameItem.POS_COIFFE)));
+        if(accessories.containsKey(OldGameItem.POS_COIFFE)){
+            sb.append(Integer.toHexString(accessories.get(OldGameItem.POS_COIFFE)));
         }
         sb.append(',');
-        if(accessories.containsKey(GameItem.POS_CAPE)){
-            sb.append(Integer.toHexString(accessories.get(GameItem.POS_CAPE)));
+        if(accessories.containsKey(OldGameItem.POS_CAPE)){
+            sb.append(Integer.toHexString(accessories.get(OldGameItem.POS_CAPE)));
         }
         sb.append(',');
-        if(accessories.containsKey(GameItem.POS_FAMILIER)){
-            sb.append(Integer.toHexString(accessories.get(GameItem.POS_FAMILIER)));
+        if(accessories.containsKey(OldGameItem.POS_FAMILIER)){
+            sb.append(Integer.toHexString(accessories.get(OldGameItem.POS_FAMILIER)));
         }
         
         return sb.toString();
-    }
+    }*/
 
     public Player getPlayer() {
         if (_player == null) {

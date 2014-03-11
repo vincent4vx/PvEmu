@@ -9,7 +9,7 @@ public abstract class Creature {
     protected Stats baseStats = new Stats();
     protected short level;
     protected short gfxID;
-    protected ArrayList<SpellStats> _spells;
+    protected ArrayList<SpellStats> spells;
     protected String[] colors = new String[3];
     protected String name;
 

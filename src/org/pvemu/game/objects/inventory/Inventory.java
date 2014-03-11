@@ -1,172 +1,247 @@
 package org.pvemu.game.objects.inventory;
 
-import org.pvemu.game.objects.item.ItemStats;
-import org.pvemu.game.objects.item.GameItem;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.game.objects.item.GameItem;
+import org.pvemu.game.objects.item.ItemPosition;
+import org.pvemu.game.objects.item.factory.ItemsFactory;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.dao.DAOFactory;
 
-public class Inventory {
-    private HashMap<Integer, GameItem> items = new HashMap<>();
-    private HashMap<ItemStats, GameItem> itemsByStats = new HashMap<>();
-    private HashMap<Byte, GameItem> itemsByPos = new HashMap<>();
-    private InventoryAble owner;
+final public class Inventory {
+    static public enum MoveState{
+        MOVE, STACK, ADD, DELETE, ERROR
+    }
     
-    public Inventory(InventoryAble owner){
+    final private HashMap<Integer, GameItem> items = new HashMap<>();
+    final private HashMap<Byte, ArrayList<GameItem>> itemsByPos = new HashMap<>();
+    final private Inventoryable owner;
+    
+    public Inventory(Inventoryable owner){
         this.owner = owner;
         
-        for(InventoryEntry IE : DAOFactory.inventory().getByOwner(owner.getOwnerType(), owner.getID())){
-            GameItem GI = IE.getGameItem();
-            items.put(GI.getID(), GI);
-            itemsByStats.put(GI.getItemStats(), GI);
+        for(InventoryEntry entry : DAOFactory.inventory().getByOwner(owner.getOwnerType(), owner.getID())){
+            GameItem item = ItemsFactory.recoverItem(entry);
             
-            if(IE.position != -1){
-                if(!GI.canMove(IE.position)){
-                    GI.changePos((byte)-1);
-                    continue;
-                }
-                itemsByPos.put(IE.position, GI);
+            if(addOrStackItem(item) == MoveState.ERROR){
+                item.getEntry().position = ItemPosition.DEFAULT_POSITION;
+                addOrStackItem(item);
+                save(item);
             }
         }
     }
     
-    /**
-     * Ajoute l'item à l'inventaire
-     * @param IS
-     * @param qu 
-     */
-    public void addItem(ItemStats IS, int qu){
-        if(itemsByStats.containsKey(IS)){
-            GameItem GI = itemsByStats.get(IS);
-            GI.addQuantity(qu);
-            owner.onQuantityChange(GI.getID(), GI.getInventoryEntry().qu);
-        }else{
-            GameItem GI = new GameItem(owner, IS, qu, (byte)-1);
-            addGameItem(GI);
-        }
-    }
-    
-    private void addGameItem(GameItem GI){
-        items.put(GI.getID(), GI);
-        itemsByStats.put(GI.getItemStats(), GI);
+    public MoveState addOrStackItem(GameItem item){
+        if(!canAddItem(item))
+            return MoveState.ERROR;
         
-        if(GI.getInventoryEntry().position != -1){
-            itemsByPos.put(GI.getInventoryEntry().position, GI);
+        GameItem other = getSameItem(item);
+        
+        if(other == null){
+            addGameItem(item);
+            return MoveState.ADD;
         }
-        owner.onAddItem(GI);
+        
+        stackGameItem(item, other);
+        return MoveState.STACK;
     }
     
     /**
-     * Déplace l'item demandé si possible
-     * @param id
-     * @param qu
-     * @param pos
-     * @return 
+     * Test if the item can be add to the inventory
+     * @param item the item to test
+     * @return true if it can be add
      */
-    public boolean moveItem(int id, int qu, byte pos){
-        GameItem GI = items.get(id);
+    public boolean canAddItem(GameItem item){
+        return canMoveItem(item, item.getEntry().position);
+    }
+    
+    /**
+     * Test if the item can be move to the position
+     * @param item item to test
+     * @param position the target position
+     * @return true if ok
+     */
+    public boolean canMoveItem(GameItem item, byte position){
+        ItemPosition pos = ItemPosition.getByPosID(position);
         
-        if(GI == null){
+        if(!pos.isValidPosition(item))
             return false;
+        
+        if(pos.isMultiplePlace()) //can have multiple items in this position
+            return true;
+        
+        ArrayList<GameItem> itemsInPos = itemsByPos.get(position);
+        
+        if(itemsInPos == null || itemsInPos.isEmpty()) //the place is free
+            return true;
+        
+        return !pos.isWearPlace() && itemsInPos.get(0).isSameItem(item); //need stack
+    }
+    
+    /**
+     * Test if there are same item in inventory
+     * @param item the item to test
+     * @return true if exists same item
+     */
+    public boolean isItemExists(GameItem item){
+        return getSameItem(item) != null;
+    }
+    
+    private GameItem getSameItem(GameItem item){
+        return getSameItemInPos(item, item.getEntry().position);
+    }
+    
+    private GameItem getSameItemInPos(GameItem item, byte position){
+        for(GameItem other : getItemsOnPos(position)){
+            if(item.isSameItem(other))
+                return other;
         }
         
-        if(!GI.canMove(pos)){
+        return null;
+    }
+    
+    /**
+     * Stack the item if possible
+     * @param item the item to stack
+     * @return true on success
+     */
+    public boolean stackItem(GameItem item){
+        if(!canAddItem(item))
             return false;
-        }
         
-        if(itemsByPos.containsKey(pos)){
-            moveGameItem(itemsByPos.get(pos), (byte)-1);
-        }
+        GameItem other = getSameItem(item);
         
-        if(!owner.canMoveItem(GI, qu, pos)){
+        if(other == null)
             return false;
-        }
         
-        if(qu < 1){
-            qu = 1;
-        }
-        
-        if(qu > GI.getInventoryEntry().qu){
-            qu = GI.getInventoryEntry().qu;
-        }
-        
-        if(qu == GI.getInventoryEntry().qu){
-            GI = moveGameItem(GI, pos);
-        }else{
-            GameItem nGI = new GameItem(owner, GI.getItemStats(), qu, pos);
-            GI.addQuantity(-qu);
-            owner.onQuantityChange(GI.getID(), GI.getInventoryEntry().qu);
-            addGameItem(nGI);
-        }
-        
-        owner.onMoveItemSuccess(GI, pos);
+        stackGameItem(item, other);
         return true;
     }
     
     /**
-     * Déplace tout les items du GI
-     * @param GI
-     * @param pos 
+     * Add the item if possible
+     * @param item the item to add
+     * @return true on success
      */
-    public GameItem moveGameItem(GameItem GI, byte pos){
-        byte lastPos = GI.getInventoryEntry().position;
+    public boolean addItem(GameItem item){
+        if(!canAddItem(item))
+            return false;
         
-        if(lastPos != -1){
-            itemsByPos.remove(lastPos);
+        if(getSameItem(item) != null) //need stack
+            return false;
+        
+        addGameItem(item);
+        return false;
+    }
+    
+    /**
+     * Add the game item to inventory
+     * @warning this method don't test if the item is valid !
+     * @param item the item to add
+     */
+    private void addGameItem(GameItem item){
+        items.put(item.getID(), item);
+        
+        ArrayList<GameItem> list = itemsByPos.get(item.getEntry().position);
+        
+        if(list == null){
+            list = new ArrayList<>();
+            itemsByPos.put(item.getEntry().position, list);
         }
         
-        itemsByStats.remove(GI.getItemStats());
-        GI.changePos(pos);
+        list.add(item);
+    }
+    
+    /**
+     * Stack the src game item to the dest game item
+     * @warning this method don't test if the item is valid !
+     * @param src the item to stack
+     * @param dest the stack item
+     */
+    private void stackGameItem(GameItem src, GameItem dest){
+        dest.getEntry().qu += src.getEntry().qu;
+        delete(src);
+    }
+    
+    /**
+     * Move the item to dest_pos
+     * @param item item to move
+     * @param dest_qu quantity to move
+     * @param dest_pos the target position
+     * @return the state of the move
+     */
+    public MoveState moveItem(GameItem item, int dest_qu, byte dest_pos){
+        if(dest_pos == item.getEntry().position 
+                || !canMoveItem(item, dest_pos)
+                || !items.containsValue(item)
+                || item.getEntry().qu > dest_qu)
+            return MoveState.ERROR;
         
-        if(itemsByStats.containsKey(GI.getItemStats())){
-            GameItem oGI = itemsByStats.get(GI.getItemStats());
-            oGI.addQuantity(GI.getInventoryEntry().qu);
-            owner.onQuantityChange(oGI.getID(), oGI.getInventoryEntry().qu);
-            GI.changePos(lastPos);
-            deleteGameItem(GI);
-            return oGI;
+        GameItem newItem;
+        if(dest_qu == item.getEntry().qu){
+            getItemsOnPos(item.getEntry().position).remove(item);
+            item.getEntry().position = dest_pos;
+            newItem = item;
         }else{
-            if(pos != -1){
-                itemsByPos.put(pos, GI);
-            }
-            itemsByStats.put(GI.getItemStats(), GI);
-            owner.onMoveItem(GI.getID(), pos);
-            return GI;
+            newItem = ItemsFactory.copyItem(item, owner, dest_qu, dest_pos);
+            item.getEntry().qu -= dest_qu;
         }
+        
+        MoveState state = addOrStackItem(newItem);
+        
+        if(newItem == item && state == MoveState.ADD)
+            return MoveState.MOVE;
+        
+        return state;
     }
     
-    private void deleteGameItem(GameItem GI){
-        Loggin.debug("Delete de l'item %d", GI.getID());
-        int id = GI.getID();
-        items.remove(id);
-        itemsByStats.remove(GI.getItemStats());
-        itemsByPos.remove(GI.getInventoryEntry().position);
-        GI.delete();
-        owner.onDeleteItem(id);
-    }
-    
-    public HashMap<Byte, GameItem> getItemsByPos(){
+    public HashMap<Byte, ArrayList<GameItem>> getItemsByPos(){
         return itemsByPos;
     }
     
+    /**
+     * Get the list of items
+     * @return 
+     */
     public Collection<GameItem> getItems(){
         return items.values();
     }
     
     /**
-     * Retourne l'item à la position indiqué
-     * @param pos
-     * @return 
+     * Get the list of items at pos
+     * @param pos the position of items
+     * @return the list of the items
      */
-    public GameItem getItemByPos(byte pos){
-        return itemsByPos.get(pos);
+    public ArrayList<GameItem> getItemsOnPos(byte pos){
+        ArrayList<GameItem> list = itemsByPos.get(pos);
+        
+        if(list == null){
+            list = new ArrayList<>();
+            itemsByPos.put(pos, list);
+        }
+        
+        return list;
     }
     
     /**
-     * Retourne l'item
-     * @param id
+     * Get the list of items at pos
+     * @param pos the position of items
+     * @return the list of the items
+     */
+    public ArrayList<GameItem> getItemsOnPos(ItemPosition pos){
+        ArrayList<GameItem> list = new ArrayList<>();
+        
+        for(byte posID : pos.getPosIds()){
+            list.addAll(getItemsOnPos(posID));
+        }
+        
+        return list;
+    }
+    
+    /**
+     * Get the item
+     * @param id id of the item
      * @return 
      */
     public GameItem getItemById(int id){
@@ -174,35 +249,29 @@ public class Inventory {
     }
     
     /**
-     * Indique si la place est disponible ou non (déjà prise)
-     * @param pos
-     * @return 
-     */
-    public boolean isAvailable(byte pos){
-        return !itemsByPos.containsKey(pos);
-    }
-    
-    /**
-     * Génère les données à envoyer au client
-     * @return 
-     */
-    @Override
-    public String toString(){
-        StringBuilder sb = new StringBuilder();
-        
-        for(GameItem GI : items.values()){
-            sb.append(GI.toString()).append(';');
-        }
-        
-        return sb.toString();
-    }
-    
-    /**
-     * Sauvegarde l'inventaire
+     * Save all the inventory
      */
     public void save(){
-        for(GameItem GI : items.values()){
-            DAOFactory.inventory().update(GI.getInventoryEntry());
+        for(GameItem item : items.values()){
+            save(item);
         }
+    }
+    
+    /**
+     * Save the item
+     * @param item item to save
+     */
+    private void save(GameItem item){
+        DAOFactory.inventory().update(item.getEntry());
+    }
+    
+    /**
+     * Delete the item
+     * @param item item to delete
+     */
+    private void delete(GameItem item){
+        items.remove(item.getID());
+        itemsByPos.get(item.getEntry().position).remove(item);
+        DAOFactory.inventory().delete(item.getEntry());
     }
 }

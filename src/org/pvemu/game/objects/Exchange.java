@@ -4,12 +4,12 @@ import org.pvemu.game.objects.item.GameItem;
 import java.util.HashMap;
 
 public class Exchange {
-    private Player _owner, _target;
-    private HashMap<Integer, Integer> pendingItems = new HashMap<>();
+    final private Player owner, target;
+    final private HashMap<Integer, Integer> pendingItems = new HashMap<>();
     
     public Exchange(Player owner, Player target){
-        _owner = owner;
-        _target = target;
+        this.owner = owner;
+        this.target = target;
     }
     
     /**
@@ -17,7 +17,7 @@ public class Exchange {
      * @return 
      */
     public Player getTarget(){
-        return _target;
+        return target;
     }
     
     /**
@@ -27,9 +27,9 @@ public class Exchange {
      * @return -1 en cas d'erreur, la nouvelle quantité sinon
      */
     public int addItem(int itemID, int qu){
-        GameItem GI = _owner.getInventory().getItemById(itemID);
+        GameItem item = owner.getInventory().getItemById(itemID);
         
-        if(GI == null){
+        if(item == null){
             return -1;
         }
         
@@ -39,7 +39,7 @@ public class Exchange {
         
         int lastQu = pendingItems.containsKey(itemID) ? pendingItems.get(itemID) : 0;
         
-        if(qu > GI.getInventoryEntry().qu - lastQu){
+        if(qu > item.getEntry().qu - lastQu){
             return -1;
         }
         

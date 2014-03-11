@@ -8,11 +8,12 @@ package org.pvemu.network.game.input;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.Player;
-import org.pvemu.game.objects.item.ItemStats;
+import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
+import org.pvemu.network.generators.GeneratorsRegistry;
 
 /**
  *
@@ -63,8 +64,10 @@ public class ExchangeMovePacket implements InputPacket {
                 }
                 
                 String p1 = qu == 0 ? "O-" + itemID : new StringBuilder().append("O+").append(itemID).append('|').append(qu).toString();
-                ItemStats IS = p.getInventory().getItemById(itemID).getItemStats();
-                String p2 = qu == 0 ? p1 : new StringBuilder().append(p1).append('|').append(IS.getID()).append('|').append(IS.statsToString()).toString();
+                //ItemStats IS = p.getInventory().getItemById(itemID).getItemStats();
+                GameItem item = p.getInventory().getItemById(itemID);
+                //String p2 = qu == 0 ? p1 : new StringBuilder().append(p1).append('|').append(IS.getID()).append('|').append(IS.statsToString()).toString();
+                String p2 = qu == 0 ? p1 : new StringBuilder().append(p1).append('|').append(item.getTemplate().id).append('|').append(GeneratorsRegistry.getObject().generateStats(item.getStats())).toString();
                 
                 GamePacketEnum.EXCHANGE_LOCAL_MOVE_OK.send(session, p1);
                 GamePacketEnum.EXCHANGE_DISTANT_MOVE_OK.send(p.getExchange().getTarget().getSession(), p2);

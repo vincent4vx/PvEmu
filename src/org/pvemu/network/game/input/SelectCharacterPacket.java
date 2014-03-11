@@ -17,6 +17,7 @@ import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.GameServer;
+import org.pvemu.network.generators.GeneratorsRegistry;
 
 /**
  *
@@ -70,17 +71,7 @@ public class SelectCharacterPacket implements InputPacket {
 
                 World.instance().addOnline(p);
 
-                //génération du packet ASK
-                StringBuilder param = new StringBuilder();
-
-                param.append('|').append(chr.id).append("|").append(chr.name).append("|")
-                        .append(chr.level).append("|").append(chr.classId).append("|")
-                        .append(chr.sexe).append("|").append(chr.gfxid).append("|")
-                        .append(Utils.implode("|", p.getColors())).append("|");
-
-                param.append(p.getInventory().toString());
-
-                GamePacketEnum.SELECT_CHARACTER_OK.send(session, param.toString());
+                GamePacketEnum.SELECT_CHARACTER_OK.send(session, GeneratorsRegistry.getPlayer().generateSelectionOk(p));
             } else { //vielles version (cf: 1.09.1), envoit les ids du game
                 String ticket = acc.setWaiting();
                 GamePacketEnum.SELECT_CHARACTER_OK.send(session, GameServer.CRYPT_IP + ticket);

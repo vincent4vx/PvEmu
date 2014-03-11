@@ -1,11 +1,11 @@
 package org.pvemu.models.dao;
 
-import org.pvemu.game.objects.item.GameItem;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.database.DAO;
 import org.pvemu.jelly.database.Database;
@@ -20,15 +20,22 @@ public class InventoryDAO extends DAO<InventoryEntry> {
 
     public InventoryDAO() {
         getByOwnerStatement = Database.prepare("SELECT * FROM inventory_entries WHERE owner = ? AND owner_type = ?");
-        getAccessoriesByPlayerIdStatement = Database.prepare(
-                new StringBuilder().append("SELECT t.id AS aID, e.position AS aPOS FROM inventory_entries e ")
+        
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT t.id AS aID, e.position AS aPOS FROM inventory_entries e ")
                 .append("JOIN item_templates t ON e.item_id = t.id ")
-                .append("WHERE (position = ").append(GameItem.POS_ARME)
-                .append(" OR position = ").append(GameItem.POS_COIFFE)
-                .append(" OR position = ").append(GameItem.POS_CAPE)
-                .append(" OR position = ").append(GameItem.POS_FAMILIER)
-                .append(") AND owner = ? AND owner_type = 1")
-                .toString());
+                .append("WHERE position IN(");
+        
+        for(ItemPosition pos : ItemPosition.getAccessoriePositions()){
+            for(byte p : pos.getPosIds()){
+                query.append(p).append(',');
+            }
+        }
+        
+        query.setLength(query.length() - 1);
+                        
+        query.append(") AND owner = ? AND owner_type = 1");
+        getAccessoriesByPlayerIdStatement = Database.prepare(query.toString());
         updateStatement = Database.prepare("UPDATE inventory_entries SET position = ?, qu = ?, stats = ? WHERE id = ?");
         createStatement = Database.prepareInsert("INSERT INTO inventory_entries(item_id, owner, owner_type, position, stats, qu) VALUES(?,?,?,?,?,?)");
     }
