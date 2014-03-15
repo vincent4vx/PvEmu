@@ -8,7 +8,6 @@ package org.pvemu.commands;
 
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.YesFilter;
-import org.pvemu.models.Account;
 
 /**
  *
