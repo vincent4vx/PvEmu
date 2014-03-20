@@ -6,6 +6,8 @@
 
 package org.pvemu.commands;
 
+import org.pvemu.commands.askers.Asker;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>

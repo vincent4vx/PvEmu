@@ -6,6 +6,7 @@
 
 package org.pvemu.commands;
 
+import org.pvemu.commands.askers.Asker;
 import java.util.Collection;
 import java.util.HashMap;
 

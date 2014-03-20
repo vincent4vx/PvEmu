@@ -6,6 +6,7 @@
 
 package org.pvemu.commands;
 
+import org.pvemu.commands.askers.Asker;
 import org.pvemu.game.World;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.utils.Utils;
