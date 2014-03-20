@@ -6,7 +6,7 @@
 
 package org.pvemu.jelly.filters;
 
-import org.pvemu.commands.Asker;
+import org.pvemu.commands.askers.Asker;
 import org.pvemu.jelly.filters.comparators.Comparator;
 import org.pvemu.jelly.filters.comparators.YesComparator;
 

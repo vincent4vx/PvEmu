@@ -162,6 +162,8 @@ final public class Inventory {
     private void stackGameItem(GameItem src, GameItem dest){
         dest.getEntry().qu += src.getEntry().qu;
         delete(src);
+        src.getEntry().id = dest.getID();
+        src.getEntry().qu = dest.getEntry().qu;
     }
     
     /**
@@ -273,5 +275,19 @@ final public class Inventory {
         items.remove(item.getID());
         itemsByPos.get(item.getEntry().position).remove(item);
         DAOFactory.inventory().delete(item.getEntry());
+    }
+    
+    public MoveState delete(GameItem item, int quantity){
+        if(!items.containsValue(item))
+            return MoveState.ERROR;
+        
+        if(item.getEntry().qu < quantity){
+            item.getEntry().qu -= quantity;
+            save(item);
+            return MoveState.STACK;
+        }else{
+            delete(item);
+            return MoveState.DELETE;
+        }
     }
 }

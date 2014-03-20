@@ -197,6 +197,10 @@ public class ItemsFactory {
         return getTypeOfItem(src.getTemplate()).getFactory().newItem(stats, entry, src.getTemplate());
     }
     
+    static public GameItem copyItem(GameItem src, Inventoryable dest_owner, int dest_qu){
+        return copyItem(src, dest_owner, dest_qu, ItemPosition.DEFAULT_POSITION);
+    }
+    
     static private ItemType getTypeOfItem(ItemTemplate template){
         return ItemType.values().length < template.type ? ItemType.NONE : ItemType.values()[template.type];
     }

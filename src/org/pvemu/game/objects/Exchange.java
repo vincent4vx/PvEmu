@@ -2,6 +2,8 @@ package org.pvemu.game.objects;
 
 import org.pvemu.game.objects.item.GameItem;
 import java.util.HashMap;
+import org.pvemu.actions.ActionsRegistry;
+import org.pvemu.game.objects.item.factory.ItemsFactory;
 
 public class Exchange {
     final private Player owner, target;
@@ -76,5 +78,17 @@ public class Exchange {
         }
         
         return nQu;
+    }
+    
+    public void accept(){
+        for(int key : pendingItems.keySet()){
+            int quantity = pendingItems.get(key);
+            
+            GameItem item = owner.getInventory().getItemById(key);
+            GameItem copy = ItemsFactory.copyItem(item, owner, quantity);
+            
+            ActionsRegistry.getObject().deleteItem(item, quantity, owner);
+            ActionsRegistry.getObject().addItem(copy, target);
+        }
     }
 }

@@ -7,6 +7,7 @@
 package org.pvemu.network.game.input;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.objects.Player;
 import org.pvemu.game.objects.inventory.Inventory.MoveState;
 import org.pvemu.game.objects.item.GameItem;
@@ -64,13 +65,15 @@ public class MoveObjectPacket implements InputPacket {
             return;
         }
         
-        if(state == MoveState.ADD){
+        /*if(state == MoveState.ADD){
             GameSendersRegistry.getObject().addItem(item, session);
         }else if(state == MoveState.STACK){
             GameSendersRegistry.getObject().quantityChange(item, session);
         }else if(state == MoveState.MOVE){
             GameSendersRegistry.getObject().moveItem(item, session);
-        }
+        }*/
+        
+        ActionsRegistry.getObject().itemStateChange(item, state, session);
         
         if(item.isWearable()){
             p.loadStuffStats();
