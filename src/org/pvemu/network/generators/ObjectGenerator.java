@@ -55,11 +55,19 @@ public class ObjectGenerator {
         return s.toString();
     }
     
-    public String generateMoveItem(GameItem item){
+    /*public String generateMoveItem(GameItem item){
         return new StringBuilder(8).append(item.getID()).append('|').append(item.getEntry().position).toString();
     }
     
     public String generateQuantityChange(GameItem item){
         return new StringBuilder(8).append(item.getID()).append('|').append(item.getEntry().qu).toString();
+    }*/
+     
+    public String generateMoveItem(InventoryEntry entry){
+        return new StringBuilder(8).append(entry.id).append('|').append(entry.position).toString();
+    }
+    
+    public String generateQuantityChange(InventoryEntry entry){
+        return new StringBuilder(8).append(entry.id).append('|').append(entry.qu).toString();
     }
 }

@@ -3,6 +3,9 @@ package org.pvemu.game.objects.inventory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.objects.inventory.entrystate.EntryState;
+import org.pvemu.game.objects.inventory.entrystate.EntryStateFactory;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
@@ -10,41 +13,47 @@ import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.dao.DAOFactory;
 
 final public class Inventory {
-    static public enum MoveState{
+    /*static public enum MoveState{
         MOVE, STACK, ADD, DELETE, ERROR
-    }
+    }*/
     
     final private HashMap<Integer, GameItem> items = new HashMap<>();
     final private HashMap<Byte, ArrayList<GameItem>> itemsByPos = new HashMap<>();
+    final private ArrayList<EntryState> waitingStates = new ArrayList<>();
     final private Inventoryable owner;
     
     public Inventory(Inventoryable owner){
         this.owner = owner;
         
         for(InventoryEntry entry : DAOFactory.inventory().getByOwner(owner.getOwnerType(), owner.getID())){
-            GameItem item = ItemsFactory.recoverItem(entry);
+            //GameItem item = ItemsFactory.recoverItem(entry);
+            addOrStackItem(ItemsFactory.recoverItem(entry));
             
-            if(addOrStackItem(item) == MoveState.ERROR){
+            /*if(addOrStackItem(item) == MoveState.ERROR){
                 item.getEntry().position = ItemPosition.DEFAULT_POSITION;
                 addOrStackItem(item);
                 save(item);
-            }
+            }*/
         }
     }
     
-    public MoveState addOrStackItem(GameItem item){
-        if(!canAddItem(item))
-            return MoveState.ERROR;
+    public void addOrStackItem(GameItem item){
+        if(!canAddItem(item)){
+            waitingStates.add(EntryStateFactory.errorState(item.getEntry(), "Permission refusée"));
+            return;
+        }
         
         GameItem other = getSameItem(item);
         
         if(other == null){
             addGameItem(item);
-            return MoveState.ADD;
+            waitingStates.add(EntryStateFactory.addState(item.getEntry()));
+            return;
         }
         
         stackGameItem(item, other);
-        return MoveState.STACK;
+        waitingStates.add(EntryStateFactory.stackState(other.getEntry()));
+        waitingStates.add(EntryStateFactory.deleteState(item.getEntry()));
     }
     
     /**
@@ -106,17 +115,21 @@ final public class Inventory {
      * @param item the item to stack
      * @return true on success
      */
-    public boolean stackItem(GameItem item){
-        if(!canAddItem(item))
-            return false;
+    public void stackItem(GameItem item){
+        if(!canAddItem(item)){
+            waitingStates.add(EntryStateFactory.errorState(item.getEntry(), "Permission refusée"));
+            return;
+        }
         
         GameItem other = getSameItem(item);
         
-        if(other == null)
-            return false;
+        if(other == null){
+            waitingStates.add(EntryStateFactory.errorState(item.getEntry(), "Necessite un add à la place d'un stack"));
+            return;
+        }
         
         stackGameItem(item, other);
-        return true;
+        waitingStates.add(EntryStateFactory.stackState(item.getEntry()));
     }
     
     /**
@@ -124,15 +137,19 @@ final public class Inventory {
      * @param item the item to add
      * @return true on success
      */
-    public boolean addItem(GameItem item){
-        if(!canAddItem(item))
-            return false;
+    public void addItem(GameItem item){
+        if(!canAddItem(item)){
+            waitingStates.add(EntryStateFactory.errorState(item.getEntry(), "Permission refusée"));
+            return;
+        }
         
-        if(getSameItem(item) != null) //need stack
-            return false;
+        if(getSameItem(item) != null){
+            waitingStates.add(EntryStateFactory.errorState(item.getEntry(), "Necessite un stack à la place d'un add"));
+            return;
+        }
         
         addGameItem(item);
-        return false;
+        waitingStates.add(EntryStateFactory.addState(item.getEntry()));
     }
     
     /**
@@ -162,8 +179,6 @@ final public class Inventory {
     private void stackGameItem(GameItem src, GameItem dest){
         dest.getEntry().qu += src.getEntry().qu;
         delete(src);
-        src.getEntry().id = dest.getID();
-        src.getEntry().qu = dest.getEntry().qu;
     }
     
     /**
@@ -173,29 +188,43 @@ final public class Inventory {
      * @param dest_pos the target position
      * @return the state of the move
      */
-    public MoveState moveItem(GameItem item, int dest_qu, byte dest_pos){
+    public void moveItem(GameItem item, int dest_qu, byte dest_pos){
         if(dest_pos == item.getEntry().position 
                 || !canMoveItem(item, dest_pos)
                 || !items.containsValue(item)
-                || item.getEntry().qu > dest_qu)
-            return MoveState.ERROR;
+                || item.getEntry().qu > dest_qu){
+            waitingStates.add(EntryStateFactory.errorState(item.getEntry(), "Permission refusée"));
+            return;
+        }
         
-        GameItem newItem;
+        //GameItem newItem;
         if(dest_qu == item.getEntry().qu){
             getItemsOnPos(item.getEntry().position).remove(item);
             item.getEntry().position = dest_pos;
-            newItem = item;
+            //newItem = item;
+            
+            GameItem other = getSameItem(item);
+            if(other != null){
+                stackGameItem(item, other);
+                waitingStates.add(EntryStateFactory.stackState(other.getEntry()));
+                waitingStates.add(EntryStateFactory.deleteState(item.getEntry()));
+            }else{
+                addGameItem(item);
+                waitingStates.add(EntryStateFactory.moveState(item.getEntry()));
+            }
         }else{
-            newItem = ItemsFactory.copyItem(item, owner, dest_qu, dest_pos);
+            GameItem newItem = ItemsFactory.copyItem(item, owner, dest_qu, dest_pos);
             item.getEntry().qu -= dest_qu;
+            waitingStates.add(EntryStateFactory.stackState(item.getEntry()));
+            addOrStackItem(newItem);
         }
         
-        MoveState state = addOrStackItem(newItem);
+        /*MoveState state = addOrStackItem(newItem);
         
         if(newItem == item && state == MoveState.ADD)
             return MoveState.MOVE;
         
-        return state;
+        return state;*/
     }
     
     public HashMap<Byte, ArrayList<GameItem>> getItemsByPos(){
@@ -274,20 +303,32 @@ final public class Inventory {
     private void delete(GameItem item){
         items.remove(item.getID());
         itemsByPos.get(item.getEntry().position).remove(item);
-        DAOFactory.inventory().delete(item.getEntry());
+        //DAOFactory.inventory().delete(item.getEntry());
     }
     
-    public MoveState delete(GameItem item, int quantity){
-        if(!items.containsValue(item))
-            return MoveState.ERROR;
+    public void delete(GameItem item, int quantity){
+        if(!items.containsValue(item)){
+            waitingStates.add(EntryStateFactory.errorState(item.getEntry(), "Impossible de supprimer un item qui ne vous appartient pas"));
+            return;
+        }
         
         if(item.getEntry().qu < quantity){
             item.getEntry().qu -= quantity;
             save(item);
-            return MoveState.STACK;
+            waitingStates.add(EntryStateFactory.stackState(item.getEntry()));
         }else{
             delete(item);
-            return MoveState.DELETE;
+            waitingStates.add(EntryStateFactory.deleteState(item.getEntry()));
         }
+    }
+    
+    public boolean commitStates(IoSession out){
+        boolean haveChanges = false;
+        for(EntryState state : waitingStates){
+            state.commit(out);
+            haveChanges = true;
+        }
+        waitingStates.clear();
+        return haveChanges;
     }
 }

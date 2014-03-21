@@ -9,7 +9,7 @@ package org.pvemu.network.game.input;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.objects.Player;
-import org.pvemu.game.objects.inventory.Inventory.MoveState;
+import org.pvemu.game.objects.inventory.entrystate.EntryState;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
@@ -58,22 +58,12 @@ public class MoveObjectPacket implements InputPacket {
             return;
         }
         
-        MoveState state = p.getInventory().moveItem(item, qu, target);
+        p.getInventory().moveItem(item, qu, target);
         
-        if(state == MoveState.ERROR){
-            Loggin.debug("Impossible de déplacer l'item %d", id);
+        if(!p.getInventory().commitStates(session)){
+            Loggin.debug("Rien à faire");
             return;
         }
-        
-        /*if(state == MoveState.ADD){
-            GameSendersRegistry.getObject().addItem(item, session);
-        }else if(state == MoveState.STACK){
-            GameSendersRegistry.getObject().quantityChange(item, session);
-        }else if(state == MoveState.MOVE){
-            GameSendersRegistry.getObject().moveItem(item, session);
-        }*/
-        
-        ActionsRegistry.getObject().itemStateChange(item, state, session);
         
         if(item.isWearable()){
             p.loadStuffStats();
@@ -82,8 +72,6 @@ public class MoveObjectPacket implements InputPacket {
             if(item.isAccessorie())
                 GameSendersRegistry.getPlayer().accessories(p);
         }
-        
-        Loggin.debug("Objet %d déplacé avec succès !", id);
         
     }
     

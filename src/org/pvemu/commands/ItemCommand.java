@@ -87,10 +87,10 @@ public class ItemCommand extends Command {
             }
             
             GameItem item = ItemsFactory.createItem(player, template, qu, max);
-            //player.getInventory().addItem(item);
-            ActionsRegistry.getObject().addItem(item, player);
             asker.write("L'item '" + template.name + "' généré avec succès pour le joueur '" + name + "'");
             GameSendersRegistry.getInformativeMessage().info(player.getSession(), 21, item.getEntry().qu, itemID);
+            //player.getInventory().addItem(item);
+            ActionsRegistry.getObject().addItem(item, player);
         }
     }
 
