@@ -13,9 +13,6 @@ import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.dao.DAOFactory;
 
 final public class Inventory {
-    /*static public enum MoveState{
-        MOVE, STACK, ADD, DELETE, ERROR
-    }*/
     
     final private HashMap<Integer, GameItem> items = new HashMap<>();
     final private HashMap<Byte, ArrayList<GameItem>> itemsByPos = new HashMap<>();
@@ -26,14 +23,18 @@ final public class Inventory {
         this.owner = owner;
         
         for(InventoryEntry entry : DAOFactory.inventory().getByOwner(owner.getOwnerType(), owner.getID())){
-            //GameItem item = ItemsFactory.recoverItem(entry);
-            addOrStackItem(ItemsFactory.recoverItem(entry));
+            GameItem item = ItemsFactory.recoverItem(entry);
             
-            /*if(addOrStackItem(item) == MoveState.ERROR){
+            if(!canAddItem(item)){
                 item.getEntry().position = ItemPosition.DEFAULT_POSITION;
-                addOrStackItem(item);
-                save(item);
-            }*/
+            }
+            
+            GameItem other = getSameItem(item);
+            
+            if(other == null)
+                addGameItem(item);
+            else
+                stackGameItem(item, other);
         }
     }
     
@@ -113,7 +114,6 @@ final public class Inventory {
     /**
      * Stack the item if possible
      * @param item the item to stack
-     * @return true on success
      */
     public void stackItem(GameItem item){
         if(!canAddItem(item)){
@@ -135,7 +135,6 @@ final public class Inventory {
     /**
      * Add the item if possible
      * @param item the item to add
-     * @return true on success
      */
     public void addItem(GameItem item){
         if(!canAddItem(item)){
@@ -186,7 +185,6 @@ final public class Inventory {
      * @param item item to move
      * @param dest_qu quantity to move
      * @param dest_pos the target position
-     * @return the state of the move
      */
     public void moveItem(GameItem item, int dest_qu, byte dest_pos){
         if(dest_pos == item.getEntry().position 
@@ -218,13 +216,6 @@ final public class Inventory {
             waitingStates.add(EntryStateFactory.stackState(item.getEntry()));
             addOrStackItem(newItem);
         }
-        
-        /*MoveState state = addOrStackItem(newItem);
-        
-        if(newItem == item && state == MoveState.ADD)
-            return MoveState.MOVE;
-        
-        return state;*/
     }
     
     public HashMap<Byte, ArrayList<GameItem>> getItemsByPos(){
@@ -303,7 +294,6 @@ final public class Inventory {
     private void delete(GameItem item){
         items.remove(item.getID());
         itemsByPos.get(item.getEntry().position).remove(item);
-        //DAOFactory.inventory().delete(item.getEntry());
     }
     
     public void delete(GameItem item, int quantity){
@@ -312,9 +302,8 @@ final public class Inventory {
             return;
         }
         
-        if(item.getEntry().qu < quantity){
+        if(item.getEntry().qu > quantity){
             item.getEntry().qu -= quantity;
-            save(item);
             waitingStates.add(EntryStateFactory.stackState(item.getEntry()));
         }else{
             delete(item);
