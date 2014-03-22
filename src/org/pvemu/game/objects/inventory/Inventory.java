@@ -157,6 +157,10 @@ final public class Inventory {
      * @param item the item to add
      */
     private void addGameItem(GameItem item){
+        if(!item.getEntry().isCreated()){
+            DAOFactory.inventory().create(item.getEntry());
+        }
+        
         items.put(item.getID(), item);
         
         ArrayList<GameItem> list = itemsByPos.get(item.getEntry().position);
@@ -177,7 +181,9 @@ final public class Inventory {
      */
     private void stackGameItem(GameItem src, GameItem dest){
         dest.getEntry().qu += src.getEntry().qu;
-        delete(src);
+        
+        if(src.getEntry().isCreated())
+            delete(src);
     }
     
     /**

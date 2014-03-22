@@ -3,7 +3,11 @@ package org.pvemu.models;
 import org.pvemu.jelly.database.Model;
 
 public class InventoryEntry implements Model {
-    public int id;
+    
+    public static final byte OWNER_PLAYER = 1;
+    final static public int NOT_CREATED = -1;
+    
+    public int id = NOT_CREATED;
     public int item_id;
     public byte position;
     public int owner;
@@ -11,32 +15,9 @@ public class InventoryEntry implements Model {
     public String stats;
     public int qu;
     
-    public static final byte OWNER_PLAYER = 1;
-    
-    /*private OldGameItem gameItem = null;
-    private ItemStats itemStats = null;*/
-    
-    /**
-     * génère l'item
-     * @return 
-     */
-    /*public ItemStats getItemStats(){
-        if(itemStats == null){
-            itemStats = new ItemStats(this);
-        }
-        return itemStats;
-    }*/
-    
-    /**
-     * Génère l'item utilisable IG
-     * @return 
-     */
-    /*public OldGameItem getGameItem(){
-        if(gameItem == null){
-            gameItem = new OldGameItem(this);
-        }
-        return gameItem;
-    }*/
+    public boolean isCreated(){
+        return id != NOT_CREATED;
+    }
     
     @Override
     public int getPk() {
