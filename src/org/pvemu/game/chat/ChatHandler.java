@@ -7,6 +7,8 @@
 package org.pvemu.game.chat;
 
 import java.util.HashMap;
+import org.pvemu.commands.CommandsHandler;
+import org.pvemu.commands.askers.PlayerAsker;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Loggin;
 
@@ -17,6 +19,8 @@ import org.pvemu.jelly.Loggin;
 final public class ChatHandler {
     final static private ChatHandler instance = new ChatHandler();
     final private HashMap<String, ChatChannel> channels = new HashMap<>();
+    
+    final private static String COMMAND_PREFIX = "!";
     
     private ChatHandler(){
         registerChannel(new MapChannel());
@@ -35,7 +39,14 @@ final public class ChatHandler {
             return;
         }
         
-        channel.post(args[1], player);
+        if(args[1].startsWith(COMMAND_PREFIX)){
+            CommandsHandler.instance().execute(
+                    args[1].substring(COMMAND_PREFIX.length()), 
+                    new PlayerAsker(player, player.getAccount())
+            );
+        }else{
+            channel.post(args[1], player);
+        }
     }
     
     /**

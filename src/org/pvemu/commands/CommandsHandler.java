@@ -59,7 +59,6 @@ public class CommandsHandler {
      * @param asker the Asker
      */
     final public void execute(String commandLine, Asker asker){
-        //String[] args = commandLine.split("\\s+");
         String[] args = parseCommand(commandLine, asker);
         
         Command cmd = commands.get(args[0]);

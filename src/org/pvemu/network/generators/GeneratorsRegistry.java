@@ -18,6 +18,28 @@ public class GeneratorsRegistry {
     private static MapGenerator map = null;
     private static CharacterGenerator character = null;
     private static ExchangeGenerator exchange = null;
+    private static MessageGenerator message = null;
+
+    /**
+     * Get the value of message
+     *
+     * @return the value of message
+     */
+    public static MessageGenerator getMessage() {
+        if(message == null)
+            message = new MessageGenerator();
+        return message;
+    }
+
+    /**
+     * Set the value of message
+     *
+     * @param message new value of message
+     */
+    public static void setMessage(MessageGenerator message) {
+        GeneratorsRegistry.message = message;
+    }
+
 
     /**
      * Get the value of exchange

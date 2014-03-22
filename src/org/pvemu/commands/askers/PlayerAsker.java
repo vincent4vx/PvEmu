@@ -6,26 +6,31 @@
 
 package org.pvemu.commands.askers;
 
+import org.pvemu.game.objects.Player;
 import org.pvemu.models.Account;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class PlayerAsker extends ClientAsker {
+    
+    final private Player player;
 
-    public PlayerAsker(Account account) {
+    public PlayerAsker(Player player, Account account) {
         super(account);
+        this.player = player;
     }
 
     @Override
     public void write(String msg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        GameSendersRegistry.getMessage().infoServerMessage(player.getSession(), "> " + msg);
     }
 
     @Override
     public void writeError(String msg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        GameSendersRegistry.getMessage().errorServerMessage(player.getSession(), "> " + msg);
     }
     
 }
