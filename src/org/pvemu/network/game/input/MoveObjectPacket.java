@@ -67,6 +67,7 @@ public class MoveObjectPacket implements InputPacket {
         if(item.isWearable()){
             player.loadStuffStats();
             GameSendersRegistry.getPlayer().weightUsed(player, session);
+            GameSendersRegistry.getPlayer().stats(player, session);
             
             if(item.isAccessorie())
                 GameSendersRegistry.getPlayer().accessories(player);
