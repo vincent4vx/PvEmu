@@ -29,4 +29,11 @@ public class PlayerSender {
                 GeneratorsRegistry.getPlayer().generateWeightUsed(player)
         );
     }
+    
+    public void stats(Player player, IoSession session){
+        GamePacketEnum.STATS_PACKET.send(
+                session, 
+                GeneratorsRegistry.getPlayer().generateAs(player)
+        );
+    }
 }

@@ -22,9 +22,6 @@ import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.Filterable;
-import org.pvemu.network.events.CharacterEvents;
-//import org.pvemu.network.events.ObjectEvents;
-import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
 

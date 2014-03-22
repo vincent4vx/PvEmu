@@ -30,13 +30,13 @@ public class MoveObjectPacket implements InputPacket {
 
     @Override
     public void perform(String extra, IoSession session) {
-        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
+        Player player = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
-        if(p == null){
+        if(player == null){
             return;
         }
         
-        String[] data = Utils.split(extra, "|");//packet.split("\\|");
+        String[] data = Utils.split(extra, "|");
         int id;
         byte target;
         int qu = 1;
@@ -50,27 +50,26 @@ public class MoveObjectPacket implements InputPacket {
             return;
         }
         
-        //boolean result = p.getInventory().moveItem(id, qu, target);
-        GameItem item = p.getInventory().getItemById(id);
+        GameItem item = player.getInventory().getItemById(id);
         
         if(item == null){
             Loggin.debug("objet %d introuvable", id);
             return;
         }
         
-        p.getInventory().moveItem(item, qu, target);
+        player.getInventory().moveItem(item, qu, target);
         
-        if(!p.getInventory().commitStates(session)){
+        if(!player.getInventory().commitStates(session)){
             Loggin.debug("Rien à faire");
             return;
         }
         
         if(item.isWearable()){
-            p.loadStuffStats();
-            GameSendersRegistry.getPlayer().weightUsed(p, session);
+            player.loadStuffStats();
+            GameSendersRegistry.getPlayer().weightUsed(player, session);
             
             if(item.isAccessorie())
-                GameSendersRegistry.getPlayer().accessories(p);
+                GameSendersRegistry.getPlayer().accessories(player);
         }
         
     }

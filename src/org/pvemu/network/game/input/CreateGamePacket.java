@@ -12,9 +12,6 @@ import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Constants;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
-import org.pvemu.network.events.BasicEvents;
-import static org.pvemu.network.events.CharacterEvents.onStatsChange;
-//import org.pvemu.network.events.ObjectEvents;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
@@ -31,30 +28,27 @@ public class CreateGamePacket implements InputPacket {
 
     @Override
     public void perform(String extra, IoSession session) {
-        Player p = SessionAttributes.PLAYER.getValue(session);
+        Player player = SessionAttributes.PLAYER.getValue(session);
 
-        if (p == null) {
+        if (player == null) {
             return;
         }
 
-        GamePacketEnum.GAME_CREATE_OK.send(session, p.getName());
-        onStatsChange(session, p);
-        //ObjectEvents.onWeightChange(session, p);
-        GameSendersRegistry.getPlayer().weightUsed(p, session);
+        GamePacketEnum.GAME_CREATE_OK.send(session, player.getName());
+        
+        GameSendersRegistry.getPlayer().stats(player, session);
+        GameSendersRegistry.getPlayer().weightUsed(player, session);
         if(Constants.DOFUS_VER_ID >= 1100){
-            GamePacketEnum.CHAT_CHANEL_ADD.send(session, p.getChanels());
+            GamePacketEnum.CHAT_CHANEL_ADD.send(session, player.getChanels());
         }
-        GamePacketEnum.CHARACTER_RESTRICTION.send(session, p.restriction);
+        GamePacketEnum.CHARACTER_RESTRICTION.send(session, player.restriction);
         GameSendersRegistry.getInformativeMessage().error(session, 89);
         //MapEvents.onArrivedInGame(session);
-        ActionsRegistry.getMap().addPlayer(p.getMap(), p);
+        ActionsRegistry.getMap().addPlayer(player.getMap(), player);
         
         if(Constants.DOFUS_VER_ID < 1100){
-            BasicEvents.onDate(session);
-            
-            if(p.getAccount().level > 0){
-                BasicEvents.onPrompt(session);
-            }
+            GameSendersRegistry.getBasic().date(session);
+            GameSendersRegistry.getBasic().time(session);
         }
 
     }

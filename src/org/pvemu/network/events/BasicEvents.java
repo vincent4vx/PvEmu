@@ -13,34 +13,34 @@ import org.pvemu.network.game.GamePacketEnum;
 @Deprecated
 public class BasicEvents {
 
-    public static void onDate(IoSession session) {
-        Date actDate = new Date();
-        StringBuilder p = new StringBuilder();
-
-
-        DateFormat dateFormat = new SimpleDateFormat("yyyy");
-        p.append(Integer.parseInt(dateFormat.format(actDate)) - 1370).append("|");
-
-        dateFormat = new SimpleDateFormat("MM");
-        String mois = (Integer.parseInt(dateFormat.format(actDate)) - 1) + "";
-
-        if (mois.length() < 2) {
-            p.append(0);
-        }
-
-        p.append(mois).append("|");
-
-        dateFormat = new SimpleDateFormat("dd");
-        String jour = Integer.parseInt(dateFormat.format(actDate)) + "";
-        if (jour.length() < 2) {
-            p.append(0);
-        }
-
-        p.append(jour).append("|");
-
-        GamePacketEnum.BASIC_DATE.send(session, p.toString());
-        GamePacketEnum.BASIC_TIME.send(session, String.valueOf(actDate.getTime() + 3600000));
-    }
+//    public static void onDate(IoSession session) {
+//        Date actDate = new Date();
+//        StringBuilder p = new StringBuilder();
+//
+//
+//        DateFormat dateFormat = new SimpleDateFormat("yyyy");
+//        p.append(Integer.parseInt(dateFormat.format(actDate)) - 1370).append("|");
+//
+//        dateFormat = new SimpleDateFormat("MM");
+//        String mois = (Integer.parseInt(dateFormat.format(actDate)) - 1) + "";
+//
+//        if (mois.length() < 2) {
+//            p.append(0);
+//        }
+//
+//        p.append(mois).append("|");
+//
+//        dateFormat = new SimpleDateFormat("dd");
+//        String jour = Integer.parseInt(dateFormat.format(actDate)) + "";
+//        if (jour.length() < 2) {
+//            p.append(0);
+//        }
+//
+//        p.append(jour).append("|");
+//
+//        GamePacketEnum.BASIC_DATE.send(session, p.toString());
+//        GamePacketEnum.BASIC_TIME.send(session, String.valueOf(actDate.getTime() + 3600000));
+//    }
     
     public static void onPrompt(IoSession session){
         GamePacketEnum.BASIC_CONSOLE_PROMPT.send(session, Constants.NAME);

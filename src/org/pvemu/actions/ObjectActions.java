@@ -31,16 +31,4 @@ public class ObjectActions {
         if(player.getInventory().commitStates(player.getSession()))
             GameSendersRegistry.getPlayer().weightUsed(player, player.getSession());
     }
-    
-    /*public void itemStateChange(GameItem item, MoveState state, IoSession session){
-        if(state == MoveState.ADD){
-            GameSendersRegistry.getObject().addItem(item, session);
-        }else if(state == MoveState.STACK){
-            GameSendersRegistry.getObject().quantityChange(item, session);
-        }else if(state == MoveState.MOVE){
-            GameSendersRegistry.getObject().moveItem(item, session);
-        } else if(state == MoveState.DELETE){
-            GameSendersRegistry.getObject().removeItem(item, session);
-        }
-    }*/
 }

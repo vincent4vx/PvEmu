@@ -19,6 +19,28 @@ public class GeneratorsRegistry {
     private static CharacterGenerator character = null;
     private static ExchangeGenerator exchange = null;
     private static MessageGenerator message = null;
+    private static BasicGenerator basic = null;
+
+    /**
+     * Get the value of basic
+     *
+     * @return the value of basic
+     */
+    public static BasicGenerator getBasic() {
+        if(basic == null)
+            return basic = new BasicGenerator();
+        return basic;
+    }
+
+    /**
+     * Set the value of basic
+     *
+     * @param basic new value of basic
+     */
+    public static void setBasic(BasicGenerator basic) {
+        GeneratorsRegistry.basic = basic;
+    }
+
 
     /**
      * Get the value of message

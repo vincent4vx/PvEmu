@@ -19,6 +19,28 @@ public class GameSendersRegistry {
     private static PlayerSender player = null;
     private static ExchangeSender exchange = null;
     private static MessageSender message = null;
+    private static BasicSender basic = null;
+
+    /**
+     * Get the value of basic
+     *
+     * @return the value of basic
+     */
+    public static BasicSender getBasic() {
+        if(basic == null)
+            basic = new BasicSender();
+        return basic;
+    }
+
+    /**
+     * Set the value of basic
+     *
+     * @param basic new value of basic
+     */
+    public static void setBasic(BasicSender basic) {
+        GameSendersRegistry.basic = basic;
+    }
+
 
     /**
      * Get the value of message
