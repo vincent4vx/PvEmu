@@ -193,6 +193,7 @@ public class ItemsFactory {
         entry.stats = src.getEntry().stats;
         
         Stats stats = new Stats(src.getStats());
+        DAOFactory.inventory().create(entry);
         
         return getTypeOfItem(src.getTemplate()).getFactory().newItem(stats, entry, src.getTemplate());
     }
