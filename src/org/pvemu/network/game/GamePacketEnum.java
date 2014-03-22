@@ -248,6 +248,10 @@ public enum GamePacketEnum {
      */
     EXCHANGE_LEAVE("EV"),
     /**
+     * Accepte l'échange en cours
+     */
+    EXCHANGE_ACCEPT("EVa"),
+    /**
      * Erreur lors du déplacement de l'objet
      */
     EXCHANGE_MOVE_ERROR("EME"),

@@ -25,8 +25,8 @@ class DeleteState extends EntryState {
     @Override
     public void commit(IoSession out) {
         GameSendersRegistry.getObject().removeItem(entry, out);
-        DAOFactory.inventory().delete(entry);
         Loggin.debug("Suppression de l'item %d", entry.id);
+        DAOFactory.inventory().delete(entry);
     }
     
 }

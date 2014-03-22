@@ -42,7 +42,7 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     private Stats stuffStats;
     final private GameActionHandler actions = new GameActionHandler();
     public NpcQuestion current_npc_question = null;
-    private Exchange _exchange = null;
+    private Exchange exchange = null;
 
     public Player(Character c) {
         character = c;
@@ -369,21 +369,21 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
      * @return 
      */
     public Exchange getExchange(){
-        return _exchange;
+        return exchange;
     }
     
     public void startExchange(Player target){
-        _exchange = new Exchange(this, target);
+        exchange = new Exchange(this, target);
     }
     
     /**
      * Arrête l'échange en cours
      */
     public void stopExchange(){
-        if(_exchange == null){
+        if(exchange == null){
             return;
         }
-        _exchange = null;
+        exchange = null;
     }
 
     @Override

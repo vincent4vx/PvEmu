@@ -17,6 +17,28 @@ public class GameSendersRegistry {
     private static AccountSender account = null;
     private static MapSender map = null;
     private static PlayerSender player = null;
+    private static ExchangeSender exchange = null;
+
+    /**
+     * Get the value of exchange
+     *
+     * @return the value of exchange
+     */
+    public static ExchangeSender getExchange() {
+        if(exchange == null)
+            exchange = new ExchangeSender();
+        return exchange;
+    }
+
+    /**
+     * Set the value of exchange
+     *
+     * @param exchange new value of exchange
+     */
+    public static void setExchange(ExchangeSender exchange) {
+        GameSendersRegistry.exchange = exchange;
+    }
+
 
     /**
      * Get the value of player

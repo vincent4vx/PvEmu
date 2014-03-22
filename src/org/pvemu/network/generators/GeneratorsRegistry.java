@@ -17,6 +17,28 @@ public class GeneratorsRegistry {
     private static AccountGenerator account = null;
     private static MapGenerator map = null;
     private static CharacterGenerator character = null;
+    private static ExchangeGenerator exchange = null;
+
+    /**
+     * Get the value of exchange
+     *
+     * @return the value of exchange
+     */
+    public static ExchangeGenerator getExchange() {
+        if(exchange == null)
+            exchange = new ExchangeGenerator();
+        return exchange;
+    }
+
+    /**
+     * Set the value of exchange
+     *
+     * @param exchange new value of exchange
+     */
+    public static void setExchange(ExchangeGenerator exchange) {
+        GeneratorsRegistry.exchange = exchange;
+    }
+
 
     /**
      * Get the value of character

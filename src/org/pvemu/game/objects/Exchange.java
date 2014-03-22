@@ -8,6 +8,7 @@ import org.pvemu.game.objects.item.factory.ItemsFactory;
 public class Exchange {
     final private Player owner, target;
     final private HashMap<Integer, Integer> pendingItems = new HashMap<>();
+    private boolean state = false;
     
     public Exchange(Player owner, Player target){
         this.owner = owner;
@@ -20,6 +21,18 @@ public class Exchange {
      */
     public Player getTarget(){
         return target;
+    }
+    
+    public Player getOwner(){
+        return owner;
+    }
+
+    public boolean getState() {
+        return state;
+    }
+
+    public void setState(boolean state) {
+        this.state = state;
     }
     
     /**
@@ -85,10 +98,10 @@ public class Exchange {
             int quantity = pendingItems.get(key);
             
             GameItem item = owner.getInventory().getItemById(key);
-            GameItem copy = ItemsFactory.copyItem(item, owner, quantity);
+            GameItem copy = ItemsFactory.copyItem(item, target, quantity);
             
-            ActionsRegistry.getObject().deleteItem(item, quantity, owner);
             ActionsRegistry.getObject().addItem(copy, target);
+            ActionsRegistry.getObject().deleteItem(item, quantity, owner);
         }
     }
 }

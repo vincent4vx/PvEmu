@@ -13,6 +13,7 @@ import org.pvemu.jelly.utils.Utils;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
+import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
 /**
@@ -46,10 +47,14 @@ public class ExchangeMovePacket implements InputPacket {
                     return;
                 }
                 
-                GamePacketEnum.EXCHANGE_OK.send(session, "0" + p.getID());
+                /*GamePacketEnum.EXCHANGE_OK.send(session, "0" + p.getID());
                 GamePacketEnum.EXCHANGE_OK.send(session, "0" + p.getExchange().getTarget().getID());
                 GamePacketEnum.EXCHANGE_OK.send(p.getExchange().getTarget().getSession(), "0" + p.getID());
-                GamePacketEnum.EXCHANGE_OK.send(p.getExchange().getTarget().getSession(), "0" + p.getExchange().getTarget().getID());
+                GamePacketEnum.EXCHANGE_OK.send(p.getExchange().getTarget().getSession(), "0" + p.getExchange().getTarget().getID());*/
+                GameSendersRegistry.getExchange().exchangeOk(p, p.getExchange().getTarget(), false);
+                GameSendersRegistry.getExchange().exchangeOk(p.getExchange().getTarget(), p, false);
+                p.getExchange().setState(false);
+                p.getExchange().getTarget().getExchange().setState(false);
                 
                 if(extra.charAt(1) == '+'){
                     if((qu = p.getExchange().addItem(itemID, qu)) == -1){
