@@ -4,8 +4,11 @@ import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
-import org.pvemu.network.events.DialogEvents;
+import org.pvemu.models.NpcQuestion;
+import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.events.GameActionEvents;
+import org.pvemu.network.game.GamePacketEnum;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 public class ActionsHandler {
 
@@ -53,12 +56,16 @@ public class ActionsHandler {
                 break;
             case 1: //dialogue NPC
                 if(a.args.length < 1 || a.args[0].equalsIgnoreCase("DV")){
-                    DialogEvents.onLeave(p.getSession());
+                    //DialogEvents.onLeave(p.getSession());
+                    p.current_npc_question = null;
+                    GamePacketEnum.DIALOG_LEAVE.send(p.getSession());
                     return;
                 }
                 try{
                     int id = Integer.parseInt(a.args[0]);
-                    DialogEvents.onSendQuestion(p.getSession(), id);
+                    NpcQuestion question = DAOFactory.question().getById(id);
+                    GameSendersRegistry.getDialog().question(p.getSession(), question);
+                    //DialogEvents.onSendQuestion(p.getSession(), id);
                 }catch(NumberFormatException e){}
                 break;
             case 69: //téléportation astrub

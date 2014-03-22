@@ -13,7 +13,7 @@ import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.NpcResponseAction;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
-import static org.pvemu.network.events.DialogEvents.onLeave;
+import org.pvemu.network.game.GamePacketEnum;
 
 /**
  *
@@ -35,7 +35,8 @@ public class ResponseDialogPacket implements InputPacket {
         }
         
         if(p.current_npc_question == null){
-            onLeave(session);
+            //onLeave(session);
+            GamePacketEnum.DIALOG_LEAVE.send(session);
             return;
         }
         
@@ -45,14 +46,18 @@ public class ResponseDialogPacket implements InputPacket {
             int rID = Integer.parseInt(params[1]);
             
             if(qID != p.current_npc_question.id){
-                onLeave(session);
+                //onLeave(session);
+                p.current_npc_question = null;
+                GamePacketEnum.DIALOG_LEAVE.send(session);
                 return;
             }
             
             ArrayList<NpcResponseAction> NRA_l = p.current_npc_question.getResponseActions(rID);
             
             if(NRA_l == null){
-                onLeave(session);
+                //onLeave(session);
+                GamePacketEnum.DIALOG_LEAVE.send(session);
+                p.current_npc_question = null;
                 return;
             }
             
@@ -66,10 +71,14 @@ public class ResponseDialogPacket implements InputPacket {
             }
             
             if(close){
-                onLeave(session);
+                //onLeave(session);
+                p.current_npc_question = null;
+                GamePacketEnum.DIALOG_LEAVE.send(session);
             }
         }catch(Exception e){
-            onLeave(session);
+            //onLeave(session);
+            p.current_npc_question = null;
+            GamePacketEnum.DIALOG_LEAVE.send(session);
         }
         
     }

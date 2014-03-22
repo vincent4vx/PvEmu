@@ -13,7 +13,6 @@ import org.pvemu.game.objects.map.GMable;
 import org.pvemu.models.NpcQuestion;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
-import static org.pvemu.network.events.DialogEvents.onLeave;
 import org.pvemu.network.game.GamePacketEnum;
 
 /**
@@ -37,7 +36,9 @@ public class CreateDialogPacket implements InputPacket {
         
         if(p.current_npc_question != null){
             GamePacketEnum.DIALOG_CREATE_ERROR.send(session);
-            onLeave(session);
+            //onLeave(session);
+            p.current_npc_question = null;
+            GamePacketEnum.DIALOG_LEAVE.send(session);
             return;         
         }
         

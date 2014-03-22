@@ -20,6 +20,28 @@ public class GeneratorsRegistry {
     private static ExchangeGenerator exchange = null;
     private static MessageGenerator message = null;
     private static BasicGenerator basic = null;
+    private static DialogGenerator dialog = null;
+
+    /**
+     * Get the value of dialog
+     *
+     * @return the value of dialog
+     */
+    public static DialogGenerator getDialog() {
+        if(dialog == null)
+            dialog = new DialogGenerator();
+        return dialog;
+    }
+
+    /**
+     * Set the value of dialog
+     *
+     * @param dialog new value of dialog
+     */
+    public static void setDialog(DialogGenerator dialog) {
+        GeneratorsRegistry.dialog = dialog;
+    }
+
 
     /**
      * Get the value of basic

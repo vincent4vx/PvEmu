@@ -20,6 +20,28 @@ public class GameSendersRegistry {
     private static ExchangeSender exchange = null;
     private static MessageSender message = null;
     private static BasicSender basic = null;
+    private static DialogSender dialog = null;
+
+    /**
+     * Get the value of dialog
+     *
+     * @return the value of dialog
+     */
+    public static DialogSender getDialog() {
+        if(dialog == null)
+            dialog = new DialogSender();
+        return dialog;
+    }
+
+    /**
+     * Set the value of dialog
+     *
+     * @param dialog new value of dialog
+     */
+    public static void setDialog(DialogSender dialog) {
+        GameSendersRegistry.dialog = dialog;
+    }
+
 
     /**
      * Get the value of basic

@@ -7,6 +7,7 @@
 package org.pvemu.network.game.output;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.models.NpcQuestion;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
@@ -14,16 +15,11 @@ import org.pvemu.network.generators.GeneratorsRegistry;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class BasicSender {
-    public void date(IoSession session){
-        GamePacketEnum.BASIC_DATE.send(session, GeneratorsRegistry.getBasic().generateDate());
-    }
-    
-    public void time(IoSession session){
-        GamePacketEnum.BASIC_TIME.send(session, GeneratorsRegistry.getBasic().generateTime());
-    }
-    
-    public void prompt(IoSession session, String prompt){
-        GamePacketEnum.BASIC_CONSOLE_PROMPT.send(session, prompt);
+public class DialogSender {
+    public void question(IoSession session, NpcQuestion question){
+        GamePacketEnum.DIALOG_QUESTION.send(
+                session, 
+                GeneratorsRegistry.getDialog().generateQuestion(question)
+        );
     }
 }
