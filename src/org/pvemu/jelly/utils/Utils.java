@@ -90,6 +90,7 @@ public class Utils {
      * @param pieces
      * @return
      */
+    @Deprecated
     public static String implode(String glue, Object[] pieces) {
         if (pieces == null || pieces.length < 1) {
             return "";

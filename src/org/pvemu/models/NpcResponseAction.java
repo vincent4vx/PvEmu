@@ -1,6 +1,6 @@
 package org.pvemu.models;
 
-import org.pvemu.game.ActionsHandler.Action;
+//import org.pvemu.game.ActionsHandler.Action;
 import org.pvemu.jelly.database.Model;
 
 public class NpcResponseAction implements Model {
@@ -8,14 +8,14 @@ public class NpcResponseAction implements Model {
     public short action_id;
     public String[] args;
     
-    private Action _action = null;
+/*    private Action _action = null;
     
     public Action getAction(){
         if(_action == null){
             _action = new Action(action_id, args, "-1");
         }
         return _action;
-    }
+    }*/
 
     @Override
     public int getPk() {

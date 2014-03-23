@@ -9,6 +9,8 @@ package org.pvemu.network.game.input;
 import java.util.ArrayList;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.Player;
+import org.pvemu.game.triggeraction.TriggerActionHandler;
+import org.pvemu.game.triggeraction.TriggerFactory;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.NpcResponseAction;
 import org.pvemu.network.InputPacket;
@@ -64,7 +66,11 @@ public class ResponseDialogPacket implements InputPacket {
             boolean close = true;
             
             for(NpcResponseAction NRA : NRA_l){
-                NRA.getAction().performAction(p);
+                //NRA.getAction().performAction(p);
+                TriggerActionHandler.instance().triggerAction(
+                        TriggerFactory.newResponseAction(NRA)
+                        , p
+                );
                 if(NRA.action_id == 1){
                     close = false;
                 }

@@ -1,12 +1,10 @@
 package org.pvemu.game.objects.map;
 
-import org.pvemu.game.ActionsHandler.Action;
 import org.pvemu.game.objects.GameNpc;
 import org.pvemu.game.objects.Player;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
-import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.MapModel;
 import org.pvemu.models.MapNpcs;

@@ -5,32 +5,32 @@
  */
 package org.pvemu.game.objects.map;
 
-import org.pvemu.game.ActionsHandler;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.models.Trigger;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import org.pvemu.game.triggeraction.TriggerActionHandler;
+import org.pvemu.game.triggeraction.TriggerFactory;
 
 public class MapCell {
 
-    protected GameMap _map;
+    protected GameMap map;
     protected boolean walkable;
     protected InteractiveObject obj;
     protected boolean canSight = true;
     protected ConcurrentHashMap<Integer, Player> _players = new ConcurrentHashMap<>();
     protected short id;
-    protected ArrayList<ActionsHandler.Action> _actions = new ArrayList<>();
+    protected ArrayList<org.pvemu.game.triggeraction.Trigger> actions = new ArrayList<>();
 
     public MapCell(GameMap map, short cellID, String CellData) {
-        _map = map;
+        this.map = map;
         id = cellID;
 
         walkable = (((parseHashChar(CellData.charAt(2))) & 56) >> 3) != 0;
         canSight = ((parseHashChar(CellData.charAt(0))) & 1) != 0;
         int layerObject2 = (((parseHashChar(CellData.charAt(0))) & 2) << 12) + (((parseHashChar(CellData.charAt(7))) & 1) << 12) + ((parseHashChar(CellData.charAt(8))) << 6) + parseHashChar(CellData.charAt(9));
         boolean layerObject2Interactive = (((parseHashChar(CellData.charAt(7))) & 2) >> 1) != 0;
-        obj = (layerObject2Interactive ? new InteractiveObject(layerObject2, this, _map) : null);
+        obj = (layerObject2Interactive ? new InteractiveObject(layerObject2, this, this.map) : null);
     }
 
     private static byte parseHashChar(char c) {
@@ -69,22 +69,21 @@ public class MapCell {
     /**
      * Ajoute une action sur la cellule
      *
-     * @param T
+     * @param trigger
      */
-    public void addTrigger(Trigger T) {
-        ActionsHandler.Action a = new ActionsHandler.Action(T.actionID, T.actionArgs.split(","), T.conditions);
-        _actions.add(a);
+    public void addTrigger(org.pvemu.models.Trigger trigger) {
+        actions.add(TriggerFactory.newTrigger(trigger));
     }
 
     /**
      * Effectue les actions sur la cellule (triggers)
      *
-     * @param p
+     * @param player
      */
-    public void performCellAction(Player p) {
-        for (ActionsHandler.Action a : _actions) {
-            Loggin.debug("[%s] Déclanchement du trigger en [%d;%d] : actionID = %d", new Object[]{p.getName(), _map.id, id, a.actionID});
-            a.performAction(p);
+    public void performCellAction(Player player) {
+        for (org.pvemu.game.triggeraction.Trigger trigger : actions) {
+            Loggin.debug("[%s] Déclanchement du trigger en [%d;%d] : %s", player.getName(), map.id, id, trigger);
+            TriggerActionHandler.instance().triggerAction(trigger, player);
         }
     }
 
