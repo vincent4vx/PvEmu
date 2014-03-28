@@ -18,9 +18,10 @@ public class Pathfinding {
             char dir = step.charAt(0);
             boolean stop = false;
             
-            for(int j = 1; j <= 64; ++j){
+            int lastSteps = steps;
+            for(;;){
                 short lastCell = currentCell;
-                currentCell = GetCellIDFromDirrection(currentCell, dir, map, false);
+                currentCell = getCellIDFromDirrection(currentCell, dir, map, false);
                 MapCell cell = map.getCellById(currentCell);
                 
                 if(!cell.isWalkable()){
@@ -33,17 +34,23 @@ public class Pathfinding {
                 }
                 
                 if(!stop && currentCell == cellID){ //end of the step
-                    steps += j;
+                    //steps += j;
                     break;
                 }
                 
                 if(stop){ //blocked
-                    --j;
-                    steps += j;
+                    //--j;
+                    //steps += j;
+                    --steps;
                     stop = true;
                     currentCell = lastCell;
                     break;
                 }
+                
+                if(steps > lastSteps + 64)
+                    return -1000;
+                
+                ++steps;
             }
             
                 
@@ -60,7 +67,7 @@ public class Pathfinding {
         return steps;
     }
 
-    public static short GetCellIDFromDirrection(short CaseID, char Direction, GameMap map, boolean inFight) {
+    public static short getCellIDFromDirrection(short CaseID, char Direction, GameMap map, boolean inFight) {
         switch (Direction) {
             case 'a':
                 return (short) (inFight ? -1 : CaseID + 1);
@@ -81,7 +88,7 @@ public class Pathfinding {
         }
         return -1;
     }
-
+    
     public static short cellCode_To_ID(String cellCode) {
         char[] HASH = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
             't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
