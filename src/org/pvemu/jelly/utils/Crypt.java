@@ -77,8 +77,8 @@ public class Crypt {
 
         for (int i = 0; i < packet.length(); i += 2) {
             int k = (int) key.charAt((i / 2) % key.length());
-            int encode_c1 = getHASHIndex(packet.charAt(i));
-            int encode_c2 = getHASHIndex(packet.charAt(i + 1));
+            int encode_c1 = getHashIndex(packet.charAt(i));
+            int encode_c2 = getHashIndex(packet.charAt(i + 1));
 
             encode_c1 = 64 + encode_c1 - k;
             encode_c2 = 64 + encode_c2 - k;
@@ -111,7 +111,7 @@ public class Crypt {
         return (_loc2);
     }
 
-    private static int getHASHIndex(char c) {
+    private static int getHashIndex(char c) {
         for (int i = 0; i < HASH.length; i++) {
             if (HASH[i] == c) {
                 return i;
@@ -144,9 +144,9 @@ public class Crypt {
     }
 
     public static String CryptPort(int config_game_port) {
-        char[] HASH = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
+        /*char[] HASH = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
             't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
-            'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'};
+            'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'};*/
         int P = config_game_port;
         String nbr64 = "";
         for (int a = 2; a >= 0; a--) {
@@ -154,5 +154,27 @@ public class Crypt {
             P = (int) (P % (int) (java.lang.Math.pow(64, a)));
         }
         return nbr64;
+    }
+    
+    public static int base64Decode(String code){
+        int ret = 0;
+        int multiplier = 1;
+        for(int i = code.length() - 1; i >= 0; --i){
+            ret += getHashIndex(code.charAt(i)) * multiplier;
+            multiplier *= 64;
+        }
+        
+        return ret;
+    }
+    
+    public static String base64Encode(int i){
+        StringBuilder code = new StringBuilder();
+        
+        while(i != 0){
+            code.append(HASH[i % 64]);
+            i /= 64;
+        }
+        
+        return code.reverse().toString();
     }
 }

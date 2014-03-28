@@ -2,70 +2,62 @@ package org.pvemu.jelly.utils;
 
 import org.pvemu.game.objects.map.GameMap;
 import java.util.concurrent.atomic.AtomicReference;
+import org.pvemu.game.objects.map.MapCell;
 import org.pvemu.jelly.Loggin;
 
 public class Pathfinding {
-
-    public static int isValidPath(GameMap map, short cellID, AtomicReference<String> pathRef) {
-        //_nSteps = 0;
-        AtomicReference<Integer> rSteps = new AtomicReference<>(0);
-        short newPos = cellID;
-        //int Steps = 0;
-        String path = pathRef.get();
-        StringBuilder newPath = new StringBuilder();
-        boolean stopBefore = false;
-        
-        for (int i = 0; i < path.length(); i += 3) {
-            String SmallPath = path.substring(i, i + 3);
-            char dir = SmallPath.charAt(0);
-            short dirCaseID = cellCode_To_ID(SmallPath.substring(1));
-            
-            if(i + 3 == path.length()){ //on se trouve à une case de l'arrivé
-                if(map.getCellById(dirCaseID).getObj() != null){ //on y trouve un objet intéractif
-                    Loggin.debug("IO %d trouvé", map.getCellById(dirCaseID).getObj().getID());
-                    stopBefore = true;              
-                }
-            }
-
-            String[] aPathInfos = ValidSinglePath(newPos, SmallPath, map, rSteps, stopBefore).split(":");
-            if (aPathInfos[0].equalsIgnoreCase("stop")) {
-                newPos = Short.parseShort(aPathInfos[1]);
-                newPath.append(dir).append(cellID_To_Code(newPos));
-                pathRef.set(newPath.toString());
-                return rSteps.get();
-            } else if (aPathInfos[0].equalsIgnoreCase("ok")) {
-                newPos = dirCaseID;
-            } else {
-                pathRef.set(newPath.toString());
-                return -1000;
-            }
-            newPath.append(dir).append(cellID_To_Code(newPos));
-        }
-        pathRef.set(newPath.toString());
-        return rSteps.get();
-    }
-
-    public static String ValidSinglePath(short CurrentPos, String Path, GameMap map, AtomicReference<Integer> rSteps, boolean stopBefore) {
+    
+    static public int validatePath(GameMap map, short startCell, AtomicReference<String> path){
         int steps = 0;
-        char dir = Path.charAt(0);
-        short dirCaseID = cellCode_To_ID(Path.substring(1));
-        short lastPos = CurrentPos;
-        for (steps = 1; steps <= 64; steps++) {
-
-            if (GetCellIDFromDirrection(lastPos, dir, map, false) == dirCaseID) {
-                if (!stopBefore && map.getCellById(dirCaseID).isWalkable()) {
-                    rSteps.set(rSteps.get() + steps);
-                    return "ok:";
-                } else {
-                    steps--;
-                    rSteps.set(rSteps.get() + steps);
-                    return ("stop:" + lastPos);
+        short currentCell = startCell;
+        short endCell = cellCode_To_ID(path.get().substring(path.get().length() - 2, path.get().length()));
+        
+        for(int i = 0; i < path.get().length(); i += 3){
+            String step = path.get().substring(i, i+3);
+            short cellID = cellCode_To_ID(step.substring(1));
+            char dir = step.charAt(0);
+            boolean stop = false;
+            
+            for(int j = 1; j <= 64; ++j){
+                short lastCell = currentCell;
+                currentCell = GetCellIDFromDirrection(currentCell, dir, map, false);
+                MapCell cell = map.getCellById(currentCell);
+                
+                if(!cell.isWalkable()){
+                    stop = true;
                 }
-            } else {
-                lastPos = GetCellIDFromDirrection(lastPos, dir, map, false);
+                   
+                if(endCell == currentCell && cell.getObj() != null){ //Use the IO
+                    Loggin.debug("IO %d trouvé", cell.getObj().getID());
+                    stop = true;
+                }
+                
+                if(!stop && currentCell == cellID){ //end of the step
+                    steps += j;
+                    break;
+                }
+                
+                if(stop){ //blocked
+                    --j;
+                    steps += j;
+                    stop = true;
+                    currentCell = lastCell;
+                    break;
+                }
+            }
+            
+                
+            if(stop){
+                path.set(
+                        new StringBuilder().append(path.get().substring(0, i))
+                                .append(dir).append(cellID_To_Code(currentCell))
+                                .toString()
+                );
+                break;
             }
         }
-        return "no:";
+        
+        return steps;
     }
 
     public static short GetCellIDFromDirrection(short CaseID, char Direction, GameMap map, boolean inFight) {
@@ -129,10 +121,6 @@ public class Pathfinding {
         }
         
         short d = (short) Math.abs(cell1-cell2);
-        
-        if(d == 14 || d == 15){
-            return true;
-        }
-        return false;
+        return d == 14 || d == 15;
     }
 }
