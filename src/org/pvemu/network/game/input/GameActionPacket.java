@@ -8,6 +8,7 @@ package org.pvemu.network.game.input;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.GameActionHandler;
+import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
@@ -15,6 +16,7 @@ import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.events.GameActionEvents;
 import org.pvemu.network.game.GamePacketEnum;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -29,23 +31,28 @@ public class GameActionPacket implements InputPacket {
 
     @Override
     public void perform(String extra, IoSession session) {
-        Player p = SessionAttributes.PLAYER.getValue(session);
-        if (p == null) {
+        Player player = SessionAttributes.PLAYER.getValue(session);
+        if (player == null) {
             return;
         }
-        int actionID = 0;
-        GameActionHandler.GameAction GA;
+        short actionID = 0;
+        //GameActionHandler.GameAction GA;
+        GameActionData data;
         try {
-            actionID = Integer.parseInt(extra.substring(0, 3));
-            String args = extra.substring(3);
-
-            GA = new GameActionHandler.GameAction(p.getActions(), actionID, Utils.split(args, ";"));
+            actionID = Short.parseShort(extra.substring(0, 3));
+            String[] args = Utils.split(extra.substring(3), ";");
+            data = new GameActionData(player, actionID, args);
+          //  GA = new GameActionHandler.GameAction(p.getActions(), actionID, Utils.split(args, ";"));
         } catch (Exception e) {
-            GamePacketEnum.GAME_ACTION_ERROR.send(session);
+            //GamePacketEnum.GAME_ACTION_ERROR.send(session);
+            GameSendersRegistry.getGameAction().error(session);
             return;
         }
+        
+        player.getActionsManager().startGameAction(data);
+        
 
-        switch (actionID) {
+        /*switch (actionID) {
             case 1: //déplacement
                 GameActionEvents.onMoveAction(session, GA);
                 break;
@@ -55,7 +62,7 @@ public class GameActionPacket implements InputPacket {
             default:
                 Loggin.debug("GameAction non géré : %d", actionID);
                 GamePacketEnum.GAME_ACTION_ERROR.send(session);
-        }
+        }*/
         
     }
     

@@ -21,6 +21,28 @@ public class GameSendersRegistry {
     private static MessageSender message = null;
     private static BasicSender basic = null;
     private static DialogSender dialog = null;
+    private static GameActionSender gameAction = null;
+
+    /**
+     * Get the value of gameAction
+     *
+     * @return the value of gameAction
+     */
+    public static GameActionSender getGameAction() {
+        if(gameAction == null)
+            gameAction = new GameActionSender();
+        return gameAction;
+    }
+
+    /**
+     * Set the value of gameAction
+     *
+     * @param gameAction new value of gameAction
+     */
+    public static void setGameAction(GameActionSender gameAction) {
+        GameSendersRegistry.gameAction = gameAction;
+    }
+
 
     /**
      * Get the value of dialog

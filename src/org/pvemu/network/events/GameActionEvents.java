@@ -23,7 +23,8 @@ public class GameActionEvents {
 
 
         AtomicReference<String> rPath = new AtomicReference<>((String) GA.args[0]);
-        int steps = Pathfinding.isValidPath(p.getMap(), p.getCell().getID(), rPath);
+        //int steps = Pathfinding.isValidPath(p.getMap(), p.getCell().getID(), rPath);
+        int steps = Pathfinding.validatePath(p.getMap(), p.getCell().getID(), rPath);
 
         Loggin.debug("Tentative de déplacement de %s de %d en %d étapes", new Object[]{p.getName(), p.getCell().getID(), steps});
 

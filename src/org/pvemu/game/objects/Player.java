@@ -19,6 +19,7 @@ import org.pvemu.models.MapModel;
 import org.pvemu.models.NpcQuestion;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.Filterable;
@@ -40,6 +41,17 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     final private GameActionHandler actions = new GameActionHandler();
     public NpcQuestion current_npc_question = null;
     private Exchange exchange = null;
+    private final GameActionsManager actionsManager = new GameActionsManager();
+
+    /**
+     * Get the value of actionsManager
+     *
+     * @return the value of actionsManager
+     */
+    public GameActionsManager getActionsManager() {
+        return actionsManager;
+    }
+
 
     public Player(Character c) {
         character = c;
@@ -179,39 +191,6 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
         return GeneratorsRegistry.getPlayer().generateGM(this);
     }
 
-//    /**
-//     * retourne le stuff pour les packets d'affichage
-//     *
-//     * @return
-//     */
-//    @Deprecated
-//    public String getGMStuff() {
-//        StringBuilder s = new StringBuilder();
-//        HashMap<Byte, GameItem> wornItems = _inventory.getItemsByPos();
-//
-//        if (wornItems.containsKey(GameItem.POS_ARME)) {
-//            s.append(Integer.toHexString(wornItems.get(GameItem.POS_ARME).getItemStats().getID()));
-//        }
-//        s.append(',');
-//        if (wornItems.containsKey(GameItem.POS_COIFFE)) {
-//            s.append(Integer.toHexString(wornItems.get(GameItem.POS_COIFFE).getItemStats().getID()));
-//        }
-//        s.append(',');
-//        if (wornItems.containsKey(GameItem.POS_CAPE)) {
-//            s.append(Integer.toHexString(wornItems.get(GameItem.POS_CAPE).getItemStats().getID()));
-//        }
-//        s.append(',');
-//        if (wornItems.containsKey(GameItem.POS_FAMILIER)) {
-//            s.append(Integer.toHexString(wornItems.get(GameItem.POS_FAMILIER).getItemStats().getID()));
-//        }
-//        s.append(',');
-//        if (wornItems.containsKey(GameItem.POS_BOUCLIER)) {
-//            s.append(wornItems.get(GameItem.POS_BOUCLIER).getItemStats().getID());
-//        }
-//
-//        return s.toString();
-//    }
-
     /**
      * Retourne la propection du joueur
      *
@@ -319,39 +298,6 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     public byte getOwnerType() {
         return 1;
     }
-
-    /*@Override
-    public void onQuantityChange(int id, int qu) {
-        ObjectEvents.onQuantityChange(session, id, qu);
-    }
-
-    @Override
-    public void onAddItem(OldGameItem GI) {
-        ObjectEvents.onAdd(session, GI);
-    }
-
-    @Override
-    public void onDeleteItem(int id) {
-        ObjectEvents.onRemove(session, id);
-    }
-
-    @Override
-    public void onMoveItemSuccess(OldGameItem GI, byte pos) {
-        if(GI.isWearable()){
-            loadStuffStats();
-            CharacterEvents.onStatsChange(session, this);
-            ObjectEvents.onWeightChange(session, this);
-        }
-        if(GI.isWearable() && (pos == OldGameItem.POS_ARME || pos == OldGameItem.POS_COIFFE || pos == OldGameItem.POS_CAPE || pos == OldGameItem.POS_FAMILIER || pos == -1)){
-            //ObjectEvents.onAccessoriesChange(this);
-            GameSendersRegistry.getObject().accessories(this);
-        }
-    }
-
-    @Override
-    public void onMoveItem(int id, byte pos) {
-        ObjectEvents.onMove(session, id, pos);
-    }*/
     
     /**
      * Retourne le GameActionHandler du joueur

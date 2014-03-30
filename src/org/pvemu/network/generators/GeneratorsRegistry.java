@@ -21,6 +21,28 @@ public class GeneratorsRegistry {
     private static MessageGenerator message = null;
     private static BasicGenerator basic = null;
     private static DialogGenerator dialog = null;
+    private static GameActionGenerator gameAction = null;
+
+    /**
+     * Get the value of gameAction
+     *
+     * @return the value of gameAction
+     */
+    public static GameActionGenerator getGameAction() {
+        if(gameAction == null)
+            gameAction = new GameActionGenerator();
+        return gameAction;
+    }
+
+    /**
+     * Set the value of gameAction
+     *
+     * @param gameAction new value of gameAction
+     */
+    public static void setGameAction(GameActionGenerator gameAction) {
+        GeneratorsRegistry.gameAction = gameAction;
+    }
+
 
     /**
      * Get the value of dialog

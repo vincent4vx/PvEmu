@@ -211,7 +211,7 @@ public class Utils {
      * @param separator Séparateur
      * @return élément concatété
      */
-    public static String join(String[] pieces, String separator) {
+    public static String join(Object[] pieces, String separator) {
         StringBuilder str = new StringBuilder(pieces.length * 16); //allocation de mémoire "assez" large pour éviter un resize
 
         for (int i = 0; i < pieces.length; ++i) {
