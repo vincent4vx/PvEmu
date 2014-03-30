@@ -20,6 +20,7 @@ final public class GameActionsRegistry {
     private GameActionsRegistry(){
         registerGameAction(new WalkAction());
         registerGameAction(new InteractiveObjectAction());
+        registerGameAction(new CinematicAction());
     }
     
     public void registerGameAction(GameAction GA){

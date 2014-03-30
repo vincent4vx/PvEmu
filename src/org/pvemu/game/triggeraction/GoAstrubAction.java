@@ -6,10 +6,11 @@
 
 package org.pvemu.game.triggeraction;
 
+import org.pvemu.game.cinematic.CinematicsHandler;
+import org.pvemu.game.gameaction.GameActionFactory;
 import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.YesFilter;
-import org.pvemu.network.events.GameActionEvents;
 
 /**
  *
@@ -24,7 +25,10 @@ public class GoAstrubAction implements TriggerAction {
 
     @Override
     public void perform(Trigger trigger, Player player) {
-        GameActionEvents.onCreateGameAction(player.getSession(), 2, player.getID(), 7);
+        //GameActionEvents.onCreateGameAction(player.getSession(), 2, player.getID(), 7);
+        player.getActionsManager().startGameAction(
+                GameActionFactory.newCinematic(player, CinematicsHandler.GO_TO_ASTRUB)
+        );
     }
 
     @Override
