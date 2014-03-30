@@ -51,6 +51,14 @@ final public class GameActionsManager {
         return pendingActions;
     }
     
+    void performPendingActions(){
+        for(GameActionData data : pendingActions){
+            GameAction GA = GameActionsRegistry.instance().getGameAction(data.getGameActionID());
+            GA.end(data, true, null);
+        }
+        pendingActions.clear();
+    }
+    
     public void startGameAction(GameActionData gad){
         GameAction GA = GameActionsRegistry.instance().getGameAction(gad.getGameActionID());
         

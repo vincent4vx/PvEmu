@@ -38,30 +38,19 @@ public class WalkAction implements GameAction {
             return;
         }
 
-        /*StringBuilder param = new StringBuilder();
-
-         param.append(GA.id).append(";1;").append(p.getID()).append(";a").append(Pathfinding.cellID_To_Code(p.getCell().getID())).append(rPath.get());
-
-         short cellDest = Pathfinding.cellCode_To_ID(rPath.get().substring(rPath.get().length() - 2));
-
-         GA.attach("dest", cellDest);
-         GA.attach("ori", Utils.parseBase64Char(rPath.get().charAt(rPath.get().length() - 3)));
-         GA.save();
-
-         for (Player P : p.getMap().getPlayers().values()) {
-         if (P.getSession() != null) {
-         GamePacketEnum.GAME_ACTION.send(P.getSession(), param.toString());
-         }
-         }*/
         String newPath = "a" + Pathfinding.cellID_To_Code(data.getPlayer().getCell().getID()) + rPath.get();
         data.setArgument(0, newPath);
 
         short id = data.getPlayer().getActionsManager().addGameAction(data);
+        
         GameSendersRegistry.getGameAction().gameActionToMap(
                 data.getPlayer().getMap(),
                 id,
                 data
         );
+        
+        data.getPlayer().getActionsManager().setWalking(true);
+        data.getPlayer().getActionsManager().clearPendingActions();
     }
 
     @Override
@@ -77,15 +66,8 @@ public class WalkAction implements GameAction {
         ActionsRegistry.getPlayer().arrivedOnCell(data.getPlayer(), data.getPlayer().getMap().getCellById(cellDest));
         data.getPlayer().orientation = Utils.parseBase64Char(data.getArgument(0).charAt(data.getArgument(0).length() - 3));
 
-        /*for (GameActionHandler.GameAction GA : _handler.getAll()) {
-            if (GA.actionID != 500) {
-                continue;
-            }
-            if (success) {
-                GA.apply(p, true, null);
-            }
-            GA.delete();
-        }*/
+        data.getPlayer().getActionsManager().setWalking(false);
+        data.getPlayer().getActionsManager().performPendingActions();
     }
 
 }
