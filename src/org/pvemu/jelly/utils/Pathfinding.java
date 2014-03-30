@@ -20,6 +20,8 @@ public class Pathfinding {
             
             int lastSteps = steps;
             for(;;){
+                ++steps;
+                
                 short lastCell = currentCell;
                 currentCell = getCellIDFromDirrection(currentCell, dir, map, false);
                 MapCell cell = map.getCellById(currentCell);
@@ -49,8 +51,6 @@ public class Pathfinding {
                 
                 if(steps > lastSteps + 64)
                     return -1000;
-                
-                ++steps;
             }
             
                 
