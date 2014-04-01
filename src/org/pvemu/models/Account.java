@@ -120,7 +120,7 @@ public class Account extends AbstractFilterable implements org.pvemu.jelly.datab
      * @return true si il est en attente, false sinon
      */
     public boolean isWaiting(String ip) {
-        return waitingTicket != null && ip.equals(current_ip);
+        return waitingTicket != null/* && ip.equals(current_ip)*/;
     }
     
     /**
