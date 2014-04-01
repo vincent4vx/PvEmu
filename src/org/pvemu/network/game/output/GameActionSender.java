@@ -42,6 +42,9 @@ public class GameActionSender {
     }
     
     public void gameActionToMap(GameMap map, int id, GameActionData data){
-        gameActionToMap(map, id, data.getGameActionID(), data.getArguments());
+        Object[] args = new Object[data.getArguments().length + 1];
+        System.arraycopy(data.getArguments(), 0, args, 1, data.getArguments().length);
+        args[0] = data.getPlayer().getID();
+        gameActionToMap(map, id, data.getGameActionID(), args);
     }
 }
