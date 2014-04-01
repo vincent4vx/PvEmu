@@ -26,11 +26,17 @@ public class RealmIoHandler extends MinaIoHandler {
     
     @Override
     public void sessionClosed(IoSession session){
-        if(session.containsAttribute("account")){
+        /*if(session.containsAttribute("account")){
             Account acc = (Account)session.getAttribute("account");
             if(acc != null){
                 acc.removeSession();
             }
+        }*/
+        Account account = SessionAttributes.ACCOUNT.getValue(session);
+        
+        if(account != null){
+            account.removeSession();
+            Loggin.debug("Logout de %s", account.pseudo);
         }
     }
 
