@@ -1,15 +1,12 @@
 package org.pvemu.models.dao;
 
 import java.sql.ResultSet;
-import java.util.HashMap;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.database.FindableDAO;
 import org.pvemu.models.MapModel;
 
 public class MapDAO extends FindableDAO<MapModel> {
-
-    private HashMap<Short, MapModel> mapById = new HashMap<>();
 
     @Override
     protected String tableName() {
@@ -38,25 +35,10 @@ public class MapDAO extends FindableDAO<MapModel> {
             map.numgroup = RS.getByte("numgroup");
             map.groupmaxsize = RS.getByte("groupmaxsize");
 
-            mapById.put(map.id, map);
-
             return map;
         } catch (Exception e) {
             Loggin.error("Impossible de charger la map !", e);
             return null;
         }
-    }
-
-    /**
-     * A utiliser à la place de find
-     *
-     * @param id
-     * @return
-     */
-    public MapModel getById(short id) {
-        if (!mapById.containsKey(id)) {
-            return find(id);
-        }
-        return mapById.get(id);
     }
 }
