@@ -144,8 +144,8 @@ API.execDir("monDir/monSousDir"); //exécute tout les scripts du dossier indiqu�
 
 ## Remerciements
 
-- Blackrush pour ces conseils java
-- Sébastien NEDJAR prof (de java) à mon IUT
+- Blackrush pour ses conseils java
+- Sébastien NEDJAR prof (de java) à l'IUT d'Aix-en-Provence
 - Mohammed pour son soutien
 - Ankama-games pour leur super jeu
 
