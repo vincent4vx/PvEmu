@@ -4,13 +4,13 @@ import org.pvemu.jelly.database.Database;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.jelly.database.UpdatableDAO;
 import org.pvemu.models.Character;
 
-public class CharacterDAO extends org.pvemu.jelly.database.DAO<Character> {
+public class CharacterDAO extends UpdatableDAO<Character> {
 
     private PreparedStatement findByNameStatement = null;
     private PreparedStatement getByAccountId = null;

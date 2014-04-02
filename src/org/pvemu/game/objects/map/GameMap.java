@@ -1,26 +1,29 @@
 package org.pvemu.game.objects.map;
 
-import org.pvemu.game.objects.GameNpc;
 import org.pvemu.game.objects.Player;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.MapModel;
-import org.pvemu.models.MapNpcs;
-import org.pvemu.models.Trigger;
 import org.pvemu.models.dao.DAOFactory;
 
 public final class GameMap {
-    final private MapModel model;
-    final private ArrayList<MapCell> cells = new ArrayList<>(150); //300 cells. devrait allez pour la plupart des maps
     short id;
+    final private MapModel model;
+    final private List<MapCell> cells; //300 cells. devrait allez pour la plupart des maps
     final private ConcurrentHashMap<Integer, Player> players = new ConcurrentHashMap<>();
-    private String mapDataPacket = null;
     final private ConcurrentHashMap<Integer, GMable> gms = new ConcurrentHashMap<>();
     private int lastGMId = 0;
 
-    public GameMap(MapModel model) {
+    public GameMap(short id, MapModel model, List<MapCell> cells) {
+        this.id = id;
+        this.model = model;
+        this.cells = cells;
+    } 
+
+    /*public GameMap(MapModel model) {
         this.model = model;
         id = this.model.id;
 
@@ -43,6 +46,17 @@ public final class GameMap {
             lastGMId--;
             gms.put(lastGMId, new GameNpc(MN, lastGMId));
         }
+    }*/
+    
+    public int getNextGmId(){
+        return lastGMId - 1;
+    }
+    
+    public void addGMable(GMable gm){
+        gms.put(gm.getID(), gm);
+        
+        if(gm.getID() < lastGMId)
+            lastGMId = gm.getID();
     }
 
     /**
@@ -54,7 +68,7 @@ public final class GameMap {
     public void addPlayer(Player p, short cellID) {
         players.put(p.getID(), p);
         gms.put(p.getID(), p);
-        getCellById(cellID)._players.put(p.getID(), p);
+        getCellById(cellID).addPlayer(p);
     }
 
     /**
@@ -66,7 +80,7 @@ public final class GameMap {
         players.remove(p.getID());
         gms.remove(p.getID());
         if (p.getCell() != null) {
-            p.getCell()._players.remove(p.getID());
+            p.getCell().removePlayer(p.getID());
         }
     }
 
@@ -119,23 +133,6 @@ public final class GameMap {
     }
 
     /**
-     * Packet pour charger la map
-     *
-     * @return
-     */
-    /*public String getMapDataPacket() {
-        if (mapDataPacket == null) {
-            StringBuilder p = new StringBuilder();
-            p.append(id).append("|").append(model.date);
-            if(Constants.DOFUS_VER_ID >= 1100){
-                p.append("|").append(model.key);
-            }
-            mapDataPacket = p.toString();
-        }
-        return mapDataPacket;
-    }*/
-
-    /**
      * Vérifie si la destination est valide ou non
      *
      * @param mapID
@@ -143,7 +140,8 @@ public final class GameMap {
      * @return
      */
     public static boolean isValidDest(short mapID, short cellID) {
-        GameMap map = DAOFactory.map().getById(mapID).getGameMap();
+        //GameMap map = DAOFactory.map().getById(mapID).getGameMap();
+        GameMap map = MapFactory.getById(mapID);
 
         if (map == null) { //map inexistante
             return false;

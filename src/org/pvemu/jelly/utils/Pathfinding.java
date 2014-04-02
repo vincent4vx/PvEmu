@@ -27,6 +27,7 @@ public class Pathfinding {
                 MapCell cell = map.getCellById(currentCell);
                 
                 if(!cell.isWalkable()){
+                    Loggin.debug("Case %d non marchable", cell.getID());
                     stop = true;
                 }
                    

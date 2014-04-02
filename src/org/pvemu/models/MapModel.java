@@ -1,6 +1,5 @@
 package org.pvemu.models;
 
-import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.jelly.database.Model;
 
 public class MapModel implements Model {
@@ -15,14 +14,6 @@ public class MapModel implements Model {
     public byte capabilities;
     public String mappos;
     public byte numgroup, groupmaxsize;
-    private GameMap _gameMap = null;
-
-    public GameMap getGameMap() {
-        if (_gameMap == null) {
-            _gameMap = new GameMap(this);
-        }
-        return _gameMap;
-    }
 
     @Override
     public int getPk() {

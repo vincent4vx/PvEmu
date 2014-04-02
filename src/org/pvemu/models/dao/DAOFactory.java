@@ -13,6 +13,19 @@ public class DAOFactory {
     private static MapNpcsDAO mapNpcs = null;
     private static NpcQuestionDAO question = null;
     private static NpcResponseActionDAO responseAction = null;
+    private static MonsterDAO monster = null;
+
+    /**
+     * Get the value of monster
+     *
+     * @return the value of monster
+     */
+    public static MonsterDAO monster() {
+        if(monster == null)
+            monster = new MonsterDAO();
+        return monster;
+    }
+
 
     public static AccountDAO account() {
         if (account == null) {

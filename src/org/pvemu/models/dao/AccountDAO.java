@@ -1,16 +1,16 @@
 package org.pvemu.models.dao;
 
 import java.sql.PreparedStatement;
-import org.pvemu.jelly.database.DAO;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.database.Database;
+import org.pvemu.jelly.database.UpdatableDAO;
 import org.pvemu.models.Account;
 
-public class AccountDAO extends DAO<Account> {
+public class AccountDAO extends UpdatableDAO<Account> {
 
     private final Map<String, Account> accountsByName = new ConcurrentHashMap<>();
     private final Map<Integer, Account> accountsById = new ConcurrentHashMap<>();

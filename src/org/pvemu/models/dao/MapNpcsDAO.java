@@ -5,11 +5,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.DAO;
 import org.pvemu.jelly.database.Database;
+import org.pvemu.jelly.database.FindableDAO;
 import org.pvemu.models.MapNpcs;
 
-public class MapNpcsDAO extends DAO<MapNpcs> {
+public class MapNpcsDAO extends FindableDAO<MapNpcs> {
     private PreparedStatement getByMapIdStatement = null;
     
     public MapNpcsDAO(){
@@ -58,16 +58,6 @@ public class MapNpcsDAO extends DAO<MapNpcs> {
         }
         
         return list;
-    }
-
-    @Override
-    public boolean update(MapNpcs obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean create(MapNpcs obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

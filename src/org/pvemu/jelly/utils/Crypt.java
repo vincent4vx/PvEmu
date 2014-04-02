@@ -10,6 +10,8 @@ public class Crypt {
         't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
         'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
     };
+    
+    final static public char[] HEX_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
     public static String md5(String data) {
         return hash("MD5", data);
@@ -111,8 +113,8 @@ public class Crypt {
         return (_loc2);
     }
 
-    private static int getHashIndex(char c) {
-        for (int i = 0; i < HASH.length; i++) {
+    public static byte getHashIndex(char c) {
+        for (byte i = 0; i < HASH.length; i++) {
             if (HASH[i] == c) {
                 return i;
             }
@@ -176,5 +178,43 @@ public class Crypt {
         }
         
         return code.reverse().toString();
+    }
+    
+    static public String prepareKey(String key){
+        StringBuilder decode = new StringBuilder(key.length() / 2);
+        
+        for(int i = 0; i < key.length(); i += 2){
+            decode.append((char)Integer.parseInt(key.substring(i, i + 2), 16));
+        }
+        
+        return decode.toString();
+    }
+    
+    static public char checksum(String str){
+        int checksum = 0;
+        
+        for(int i = 0; i < str.length(); ++i){
+            checksum += str.charAt(i) % 16;
+        }
+        
+        return HEX_CHARS[checksum % 16];
+    }
+    
+    static public String decypherData(String str, String key, int checksum){
+        StringBuilder decoded = new StringBuilder();
+        int keylen = key.length();
+        int keypos = 0;
+        
+        for(int i = 0; i < str.length(); i += 2){
+            decoded.append((char)(Integer.parseInt(str.substring(i, i + 2), 16) ^ (int)(key.charAt((keypos++ + checksum) % keylen))));
+        }
+        
+        return decoded.toString();
+    }
+    
+    static public String decodeMapData(String mapData, String key){
+        key = prepareKey(key);
+        
+        return decypherData(mapData, key, Integer.parseInt(checksum(key) + "", 16) * 2);
     }
 }

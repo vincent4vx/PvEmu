@@ -5,16 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.DAO;
 import org.pvemu.jelly.database.Database;
+import org.pvemu.jelly.database.FindableDAO;
 import org.pvemu.models.NpcResponseAction;
 
-public class NpcResponseActionDAO extends DAO<NpcResponseAction> {
-    private PreparedStatement findByResponseIdStatement = null;
-    
-    public NpcResponseActionDAO(){
-        findByResponseIdStatement = Database.prepare("SELECT * FROM npc_responses_actions WHERE response_id = ?");
-    }
+public class NpcResponseActionDAO extends FindableDAO<NpcResponseAction> {
+    final private PreparedStatement findByResponseIdStatement = Database.prepare("SELECT * FROM npc_responses_actions WHERE response_id = ?");
 
     @Override
     protected String tableName() {
@@ -57,16 +53,6 @@ public class NpcResponseActionDAO extends DAO<NpcResponseAction> {
         }
         
         return list;
-    }
-
-    @Override
-    public boolean update(NpcResponseAction obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean create(NpcResponseAction obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -4,10 +4,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.DAO;
+import org.pvemu.jelly.database.FindableDAO;
 import org.pvemu.models.NpcQuestion;
 
-public class NpcQuestionDAO extends DAO<NpcQuestion> {
+public class NpcQuestionDAO extends FindableDAO<NpcQuestion> {
     private HashMap<Integer, NpcQuestion> questionsById = new HashMap<>();
 
     @Override
@@ -38,16 +38,6 @@ public class NpcQuestionDAO extends DAO<NpcQuestion> {
             return questionsById.get(id);
         }
         return find(id);
-    }
-
-    @Override
-    public boolean update(NpcQuestion obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean create(NpcQuestion obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.DAO;
 import org.pvemu.jelly.database.Database;
+import org.pvemu.jelly.database.UpdatableDAO;
 import org.pvemu.models.InventoryEntry;
 
-public class InventoryDAO extends DAO<InventoryEntry> {
+public class InventoryDAO extends UpdatableDAO<InventoryEntry> {
 
     private PreparedStatement getByOwnerStatement = null;
     private PreparedStatement createStatement = null;

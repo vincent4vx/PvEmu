@@ -21,6 +21,7 @@ import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.objects.item.ItemPosition;
+import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.Filterable;
 import org.pvemu.network.generators.GeneratorsRegistry;
@@ -64,10 +65,11 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
         colors[1] = c.color2 == -1 ? "-1" : Integer.toHexString(c.color2);
         colors[2] = c.color3 == -1 ? "-1" : Integer.toHexString(c.color3);
 
-        MapModel m = DAOFactory.map().getById(c.lastMap);
+        /*MapModel m = DAOFactory.map().getById(c.lastMap);
         if (m != null) {
             curMap = m.getGameMap();
-        }
+        }*/
+        curMap = MapFactory.getById(c.lastMap);
 
         if (curMap != null) {
             curCell = curMap.getCellById(c.lastCell);

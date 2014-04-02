@@ -59,14 +59,4 @@ public class TriggerDAO extends DAO<Trigger> {
 
         return triggers;
     }
-
-    @Override
-    public boolean update(Trigger obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean create(Trigger obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }

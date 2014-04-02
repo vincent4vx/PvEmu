@@ -9,8 +9,8 @@ package org.pvemu.actions;
 import org.pvemu.game.objects.Player;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapCell;
+import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.models.dao.DAOFactory;
 
 /**
  *
@@ -28,7 +28,8 @@ public class PlayerActions {
             return;
         }
         
-        GameMap map = DAOFactory.map().getById(mapID).getGameMap();
+        //GameMap map = DAOFactory.map().getById(mapID).getGameMap();
+        GameMap map = MapFactory.getById(mapID);
         MapCell cell = map.getCellById(cellID);
         ActionsRegistry.getMap().removePlayer(player.getMap(), player);
         

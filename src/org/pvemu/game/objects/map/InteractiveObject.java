@@ -6,13 +6,13 @@ import org.pvemu.network.game.output.GameSendersRegistry;
 
 public class InteractiveObject {
     private int objID;
-    private GameMap _map;
-    private MapCell _cell;
+    private short map;
+    private short cell;
     
-    public InteractiveObject(int objID, MapCell cell, GameMap map){
+    public InteractiveObject(int objID, short cell, short map){
         this.objID = objID;
-        _cell = cell;
-        _map = map;
+        this.cell = cell;
+        this.map = map;
     }
     
     public int getID(){
@@ -30,12 +30,12 @@ public class InteractiveObject {
         
         switch(action){
             case 44: //sauvegarde de la position
-                p.setStartPos(new short[]{_map.getID(), _cell.getID()});
+                p.setStartPos(new short[]{map, cell});
                 //ChatEvents.onSendInfoMessage(p.getSession(), 6);
                 GameSendersRegistry.getInformativeMessage().info(p.getSession(), 6);
                 break;
             default:
-                Loggin.debug("MapAction non reconnue : %d (map = %d, cell = %d, IO = %d)", action, _map.getID(), _cell.getID(), objID);
+                Loggin.debug("MapAction non reconnue : %d (map = %d, cell = %d, IO = %d)", action, map, cell, objID);
         }
     }
 

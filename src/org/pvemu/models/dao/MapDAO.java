@@ -4,10 +4,10 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.DAO;
+import org.pvemu.jelly.database.FindableDAO;
 import org.pvemu.models.MapModel;
 
-public class MapDAO extends DAO<MapModel> {
+public class MapDAO extends FindableDAO<MapModel> {
 
     private HashMap<Short, MapModel> mapById = new HashMap<>();
 
@@ -45,16 +45,6 @@ public class MapDAO extends DAO<MapModel> {
             Loggin.error("Impossible de charger la map !", e);
             return null;
         }
-    }
-
-    @Override
-    public boolean update(MapModel obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean create(MapModel obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
