@@ -19,7 +19,7 @@ public class MonsterTemplate {
     final private Stats basicStats;
     final private int xp;
 
-    public MonsterTemplate(Monster model, short level, Stats basicStats, int xp) {
+    MonsterTemplate(Monster model, short level, Stats basicStats, int xp) {
         this.model = model;
         this.level = level;
         this.basicStats = basicStats;

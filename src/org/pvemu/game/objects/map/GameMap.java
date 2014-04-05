@@ -1,52 +1,33 @@
 package org.pvemu.game.objects.map;
 
 import org.pvemu.game.objects.Player;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.pvemu.game.objects.monster.MonsterFactory;
+import org.pvemu.game.objects.monster.MonsterGroup;
+import org.pvemu.game.objects.monster.MonsterTemplate;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.MapModel;
-import org.pvemu.models.dao.DAOFactory;
 
 public final class GameMap {
     short id;
     final private MapModel model;
-    final private List<MapCell> cells; //300 cells. devrait allez pour la plupart des maps
+    final private List<MapCell> cells;
     final private ConcurrentHashMap<Integer, Player> players = new ConcurrentHashMap<>();
     final private ConcurrentHashMap<Integer, GMable> gms = new ConcurrentHashMap<>();
+    final private List<MonsterTemplate> availableMonsters;
+    final private Map<Integer, MonsterGroup> monsterGroups = new ConcurrentHashMap<>();
     private int lastGMId = 0;
 
-    public GameMap(short id, MapModel model, List<MapCell> cells) {
+    GameMap(short id, MapModel model, List<MapCell> cells, List<MonsterTemplate> availableMonsters) {
         this.id = id;
         this.model = model;
         this.cells = cells;
-    } 
-
-    /*public GameMap(MapModel model) {
-        this.model = model;
-        id = this.model.id;
-
-        for (int f = 0; f < this.model.mapData.length(); f += 10) {
-            String CellData = this.model.mapData.substring(f, f + 10);
-            cells.add(new MapCell(this, (short) (f / 10), CellData));
-        }
-        
-        this.model.mapData = null;
-
-        for (Trigger T : DAOFactory.trigger().getByMapID(id)) {
-            MapCell cell = getCellById(T.cellID);
-
-            if (cell != null) {
-                cell.addTrigger(T);
-            }
-        }
-        
-        for(MapNpcs MN : DAOFactory.mapNpcs().getByMapId(id)){
-            lastGMId--;
-            gms.put(lastGMId, new GameNpc(MN, lastGMId));
-        }
-    }*/
+        this.availableMonsters = availableMonsters;
+        refreshMobs();
+    }
     
     public int getNextGmId(){
         return lastGMId - 1;
@@ -57,6 +38,11 @@ public final class GameMap {
         
         if(gm.getID() < lastGMId)
             lastGMId = gm.getID();
+    }
+    
+    public void addMonsterGroup(MonsterGroup group){
+        addGMable(group);
+        monsterGroups.put(group.getID(), group);
     }
 
     /**
@@ -124,6 +110,10 @@ public final class GameMap {
         return cells.get(id);
     }
 
+    List<MapCell> getCells() {
+        return cells;
+    }
+
     public byte getWidth() {
         return model.width;
     }
@@ -132,29 +122,16 @@ public final class GameMap {
         return model.heigth;
     }
 
-    /**
-     * Vérifie si la destination est valide ou non
-     *
-     * @param mapID
-     * @param cellID
-     * @return
-     */
-    public static boolean isValidDest(short mapID, short cellID) {
-        //GameMap map = DAOFactory.map().getById(mapID).getGameMap();
-        GameMap map = MapFactory.getById(mapID);
-
-        if (map == null) { //map inexistante
-            return false;
-        }
-
-        if (map.cells.size() < cellID) { //cellule inexistante
-            return false;
-        }
-
-        return map.cells.get(cellID).isWalkable();
-    }
-
     public short getID() {
         return id;
+    }
+    
+    public void refreshMobs(){
+        if(monsterGroups.size() >= model.numgroup)
+            return;
+        
+        while(monsterGroups.size() < model.numgroup){
+            addMonsterGroup(MonsterFactory.generateMonsterGroup(availableMonsters, this));
+        }
     }
 }

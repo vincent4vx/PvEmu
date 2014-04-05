@@ -7,10 +7,12 @@
 package org.pvemu.game.objects.map;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.pvemu.game.objects.GameNpc;
+import org.pvemu.game.objects.monster.MonsterFactory;
 import org.pvemu.jelly.utils.Crypt;
 import org.pvemu.models.MapModel;
 import org.pvemu.models.MapNpcs;
@@ -45,7 +47,12 @@ final public class MapFactory {
             cells.add(parseCellData(id, i, cellData));
         }
         
-        GameMap map = new GameMap(id, model, cells);
+        GameMap map = new GameMap(
+                id, 
+                model,
+                Collections.unmodifiableList(cells),
+                MonsterFactory.parseMonsterList(model.monsters)
+        );
         
         for(MapNpcs MN : DAOFactory.mapNpcs().getByMapId(id)){
             map.addGMable(new GameNpc(MN, map.getNextGmId()));

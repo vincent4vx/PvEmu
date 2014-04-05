@@ -6,7 +6,7 @@ import org.pvemu.jelly.Jelly;
 
 public class Utils {
 
-    private static Random _rand = new Random();
+    final private static Random rand = new Random();
 
     /**
      * Génère une chaine aléatoire
@@ -21,21 +21,24 @@ public class Utils {
             't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
         for (int i = 0; i < size; i++) {
-            b.append(chrs[_rand.nextInt(chrs.length)]);
+            b.append(chrs[rand.nextInt(chrs.length)]);
         }
 
         return b.toString();
     }
 
     /**
-     * Génère un antier aliéatoire entre min (inclue) et max (exclue)
-     *
+     * Generate random integer in range [ min..max [
      * @param min
      * @param max
      * @return
      */
     public static int rand(int min, int max) {
-        return _rand.nextInt(max - min + 1) + min;
+        return rand.nextInt(max - min + 1) + min;
+    }
+    
+    static public int rand(int max){
+        return rand.nextInt(max);
     }
 
     /**
@@ -114,7 +117,7 @@ public class Utils {
      * @return
      */
     public static Object array_rand(Object[] arr) {
-        return arr[_rand.nextInt(arr.length)];
+        return arr[rand.nextInt(arr.length)];
     }
 
     /**
@@ -124,7 +127,7 @@ public class Utils {
      * @return
      */
     public static char char_rand(String s) {
-        return s.charAt(_rand.nextInt(s.length()));
+        return s.charAt(rand.nextInt(s.length()));
     }
 
     /**

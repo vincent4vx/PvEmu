@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.dep.Stats.Element;
+import org.pvemu.game.objects.map.GameMap;
+import org.pvemu.game.objects.map.MapCell;
+import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.Monster;
@@ -39,27 +42,74 @@ final public class MonsterFactory {
     final static private byte PA = 0;
     final static private byte PM = 1;
     
-    final static Map<Integer, List<MonsterTemplate>> templatesById = new HashMap<>();
+    final static Map<Integer, MonsterGrades> monsters = new HashMap<>();
     
-    static public List<MonsterTemplate> getTemplatesByMonsterId(int monsterId){
-        List<MonsterTemplate> templates = templatesById.get(monsterId);
-        
-        if(templates == null){
+    static public MonsterGrades getMonsterGrades(int monsterId){
+        if(!monsters.containsKey(monsterId)){
+            MonsterGrades grades = new MonsterGrades();
+            monsters.put(monsterId, grades);
             Monster model = DAOFactory.monster().find(monsterId);
             
             if(model == null){
                 Loggin.debug("cannot found monster %d", monsterId);
-                return templates;
+                return grades;
             }
             
+            populateGradesByModel(grades, model);
         }
+        
+        return monsters.get(monsterId);
+    }
+    
+    static public List<MonsterTemplate> parseMonsterList(String monsterList){
+        List<MonsterTemplate> templates = new ArrayList<>();
+        
+        String[] datas = Utils.split(monsterList, "|");
+        
+        for(String data : datas){
+            String[] tmp = Utils.split(data, ",");
+            try{
+                int id = Integer.parseInt(tmp[0]);
+                MonsterGrades grades = getMonsterGrades(id);
+                
+                if(grades == null){
+                    Loggin.debug("Cannot find monster %d", id);
+                    continue;
+                }
+                
+                if(tmp.length == 1){
+                    templates.addAll(grades.getAllTemplates());
+                }else{
+                    MonsterTemplate tpl = grades.getByLevel(Short.parseShort(tmp[1]));
+                    
+                    if(tpl == null){
+                        Loggin.debug("Cannot find grade lvl %s for monster %d", tmp[1], id);
+                        continue;
+                    }
+                    templates.add(tpl);
+                }
+            }catch(NumberFormatException e){}
+       }
         
         return templates;
     }
     
-    static private List<MonsterTemplate> getTemplatesByModel(Monster model){
-        List<MonsterTemplate> templates = new ArrayList<>();
+    static public MonsterGroup generateMonsterGroup(List<MonsterTemplate> monsters, GameMap map){
+        int id = map.getNextGmId();
+        MapCell cell = MapUtils.getRandomValidCell(map);
         
+        int size = Utils.rand(1, map.getModel().groupmaxsize);
+        
+        List<MonsterTemplate> list = new ArrayList<>(size);
+        
+        for(int i = 0; i < size; ++i){
+            list.add(monsters.get(Utils.rand(monsters.size())));
+        }
+        
+        return new MonsterGroup(id, list, cell, map);
+    }
+    
+    static private void populateGradesByModel(MonsterGrades gradesObj, Monster model){
         String[] grades = Utils.split(model.grades, "|");
         String[] stats = Utils.split(model.stats, "|");
         String[] pdvs = Utils.split(model.pdvs, "|");
@@ -113,11 +163,7 @@ final public class MonsterFactory {
             
             int xp = Integer.parseInt(exps[i]);
             
-            templates.add(new MonsterTemplate(model, level, statsObj, xp));
+            gradesObj.addTemplate(new MonsterTemplate(model, level, statsObj, xp));
         }
-        
-        return templates;
-        
-
     }
 }

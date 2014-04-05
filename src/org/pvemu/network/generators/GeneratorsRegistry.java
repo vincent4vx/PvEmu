@@ -22,6 +22,28 @@ public class GeneratorsRegistry {
     private static BasicGenerator basic = null;
     private static DialogGenerator dialog = null;
     private static GameActionGenerator gameAction = null;
+    private static MonsterGenerator monster = null;
+
+    /**
+     * Get the value of monster
+     *
+     * @return the value of monster
+     */
+    public static MonsterGenerator getMonster() {
+        if(monster == null)
+            monster = new MonsterGenerator();
+        return monster;
+    }
+
+    /**
+     * Set the value of monster
+     *
+     * @param monster new value of monster
+     */
+    public static void setMonster(MonsterGenerator monster) {
+        GeneratorsRegistry.monster = monster;
+    }
+
 
     /**
      * Get the value of gameAction

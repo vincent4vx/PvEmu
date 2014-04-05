@@ -10,6 +10,7 @@ import org.pvemu.game.objects.Player;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapCell;
 import org.pvemu.game.objects.map.MapFactory;
+import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Loggin;
 
 /**
@@ -24,7 +25,7 @@ public class PlayerActions {
      * @param cellID cellule de destination
      */
     public void teleport(Player player, short mapID, short cellID){
-        if(!GameMap.isValidDest(mapID, cellID)){
+        if(!MapUtils.isValidDest(mapID, cellID)){
             return;
         }
         
