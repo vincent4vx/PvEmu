@@ -63,7 +63,7 @@ public class PlayerGenerator {
             str.append(";");
         }
         //str.append(_lvl).append(";");
-        str.append(Utils.implode(";", p.getColors())).append(";");
+        str.append(Utils.join(p.getColors(), ";")).append(";");
         str.append(generateAccessories(p)).append(";"); //stuff
          /*if (hasEquiped(10054) || hasEquiped(10055) || hasEquiped(10056) || hasEquiped(10058) || hasEquiped(10061) || hasEquiped(10102)) {
          str.append(3).append(";");
@@ -197,7 +197,7 @@ public class PlayerGenerator {
         return new StringBuilder(50).append('|').append(player.getID()).append("|").append(player.getName()).append("|")
                     .append(player.getLevel()).append("|").append(player.getClassID()).append("|")
                     .append(player.getSexe()).append("|").append(player.getGfxID()).append("|")
-                    .append(Utils.implode("|", player.getColors())).append("|")
+                    .append(Utils.join(player.getColors(), "|")).append("|")
                     .append(GeneratorsRegistry.getObject().generateInventory(player.getInventory())).toString();
     }
 }

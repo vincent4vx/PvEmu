@@ -14,6 +14,6 @@ import org.pvemu.jelly.utils.Utils;
  */
 public class InformativeMessageGenerator {
     public String generateIm(int msgID, Object... args){
-        return new StringBuilder().append(msgID).append(';').append(Utils.implode("~", args)).toString();
+        return new StringBuilder().append(msgID).append(';').append(Utils.join(args, "~")).toString();
     }
 }

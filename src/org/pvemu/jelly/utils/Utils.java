@@ -87,30 +87,6 @@ public class Utils {
     }
 
     /**
-     * Recole les parties de pieces avec glue, dans un String
-     *
-     * @param delimiter
-     * @param pieces
-     * @return
-     */
-    @Deprecated
-    public static String implode(String glue, Object[] pieces) {
-        if (pieces == null || pieces.length < 1) {
-            return "";
-        }
-
-        StringBuilder b = new StringBuilder();
-
-        for (Object p : pieces) {
-            b.append(p).append(glue);
-        }
-
-        String r = b.toString();
-
-        return r.substring(0, r.length() - 1);
-    }
-
-    /**
      * Retourne une valeur aléatoirement du tableau
      *
      * @param arr

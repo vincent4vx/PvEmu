@@ -7,15 +7,11 @@
 package org.pvemu.network.game.input;
 
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.game.GameActionHandler;
 import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.Player;
-import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
-import org.pvemu.network.events.GameActionEvents;
-import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

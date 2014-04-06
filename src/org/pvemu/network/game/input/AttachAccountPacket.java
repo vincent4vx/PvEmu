@@ -73,7 +73,7 @@ public class AttachAccountPacket implements InputPacket {
             param.append('|').append(p.getID()).append("|").append(p.getName()).append("|")
                     .append(p.getLevel()).append("|").append(p.getClassID()).append("|")
                     .append(p.getSexe()).append("|").append(p.getGfxID()).append("|")
-                    .append(Utils.implode("|", p.getColors())).append("|");
+                    .append(Utils.join(p.getColors(), "|")).append("|");
 
             param.append(p.getInventory().toString());
             
