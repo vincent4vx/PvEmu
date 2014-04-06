@@ -23,6 +23,7 @@ import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.game.objects.player.classes.ClassData;
 import org.pvemu.game.objects.player.classes.ClassesHandler;
+import org.pvemu.game.objects.spell.SpellList;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.Filterable;
 import org.pvemu.network.generators.GeneratorsRegistry;
@@ -45,6 +46,17 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     private Exchange exchange = null;
     private final GameActionsManager actionsManager = new GameActionsManager();
     final private ClassData classData;
+    private final SpellList spellList = new SpellList();
+
+    /**
+     * Get the value of spellList
+     *
+     * @return the value of spellList
+     */
+    public SpellList getSpellList() {
+        return spellList;
+    }
+
 
     /**
      * Get the value of actionsManager
@@ -82,6 +94,7 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
 
         inventory = new Inventory(this);
         loadStats();
+        classData.learnClassSpells(this);
     }
 
     /**

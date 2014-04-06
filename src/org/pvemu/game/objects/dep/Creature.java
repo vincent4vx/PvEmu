@@ -1,35 +1,28 @@
 package org.pvemu.game.objects.dep;
 
 import org.pvemu.game.objects.dep.Stats.Element;
-import java.util.ArrayList;
-import org.pvemu.models.Spell.SpellStats;
 
 public abstract class Creature {
 
     protected Stats baseStats = new Stats();
     protected short level;
     protected short gfxID;
-    protected ArrayList<SpellStats> spells;
     protected String[] colors = new String[3];
     protected String name;
 
     /**
-     * Retourne les stats de bases
-     *
-     * @return
+     * Get only the base stats
+     * @return 
      */
     public Stats getBaseStats() {
         return baseStats;
     }
 
     /**
-     * Retourne les stats total (base + équipement)
-     *
-     * @return
+     * Get all the stats
+     * @return 
      */
-    public Stats getTotalStats() {
-        return baseStats;
-    }
+    abstract public Stats getTotalStats();
 
     /**
      * Retourne le nom de la créature

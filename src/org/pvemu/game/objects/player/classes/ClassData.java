@@ -6,14 +6,64 @@
 
 package org.pvemu.game.objects.player.classes;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.dep.Stats.Element;
+import org.pvemu.game.objects.player.Player;
+import org.pvemu.game.objects.spell.GameSpell;
+import org.pvemu.game.objects.spell.SpellFactory;
+import org.pvemu.game.objects.spell.SpellLevels;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 abstract public class ClassData {
+    static private class PairSpellLevel{
+        final private int level;
+        final private GameSpell spell;
+
+        PairSpellLevel(int level, GameSpell spell) {
+            this.level = level;
+            this.spell = spell;
+        }
+
+        public int getLevel() {
+            return level;
+        }
+
+        public GameSpell getSpell() {
+            return spell;
+        }
+    }
+    
+    final private Set<PairSpellLevel> spellsByLevel = new HashSet<>();
+    
+    public void addSpell(int level, int spellID){
+        SpellLevels spellLevels = SpellFactory.getSpellLevelsById(spellID);
+        
+        if(spellLevels == null)
+            return;
+        
+        GameSpell spell = spellLevels.getSpellByLevel((byte)1);
+        
+        if(spell == null)
+            return;
+        
+        spellsByLevel.add(new PairSpellLevel(level, spell));
+    }
+    
+    public void learnClassSpells(Player player){
+        for(PairSpellLevel psl : spellsByLevel){
+            if(player.getLevel() < psl.getLevel() 
+               || player.getSpellList().hasAlreadyLearnedSpell(psl.getSpell().getModel().id))
+                continue;
+            
+            player.getSpellList().learnSpell(psl.getSpell());
+        }
+    }
+    
     abstract public byte id();
     
     public short getGfxID(byte sex){

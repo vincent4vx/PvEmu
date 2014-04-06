@@ -8,6 +8,7 @@ package org.pvemu.network.game.output;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.player.Player;
+import org.pvemu.game.objects.spell.SpellList;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
@@ -34,6 +35,13 @@ public class PlayerSender {
         GamePacketEnum.STATS_PACKET.send(
                 session, 
                 GeneratorsRegistry.getPlayer().generateAs(player)
+        );
+    }
+    
+    public void spellList(SpellList list, IoSession session){
+        GamePacketEnum.SPELL_LIST.send(
+                session,
+                GeneratorsRegistry.getPlayer().generateSpellList(list)
         );
     }
 }

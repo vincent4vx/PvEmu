@@ -38,6 +38,8 @@ public class CreateGamePacket implements InputPacket {
         
         GameSendersRegistry.getPlayer().stats(player, session);
         GameSendersRegistry.getPlayer().weightUsed(player, session);
+        GameSendersRegistry.getPlayer().spellList(player.getSpellList(), session);
+        
         if(Constants.DOFUS_VER_ID >= 1100){
             GamePacketEnum.CHAT_CHANEL_ADD.send(session, player.getChanels());
         }

@@ -9,6 +9,8 @@ import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
+import org.pvemu.game.objects.spell.GameSpell;
+import org.pvemu.game.objects.spell.SpellList;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.utils.Utils;
 
@@ -199,5 +201,17 @@ public class PlayerGenerator {
                     .append(player.getSexe()).append("|").append(player.getGfxID()).append("|")
                     .append(Utils.join(player.getColors(), "|")).append("|")
                     .append(GeneratorsRegistry.getObject().generateInventory(player.getInventory())).toString();
+    }
+    
+    public String generateSpellList(SpellList list){
+        StringBuilder sb = new StringBuilder();
+        
+        for(GameSpell spell : list.getSpells()){
+            sb.append(spell.getModel().id).append('~')
+                    .append(spell.getLevel()).append('~')
+                    .append(list.getSpellPosition(spell)).append(';');
+        }
+        
+        return sb.toString();
     }
 }

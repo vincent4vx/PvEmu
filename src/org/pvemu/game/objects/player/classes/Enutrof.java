@@ -15,6 +15,30 @@ import org.pvemu.game.objects.dep.Stats.Element;
  */
 public class Enutrof extends ClassData {
 
+    public Enutrof() {
+        addSpell(1, 51);
+        addSpell(1, 43);
+        addSpell(1, 41);
+        addSpell(3, 49);
+        addSpell(6, 42);
+        addSpell(9, 47);
+        addSpell(13, 48);
+        addSpell(17, 45);
+        addSpell(21, 53);
+        addSpell(26, 46);
+        addSpell(31, 52);
+        addSpell(36, 44);
+        addSpell(42, 50);
+        addSpell(48, 54);
+        addSpell(54, 55);
+        addSpell(60, 56);
+        addSpell(70, 58);
+        addSpell(80, 59);
+        addSpell(90, 57);
+        addSpell(100, 60);
+        addSpell(200, 1903);
+    }
+
     @Override
     public byte id() {
         return ClassesHandler.CLASS_ENUTROF;

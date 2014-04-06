@@ -270,6 +270,7 @@ public enum GamePacketEnum {
      * param : [type][+/-][itemID]|[qu]|[templateID]|[stats]
      */
     EXCHANGE_DISTANT_MOVE_OK("EmK"),
+    SPELL_LIST("SL"),
     PONG("pong");
     private String packet;
     private Object param;
