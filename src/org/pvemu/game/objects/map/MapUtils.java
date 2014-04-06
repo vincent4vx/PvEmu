@@ -37,7 +37,7 @@ final public class MapUtils {
         
         do{
             cell = map.getCellById((short)Utils.rand(size));
-        }while(cell.isWalkable());
+        }while(!cell.isWalkable());
         
         return cell;
     }
