@@ -14,6 +14,8 @@ import org.pvemu.game.World;
 import org.pvemu.game.objects.Player;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
+import org.pvemu.jelly.filters.Filter;
+import org.pvemu.jelly.filters.FilterFactory;
 import org.pvemu.models.ItemTemplate;
 import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.SessionAttributes;
@@ -102,6 +104,11 @@ public class ItemCommand extends Command {
         }
         
         perform(args, (ClientAsker)asker);
+    }
+
+    @Override
+    public Filter conditions() {
+        return FilterFactory.moderatorAskerFilter();
     }
     
 }

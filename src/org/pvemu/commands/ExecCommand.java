@@ -7,9 +7,8 @@
 package org.pvemu.commands;
 
 import org.pvemu.commands.askers.Asker;
-import org.pvemu.jelly.filters.ConsoleAskerFilter;
 import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.comparators.MoreThanComparator;
+import org.pvemu.jelly.filters.FilterFactory;
 import org.pvemu.jelly.scripting.API;
 
 /**
@@ -39,11 +38,7 @@ public class ExecCommand extends Command {
 
     @Override
     public Filter conditions() {
-        ConsoleAskerFilter filter = new ConsoleAskerFilter();
-        
-        filter.setLevel(new MoreThanComparator<>((byte)3));
-        
-        return filter;
+        return FilterFactory.adminConsoleFilter();
     }
 
     @Override

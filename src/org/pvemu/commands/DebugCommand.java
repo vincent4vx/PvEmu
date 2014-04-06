@@ -8,9 +8,8 @@ package org.pvemu.commands;
 
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.jelly.Jelly;
-import org.pvemu.jelly.filters.AskerFilter;
 import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.comparators.MoreThanComparator;
+import org.pvemu.jelly.filters.FilterFactory;
 
 /**
  *
@@ -41,11 +40,7 @@ public class DebugCommand extends Command {
 
     @Override
     public Filter conditions() {
-        AskerFilter filter = new AskerFilter();
-        
-        filter.setLevel(new MoreThanComparator((byte)3));
-        
-        return filter;
+        return FilterFactory.adminAskerFilter();
     }
 
     @Override

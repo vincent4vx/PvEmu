@@ -8,7 +8,7 @@ package org.pvemu.commands;
 
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.YesFilter;
+import org.pvemu.jelly.filters.FilterFactory;
 
 /**
  *
@@ -34,6 +34,6 @@ abstract public class Command {
     }
     
     public Filter conditions(){
-        return new YesFilter();
+        return FilterFactory.yesFilter();
     }
 }

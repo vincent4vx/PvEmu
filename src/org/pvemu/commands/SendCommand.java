@@ -12,6 +12,7 @@ import org.pvemu.game.objects.Player;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.jelly.filters.AskerFilter;
 import org.pvemu.jelly.filters.Filter;
+import org.pvemu.jelly.filters.FilterFactory;
 import org.pvemu.jelly.filters.comparators.MoreThanComparator;
 
 /**
@@ -49,10 +50,7 @@ public class SendCommand extends Command {
 
     @Override
     public Filter conditions() {
-        AskerFilter filter = new AskerFilter();
-        filter.setLevel(new MoreThanComparator((byte)3));
-        
-        return filter;
+        return FilterFactory.adminConsoleFilter();
     }
     
 }

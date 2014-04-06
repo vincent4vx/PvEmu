@@ -7,6 +7,8 @@
 package org.pvemu.commands;
 
 import org.pvemu.commands.askers.Asker;
+import org.pvemu.jelly.filters.Filter;
+import org.pvemu.jelly.filters.FilterFactory;
 
 /**
  *
@@ -74,6 +76,11 @@ public class AliasCommand extends Command {
             "alias (pas d'arguments) : affiche la liste des alias disponibles",
             "alias [nom de l'alias] [nom de la commande] {params...} : ajoute un alias"
         };
+    }
+
+    @Override
+    public Filter conditions() {
+        return FilterFactory.adminAskerFilter();
     }
        
 }
