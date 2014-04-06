@@ -95,6 +95,9 @@ final public class MonsterFactory {
     }
     
     static public MonsterGroup generateMonsterGroup(List<MonsterTemplate> monsters, GameMap map){
+        if(monsters.isEmpty() || map.getModel().groupmaxsize == 0){
+            return null;
+        }
         int id = map.getNextGmId();
         MapCell cell = MapUtils.getRandomValidCell(map);
         

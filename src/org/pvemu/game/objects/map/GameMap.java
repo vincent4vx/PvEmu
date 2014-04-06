@@ -41,6 +41,9 @@ public final class GameMap {
     }
     
     public void addMonsterGroup(MonsterGroup group){
+        if(group == null)
+            return;
+        
         addGMable(group);
         monsterGroups.put(group.getID(), group);
     }
@@ -127,7 +130,7 @@ public final class GameMap {
     }
     
     public void refreshMobs(){
-        if(monsterGroups.size() >= model.numgroup)
+        if(monsterGroups.size() >= model.numgroup || availableMonsters.isEmpty())
             return;
         
         while(monsterGroups.size() < model.numgroup){
