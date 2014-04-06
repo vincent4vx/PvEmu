@@ -8,7 +8,7 @@ package org.pvemu.network.game.input;
 
 import java.util.ArrayList;
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.triggeraction.TriggerActionHandler;
 import org.pvemu.game.triggeraction.TriggerFactory;
 import org.pvemu.jelly.utils.Utils;

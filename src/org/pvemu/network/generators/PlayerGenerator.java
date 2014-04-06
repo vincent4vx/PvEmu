@@ -5,7 +5,7 @@
 package org.pvemu.network.generators;
 
 import java.util.ArrayList;
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
@@ -137,7 +137,7 @@ public class PlayerGenerator {
         ASData.append(0).append("|").append(0).append("|").append(0).append("|");
         ASData.append(0).append("~").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append((false ? "1" : "0")).append("|");
 
-        ASData.append(p.getPDVMax()).append(",").append(p.getPDVMax()).append("|");
+        ASData.append(p.getTotalStats().get(Stats.Element.VITA)).append(",").append(p.getTotalStats().get(Stats.Element.VITA)).append("|");
         ASData.append(10000).append(",10000|");
 
         ASData.append(p.getInitiative()).append("|");

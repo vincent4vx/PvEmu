@@ -6,7 +6,7 @@
 
 package org.pvemu.game.cinematic;
 
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 
 /**
  *

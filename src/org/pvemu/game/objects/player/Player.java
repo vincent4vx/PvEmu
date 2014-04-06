@@ -1,9 +1,8 @@
-package org.pvemu.game.objects;
+package org.pvemu.game.objects.player;
 
 import org.pvemu.game.objects.map.GameMap;
-import org.pvemu.game.GameActionHandler;
+//import org.pvemu.game.GameActionHandler;
 import org.pvemu.game.objects.item.GameItem;
-import org.pvemu.game.objects.dep.ClassData;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.map.GMable;
 import org.pvemu.game.objects.dep.Stats;
@@ -15,13 +14,15 @@ import java.util.Map.Entry;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.Account;
 import org.pvemu.models.Character;
-import org.pvemu.models.MapModel;
 import org.pvemu.models.NpcQuestion;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.gameaction.GameActionsManager;
+import org.pvemu.game.objects.Exchange;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.map.MapFactory;
+import org.pvemu.game.objects.player.classes.ClassData;
+import org.pvemu.game.objects.player.classes.ClassesHandler;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.Filterable;
 import org.pvemu.network.generators.GeneratorsRegistry;
@@ -39,10 +40,11 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     public Byte orientation = 2;
     final private Inventory inventory;
     private Stats stuffStats;
-    final private GameActionHandler actions = new GameActionHandler();
+//    final private GameActionHandler actions = new GameActionHandler();
     public NpcQuestion current_npc_question = null;
     private Exchange exchange = null;
     private final GameActionsManager actionsManager = new GameActionsManager();
+    final private ClassData classData;
 
     /**
      * Get the value of actionsManager
@@ -55,6 +57,7 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
 
 
     public Player(Character c) {
+        classData = ClassesHandler.instance().getClass(c.classId);
         character = c;
         gfxID = c.gfxid;
         level = c.level;
@@ -86,7 +89,8 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
      */
     private void loadStats() {
         if (character.baseStats == null || character.baseStats.isEmpty()) {
-            ClassData.setStartStats(this);
+            //OldClassData.setStartStats(this);
+            return;
         } else {
             for (String data : character.baseStats.split("\\|")) {
                 try {
@@ -124,7 +128,7 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     @Override
     public Stats getTotalStats() {
         Stats total = new Stats();
-        return total.addAll(baseStats).addAll(stuffStats);
+        return total.addAll(baseStats).addAll(stuffStats).addAll(classData.getClassStats(level));
     }
     
     /**
@@ -205,12 +209,16 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
         return p;
     }
     
-    /**
-     * Retourne le nombre de pdv max du perso
-     * @return 
-     */
-    public Short getPDVMax(){
-        return (short)((level - 1) * ClassData.VITA_PER_LVL + ClassData.BASE_VITA + getTotalStats().get(Element.VITA));
+//    /**
+//     * Retourne le nombre de pdv max du perso
+//     * @return 
+//     */
+//    public Short getPDVMax(){
+//        return (short)((level - 1) * OldClassData.VITA_PER_LVL + OldClassData.BASE_VITA + getTotalStats().get(Element.VITA));
+//    }
+    
+    public ClassData getClassData() {
+        return classData;
     }
 
     /**
@@ -235,9 +243,16 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
      * data = {mapID, cellID}
      * @param data 
      */
+    @Deprecated
     public void setStartPos(short[] data){
         character.startMap = data[0];
         character.startCell = data[1];
+        DAOFactory.character().update(character);
+    }
+    
+    public void setStartPos(short mapID, short cellID){
+        character.startMap = mapID;
+        character.startCell = cellID;
         DAOFactory.character().update(character);
     }
 
@@ -301,13 +316,13 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
         return 1;
     }
     
-    /**
-     * Retourne le GameActionHandler du joueur
-     * @return 
-     */
-    public GameActionHandler getActions(){
-        return actions;
-    }
+//    /**
+//     * Retourne le GameActionHandler du joueur
+//     * @return 
+//     */
+//    public GameActionHandler getActions(){
+//        return actions;
+//    }
     
     /**
      * Retourne l'échange en cours (si il existe)

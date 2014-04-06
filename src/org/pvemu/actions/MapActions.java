@@ -6,7 +6,7 @@
 
 package org.pvemu.actions;
 
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.network.game.output.GameSendersRegistry;
 

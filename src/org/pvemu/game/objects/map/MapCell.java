@@ -5,7 +5,7 @@
  */
 package org.pvemu.game.objects.map;
 
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;

@@ -8,7 +8,7 @@ package org.pvemu.network.game.input;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.GameNpc;
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.map.GMable;
 import org.pvemu.models.NpcQuestion;
 import org.pvemu.network.InputPacket;

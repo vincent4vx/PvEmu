@@ -6,8 +6,7 @@
 package org.pvemu.game.cinematic;
 
 import org.pvemu.actions.ActionsRegistry;
-import org.pvemu.game.objects.Player;
-import org.pvemu.game.objects.dep.ClassData;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
@@ -23,9 +22,8 @@ public class GoToAstrubCinematic implements Cinematic {
 
     @Override
     public void end(Player player) {
-        short[] mapData = ClassData.getStatuesPos(player.getClassID());
-        ActionsRegistry.getPlayer().teleport(player, mapData[0], mapData[1]);
-        player.setStartPos(mapData);
+        ActionsRegistry.getPlayer().teleport(player, player.getClassData().getAstrubStatueMap(), player.getClassData().getAstrubStatueCell());
+        player.setStartPos(player.getClassData().getAstrubStatueMap(), player.getClassData().getAstrubStatueCell());
         GameSendersRegistry.getInformativeMessage().info(player.getSession(), 6);
     }
 

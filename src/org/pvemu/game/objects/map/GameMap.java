@@ -1,6 +1,6 @@
 package org.pvemu.game.objects.map;
 
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;

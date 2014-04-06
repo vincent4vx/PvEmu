@@ -1,7 +1,7 @@
 package org.pvemu.models;
 
 import org.pvemu.models.dao.DAOFactory;
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;

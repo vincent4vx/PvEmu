@@ -6,7 +6,7 @@
 package org.pvemu.game.triggeraction;
 
 import org.pvemu.actions.ActionsRegistry;
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.YesFilter;

@@ -6,7 +6,7 @@
 
 package org.pvemu.commands.askers;
 
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.models.Account;
 import org.pvemu.network.game.output.GameSendersRegistry;
 

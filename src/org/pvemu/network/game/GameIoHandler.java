@@ -1,6 +1,6 @@
 package org.pvemu.network.game;
 
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Jelly;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.Account;

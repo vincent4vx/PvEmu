@@ -9,7 +9,7 @@ package org.pvemu.game.chat;
 import java.util.HashMap;
 import org.pvemu.commands.CommandsHandler;
 import org.pvemu.commands.askers.PlayerAsker;
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 
 /**

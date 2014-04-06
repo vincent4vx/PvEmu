@@ -11,7 +11,7 @@ import org.pvemu.commands.askers.ClientAsker;
 import java.util.ArrayList;
 import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.World;
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
 import org.pvemu.jelly.filters.Filter;

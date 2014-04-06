@@ -1,6 +1,6 @@
 package org.pvemu.game.objects.map;
 
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
@@ -30,7 +30,7 @@ public class InteractiveObject {
         
         switch(action){
             case 44: //sauvegarde de la position
-                p.setStartPos(new short[]{map, cell});
+                p.setStartPos(map, cell);
                 //ChatEvents.onSendInfoMessage(p.getSession(), 6);
                 GameSendersRegistry.getInformativeMessage().info(p.getSession(), 6);
                 break;

@@ -1,5 +1,6 @@
 package org.pvemu.game.objects;
 
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.item.GameItem;
 import java.util.HashMap;
 import org.pvemu.actions.ActionsRegistry;

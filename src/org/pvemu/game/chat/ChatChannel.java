@@ -6,7 +6,7 @@
 
 package org.pvemu.game.chat;
 
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.filters.Filter;
 
 /**

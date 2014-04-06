@@ -8,7 +8,7 @@ package org.pvemu.network.game.input;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.actions.ActionsRegistry;
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.inventory.entrystate.EntryState;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.jelly.Loggin;

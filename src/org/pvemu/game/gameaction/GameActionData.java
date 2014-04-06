@@ -6,7 +6,7 @@
 
 package org.pvemu.game.gameaction;
 
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 
 /**
  *

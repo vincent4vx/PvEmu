@@ -2,7 +2,7 @@ package org.pvemu.network.game;
 
 import org.pvemu.game.World;
 import org.pvemu.game.objects.map.GameMap;
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import java.util.Collection;
 import org.pvemu.jelly.Jelly;
 import org.apache.mina.core.session.IoSession;

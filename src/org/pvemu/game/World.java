@@ -1,6 +1,6 @@
 package org.pvemu.game;
 
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.jelly.Loggin;
 import java.util.ArrayList;

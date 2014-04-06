@@ -7,7 +7,7 @@
 package org.pvemu.network.generators;
 
 import java.util.Map;
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.inventory.Inventory;
 import org.pvemu.game.objects.item.GameItem;

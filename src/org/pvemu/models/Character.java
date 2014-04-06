@@ -6,7 +6,7 @@ package org.pvemu.models;
 
 import org.pvemu.game.World;
 //import org.pvemu.game.objects.item.OldGameItem;
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import java.util.HashMap;
 import org.pvemu.jelly.Jelly;
 import org.pvemu.models.dao.DAOFactory;

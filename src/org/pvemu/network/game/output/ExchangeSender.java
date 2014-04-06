@@ -6,7 +6,7 @@
 
 package org.pvemu.network.game.output;
 
-import org.pvemu.game.objects.Player;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
