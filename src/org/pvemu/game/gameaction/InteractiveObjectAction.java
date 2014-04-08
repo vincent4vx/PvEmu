@@ -18,7 +18,7 @@ public class InteractiveObjectAction implements GameAction {
 
     @Override
     public short id() {
-        return 500;
+        return GameActionsRegistry.INTERACTIVE_OBJECT;
     }
 
     @Override

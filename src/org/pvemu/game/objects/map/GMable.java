@@ -12,4 +12,8 @@ public interface GMable {
      * @return 
      */
     public Integer getID();
+    
+    public short getCellId();
+    public byte getOrientation();
+    public String getName();
 }

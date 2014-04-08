@@ -22,6 +22,28 @@ public class GameSendersRegistry {
     private static BasicSender basic = null;
     private static DialogSender dialog = null;
     private static GameActionSender gameAction = null;
+    private static DefianceSender defiance = null;
+
+    /**
+     * Get the value of defiance
+     *
+     * @return the value of defiance
+     */
+    public static DefianceSender getDefiance() {
+        if(defiance == null)
+            defiance = new DefianceSender();
+        return defiance;
+    }
+
+    /**
+     * Set the value of defiance
+     *
+     * @param defiance new value of defiance
+     */
+    public static void setDefiance(DefianceSender defiance) {
+        GameSendersRegistry.defiance = defiance;
+    }
+
 
     /**
      * Get the value of gameAction

@@ -20,7 +20,7 @@ public class WalkAction implements GameAction {
 
     @Override
     public short id() {
-        return 1;
+        return GameActionsRegistry.WALK;
     }
 
     @Override

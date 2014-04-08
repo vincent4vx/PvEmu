@@ -23,6 +23,28 @@ public class GeneratorsRegistry {
     private static DialogGenerator dialog = null;
     private static GameActionGenerator gameAction = null;
     private static MonsterGenerator monster = null;
+    private static FightGenerator fight = null;
+
+    /**
+     * Get the value of fight
+     *
+     * @return the value of fight
+     */
+    public static FightGenerator getFight() {
+        if(fight == null)
+            fight = new FightGenerator();
+        return fight;
+    }
+
+    /**
+     * Set the value of fight
+     *
+     * @param fight new value of fight
+     */
+    public static void setFight(FightGenerator fight) {
+        GeneratorsRegistry.fight = fight;
+    }
+
 
     /**
      * Get the value of monster

@@ -41,6 +41,21 @@ public class GameActionSender {
         }
     }
     
+    public void unidentifiedGameActionToMap(GameMap map, short gameActionID, Object... args){
+        String packet = GeneratorsRegistry.getGameAction().generateUnidentifiedGameAction(gameActionID, args);
+        
+        for(Player player : map.getPlayers().values()){
+            GamePacketEnum.GAME_ACTION.send(player.getSession(), packet);
+        }
+    }
+    
+    public void unidentifiedGameAction(IoSession session, short gameActionID, Object... args){
+        GamePacketEnum.GAME_ACTION.send(
+                session,
+                GeneratorsRegistry.getGameAction().generateUnidentifiedGameAction(gameActionID, args)
+        );
+    }
+    
     public void gameActionToMap(GameMap map, int id, GameActionData data){
         Object[] args = new Object[data.getArguments().length + 1];
         System.arraycopy(data.getArguments(), 0, args, 1, data.getArguments().length);

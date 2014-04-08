@@ -19,7 +19,7 @@ public class CinematicAction implements GameAction {
 
     @Override
     public short id() {
-        return 2;
+        return GameActionsRegistry.CINEMATIC;
     }
 
     @Override

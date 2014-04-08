@@ -8,6 +8,7 @@ package org.pvemu.actions;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.World;
+import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapCell;
@@ -15,6 +16,7 @@ import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.SessionAttributes;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -54,14 +56,44 @@ public class PlayerActions {
     }
     
     public void logout(Player player){
-        ActionsRegistry.getMap().removePlayer(player.getMap(), player);
+        GameMap map = player.getMap();
+        ActionsRegistry.getMap().removePlayer(map, player);
         IoSession session = player.getSession();
         player.setSession(null);
         player.stopExchange();
+        cancelDefiance(player);
         player.getActionsManager().clearAll();
         SessionAttributes.PLAYER.removeValue(session);
         World.instance().removeOnline(player);
         player.save();
         Loggin.debug("%s : logout", player.getName());
+    }
+    
+    public void cancelDefiance(Player player){
+        int otherId = player.getActionsManager().getDefianceTarget();
+        if(otherId == GameActionsManager.NO_DEFIANCE_TARGET)
+            return;
+        
+        player.getActionsManager().setBusy(false);
+        player.getActionsManager().setDefianceTarget(GameActionsManager.NO_DEFIANCE_TARGET);
+        
+        Player other = player.getMap().getPlayers().get(otherId);
+        
+        if(other != null){
+            other.getActionsManager().setBusy(false);
+            other.getActionsManager().setDefianceTarget(GameActionsManager.NO_DEFIANCE_TARGET);
+            GameSendersRegistry.getGameAction().unidentifiedGameActionToMap(
+                    player.getMap(), 
+                    (short)902, 
+                    player.getID(),
+                    other.getID()
+            );
+        }else{
+            GameSendersRegistry.getDefiance().cancelDefiance(
+                    player.getSession(), 
+                    otherId, 
+                    player.getID()
+            );
+        }
     }
 }

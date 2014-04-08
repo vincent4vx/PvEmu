@@ -20,4 +20,11 @@ public class GameActionGenerator {
                 .append(';').append(Utils.join(args, ";"))
                 .toString();
     }
+    
+    public String generateUnidentifiedGameAction(short gameActionID, Object... args){
+        return new StringBuilder()
+                .append(';').append(gameActionID)
+                .append(';').append(Utils.join(args, ";"))
+                .toString();
+    }
 }

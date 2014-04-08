@@ -13,6 +13,14 @@ import java.util.HashMap;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 final public class GameActionsRegistry {
+    final static public short WALK               = 1;
+    final static public short CINEMATIC          = 2;
+    final static public short INTERACTIVE_OBJECT = 500;
+    final static public short ASK_DEFIANCE       = 900;
+    final static public short ACCEPT_DEFIANCE    = 901;
+    final static public short CANCEL_DEFIANCE    = 902;
+    final static public short DEFIANCE_ERROR     = 903;
+    
     final static private GameActionsRegistry instance = new GameActionsRegistry();
     
     final private HashMap<Short, GameAction> gameActions = new HashMap<>();
@@ -21,6 +29,9 @@ final public class GameActionsRegistry {
         registerGameAction(new WalkAction());
         registerGameAction(new InteractiveObjectAction());
         registerGameAction(new CinematicAction());
+        registerGameAction(new AskDefianceAction());
+        registerGameAction(new CancelDefianceAction());
+        registerGameAction(new AcceptDefianceAction());
     }
     
     public void registerGameAction(GameAction GA){

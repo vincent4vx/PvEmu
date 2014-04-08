@@ -16,12 +16,32 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 final public class GameActionsManager {
+    final static public int NO_DEFIANCE_TARGET = -1;
+    
     private boolean walking = false;
+    private boolean busy = false;
     final private HashMap<Short, GameActionData> gameActions = new HashMap<>();
     final private ArrayList<GameActionData> pendingActions = new ArrayList<>();
+    private int defianceTarget = NO_DEFIANCE_TARGET;
 
     public boolean isWalking() {
         return walking;
+    }
+
+    public void setDefianceTarget(int defiantTarget) {
+        this.defianceTarget = defiantTarget;
+    }
+
+    public int getDefianceTarget() {
+        return defianceTarget;
+    }
+    
+    public boolean isBusy(){
+        return walking || !gameActions.isEmpty() || busy;
+    }
+
+    public void setBusy(boolean busy) {
+        this.busy = busy;
     }
 
     void setWalking(boolean walking) {
@@ -80,5 +100,13 @@ final public class GameActionsManager {
         GameAction GA = GameActionsRegistry.instance().getGameAction(gad.getGameActionID());
         GA.end(gad, success, args);
         gameActions.remove(id);
+    }
+    
+    public void clearAll(){
+        walking = false;
+        busy = false;
+        gameActions.clear();
+        pendingActions.clear();
+        defianceTarget = NO_DEFIANCE_TARGET;
     }
 }
