@@ -24,9 +24,9 @@ public class GameIoHandler extends MinaIoHandler {
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
-        Player p = SessionAttributes.PLAYER.getValue(session);
+        Player player = SessionAttributes.PLAYER.getValue(session);
         
-        if(p != null)
+        /*if(p != null)
             ActionsRegistry.getMap().removePlayer(p.getMap(), p);
 
         if (p == null) {
@@ -38,7 +38,15 @@ public class GameIoHandler extends MinaIoHandler {
         }
 
         Loggin.debug("Déconnexion de %s", new Object[]{p.getName()});
-        p.getCharacter().logout();
+        p.getCharacter().logout();*/
+        
+        if(player != null)
+            ActionsRegistry.getPlayer().logout(player);
+        
+        Account account = SessionAttributes.ACCOUNT.getValue(session);
+        
+        if(account != null)
+            ActionsRegistry.getAccount().logout(account);
     }
 
     @Override

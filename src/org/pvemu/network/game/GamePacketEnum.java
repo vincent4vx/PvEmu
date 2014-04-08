@@ -6,6 +6,7 @@ import org.pvemu.game.objects.player.Player;
 import java.util.Collection;
 import org.pvemu.jelly.Jelly;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.actions.ActionsRegistry;
 
 public enum GamePacketEnum {
 
@@ -346,7 +347,8 @@ public enum GamePacketEnum {
         }
         for (Player P : players) {
             if (P.getSession() == null) {
-                P.logout();
+                ActionsRegistry.getPlayer().logout(P);
+                ActionsRegistry.getAccount().logout(P.getAccount());
                 continue;
             }
             if(P.getSession().isClosing()){

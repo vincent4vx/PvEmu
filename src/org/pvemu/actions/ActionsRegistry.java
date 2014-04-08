@@ -15,6 +15,26 @@ public class ActionsRegistry {
     private static MapActions map = new MapActions();
     private static PlayerActions player = new PlayerActions();
     private static ObjectActions object = new ObjectActions();
+    private static AccountAction account = new AccountAction();
+
+    /**
+     * Get the value of account
+     *
+     * @return the value of account
+     */
+    public static AccountAction getAccount() {
+        return account;
+    }
+
+    /**
+     * Set the value of account
+     *
+     * @param account new value of account
+     */
+    public static void setAccount(AccountAction account) {
+        ActionsRegistry.account = account;
+    }
+
 
     /**
      * Get the value of object

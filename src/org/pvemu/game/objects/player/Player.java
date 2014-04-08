@@ -270,13 +270,6 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     }
 
     /**
-     * Prépare la déconnexion
-     */
-    public void logout() {
-        character.logout();
-    }
-
-    /**
      * Retourne ne nombre total de pods
      *
      * @return
@@ -347,6 +340,7 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     
     public void startExchange(Player target){
         exchange = new Exchange(this, target);
+        actionsManager.setBusy(true);
     }
     
     /**
@@ -357,6 +351,7 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
             return;
         }
         exchange = null;
+        actionsManager.setBusy(false);
     }
 
     @Override

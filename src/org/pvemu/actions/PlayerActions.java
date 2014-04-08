@@ -6,12 +6,15 @@
 
 package org.pvemu.actions;
 
+import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.World;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapCell;
 import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.network.SessionAttributes;
 
 /**
  *
@@ -48,5 +51,17 @@ public class PlayerActions {
         Loggin.debug("Joueur %s arrivé sur la cellule %d avec succès !", player.getName(), player.getCell().getID());
         
         player.getCell().performCellAction(player);
+    }
+    
+    public void logout(Player player){
+        ActionsRegistry.getMap().removePlayer(player.getMap(), player);
+        IoSession session = player.getSession();
+        player.setSession(null);
+        player.stopExchange();
+        player.getActionsManager().clearAll();
+        SessionAttributes.PLAYER.removeValue(session);
+        World.instance().removeOnline(player);
+        player.save();
+        Loggin.debug("%s : logout", player.getName());
     }
 }

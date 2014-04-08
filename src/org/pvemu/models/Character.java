@@ -90,22 +90,6 @@ public class Character implements org.pvemu.jelly.database.Model {
         return _player;
     }
 
-    public void logout() {
-        if (_player == null) {
-            return;
-        }
-
-        _player.getAccount().removeSession();
-        World.instance().removeOnline(_player);
-        _player.getSession().removeAttribute("player");
-        _player.getSession().removeAttribute("account");
-        _player.setSession(null);
-
-        if (Jelly.running) {
-            _player.save();
-        }
-    }
-
     @Override
     public void clear() {
         id = 0;

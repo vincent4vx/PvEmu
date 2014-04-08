@@ -43,6 +43,14 @@ public class SessionAttributes<T> {
     }
     
     /**
+     * Remove an attribute stored in the session
+     * @param session 
+     */
+    public void removeValue(IoSession session){
+        session.removeAttribute(this);
+    }
+    
+    /**
      * Teste si une valeur est stocké dans la session
      * @param session la session courante
      * @return true si l'information existe, false sinon

@@ -6,6 +6,7 @@ import org.pvemu.jelly.Loggin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
+import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.jelly.Shell;
 import org.pvemu.jelly.Shell.GraphicRenditionEnum;
 import org.pvemu.jelly.database.Database;
@@ -144,7 +145,8 @@ public class World {
                 if (P.getSession() != null) {
                     P.getSession().close(true).awaitUninterruptibly();
                 } else {
-                    P.logout();
+                    ActionsRegistry.getPlayer().logout(P);
+                    ActionsRegistry.getAccount().logout(P.getAccount());
                 }
             }
             Shell.println("Ok !", GraphicRenditionEnum.GREEN);
