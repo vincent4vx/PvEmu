@@ -358,4 +358,15 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     public boolean corresponds(Filter filter) {
         return filter.corresponds(this);
     }
+
+    @Override
+    public short getCellId() {
+        return curCell.getID();
+    }
+
+    @Override
+    public byte getOrientation() {
+        return orientation;
+    }
+    
 }

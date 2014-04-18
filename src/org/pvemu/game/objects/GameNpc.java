@@ -71,6 +71,21 @@ public class GameNpc implements GMable {
     }
 
     @Override
+    public short getCellId() {
+        return cellID;
+    }
+
+    @Override
+    public byte getOrientation() {
+        return orientation;
+    }
+
+    @Override
+    public String getName() {
+        return "" + _template.id;
+    }    
+
+    @Override
     public Integer getID() {
         return id;
     }

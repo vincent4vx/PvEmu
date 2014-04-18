@@ -50,5 +50,34 @@ public class MonsterGroup implements GMable {
     public Integer getID() {
         return id;
     }
+
+    @Override
+    public short getCellId() {
+        return cell.getID();
+    }
+
+    @Override
+    public byte getOrientation() {
+        return 2;
+    }
+
+    @Override
+    public String getName() {
+        StringBuilder sb = new StringBuilder();
+        
+        boolean first = true;
+        for(MonsterTemplate monster : monsters){
+            if(!first){
+                sb.append(',');
+            }
+            
+            sb.append(monster.getModel().id);
+            first = false;
+        }
+        
+        return sb.toString();
+    }
+    
+    
     
 }
