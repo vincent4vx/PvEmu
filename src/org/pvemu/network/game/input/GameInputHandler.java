@@ -57,6 +57,9 @@ public class GameInputHandler extends InputPacketsHandler {
         registerPacket(new LeaveExchangePacket());
         registerPacket(new ExchangeMovePacket());
         registerPacket(new ExchangeOkPacket());
+        
+        //fight packets
+        registerPacket(new FightChangePlacePacket());
     }
     
     static public GameInputHandler instance(){

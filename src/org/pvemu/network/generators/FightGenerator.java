@@ -77,4 +77,8 @@ public class FightGenerator {
     public String generateFightPlaces(String places, byte team){
         return places + "|" + team;
     }
+    
+    public String generateChangePlace(int fighterID, short cellID){
+        return "|" + fighterID + ";" + cellID;
+    }
 }

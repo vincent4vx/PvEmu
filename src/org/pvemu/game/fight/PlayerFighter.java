@@ -11,6 +11,7 @@ import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.player.Player;
+import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
@@ -30,6 +31,8 @@ public class PlayerFighter extends Fighter{
     @Override
     public void enterFight() {
         super.enterFight();
+        player.getActionsManager().setBusy(true);
+        SessionAttributes.FIGHTER.setValue(this, player.getSession());
         ActionsRegistry.getMap().removePlayer(player.getMap(), player);
         GameSendersRegistry.getFight().joinFightOk(player.getSession(), fight);
         GameSendersRegistry.getFight().fightPlaces(this);

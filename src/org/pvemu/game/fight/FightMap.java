@@ -47,4 +47,23 @@ public class FightMap {
     public GameMap getMap() {
         return map;
     }
+    
+    public boolean isValidPlace(Fighter fighter, short cell){
+        if(fighters.containsKey(cell))
+            return false;
+        
+        if(map.getCellById(cell) == null)
+            return false;
+        
+        if(!map.getCellById(cell).isWalkable())
+            return false;
+        
+        return Utils.contains(fighter.getTeam().getPlaces(), cell);
+    }
+    
+    public void moveFighter(Fighter fighter, short dest){
+        fighters.remove(fighter.getCellId());
+        fighter.setCell(dest);
+        fighters.put(dest, fighter);
+    }
 }

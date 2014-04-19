@@ -103,4 +103,18 @@ public class FightSender {
                 )
         );
     }
+    
+    public void changePlaceError(IoSession session){
+        GamePacketEnum.FIGHT_CHANGE_PLACE.send(session, "e");
+    }
+    
+    public void changePlace(Fight fight, Fighter fighter){
+        String packet = GeneratorsRegistry.getFight().generateChangePlace(fighter.getID(), fighter.getCellId());
+        
+        for(Fighter f : fight.getFighters()){
+            if(f instanceof PlayerFighter){
+                GamePacketEnum.FIGHT_CHANGE_PLACE.send(((PlayerFighter)f).getSession(), packet);
+            }
+        }
+    }
 }

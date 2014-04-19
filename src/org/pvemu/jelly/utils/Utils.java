@@ -222,4 +222,13 @@ public class Utils {
 
         return str.toString();
     }
+    
+    static public boolean contains(Iterable array, Object obj){
+        for(Object o : array){
+            if(obj.equals(o))
+                return true;
+        }
+        
+        return false;
+    }
 }

@@ -278,6 +278,7 @@ public enum GamePacketEnum {
     FIGHT_JOIN_OK("GJK"),
     ADD_TO_TEAM("Gt"),
     FIGHT_PLACES("GP"),
+    FIGHT_CHANGE_PLACE("GIC"),
     PONG("pong");
     private String packet;
     private Object param;

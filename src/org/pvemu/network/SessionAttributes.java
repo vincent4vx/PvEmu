@@ -7,6 +7,7 @@
 package org.pvemu.network;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.fight.PlayerFighter;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.models.Account;
 
@@ -18,6 +19,7 @@ public class SessionAttributes<T> {
     static final public SessionAttributes<String> CONNEXION_KEY = new SessionAttributes<>();
     static final public SessionAttributes<Account> ACCOUNT = new SessionAttributes<>();
     static final public SessionAttributes<Player> PLAYER = new SessionAttributes<>();
+    static final public SessionAttributes<PlayerFighter> FIGHTER = new SessionAttributes<>();
     
     /**
      * Constructeur privé
