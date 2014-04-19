@@ -23,6 +23,28 @@ public class GameSendersRegistry {
     private static DialogSender dialog = null;
     private static GameActionSender gameAction = null;
     private static DefianceSender defiance = null;
+    private static FightSender fight = null;
+
+    /**
+     * Get the value of fight
+     *
+     * @return the value of fight
+     */
+    public static FightSender getFight() {
+        if(fight == null)
+            fight = new FightSender();
+        return fight;
+    }
+
+    /**
+     * Set the value of fight
+     *
+     * @param fight new value of fight
+     */
+    public static void setFight(FightSender fight) {
+        GameSendersRegistry.fight = fight;
+    }
+
 
     /**
      * Get the value of defiance

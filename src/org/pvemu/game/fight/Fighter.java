@@ -9,7 +9,6 @@ package org.pvemu.game.fight;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.map.GMable;
-import org.pvemu.network.generators.GeneratorsRegistry;
 
 /**
  *
@@ -24,19 +23,18 @@ abstract public class Fighter implements GMable {
     protected Stats currentStats;
     private short numPA;
     private short numPM;
-    private Fight fight;
-    private short cell;
-    final private byte team;
+    protected short cell;
+    private FightTeam team;
+    final protected Fight fight;
 
-    public Fighter(Stats baseStats, byte team) {
+    public Fighter(Stats baseStats, Fight fight) {
         this.baseStats = baseStats;
-        this.team = team;
+        this.fight = fight;
     }
     
-    public void enterFight(Fight fight){
+    public void enterFight(){
         currentStats = new Stats(baseStats);
         currentVita = getTotalVita();
-        this.fight = fight;
     }
     
     public void startTurn(){
@@ -54,8 +52,12 @@ abstract public class Fighter implements GMable {
         canPlay = false;
     }
 
-    public byte getTeam() {
+    public FightTeam getTeam() {
         return team;
+    }
+
+    public void setTeam(FightTeam team) {
+        this.team = team;
     }
 
     public boolean canPlay() {
@@ -76,14 +78,13 @@ abstract public class Fighter implements GMable {
         return cell;
     }
 
-    @Override
-    public byte getOrientation() {
-        return 1;
+    public void setCell(short cell) {
+        this.cell = cell;
     }
 
     @Override
-    public String getGMData() {
-        return GeneratorsRegistry.getFight().generateGMPacket(this);
+    public byte getOrientation() {
+        return 1;
     }
 
     public Fight getFight() {
@@ -128,4 +129,5 @@ abstract public class Fighter implements GMable {
     }
     
     abstract public Creature getCreature();
+    abstract public int getLevel();
 }

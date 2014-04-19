@@ -6,6 +6,7 @@
 
 package org.pvemu.game.gameaction;
 
+import org.pvemu.game.fight.FightFactory;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -40,6 +41,8 @@ public class AcceptDefianceAction implements GameAction{
         }
         
         other.getActionsManager().setDefianceTarget(GameActionsManager.NO_DEFIANCE_TARGET);
+        
+        FightFactory.defiance(data.getPlayer(), other);
     }
 
     @Override

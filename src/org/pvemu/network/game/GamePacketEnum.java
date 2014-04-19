@@ -272,6 +272,12 @@ public enum GamePacketEnum {
      */
     EXCHANGE_DISTANT_MOVE_OK("EmK"),
     SPELL_LIST("SL"),
+    /**
+     * On start fight
+     */
+    FIGHT_JOIN_OK("GJK"),
+    ADD_TO_TEAM("Gt"),
+    FIGHT_PLACES("GP"),
     PONG("pong");
     private String packet;
     private Object param;

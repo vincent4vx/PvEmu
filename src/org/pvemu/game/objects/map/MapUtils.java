@@ -1,5 +1,8 @@
 package org.pvemu.game.objects.map;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.pvemu.jelly.utils.Pathfinding;
 import org.pvemu.jelly.utils.Utils;
 
 /**
@@ -40,5 +43,18 @@ final public class MapUtils {
         }while(!cell.isWalkable());
         
         return cell;
+    }
+    
+    static public List<Short> parseCellList(String cellList, GameMap map){
+        List<Short> list = new ArrayList<>(cellList.length() / 2);
+        
+        for(int i = 0; i < cellList.length(); i += 2){
+            short cell = Pathfinding.cellCode_To_ID(cellList.substring(i, i + 2));
+            
+            if(map.getCellById(cell) != null && map.getCellById(cell).isWalkable())
+                list.add(cell);
+        }
+        
+        return list;
     }
 }

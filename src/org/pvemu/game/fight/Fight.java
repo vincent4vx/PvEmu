@@ -7,13 +7,13 @@
 package org.pvemu.game.fight;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.pvemu.jelly.Constants;
+import org.pvemu.jelly.Loggin;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -21,22 +21,47 @@ import org.pvemu.jelly.Constants;
  */
 abstract public class Fight {
     final static int TIMERS_POOL_SIZE = Runtime.getRuntime().availableProcessors() * 4;
-    final private Map<Integer, Fighter> team1 = new HashMap<>();
-    final private Map<Integer, Fighter> team2 = new HashMap<>();
+    final private FightMap map;
+    final private FightTeam team1;
+    final private FightTeam team2;
     final private List<Fighter> fighters = new ArrayList<>();
     final private static ScheduledExecutorService timers = Executors.newScheduledThreadPool(TIMERS_POOL_SIZE);
-    final private Map<Short, Fighter> fightersByPos = new HashMap<>();
+    private byte state;
+    
+    final static public byte STATE_INIT     = 1;
+    final static public byte STATE_PLACE    = 2;
+    final static public byte STATE_ACTIVE   = 3;
+    final static public byte STATE_FINISHED = 4;
+
+    Fight(FightMap map, FightTeam team1, FightTeam team2) {
+        this.map = map;
+        this.team1 = team1;
+        this.team2 = team2;
+        state = STATE_INIT;
+    }
     
     public void addFighterToTeam1(Fighter fighter){
-        team1.put(fighter.getID(), fighter);
-        fighter.enterFight(this);
-        addToFighterList(fighter);
+        addFighterToTeam(fighter, team1);
     }
     
     public void addFighterToTeam2(Fighter fighter){
-        team2.put(fighter.getID(), fighter);
-        fighter.enterFight(this);
+        addFighterToTeam(fighter, team2);
+    }
+    
+    private void addFighterToTeam(Fighter fighter, FightTeam team){
+        Loggin.debug("new player (%s) into fight (there are %d players)", fighter.getName(), fighters.size());
+        team.addFighter(fighter);
         addToFighterList(fighter);
+        map.addFighter(fighter);
+        fighter.enterFight();
+    }
+
+    public FightTeam getTeam1() {
+        return team1;
+    }
+
+    public FightTeam getTeam2() {
+        return team2;
     }
     
     /**
@@ -53,13 +78,30 @@ abstract public class Fight {
             }
         }
     }
-    
-    void moveFighter(short from, short to, Fighter fighter){
-        fightersByPos.remove(from);
-        fightersByPos.put(to, fighter);
-    }
 
     public static void startTimer(Runnable callback){
         timers.schedule(callback, Constants.TURN_TIME, TimeUnit.SECONDS);
     }
+    
+    abstract public byte getType();
+    abstract public int spec();
+    abstract public boolean isDuel();
+    abstract public boolean canCancel();
+
+    public byte getState() {
+        return state;
+    }
+
+    public void setState(byte state) {
+        this.state = state;
+    }
+    
+    public List<Fighter> getFighters(){
+        return fighters;
+    }
+
+    public FightMap getMap() {
+        return map;
+    }
+    
 }

@@ -6,9 +6,13 @@
 
 package org.pvemu.game.fight;
 
+import org.apache.mina.core.session.IoSession;
+import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.player.Player;
+import org.pvemu.network.game.output.GameSendersRegistry;
+import org.pvemu.network.generators.GeneratorsRegistry;
 
 /**
  *
@@ -17,10 +21,23 @@ import org.pvemu.game.objects.player.Player;
 public class PlayerFighter extends Fighter{
     final private Player player;
 
-    public PlayerFighter(Player player, byte team) {
-        super(player.getTotalStats(), team);
+    PlayerFighter(Player player, Fight fight) {
+        super(player.getTotalStats(), fight);
         this.player = player;
+        cell = player.getCellId();
     }
+
+    @Override
+    public void enterFight() {
+        super.enterFight();
+        ActionsRegistry.getMap().removePlayer(player.getMap(), player);
+        GameSendersRegistry.getFight().joinFightOk(player.getSession(), fight);
+        GameSendersRegistry.getFight().fightPlaces(this);
+        GameSendersRegistry.getFight().GMList(player.getSession(), fight);
+        GameSendersRegistry.getFight().getAllTeams(player.getSession(), fight);
+    }
+    
+    
     
     @Override
     public Integer getID() {
@@ -50,5 +67,20 @@ public class PlayerFighter extends Fighter{
     public String getName() {
         return player.getName();
     }
+
+    @Override
+    public String getGMData() {
+        return GeneratorsRegistry.getFight().generatePlayerGMPacket(this);
+    }
+    
+    public IoSession getSession(){
+        return player.getSession();
+    }
+
+    @Override
+    public int getLevel() {
+        return 1;
+    }
+    
     
 }

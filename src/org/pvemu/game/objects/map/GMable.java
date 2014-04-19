@@ -1,6 +1,9 @@
 package org.pvemu.game.objects.map;
 
 public interface GMable {
+    final static public byte MONSTER   = -3;
+    final static public byte PERCEPTOR = -6;
+    
     /**
      * Données pour affichage sur map
      * @return Le param du packet sous forme de string
