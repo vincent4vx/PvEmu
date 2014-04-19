@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.network.game.input;
+package org.pvemu.network.game.input.exchange;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.player.Player;
@@ -16,11 +16,11 @@ import org.pvemu.network.game.GamePacketEnum;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class AcceptExchangePacket implements InputPacket {
+public class LeaveExchangePacket implements InputPacket {
 
     @Override
     public String id() {
-        return "EA";
+        return "EV";
     }
 
     @Override
@@ -32,12 +32,16 @@ public class AcceptExchangePacket implements InputPacket {
         }
         
         if(p.getExchange() == null){
-            GamePacketEnum.EXCHANGE_CREATE_ERROR.send(session);
             return;
         }
         
-        GamePacketEnum.EXCHANGE_CREATE_OK.send(session, 1);
-        GamePacketEnum.EXCHANGE_CREATE_OK.send(p.getExchange().getTarget().getSession(), 1);
+        Player T = p.getExchange().getTarget();
+        
+        p.stopExchange();
+        T.stopExchange();
+        
+        GamePacketEnum.EXCHANGE_LEAVE.send(session);
+        GamePacketEnum.EXCHANGE_LEAVE.send(T.getSession());
         
     }
     

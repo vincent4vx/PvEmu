@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.network.game.input;
+package org.pvemu.network.game.input.account;
 
 import java.net.InetSocketAddress;
 import org.apache.mina.core.session.IoSession;

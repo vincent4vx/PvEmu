@@ -4,27 +4,36 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.network.game.input;
+package org.pvemu.network.game.input.account;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.models.Account;
 import org.pvemu.network.InputPacket;
+import org.pvemu.network.SessionAttributes;
+import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class DatePacket implements InputPacket {
+public class CharacterListPacket implements InputPacket {
 
     @Override
     public String id() {
-        return "BD";
+        return "AL";
     }
 
     @Override
     public void perform(String extra, IoSession session) {
-        GameSendersRegistry.getBasic().date(session);
-        GameSendersRegistry.getBasic().time(session);
+        Account acc = SessionAttributes.ACCOUNT.getValue(session);
+
+        if (acc == null) {
+            return;
+        }
+
+//        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());        
+        GameSendersRegistry.getAccount().charactersList(session, acc);
     }
     
 }

@@ -4,12 +4,10 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.network.game.input;
+package org.pvemu.network.game.input.basic;
 
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.game.chat.ChatHandler;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.utils.Utils;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
@@ -18,28 +16,22 @@ import org.pvemu.network.game.GamePacketEnum;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class MessagePacket implements InputPacket {
+public class SmileyPacket implements InputPacket {
 
     @Override
     public String id() {
-        return "BM";
+        return "BS";
     }
 
     @Override
     public void perform(String extra, IoSession session) {
-        Player p = SessionAttributes.PLAYER.getValue(session);
-
-        if (p == null) {
-            return;
-        }
-
-        String[] args = Utils.split(extra, "|");
+        Player p = SessionAttributes.PLAYER.getValue(session);//(Player)session.getAttribute("player");
         
-        if(args.length < 2){
+        if(p == null){
             return;
         }
         
-        ChatHandler.instance().parse(args, p);
+        GamePacketEnum.CHAT_SMILEY.sendToMap(p.getMap(), new StringBuilder().append(p.getID()).append('|').append(extra));        
     }
     
 }

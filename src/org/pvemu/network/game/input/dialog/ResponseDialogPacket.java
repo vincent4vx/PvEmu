@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.network.game.input;
+package org.pvemu.network.game.input.dialog;
 
 import java.util.ArrayList;
 import org.apache.mina.core.session.IoSession;

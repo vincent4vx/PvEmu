@@ -6,6 +6,31 @@
 
 package org.pvemu.network.game.input;
 
+import org.pvemu.network.game.input.fight.FightChangePlacePacket;
+import org.pvemu.network.game.input.exchange.LeaveExchangePacket;
+import org.pvemu.network.game.input.exchange.RequestExchangePacket;
+import org.pvemu.network.game.input.exchange.AcceptExchangePacket;
+import org.pvemu.network.game.input.exchange.ExchangeMovePacket;
+import org.pvemu.network.game.input.exchange.ExchangeOkPacket;
+import org.pvemu.network.game.input.dialog.LeaveDialogPacket;
+import org.pvemu.network.game.input.dialog.CreateDialogPacket;
+import org.pvemu.network.game.input.dialog.ResponseDialogPacket;
+import org.pvemu.network.game.input.object.MoveObjectPacket;
+import org.pvemu.network.game.input.basic.SmileyPacket;
+import org.pvemu.network.game.input.basic.MessagePacket;
+import org.pvemu.network.game.input.basic.ChatChanelPacket;
+import org.pvemu.network.game.input.basic.DatePacket;
+import org.pvemu.network.game.input.basic.AdminCommandPacket;
+import org.pvemu.network.game.input.game.GameActionOkPacket;
+import org.pvemu.network.game.input.game.CreateGamePacket;
+import org.pvemu.network.game.input.game.InitMapPacket;
+import org.pvemu.network.game.input.game.GameActionPacket;
+import org.pvemu.network.game.input.account.SelectCharacterPacket;
+import org.pvemu.network.game.input.account.AddCharacterPacket;
+import org.pvemu.network.game.input.account.GenerateNamePacket;
+import org.pvemu.network.game.input.account.CharacterListPacket;
+import org.pvemu.network.game.input.account.DeleteCharacterPacket;
+import org.pvemu.network.game.input.account.AttachAccountPacket;
 import org.pvemu.network.InputPacketsHandler;
 
 /**

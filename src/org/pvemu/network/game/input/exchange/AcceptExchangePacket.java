@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.network.game.input;
+package org.pvemu.network.game.input.exchange;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.player.Player;
@@ -16,11 +16,11 @@ import org.pvemu.network.game.GamePacketEnum;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class SmileyPacket implements InputPacket {
+public class AcceptExchangePacket implements InputPacket {
 
     @Override
     public String id() {
-        return "BS";
+        return "EA";
     }
 
     @Override
@@ -31,7 +31,14 @@ public class SmileyPacket implements InputPacket {
             return;
         }
         
-        GamePacketEnum.CHAT_SMILEY.sendToMap(p.getMap(), new StringBuilder().append(p.getID()).append('|').append(extra));        
+        if(p.getExchange() == null){
+            GamePacketEnum.EXCHANGE_CREATE_ERROR.send(session);
+            return;
+        }
+        
+        GamePacketEnum.EXCHANGE_CREATE_OK.send(session, 1);
+        GamePacketEnum.EXCHANGE_CREATE_OK.send(p.getExchange().getTarget().getSession(), 1);
+        
     }
     
 }

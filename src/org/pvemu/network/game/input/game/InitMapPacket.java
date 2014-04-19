@@ -4,37 +4,36 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.network.game.input;
+package org.pvemu.network.game.input.game;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class LeaveDialogPacket implements InputPacket {
+public class InitMapPacket implements InputPacket {
 
     @Override
     public String id() {
-        return "DV";
+        return "GI";
     }
 
     @Override
     public void perform(String extra, IoSession session) {
-        Player p = SessionAttributes.PLAYER.getValue(session);
+        Player player = SessionAttributes.PLAYER.getValue(session);
         
-        if(p == null){
-                return;
-        }
+        if(player == null)
+            return;
         
-        p.current_npc_question = null;
-        
-        GamePacketEnum.DIALOG_LEAVE.send(session);
-       
+        GameSendersRegistry.getMap().addGMable(player.getMap(), player);
+        GameSendersRegistry.getMap().getAllGMable(player.getMap(), session);
+        GamePacketEnum.MAP_LOADED.send(session);
     }
     
 }

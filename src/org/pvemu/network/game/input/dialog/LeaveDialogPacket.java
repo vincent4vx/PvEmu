@@ -4,41 +4,37 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.network.game.input;
+package org.pvemu.network.game.input.dialog;
 
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.commands.CommandsHandler;
-import org.pvemu.commands.askers.ConsoleAsker;
-import org.pvemu.models.Account;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
+import org.pvemu.network.game.GamePacketEnum;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class AdminCommandPacket implements InputPacket {
+public class LeaveDialogPacket implements InputPacket {
 
     @Override
     public String id() {
-        return "BA";
+        return "DV";
     }
 
     @Override
     public void perform(String extra, IoSession session) {
-        Account acc = SessionAttributes.ACCOUNT.getValue(session);
-
-        if (acc == null) {
-            session.close(false);
-            return;
+        Player p = SessionAttributes.PLAYER.getValue(session);
+        
+        if(p == null){
+                return;
         }
         
-        if(acc.level < 1){
-            return;
-        }
-
-        CommandsHandler.instance().execute(extra, new ConsoleAsker(acc));
+        p.current_npc_question = null;
         
+        GamePacketEnum.DIALOG_LEAVE.send(session);
+       
     }
     
 }

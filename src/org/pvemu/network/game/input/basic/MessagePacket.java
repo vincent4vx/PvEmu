@@ -4,36 +4,42 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.network.game.input;
+package org.pvemu.network.game.input.basic;
 
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.models.Account;
+import org.pvemu.game.chat.ChatHandler;
+import org.pvemu.game.objects.player.Player;
+import org.pvemu.jelly.utils.Utils;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;
-import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class CharacterListPacket implements InputPacket {
+public class MessagePacket implements InputPacket {
 
     @Override
     public String id() {
-        return "AL";
+        return "BM";
     }
 
     @Override
     public void perform(String extra, IoSession session) {
-        Account acc = SessionAttributes.ACCOUNT.getValue(session);
+        Player p = SessionAttributes.PLAYER.getValue(session);
 
-        if (acc == null) {
+        if (p == null) {
             return;
         }
 
-//        GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());        
-        GameSendersRegistry.getAccount().charactersList(session, acc);
+        String[] args = Utils.split(extra, "|");
+        
+        if(args.length < 2){
+            return;
+        }
+        
+        ChatHandler.instance().parse(args, p);
     }
     
 }
