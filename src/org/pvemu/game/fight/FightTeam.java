@@ -55,6 +55,10 @@ public class FightTeam {
     public boolean isEmpty(){
         return fighters.isEmpty();
     }
+    
+    public boolean isFull(){
+        return fighters.size() >= places.size();
+    }
 
     public List<Short> getPlaces() {
         return places;

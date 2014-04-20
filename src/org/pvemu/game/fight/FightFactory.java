@@ -10,6 +10,7 @@ import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.utils.Utils;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -29,11 +30,17 @@ public class FightFactory {
                 }
         );
         
+        map.addFight(fight);
+        
         fight.setState(Fight.STATE_PLACE);
         
         fight.addFighterToTeamByNumber(new PlayerFighter(p1, fight), (byte)0);
         fight.addFighterToTeamByNumber(new PlayerFighter(p2, fight), (byte)1);
         
         return fight;
+    }
+    
+    static public Fighter newFighter(Player player, Fight fight){
+        return new PlayerFighter(player, fight);
     }
 }

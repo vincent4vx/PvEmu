@@ -34,6 +34,10 @@ public class MapSender {
     }
     
     public void fightCount(GameMap map, IoSession session){
-        GamePacketEnum.MAP_FIGHT_COUNT.send(session);
+        GamePacketEnum.MAP_FIGHT_COUNT.send(session, map.getFightCount());
+    }
+    
+    public void fightCountToMap(GameMap map){
+        GamePacketEnum.MAP_FIGHT_COUNT.sendToMap(map, map.getFightCount());
     }
 }

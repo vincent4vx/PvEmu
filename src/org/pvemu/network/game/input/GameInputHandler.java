@@ -32,6 +32,7 @@ import org.pvemu.network.game.input.account.CharacterListPacket;
 import org.pvemu.network.game.input.account.DeleteCharacterPacket;
 import org.pvemu.network.game.input.account.AttachAccountPacket;
 import org.pvemu.network.InputPacketsHandler;
+import org.pvemu.network.game.input.fight.FightReadyPacket;
 
 /**
  *
@@ -85,6 +86,7 @@ public class GameInputHandler extends InputPacketsHandler {
         
         //fight packets
         registerPacket(new FightChangePlacePacket());
+        registerPacket(new FightReadyPacket());
     }
     
     static public GameInputHandler instance(){

@@ -97,4 +97,8 @@ public class FightGenerator {
         
         return packet.toString();
     }
+    
+    public String generateReady(int id, boolean ready){
+        return (ready ? "1" : "0") + id;
+    }
 }

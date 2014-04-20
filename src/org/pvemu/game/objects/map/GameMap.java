@@ -11,6 +11,7 @@ import org.pvemu.game.objects.monster.MonsterGroup;
 import org.pvemu.game.objects.monster.MonsterTemplate;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.MapModel;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 public final class GameMap {
     short id;
@@ -156,5 +157,14 @@ public final class GameMap {
     
     public void addFight(Fight fight){
         fights.put(fight.getId(), fight);
+        GameSendersRegistry.getMap().fightCountToMap(this);
+    }
+    
+    public int getFightCount(){
+        return fights.size();
+    }
+    
+    public Fight getFight(int fightID){
+        return fights.get(fightID);
     }
 }

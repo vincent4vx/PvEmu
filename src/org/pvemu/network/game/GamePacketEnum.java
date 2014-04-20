@@ -4,6 +4,8 @@ import org.pvemu.game.World;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.jelly.Jelly;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.fight.Fight;
+import org.pvemu.game.fight.Fighter;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.FilterFactory;
@@ -283,6 +285,7 @@ public enum GamePacketEnum {
     FIGHT_CHANGE_PLACE("GIC"),
     FIGHT_ADD_FLAG("Gc+"),
     FIGHT_REMOVE_FLAG("Gc-"),
+    FIGHT_READY("GR"),
     PONG("pong");
     final private String packet;
     final private Object param;
@@ -367,5 +370,13 @@ public enum GamePacketEnum {
      */
     public void sendToMap(GameMap map, Object param) {
         sendToFilteredList(map.getPlayers().values(), FilterFactory.playerNotInFightFilter(), param);
+    }
+    
+    public void sendToFight(Fight fight, Object param){
+        for(Fighter fighter : fight.getFighters()){
+            if(fighter instanceof Sessionable){
+                send(((Sessionable)fighter).getSession(), param);
+            }
+        }
     }
 }

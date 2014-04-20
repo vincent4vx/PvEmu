@@ -8,6 +8,7 @@ package org.pvemu.network.game.output;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.gameaction.GameActionsRegistry;
+import org.pvemu.game.gameaction.JoinFightAction;
 
 /**
  *
@@ -17,18 +18,18 @@ public class DefianceSender {
     protected void defianceError(IoSession session, int playerID, char errType){
         GameSendersRegistry.getGameAction().unidentifiedGameAction(
                 session, 
-                GameActionsRegistry.DEFIANCE_ERROR,
+                GameActionsRegistry.JOIN_FIGHT,
                 playerID,
                 errType
         );
     }
     
     public void defianceCasterError(IoSession session, int playerID){
-        defianceError(session, playerID, 'o');
+        defianceError(session, playerID, JoinFightAction.CANT_YOU_R_OCCUPED);
     }
     
     public void defianceTargetBusyError(IoSession session, int playerID){
-        defianceError(session, playerID, 'z');
+        defianceError(session, playerID, JoinFightAction.CANT_YOU_OPPONENT_OCCUPED);
     }
     
     public void cancelDefiance(IoSession session, int player1, int player2){

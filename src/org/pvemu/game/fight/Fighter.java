@@ -18,6 +18,7 @@ abstract public class Fighter implements GMable {
     
     private boolean alive = true;
     private boolean canPlay = false;
+    private boolean ready;
     protected int currentVita;
     final private Stats baseStats;
     protected Stats currentStats;
@@ -66,6 +67,14 @@ abstract public class Fighter implements GMable {
 
     public void setCanPlay(boolean canPlay) {
         this.canPlay = canPlay;
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
 
     /**

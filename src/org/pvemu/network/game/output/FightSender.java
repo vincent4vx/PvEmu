@@ -12,6 +12,7 @@ import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.PlayerFighter;
+import org.pvemu.game.gameaction.GameActionsRegistry;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
@@ -27,6 +28,15 @@ public class FightSender {
         GamePacketEnum.FIGHT_JOIN_OK.send(
                 session, 
                 GeneratorsRegistry.getFight().generateJoinFightOk(fight)
+        );
+    }
+    
+    public void joinFightError(IoSession session, int playerID, char error){
+        GameSendersRegistry.getGameAction().unidentifiedGameAction(
+                session, 
+                GameActionsRegistry.JOIN_FIGHT, 
+                playerID,
+                error
         );
     }
     
@@ -126,6 +136,13 @@ public class FightSender {
         GamePacketEnum.FIGHT_ADD_FLAG.sendToMap(
                 map,
                 GeneratorsRegistry.getFight().generateAddFlag(fight)
+        );
+    }
+    
+    public void ready(Fighter fighter){
+        GamePacketEnum.FIGHT_READY.sendToFight(
+                fighter.getFight(), 
+                GeneratorsRegistry.getFight().generateReady(fighter.getID(), fighter.isReady())
         );
     }
 }
