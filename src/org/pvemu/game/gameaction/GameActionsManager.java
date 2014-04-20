@@ -20,6 +20,7 @@ final public class GameActionsManager {
     
     private boolean walking = false;
     private boolean busy = false;
+    private boolean inFight = false;
     final private HashMap<Short, GameActionData> gameActions = new HashMap<>();
     final private ArrayList<GameActionData> pendingActions = new ArrayList<>();
     private int defianceTarget = NO_DEFIANCE_TARGET;
@@ -37,7 +38,7 @@ final public class GameActionsManager {
     }
     
     public boolean isBusy(){
-        return walking || !gameActions.isEmpty() || busy;
+        return walking || !gameActions.isEmpty() || inFight || busy;
     }
 
     public void setBusy(boolean busy) {
@@ -46,6 +47,14 @@ final public class GameActionsManager {
 
     void setWalking(boolean walking) {
         this.walking = walking;
+    }
+
+    public boolean isInFight() {
+        return inFight;
+    }
+
+    public void setInFight(boolean inFight) {
+        this.inFight = inFight;
     }
     
     void addPendingAction(GameActionData gad){
@@ -105,6 +114,7 @@ final public class GameActionsManager {
     public void clearAll(){
         walking = false;
         busy = false;
+        inFight = false;
         gameActions.clear();
         pendingActions.clear();
         defianceTarget = NO_DEFIANCE_TARGET;

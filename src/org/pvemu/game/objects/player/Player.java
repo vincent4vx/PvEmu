@@ -1,7 +1,6 @@
 package org.pvemu.game.objects.player;
 
 import org.pvemu.game.objects.map.GameMap;
-//import org.pvemu.game.GameActionHandler;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.map.GMable;
@@ -20,32 +19,32 @@ import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.objects.Exchange;
 import org.pvemu.game.objects.item.ItemPosition;
-import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.game.objects.player.classes.ClassData;
-import org.pvemu.game.objects.player.classes.ClassesHandler;
 import org.pvemu.game.objects.spell.SpellList;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.Filterable;
+import org.pvemu.network.Sessionable;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
 
-public class Player extends Creature implements GMable, Inventoryable, Filterable {
+public class Player implements GMable, Inventoryable, Filterable, Sessionable, Creature {
 
     final private Character character;
+    final private Account account;
+    final private ClassData classData;
+    private String[] colors;
+    final private Inventory inventory = new Inventory(this);
+    private Stats baseStats;
+    private Stats stuffStats;
     private GameMap curMap;
     private MapCell curCell;
     private IoSession session = null;
     private String chanels = "*#$:?i^!%";
-    final private Account account;
     public String restriction = "6bk";
     public Byte orientation = 2;
-    final private Inventory inventory;
-    private Stats stuffStats;
-//    final private GameActionHandler actions = new GameActionHandler();
     public NpcQuestion current_npc_question = null;
     private Exchange exchange = null;
     private final GameActionsManager actionsManager = new GameActionsManager();
-    final private ClassData classData;
     private final SpellList spellList = new SpellList();
 
     /**
@@ -68,34 +67,44 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     }
 
 
-    public Player(Character c) {
-        classData = ClassesHandler.instance().getClass(c.classId);
-        character = c;
-        gfxID = c.gfxid;
-        level = c.level;
-        name = c.name;
-        orientation = c.orientation;
+//    public Player(Character c) {
+//        classData = ClassesHandler.instance().getClass(c.classId);
+//        character = c;
+//        gfxID = c.gfxid;
+//        level = c.level;
+//        name = c.name;
+//        orientation = c.orientation;
+//
+//        colors[0] = c.color1 == -1 ? "-1" : Integer.toHexString(c.color1);
+//        colors[1] = c.color2 == -1 ? "-1" : Integer.toHexString(c.color2);
+//        colors[2] = c.color3 == -1 ? "-1" : Integer.toHexString(c.color3);
+//
+//        /*MapModel m = DAOFactory.map().getById(c.lastMap);
+//        if (m != null) {
+//            curMap = m.getGameMap();
+//        }*/
+//        curMap = MapFactory.getById(c.lastMap);
+//
+//        if (curMap != null) {
+//            curCell = curMap.getCellById(c.lastCell);
+//        }
+//
+//        account = DAOFactory.account().getById(character.accountId);
+//
+//        inventory = new Inventory(this);
+//        loadStats();
+//        classData.learnClassSpells(this);
+//    }
 
-        colors[0] = c.color1 == -1 ? "-1" : Integer.toHexString(c.color1);
-        colors[1] = c.color2 == -1 ? "-1" : Integer.toHexString(c.color2);
-        colors[2] = c.color3 == -1 ? "-1" : Integer.toHexString(c.color3);
-
-        /*MapModel m = DAOFactory.map().getById(c.lastMap);
-        if (m != null) {
-            curMap = m.getGameMap();
-        }*/
-        curMap = MapFactory.getById(c.lastMap);
-
-        if (curMap != null) {
-            curCell = curMap.getCellById(c.lastCell);
-        }
-
-        account = DAOFactory.account().getById(character.accountId);
-
-        inventory = new Inventory(this);
-        loadStats();
-        classData.learnClassSpells(this);
-    }
+    Player(Character character, Account account, ClassData classData, String[] colors, Stats baseStats, GameMap curMap, MapCell curCell) {
+        this.character = character;
+        this.account = account;
+        this.classData = classData;
+        this.colors = colors;
+        this.baseStats = baseStats;
+        this.curMap = curMap;
+        this.curCell = curCell;
+    }    
 
     /**
      * Charge les stats du perso
@@ -141,7 +150,7 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     @Override
     public Stats getTotalStats() {
         Stats total = new Stats();
-        return total.addAll(baseStats).addAll(stuffStats).addAll(classData.getClassStats(level));
+        return total.addAll(baseStats).addAll(stuffStats).addAll(classData.getClassStats(character.level));
     }
     
     /**
@@ -187,6 +196,7 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
         return character.id;
     }
 
+    @Override
     public IoSession getSession() {
         return session;
     }
@@ -367,6 +377,66 @@ public class Player extends Creature implements GMable, Inventoryable, Filterabl
     @Override
     public byte getOrientation() {
         return orientation;
+    }
+
+    @Override
+    public String getName() {
+        return character.name;
+    }
+
+    public Stats getBaseStats() {
+        //return baseStats;
+        return new Stats(baseStats).addAll(classData.getClassStats(character.level));
+    }
+
+    @Override
+    public Short getInitiative(){
+        short fact = 4;
+        short pvmax = 100;
+        short pv = 100;
+        /*if (_classe == Constants.CLASS_SACRIEUR) {
+         fact = 8;
+         }*/
+        double coef = pvmax / fact;
+        
+        Stats stats = getTotalStats();
+
+        coef += stats.get(Element.INIT);
+        coef += stats.get(Element.AGILITE);
+        coef += stats.get(Element.CHANCE);
+        coef += stats.get(Element.INTEL);
+        coef += stats.get(Element.FORCE);
+
+        short init = 1;
+        if (pvmax != 0) {
+            init = (short) (coef * ((double) pv / (double) pvmax));
+        }
+        
+        if (init < 0) {
+            init = 0;
+        }
+        return init;
+    }
+
+
+    @Override
+    public Short getLevel() {
+        return character.level;
+    }
+
+    @Override
+    public Short getGfxID() {
+        return character.gfxid;
+    }
+
+    @Override
+    public String[] getColors() {
+        return colors;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" + getName() + '}';
     }
     
 }

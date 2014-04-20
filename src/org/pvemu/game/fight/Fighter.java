@@ -130,4 +130,11 @@ abstract public class Fighter implements GMable {
     
     abstract public Creature getCreature();
     abstract public int getLevel();
+
+    @Override
+    public String toString() {
+        return "Fighter{" + "name=" + getName() + ", alive=" + alive + ", canPlay=" + canPlay + ", currentVita=" + currentVita + ", numPA=" + numPA + ", numPM=" + numPM + ", cell=" + cell + ", team=" + team + ", fight=" + fight + '}';
+    }
+    
+    
 }

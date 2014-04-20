@@ -2,11 +2,13 @@ package org.pvemu.network.game;
 
 import org.pvemu.game.World;
 import org.pvemu.game.objects.map.GameMap;
-import org.pvemu.game.objects.player.Player;
-import java.util.Collection;
 import org.pvemu.jelly.Jelly;
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.actions.ActionsRegistry;
+import org.pvemu.jelly.Loggin;
+import org.pvemu.jelly.filters.Filter;
+import org.pvemu.jelly.filters.FilterFactory;
+import org.pvemu.jelly.filters.Filterable;
+import org.pvemu.network.Sessionable;
 
 public enum GamePacketEnum {
 
@@ -279,9 +281,11 @@ public enum GamePacketEnum {
     ADD_TO_TEAM("Gt"),
     FIGHT_PLACES("GP"),
     FIGHT_CHANGE_PLACE("GIC"),
+    FIGHT_ADD_FLAG("Gc+"),
+    FIGHT_REMOVE_FLAG("Gc-"),
     PONG("pong");
-    private String packet;
-    private Object param;
+    final private String packet;
+    final private Object param;
 
     GamePacketEnum(String packet) {
         this.packet = packet;
@@ -330,38 +334,20 @@ public enum GamePacketEnum {
      * @param param packet à envoyer
      */
     public void sendToAll(Object param) {
-        sendToPlayerList(World.instance().getOnlinePlayers(), param);
+        sendToList(World.instance().getOnlinePlayers(), param);
     }
-
-    /**
-     * Envoit le packet aux joueurs sléectionné
-     *
-     * @param players
-     */
-    public void sendToPlayerList(Collection<Player> players) {
-        sendToPlayerList(players, param);
-    }
-
-    /**
-     * Envoit le packet aux joueurs sélectionnés
-     *
-     * @param players
-     * @param param
-     */
-    public void sendToPlayerList(Collection<Player> players, Object param) {
-        if (!Jelly.running) {
-            return;
+    
+    public void sendToList(Iterable<? extends Sessionable> list, Object param){
+        for(Sessionable sa : list){
+            send(sa.getSession(), param);
         }
-        for (Player P : players) {
-            if (P.getSession() == null) {
-                ActionsRegistry.getPlayer().logout(P);
-                ActionsRegistry.getAccount().logout(P.getAccount());
-                continue;
+    }
+    
+    public <T extends Sessionable & Filterable> void sendToFilteredList(Iterable<? extends T> list, Filter filter, Object param){
+        for(T s : list){
+            if(s.corresponds(filter)){
+                send(s.getSession(), param);
             }
-            if(P.getSession().isClosing()){
-                return;
-            }
-            P.getSession().write(packet + String.valueOf(param));
         }
     }
 
@@ -375,11 +361,11 @@ public enum GamePacketEnum {
     }
 
     /**
-     * Envoit le packet à tout les joueurs de la map
-     *
+     * send a packet to all players on map (except players in fight)
      * @param map
+     * @param param 
      */
     public void sendToMap(GameMap map, Object param) {
-        sendToPlayerList(map.getPlayers().values(), param);
+        sendToFilteredList(map.getPlayers().values(), FilterFactory.playerNotInFightFilter(), param);
     }
 }

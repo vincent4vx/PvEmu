@@ -10,8 +10,9 @@ import org.pvemu.jelly.utils.Crypt;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.jelly.filters.AbstractFilterable;
 import org.pvemu.network.SessionAttributes;
+import org.pvemu.network.Sessionable;
 
-public class Account extends AbstractFilterable implements org.pvemu.jelly.database.Model {
+public class Account extends AbstractFilterable implements org.pvemu.jelly.database.Model, Sessionable {
 
     public int id;
     public String account;
@@ -156,6 +157,7 @@ public class Account extends AbstractFilterable implements org.pvemu.jelly.datab
      *
      * @return
      */
+    @Override
     public IoSession getSession() {
         return session;
     }

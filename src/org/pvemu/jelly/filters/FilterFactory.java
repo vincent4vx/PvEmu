@@ -6,6 +6,7 @@
 
 package org.pvemu.jelly.filters;
 
+import org.pvemu.jelly.filters.comparators.EqualComparator;
 import org.pvemu.jelly.filters.comparators.MoreThanComparator;
 
 /**
@@ -17,6 +18,7 @@ public class FilterFactory {
     final static private Filter yesFilter = new YesFilter();
     static private AskerFilter moderatorAskerFilter = null;
     static private AskerFilter adminConsoleFilter = null;
+    static private PlayerFilter playerNotInFightFilter = null;
     
     static public Filter adminAskerFilter(){
         if(adminAskerFilter == null){
@@ -44,5 +46,14 @@ public class FilterFactory {
     
     static public Filter yesFilter(){
         return yesFilter;
+    }
+    
+    static public Filter playerNotInFightFilter(){
+        if(playerNotInFightFilter == null){
+            playerNotInFightFilter = new PlayerFilter();
+            playerNotInFightFilter.setInFight(new EqualComparator<>(false));
+        }
+        
+        return playerNotInFightFilter;
     }
 }

@@ -12,6 +12,7 @@ import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.network.SessionAttributes;
+import org.pvemu.network.Sessionable;
 import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
@@ -19,7 +20,7 @@ import org.pvemu.network.generators.GeneratorsRegistry;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class PlayerFighter extends Fighter{
+public class PlayerFighter extends Fighter implements Sessionable{
     final private Player player;
 
     PlayerFighter(Player player, Fight fight) {
@@ -32,12 +33,13 @@ public class PlayerFighter extends Fighter{
     public void enterFight() {
         super.enterFight();
         player.getActionsManager().setBusy(true);
+        player.getActionsManager().setInFight(true);
         SessionAttributes.FIGHTER.setValue(this, player.getSession());
-        ActionsRegistry.getMap().removePlayer(player.getMap(), player);
+        GameSendersRegistry.getMap().removeGMable(player.getMap(), player);
+        player.getMap().removeGMable(player);
         GameSendersRegistry.getFight().joinFightOk(player.getSession(), fight);
         GameSendersRegistry.getFight().fightPlaces(this);
         GameSendersRegistry.getFight().GMList(player.getSession(), fight);
-        GameSendersRegistry.getFight().getAllTeams(player.getSession(), fight);
     }
     
     
@@ -76,6 +78,7 @@ public class PlayerFighter extends Fighter{
         return GeneratorsRegistry.getFight().generatePlayerGMPacket(this);
     }
     
+    @Override
     public IoSession getSession(){
         return player.getSession();
     }

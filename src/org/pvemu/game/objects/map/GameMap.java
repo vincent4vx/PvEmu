@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.pvemu.game.fight.Fight;
 import org.pvemu.game.objects.monster.MonsterFactory;
 import org.pvemu.game.objects.monster.MonsterGroup;
 import org.pvemu.game.objects.monster.MonsterTemplate;
@@ -19,6 +20,7 @@ public final class GameMap {
     final private ConcurrentHashMap<Integer, GMable> gms = new ConcurrentHashMap<>();
     final private List<MonsterTemplate> availableMonsters;
     final private Map<Integer, MonsterGroup> monsterGroups = new ConcurrentHashMap<>();
+    final private Map<Integer, Fight> fights = new ConcurrentHashMap<>();
     private int lastGMId = 0;
 
     GameMap(short id, MapModel model, List<MapCell> cells, List<MonsterTemplate> availableMonsters) {
@@ -71,6 +73,10 @@ public final class GameMap {
         if (p.getCell() != null) {
             p.getCell().removePlayer(p.getID());
         }
+    }
+    
+    public void removeGMable(GMable gmable){
+        gms.remove(gmable.getID());
     }
 
     public ConcurrentHashMap<Integer, Player> getPlayers() {
@@ -136,5 +142,19 @@ public final class GameMap {
         while(monsterGroups.size() < model.numgroup){
             addMonsterGroup(MonsterFactory.generateMonsterGroup(availableMonsters, this));
         }
+    }
+    
+    public int getFreeFightId(){
+        int fightID = 0;
+        
+        while(fights.containsKey(fightID)){
+            ++fightID;
+        }
+        
+        return fightID;
+    }
+    
+    public void addFight(Fight fight){
+        fights.put(fight.getId(), fight);
     }
 }

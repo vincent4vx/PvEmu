@@ -12,6 +12,7 @@ import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.PlayerFighter;
+import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.GamePacketEnum;
@@ -29,19 +30,15 @@ public class FightSender {
         );
     }
     
-    public void addToTeam(Fight fight, Fighter fighter){
-        String packet = GeneratorsRegistry.getFight().generateAddToTeam(fighter);
-        
-        for(Fighter f : fight.getFighters()){
-            if(f instanceof PlayerFighter){
-                Player p = (Player)f.getCreature();
-                GamePacketEnum.ADD_TO_TEAM.send(p.getSession(), packet);
-            }
-        }
+    public void addToTeam(GameMap map, Fighter fighter){
+        GamePacketEnum.ADD_TO_TEAM.sendToMap(
+                map, 
+                GeneratorsRegistry.getFight().generateAddToTeam(fighter)
+        );
     }
     
     public void getAllTeams(IoSession session, Fight fight){
-        for(FightTeam team : new FightTeam[]{fight.getTeam1(), fight.getTeam2()}){
+        for(FightTeam team : fight.getTeams()){
             if(team.isEmpty()){
                 Loggin.debug("empty team : %d", team.getId());
                 continue;
@@ -99,7 +96,7 @@ public class FightSender {
                 fighter.getSession(), 
                 GeneratorsRegistry.getFight().generateFightPlaces(
                         fighter.getFight().getMap().getMap().getModel().places, 
-                        fighter.getTeam().getId()
+                        fighter.getTeam().getNumber()
                 )
         );
     }
@@ -116,5 +113,19 @@ public class FightSender {
                 GamePacketEnum.FIGHT_CHANGE_PLACE.send(((PlayerFighter)f).getSession(), packet);
             }
         }
+    }
+    
+    public void getFlags(IoSession session, Fight fight){
+        GamePacketEnum.FIGHT_ADD_FLAG.send(
+                session,
+                GeneratorsRegistry.getFight().generateAddFlag(fight)
+        );
+    }
+    
+    public void flagsToMap(GameMap map, Fight fight){
+        GamePacketEnum.FIGHT_ADD_FLAG.sendToMap(
+                map,
+                GeneratorsRegistry.getFight().generateAddFlag(fight)
+        );
     }
 }

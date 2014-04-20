@@ -39,7 +39,7 @@ public class AddCharacterPacket implements InputPacket {
             return;
         }
 
-        String[] arr_data = Utils.split(extra, "|");//packet.split("\\|");
+        String[] arr_data = Utils.split(extra, "|");
 
         try {
             if (DAOFactory.character().countByAccount(acc.id) >= Config.CHAR_PER_ACCOUNT.getValue()) {
@@ -59,11 +59,8 @@ public class AddCharacterPacket implements InputPacket {
             c.color1 = Integer.parseInt(arr_data[3]);
             c.color2 = Integer.parseInt(arr_data[4]);
             c.color3 = Integer.parseInt(arr_data[5]);
-            //c.gfxid = OldClassData.getCharacterGfxID(c);
             ClassData classData = ClassesHandler.instance().getClass(c.classId);
             c.gfxid = classData.getGfxID(c.sexe);
-            //c.startMap = c.lastMap = OldClassData.getStartMap(c.classId)[0];
-            //c.startCell = c.lastCell = OldClassData.getStartMap(c.classId)[1];
             c.startMap = c.lastMap = classData.getStartMap();
             c.startCell = c.lastCell = classData.getStartCell();
 
@@ -78,7 +75,6 @@ public class AddCharacterPacket implements InputPacket {
         }
 
         GamePacketEnum.CREATE_CHARACTER_OK.send(session);
-        //GamePacketEnum.CHARCTERS_LIST.send(session, acc.getCharactersList());
         GameSendersRegistry.getAccount().charactersList(session, acc);
         GamePacketEnum.TUTORIAL_BEGIN.send(session);
 

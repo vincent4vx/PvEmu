@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
@@ -21,9 +22,9 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  */
 abstract public class Fight {
     final static int TIMERS_POOL_SIZE = Runtime.getRuntime().availableProcessors() * 4;
+    final private int id;
     final private FightMap map;
-    final private FightTeam team1;
-    final private FightTeam team2;
+    final private FightTeam[] teams;
     final private List<Fighter> fighters = new ArrayList<>();
     final private static ScheduledExecutorService timers = Executors.newScheduledThreadPool(TIMERS_POOL_SIZE);
     private byte state;
@@ -33,22 +34,30 @@ abstract public class Fight {
     final static public byte STATE_ACTIVE   = 3;
     final static public byte STATE_FINISHED = 4;
 
-    Fight(FightMap map, FightTeam team1, FightTeam team2) {
+    Fight(int id, FightMap map, FightTeam[] teams) {
+        this.id = id;
         this.map = map;
-        this.team1 = team1;
-        this.team2 = team2;
+        this.teams = teams;
         state = STATE_INIT;
+        GameSendersRegistry.getFight().flagsToMap(map.getMap(), this);
     }
     
-    public void addFighterToTeam1(Fighter fighter){
-        addFighterToTeam(fighter, team1);
+    void addFighterToTeamByNumber(Fighter fighter, byte number){
+        addToTeam(fighter, teams[number]);
     }
     
-    public void addFighterToTeam2(Fighter fighter){
-        addFighterToTeam(fighter, team2);
+    public void addToTeamById(Fighter fighter, int teamID){
+        FightTeam team;
+        int number = 0;
+        
+        do{
+            team = teams[number++];
+        }while(team.getId() != teamID && teams.length < number);
+        
+        addToTeam(fighter, team);
     }
     
-    private void addFighterToTeam(Fighter fighter, FightTeam team){
+    private void addToTeam(Fighter fighter, FightTeam team){
         Loggin.debug("new player (%s) into fight (there are %d players)", fighter.getName(), fighters.size());
         team.addFighter(fighter);
         addToFighterList(fighter);
@@ -56,12 +65,8 @@ abstract public class Fight {
         fighter.enterFight();
     }
 
-    public FightTeam getTeam1() {
-        return team1;
-    }
-
-    public FightTeam getTeam2() {
-        return team2;
+    public FightTeam[] getTeams() {
+        return teams;
     }
     
     /**
@@ -102,6 +107,10 @@ abstract public class Fight {
 
     public FightMap getMap() {
         return map;
+    }
+
+    public int getId() {
+        return id;
     }
     
 }

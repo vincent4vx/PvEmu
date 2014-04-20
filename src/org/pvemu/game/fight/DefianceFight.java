@@ -12,8 +12,8 @@ package org.pvemu.game.fight;
  */
 public class DefianceFight extends Fight{
 
-    public DefianceFight(FightMap map, FightTeam team1, FightTeam team2) {
-        super(map, team1, team2);
+    public DefianceFight(int id, FightMap map, FightTeam[] teams) {
+        super(id, map, teams);
     }
 
     @Override

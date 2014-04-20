@@ -81,4 +81,20 @@ public class FightGenerator {
     public String generateChangePlace(int fighterID, short cellID){
         return "|" + fighterID + ";" + cellID;
     }
+    
+    public String generateAddFlag(Fight fight){
+        StringBuilder packet = new StringBuilder();
+        
+        packet.append(fight.getId()).append(';').append(fight.getType());
+        
+        for(FightTeam team : fight.getTeams()){
+            packet.append('|')
+                    .append(team.getId()).append(';')
+                    .append(team.getCell()).append(';')
+                    .append(team.getType()).append(';')
+                    .append(team.getAlignement());
+        }
+        
+        return packet.toString();
+    }
 }

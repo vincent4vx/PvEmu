@@ -3,6 +3,8 @@ package org.pvemu.game.objects.inventory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.inventory.entrystate.EntryState;
 import org.pvemu.game.objects.inventory.entrystate.EntryStateFactory;
@@ -14,13 +16,18 @@ import org.pvemu.models.dao.DAOFactory;
 
 final public class Inventory {
     
-    final private HashMap<Integer, GameItem> items = new HashMap<>();
-    final private HashMap<Byte, ArrayList<GameItem>> itemsByPos = new HashMap<>();
-    final private ArrayList<EntryState> waitingStates = new ArrayList<>();
+    final private Map<Integer, GameItem> items = new HashMap<>();
+    final private Map<Byte, ArrayList<GameItem>> itemsByPos = new HashMap<>();
+    final private List<EntryState> waitingStates = new ArrayList<>();
     final private Inventoryable owner;
     
     public Inventory(Inventoryable owner){
         this.owner = owner;
+    }
+    
+    public void load(){
+        items.clear();
+        itemsByPos.clear();
         
         for(InventoryEntry entry : DAOFactory.inventory().getByOwner(owner.getOwnerType(), owner.getID())){
             GameItem item = ItemsFactory.recoverItem(entry);
@@ -224,7 +231,7 @@ final public class Inventory {
         }
     }
     
-    public HashMap<Byte, ArrayList<GameItem>> getItemsByPos(){
+    public Map<Byte, ArrayList<GameItem>> getItemsByPos(){
         return itemsByPos;
     }
     

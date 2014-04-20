@@ -9,6 +9,7 @@ package org.pvemu.network.game.input.account;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.World;
 import org.pvemu.game.objects.player.Player;
+import org.pvemu.game.objects.player.PlayerFactory;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
@@ -62,20 +63,20 @@ public class SelectCharacterPacket implements InputPacket {
                 return;
             }
 
-            Player p = chr.getPlayer();
+            Player player = PlayerFactory.getPlayer(chr, acc);//chr.getPlayer();
 
             if (Constants.DOFUS_VER_ID >= 1100) { //pour dofus "récents" : connecte directement le pesonnage
                 //session.setAttribute("player", p);
-                SessionAttributes.PLAYER.setValue(p, session);
-                chr.getPlayer().setSession(session);
+                SessionAttributes.PLAYER.setValue(player, session);
+                player.setSession(session);
 
-                World.instance().addOnline(p);
+                World.instance().addOnline(player);
 
-                GamePacketEnum.SELECT_CHARACTER_OK.send(session, GeneratorsRegistry.getPlayer().generateSelectionOk(p));
+                GamePacketEnum.SELECT_CHARACTER_OK.send(session, GeneratorsRegistry.getPlayer().generateSelectionOk(player));
             } else { //vielles version (cf: 1.09.1), envoit les ids du game
                 String ticket = acc.setWaiting();
                 GamePacketEnum.SELECT_CHARACTER_OK.send(session, GameServer.CRYPT_IP + ticket);
-                acc.setWaitingCharacter(p);
+                acc.setWaitingCharacter(player);
             }
         } catch (Exception e) {
             Loggin.error("Impossible de sélectionner le personnage", e);

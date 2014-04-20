@@ -16,25 +16,36 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class FightTeam {
-    final private byte id;
+    final private byte number;
+    final private int id;
+    final private short cell;
     final private Map<Integer, Fighter> fighters = new HashMap<>();
     final private List<Short> places;
 
-    FightTeam(byte id, List<Short> places) {
+    FightTeam(byte number, int id, short cell, List<Short> places) {
+        if(id > 0) //set the id negative
+            id = -id;
+        
+        this.number = number;
         this.id = id;
+        this.cell = cell;
         this.places = places;
     }
     
     public void addFighter(Fighter fighter){
         fighters.put(fighter.getID(), fighter);
         fighter.setTeam(this);
-        GameSendersRegistry.getFight().addToTeam(fighter.getFight(), fighter);
+        GameSendersRegistry.getFight().addToTeam(fighter.getFight().getMap().getMap(), fighter);
         fighter.setCell(fighter.getFight().getMap().getFreeRandomCell(places));
         GameSendersRegistry.getFight().GMToFight(fighter.getFight(), fighter);
     }
 
-    public byte getId() {
+    public int getId() {
         return id;
+    }
+
+    public byte getNumber() {
+        return number;
     }
 
     public Map<Integer, Fighter> getFighters() {
@@ -47,6 +58,26 @@ public class FightTeam {
 
     public List<Short> getPlaces() {
         return places;
+    }
+
+    public short getCell() {
+        return cell;
+    }
+    
+    /**
+     * @todo sub classes for defiance / agro / pvm
+     * @return 
+     */
+    public byte getAlignement(){
+        return -1;
+    }
+    
+    /**
+     * @todo sub classes
+     * @return 
+     */
+    public byte getType(){
+        return 0;
     }
     
 }
