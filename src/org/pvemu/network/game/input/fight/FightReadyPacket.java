@@ -32,6 +32,7 @@ public class FightReadyPacket implements InputPacket{
         
         fighter.setReady(extra.equals("1"));
         GameSendersRegistry.getFight().ready(fighter);
+        fighter.getFight().startIfAllReady();
     }
     
 }

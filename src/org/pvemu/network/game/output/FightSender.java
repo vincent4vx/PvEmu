@@ -145,4 +145,12 @@ public class FightSender {
                 GeneratorsRegistry.getFight().generateReady(fighter.getID(), fighter.isReady())
         );
     }
+    
+    public void removeFlags(GameMap map, int fightID){
+        GamePacketEnum.FIGHT_REMOVE_FLAG.sendToMap(map, fightID);
+    }
+    
+    public void startFight(Fight fight){
+        GamePacketEnum.FIGHT_START.sendToFight(fight, "");
+    }
 }

@@ -6,14 +6,12 @@
 
 package org.pvemu.game.fight;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
@@ -25,9 +23,10 @@ abstract public class Fight {
     final private int id;
     final private FightMap map;
     final private FightTeam[] teams;
-    final private List<Fighter> fighters = new ArrayList<>();
+    final private FighterList fighters = new FighterList();
     final private static ScheduledExecutorService timers = Executors.newScheduledThreadPool(TIMERS_POOL_SIZE);
     private byte state;
+    private long startTime = 0;
     
     final static public byte STATE_INIT     = 1;
     final static public byte STATE_PLACE    = 2;
@@ -60,7 +59,7 @@ abstract public class Fight {
     private void addToTeam(Fighter fighter, FightTeam team){
         Loggin.debug("new player (%s) into fight (there are %d players)", fighter.getName(), fighters.size());
         team.addFighter(fighter);
-        addToFighterList(fighter);
+        fighters.add(fighter);
         map.addFighter(fighter);
         fighter.enterFight();
     }
@@ -69,19 +68,18 @@ abstract public class Fight {
         return teams;
     }
     
-    /**
-     * Add a fighter sorted by is initiative
-     * @param fighter 
-     */
-    private void addToFighterList(Fighter fighter){
-        synchronized(fighters){
-            fighters.add(fighter);
-            for(int i = fighters.size() - 1; i >= 0 && fighter.getInitiative() > fighters.get(i).getInitiative(); --i){
-                Fighter tmp = fighters.get(i);
-                fighters.set(i, fighter);
-                fighters.set(i + 1, tmp);
-            }
-        }
+    public void startIfAllReady(){
+        if(!fighters.isAllReady())
+            return;
+        
+        startFight();
+    }
+    
+    protected void startFight(){
+        state = STATE_ACTIVE;
+        startTime = System.currentTimeMillis();
+        GameSendersRegistry.getFight().removeFlags(map.getMap(), id);
+        GameSendersRegistry.getFight().startFight(this);
     }
 
     public static void startTimer(Runnable callback){
@@ -101,7 +99,7 @@ abstract public class Fight {
         this.state = state;
     }
     
-    public List<Fighter> getFighters(){
+    public Collection<Fighter> getFighters(){
         return fighters;
     }
 

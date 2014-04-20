@@ -6,7 +6,6 @@ import org.pvemu.jelly.Jelly;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
-import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.FilterFactory;
 import org.pvemu.jelly.filters.Filterable;
@@ -286,6 +285,7 @@ public enum GamePacketEnum {
     FIGHT_ADD_FLAG("Gc+"),
     FIGHT_REMOVE_FLAG("Gc-"),
     FIGHT_READY("GR"),
+    FIGHT_START("GS"),
     PONG("pong");
     final private String packet;
     final private Object param;
