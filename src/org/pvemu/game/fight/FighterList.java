@@ -18,7 +18,7 @@ import java.util.List;
 class FighterList implements Collection<Fighter>{
     final private List<Fighter> fighters = new ArrayList<>();
     private int currentKey = -1;
-    private Fighter current;
+    private Fighter current = null;
 
     @Override
     public Iterator<Fighter> iterator() {
@@ -30,8 +30,9 @@ class FighterList implements Collection<Fighter>{
             return null;
         
         do{
-            current = fighters.get((++currentKey) % fighters.size());
-        }while(current.isAlive());
+            currentKey = (currentKey + 1) % fighters.size();
+            current = fighters.get(currentKey);
+        }while(!current.isAlive());
         
         return current;
     }

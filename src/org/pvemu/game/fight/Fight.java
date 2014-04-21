@@ -9,6 +9,7 @@ package org.pvemu.game.fight;
 import java.util.Collection;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
@@ -27,6 +28,7 @@ abstract public class Fight {
     final private static ScheduledExecutorService timers = Executors.newScheduledThreadPool(TIMERS_POOL_SIZE);
     private byte state;
     private long startTime = 0;
+    private ScheduledFuture timer;
     
     final static public byte STATE_INIT     = 1;
     final static public byte STATE_PLACE    = 2;
@@ -80,10 +82,40 @@ abstract public class Fight {
         startTime = System.currentTimeMillis();
         GameSendersRegistry.getFight().removeFlags(map.getMap(), id);
         GameSendersRegistry.getFight().startFight(this);
+        GameSendersRegistry.getFight().turnList(this);
+        nextFighter();
+    }
+    
+    public void nextFighter(){
+        if(timer != null && !timer.isCancelled() && !timer.isDone()){
+            timer.cancel(true); //stop the timer if is not stoped
+        }
+        
+        GameSendersRegistry.getFight().turnMiddle(this);
+        
+        Fighter fighter = fighters.getCurrent();
+        
+        if(fighter != null){
+            fighter.setCanPlay(false);
+            fighter.endTurn();
+            GameSendersRegistry.getFight().turnEnd(this, fighter.getID());
+        }
+        
+        fighter = fighters.getNext();
+        fighter.setCanPlay(true);
+        fighter.startTurn();
+        GameSendersRegistry.getFight().turnStart(this, fighter.getID());
+        
+        timer = startTimer(new Runnable() {
+            @Override
+            public void run() {
+                nextFighter();
+            }
+        }); //start another timer
     }
 
-    public static void startTimer(Runnable callback){
-        timers.schedule(callback, Constants.TURN_TIME, TimeUnit.SECONDS);
+    public static ScheduledFuture startTimer(Runnable callback){
+        return timers.schedule(callback, Constants.TURN_TIME, TimeUnit.SECONDS);
     }
     
     abstract public byte getType();

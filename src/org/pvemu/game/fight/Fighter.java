@@ -9,6 +9,7 @@ package org.pvemu.game.fight;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.map.GMable;
+import org.pvemu.jelly.Loggin;
 
 /**
  *
@@ -39,18 +40,10 @@ abstract public class Fighter implements GMable {
     }
     
     public void startTurn(){
-        canPlay = true;
-        
-        Fight.startTimer(new Runnable() {
-            @Override
-            public void run() {
-                endTurn();
-            }
-        });
+        Loggin.debug("Start turn for %s", getName());
     }
     
     public void endTurn(){
-        canPlay = false;
     }
 
     public FightTeam getTeam() {

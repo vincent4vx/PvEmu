@@ -286,7 +286,12 @@ public enum GamePacketEnum {
     FIGHT_REMOVE_FLAG("Gc-"),
     FIGHT_READY("GR"),
     FIGHT_START("GS"),
-    PONG("pong");
+    FIGHT_TURN_LIST("GTL"),
+    FIGHT_TURN_MIDDLE("GTM"),
+    FIGHT_TURN_START("GTS"),
+    FIGHT_TURN_FNISH("GTF"),
+    PONG("pong"),
+    QPONG("qpong");
     final private String packet;
     final private Object param;
 

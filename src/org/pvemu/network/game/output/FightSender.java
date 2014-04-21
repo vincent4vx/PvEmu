@@ -6,6 +6,7 @@
 
 package org.pvemu.network.game.output;
 
+import java.util.Collection;
 import java.util.List;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.fight.Fight;
@@ -152,5 +153,33 @@ public class FightSender {
     
     public void startFight(Fight fight){
         GamePacketEnum.FIGHT_START.sendToFight(fight, "");
+    }
+    
+    public void turnList(Fight fight){
+        GamePacketEnum.FIGHT_TURN_LIST.sendToFight(
+                fight, 
+                GeneratorsRegistry.getFight().generateTurnList(fight.getFighters())
+        );
+    }
+    
+    public void turnMiddle(Fight fight){
+        GamePacketEnum.FIGHT_TURN_MIDDLE.sendToFight(
+                fight, 
+                GeneratorsRegistry.getFight().generateTurnMiddle(fight.getFighters())
+        );
+    }
+    
+    public void turnStart(Fight fight, int fighter){
+        GamePacketEnum.FIGHT_TURN_START.sendToFight(
+                fight, 
+                GeneratorsRegistry.getFight().generateTurnStart(fighter)
+        );
+    }
+    
+    public void turnEnd(Fight fight, int fighter){
+        GamePacketEnum.FIGHT_TURN_FNISH.sendToFight(
+                fight, 
+                fighter
+        );
     }
 }

@@ -6,6 +6,7 @@
 
 package org.pvemu.network.generators;
 
+import java.util.Collection;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
@@ -36,7 +37,7 @@ public class FightGenerator {
             .append(fighter.getTotalVita()).append(';')
             .append("6;3;") //TODO: PA/PM
             .append("0;0;0;0;0;0;0;") //TODO: resis
-            .append(fighter.getTeam().getId()).append(';')
+            .append(fighter.getTeam().getNumber()).append(';')
             .append(';') //TODO: mount
             ;
         
@@ -100,5 +101,43 @@ public class FightGenerator {
     
     public String generateReady(int id, boolean ready){
         return (ready ? "1" : "0") + id;
+    }
+    
+    public String generateTurnList(Collection<Fighter> fighters){
+        StringBuilder packet = new StringBuilder(fighters.size() * 4);
+        
+        for(Fighter fighter : fighters){
+            packet.append('|').append(fighter.getID());
+        }
+        
+        return packet.toString();
+    }
+    
+    public String generateTurnMiddle(Collection<Fighter> fighters){
+        StringBuilder packet = new StringBuilder(24 * fighters.size());
+        
+        for(Fighter fighter : fighters){
+            packet.append('|')
+                    .append(fighter.getID()).append(';');
+            
+            if(!fighter.isAlive()){
+                packet.append('1');
+                continue;
+            }
+            
+            packet.append("0;")
+                    .append(fighter.getCurrentVita()).append(';')
+                    .append(fighter.getNumPA()).append(';')
+                    .append(fighter.getNumPM()).append(';')
+                    .append(fighter.getCellId()).append(';') //TODO: invisibility
+                    .append(';')
+                    .append(fighter.getTotalVita());
+        }
+        
+        return packet.toString();
+    }
+    
+    public String generateTurnStart(int fighterID){
+        return fighterID + "|" + Constants.TURN_TIME * 1000;
     }
 }
