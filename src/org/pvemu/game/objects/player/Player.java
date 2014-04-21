@@ -16,6 +16,7 @@ import org.pvemu.models.Character;
 import org.pvemu.models.NpcQuestion;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.fight.PlayerFighter;
 import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.objects.Exchange;
 import org.pvemu.game.objects.item.ItemPosition;
@@ -65,36 +66,6 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
     public GameActionsManager getActionsManager() {
         return actionsManager;
     }
-
-
-//    public Player(Character c) {
-//        classData = ClassesHandler.instance().getClass(c.classId);
-//        character = c;
-//        gfxID = c.gfxid;
-//        level = c.level;
-//        name = c.name;
-//        orientation = c.orientation;
-//
-//        colors[0] = c.color1 == -1 ? "-1" : Integer.toHexString(c.color1);
-//        colors[1] = c.color2 == -1 ? "-1" : Integer.toHexString(c.color2);
-//        colors[2] = c.color3 == -1 ? "-1" : Integer.toHexString(c.color3);
-//
-//        /*MapModel m = DAOFactory.map().getById(c.lastMap);
-//        if (m != null) {
-//            curMap = m.getGameMap();
-//        }*/
-//        curMap = MapFactory.getById(c.lastMap);
-//
-//        if (curMap != null) {
-//            curCell = curMap.getCellById(c.lastCell);
-//        }
-//
-//        account = DAOFactory.account().getById(character.accountId);
-//
-//        inventory = new Inventory(this);
-//        loadStats();
-//        classData.learnClassSpells(this);
-//    }
 
     Player(Character character, Account account, ClassData classData, String[] colors, Stats baseStats, GameMap curMap, MapCell curCell) {
         this.character = character;
@@ -438,5 +409,4 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
     public String toString() {
         return "Player{" + getName() + '}';
     }
-    
 }

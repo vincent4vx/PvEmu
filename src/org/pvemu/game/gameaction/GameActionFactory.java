@@ -14,6 +14,6 @@ import org.pvemu.game.objects.player.Player;
  */
 public class GameActionFactory {
     static public GameActionData newCinematic(Player player, Byte cinematic){
-        return new GameActionData(player, (short)2, new String[]{cinematic.toString()});
+        return new GameActionData(player, null, (short)2, new String[]{cinematic.toString()});
     }
 }

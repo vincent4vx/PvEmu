@@ -11,8 +11,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import org.pvemu.game.gameaction.GameActionsRegistry;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.jelly.utils.Pathfinding;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
@@ -91,8 +93,6 @@ abstract public class Fight {
             timer.cancel(true); //stop the timer if is not stoped
         }
         
-        GameSendersRegistry.getFight().turnMiddle(this);
-        
         Fighter fighter = fighters.getCurrent();
         
         if(fighter != null){
@@ -100,6 +100,8 @@ abstract public class Fight {
             fighter.endTurn();
             GameSendersRegistry.getFight().turnEnd(this, fighter.getID());
         }
+        
+        GameSendersRegistry.getFight().turnMiddle(this);
         
         fighter = fighters.getNext();
         fighter.setCanPlay(true);
@@ -143,4 +145,7 @@ abstract public class Fight {
         return id;
     }
     
+    public boolean canMove(Fighter fighter, short dest, short nbPM){
+        return map.isFreeCell(dest) && fighter.getNumPM() >= nbPM;
+    }
 }

@@ -27,4 +27,8 @@ public class GameActionGenerator {
                 .append(';').append(Utils.join(args, ";"))
                 .toString();
     }
+    
+    public String generateActionFinish(int tip, int id){
+        return tip + "|" + id;
+    }
 }

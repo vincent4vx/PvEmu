@@ -124,6 +124,8 @@ public enum GamePacketEnum {
      * confirmation de game action [id de l'action] ; [type] (;[args]...)
      */
     GAME_ACTION("GA"),
+    GAME_ACTION_START("GAS"),
+    GAME_ACTION_FNISH("GAF"),
     /**
      * Annule la dernière game action
      */

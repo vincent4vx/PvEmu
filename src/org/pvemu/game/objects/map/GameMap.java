@@ -112,7 +112,7 @@ public final class GameMap {
      * @return
      */
     public MapCell getCellById(short id) {
-        if (cells.size() < id) {
+        if (id < 0 || cells.size() < id) {
             Loggin.debug("CellID invalide : %d, max : %d", id, cells.size());
             return null;
         }

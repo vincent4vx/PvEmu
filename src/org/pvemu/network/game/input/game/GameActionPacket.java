@@ -7,6 +7,7 @@
 package org.pvemu.network.game.input.game;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.fight.PlayerFighter;
 import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.utils.Utils;
@@ -28,37 +29,25 @@ public class GameActionPacket implements InputPacket {
     @Override
     public void perform(String extra, IoSession session) {
         Player player = SessionAttributes.PLAYER.getValue(session);
+        PlayerFighter fighter = SessionAttributes.FIGHTER.getValue(session);
+        
         if (player == null) {
             return;
         }
+        
         short actionID = 0;
-        //GameActionHandler.GameAction GA;
         GameActionData data;
+        
         try {
             actionID = Short.parseShort(extra.substring(0, 3));
             String[] args = Utils.split(extra.substring(3), ";");
-            data = new GameActionData(player, actionID, args);
-          //  GA = new GameActionHandler.GameAction(p.getActions(), actionID, Utils.split(args, ";"));
+            data = new GameActionData(player, fighter, actionID, args);
         } catch (Exception e) {
-            //GamePacketEnum.GAME_ACTION_ERROR.send(session);
             GameSendersRegistry.getGameAction().error(session);
             return;
         }
         
         player.getActionsManager().startGameAction(data);
-        
-
-        /*switch (actionID) {
-            case 1: //déplacement
-                GameActionEvents.onMoveAction(session, GA);
-                break;
-            case 500: //action sur la map
-                GameActionEvents.onMapAction(p, GA);
-                break;
-            default:
-                Loggin.debug("GameAction non géré : %d", actionID);
-                GamePacketEnum.GAME_ACTION_ERROR.send(session);
-        }*/
         
     }
     

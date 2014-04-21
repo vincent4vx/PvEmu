@@ -6,6 +6,7 @@
 
 package org.pvemu.game.gameaction;
 
+import org.pvemu.game.fight.PlayerFighter;
 import org.pvemu.game.objects.player.Player;
 
 /**
@@ -15,11 +16,13 @@ import org.pvemu.game.objects.player.Player;
 public class GameActionData {
     
     final private Player player;
+    final private PlayerFighter fighter;
     final private short gameActionID;
     final private String[] arguments;
 
-    public GameActionData(Player player, short gameActionID, String[] arguments) {
+    public GameActionData(Player player, PlayerFighter fighter, short gameActionID, String[] arguments) {
         this.player = player;
+        this.fighter = fighter;
         this.gameActionID = gameActionID;
         this.arguments = arguments;
     }
@@ -63,4 +66,11 @@ public class GameActionData {
         return player;
     }
 
+    public PlayerFighter getFighter() {
+        return fighter;
+    }
+
+    public boolean isFight(){
+        return fighter != null;
+    }
 }

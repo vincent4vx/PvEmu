@@ -37,6 +37,8 @@ abstract public class Fighter implements GMable {
     public void enterFight(){
         currentStats = new Stats(baseStats);
         currentVita = getTotalVita();
+        numPA = currentStats.get(Stats.Element.PA);
+        numPM = currentStats.get(Stats.Element.PM);
     }
     
     public void startTurn(){
@@ -44,6 +46,8 @@ abstract public class Fighter implements GMable {
     }
     
     public void endTurn(){
+        numPA = currentStats.get(Stats.Element.PA);
+        numPM = currentStats.get(Stats.Element.PM);
     }
 
     public FightTeam getTeam() {
@@ -116,9 +120,23 @@ abstract public class Fighter implements GMable {
     public short getNumPA() {
         return numPA;
     }
+    
+    public void removePA(short num){
+        numPA -= num;
+        
+        if(numPA < 0)
+            numPA = 0;
+    }
 
     public short getNumPM() {
         return numPM;
+    }
+    
+    public void removePM(short num){
+        numPM -= num;
+        
+        if(numPM < 0)
+            numPM = 0;
     }
 
     /**

@@ -7,8 +7,8 @@ import org.pvemu.jelly.Loggin;
 
 public class Pathfinding {
     
-    static public int validatePath(GameMap map, short startCell, AtomicReference<String> path){
-        int steps = 0;
+    static public short validatePath(GameMap map, short startCell, AtomicReference<String> path, boolean inFight){
+        short steps = 0;
         short currentCell = startCell;
         short endCell = cellCode_To_ID(path.get().substring(path.get().length() - 2, path.get().length()));
         
@@ -23,27 +23,22 @@ public class Pathfinding {
                 ++steps;
                 
                 short lastCell = currentCell;
-                currentCell = getCellIDFromDirrection(currentCell, dir, map, false);
+                currentCell = getCellIDFromDirrection(currentCell, dir, map, inFight);
                 MapCell cell = map.getCellById(currentCell);
                 
-                if(!cell.isWalkable()){
-                    Loggin.debug("Case %d non marchable", cell.getID());
+                if(cell == null || !cell.isWalkable()){
+                    Loggin.debug("Case %d non marchable", currentCell);
                     stop = true;
-                }
-                   
-                if(endCell == currentCell && cell.getObj() != null){ //Use the IO
+                }else if(endCell == currentCell && cell.getObj() != null){ //Use the IO
                     Loggin.debug("IO %d trouvé", cell.getObj().getID());
                     stop = true;
                 }
                 
                 if(!stop && currentCell == cellID){ //end of the step
-                    //steps += j;
                     break;
                 }
                 
                 if(stop){ //blocked
-                    //--j;
-                    //steps += j;
                     --steps;
                     stop = true;
                     currentCell = lastCell;

@@ -66,4 +66,8 @@ public class FightMap {
         fighter.setCell(dest);
         fighters.put(dest, fighter);
     }
+    
+    public boolean isFreeCell(short cell){
+        return !fighters.containsKey(cell) && map.getCellById(cell).isWalkable();
+    }
 }
