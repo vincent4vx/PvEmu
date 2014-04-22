@@ -6,14 +6,14 @@
 
 package org.pvemu.game.objects.spell;
 
-import org.pvemu.game.objects.spell.effect.SpellEffectData;
+import org.pvemu.game.effect.EffectData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.pvemu.game.objects.spell.effect.SpellEffectFactory;
+import org.pvemu.game.effect.EffectFactory;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.Spell;
@@ -69,14 +69,14 @@ final public class SpellFactory {
         if(tmp.length < 2)
             return null;
         
-        Set<SpellEffectData> effects = parseSpellEffect(tmp[0]);
-        Set<SpellEffectData> criticals = parseSpellEffect(tmp[1]);
+        Set<EffectData> effects = parseSpellEffect(tmp[0]);
+        Set<EffectData> criticals = parseSpellEffect(tmp[1]);
         
         return new GameSpell(model, level, effects, criticals);
     }
     
-    static private Set<SpellEffectData> parseSpellEffect(String strEffect){
-        Set<SpellEffectData> effects = new HashSet<>();
+    static private Set<EffectData> parseSpellEffect(String strEffect){
+        Set<EffectData> effects = new HashSet<>();
         
         if(strEffect.isEmpty() || strEffect.equals("-1"))
             return effects;
@@ -87,7 +87,7 @@ final public class SpellFactory {
             if(effectsArray[i].isEmpty() || effectsArray[i].equals("-1"))
                 continue;
             
-            SpellEffectData effect = SpellEffectFactory.parseSpellEffect(effectsArray[i]);
+            EffectData effect = EffectFactory.parseSpellEffect(effectsArray[i]);
             
             if(effect == null)
                 continue;

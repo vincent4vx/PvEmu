@@ -6,7 +6,7 @@
 
 package org.pvemu.game.objects.spell;
 
-import org.pvemu.game.objects.spell.effect.SpellEffectData;
+import org.pvemu.game.effect.EffectData;
 import java.util.Collections;
 import java.util.Set;
 import org.pvemu.models.Spell;
@@ -18,10 +18,10 @@ import org.pvemu.models.Spell;
 public class GameSpell {
     final private Spell model;
     final private byte level;
-    final private Set<SpellEffectData> effects;
-    final private Set<SpellEffectData> critical;
+    final private Set<EffectData> effects;
+    final private Set<EffectData> critical;
 
-    public GameSpell(Spell model, byte level, Set<SpellEffectData> effects, Set<SpellEffectData> critical) {
+    public GameSpell(Spell model, byte level, Set<EffectData> effects, Set<EffectData> critical) {
         this.model = model;
         this.level = level;
         this.effects = Collections.unmodifiableSet(effects);
@@ -36,11 +36,11 @@ public class GameSpell {
         return SpellFactory.getSpellLevelsById(model.id);
     }
 
-    public Set<SpellEffectData> getEffects() {
+    public Set<EffectData> getEffects() {
         return effects;
     }
 
-    public Set<SpellEffectData> getCritical() {
+    public Set<EffectData> getCritical() {
         return critical;
     }
 

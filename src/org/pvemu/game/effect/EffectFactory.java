@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.pvemu.game.objects.spell.effect;
+package org.pvemu.game.effect;
 
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
@@ -12,9 +12,9 @@ import org.pvemu.jelly.utils.Utils;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-final public class SpellEffectFactory {
+final public class EffectFactory {
 
-    static public SpellEffectData parseSpellEffect(String spellEffect) {
+    static public EffectData parseSpellEffect(String spellEffect) {
 
         String[] args = Utils.split(spellEffect, ";");
 
@@ -32,14 +32,14 @@ final public class SpellEffectFactory {
             min += fix;
             max += fix;
 
-            SpellEffect effect = SpellEffectsHandler.instance().getSpellEffect(id);
+            Effect effect = EffectsHandler.instance().getEffect(id);
 
             if (effect == null) {
                 Loggin.debug("Cannot find effectID %d", id);
                 return null;
             }
 
-            return new SpellEffectData(effect, min, max, duration, target);
+            return new EffectData(effect, min, max, duration, target);
 
         } catch (Exception e) {
             Loggin.error("error during parsing effect : " + spellEffect, e);
@@ -47,7 +47,7 @@ final public class SpellEffectFactory {
         }
     }
     
-    static public SpellEffectData parseItemEffect(String itemEffect){
+    static public EffectData parseItemEffect(String itemEffect){
         
             if(itemEffect.isEmpty()){
                 return null;
@@ -66,11 +66,11 @@ final public class SpellEffectFactory {
                 return null;
             }
             
-            SpellEffect effect = SpellEffectsHandler.instance().getSpellEffect(effectID);
+            Effect effect = EffectsHandler.instance().getEffect(effectID);
             
             if(effect == null)
                 return null;
             
-            return new SpellEffectData(effect, min, max, 0, 0);
+            return new EffectData(effect, min, max, 0, 0);
     }
 }

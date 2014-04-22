@@ -12,8 +12,8 @@ import org.pvemu.game.objects.inventory.Inventoryable;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.item.types.Weapon;
-import org.pvemu.game.objects.spell.effect.SpellEffectData;
-import org.pvemu.game.objects.spell.effect.SpellEffectFactory;
+import org.pvemu.game.effect.EffectData;
+import org.pvemu.game.effect.EffectFactory;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
@@ -239,14 +239,14 @@ public class ItemsFactory {
         return stats;
     }
     
-    static Set<SpellEffectData> parseEffects(String strEffets){
-        Set<SpellEffectData> effects = new HashSet<>();
+    static Set<EffectData> parseEffects(String strEffets){
+        Set<EffectData> effects = new HashSet<>();
         
         for(String e : Utils.split(strEffets, ",")){
             if(e.isEmpty())
                 continue;
             
-            SpellEffectData data = SpellEffectFactory.parseItemEffect(e);
+            EffectData data = EffectFactory.parseItemEffect(e);
             
             if(data == null)
                 continue;

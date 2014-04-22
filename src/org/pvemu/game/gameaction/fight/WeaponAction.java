@@ -14,7 +14,7 @@ import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
 import org.pvemu.game.objects.item.types.Weapon;
-import org.pvemu.game.objects.spell.effect.SpellEffectData;
+import org.pvemu.game.effect.EffectData;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
@@ -57,7 +57,7 @@ public class WeaponAction implements GameAction<PlayerFighter>{
                 cell
         );
         
-        for(SpellEffectData effect : weapon.getEffects()){
+        for(EffectData effect : weapon.getEffects()){
             effect.getEffect().applyToFight(effect, data.getPerformer(), data.getPerformer().getFight(), cell);
         }
     }

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.objects.spell.effect;
+package org.pvemu.game.effect;
 
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
@@ -15,7 +15,7 @@ import org.pvemu.jelly.utils.Utils;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class NeutralAttackEffect implements SpellEffect{
+public class NeutralAttackEffect implements Effect{
 
     @Override
     public short id() {
@@ -23,7 +23,7 @@ public class NeutralAttackEffect implements SpellEffect{
     }
 
     @Override
-    public void applyToFight(SpellEffectData data, Fighter caster, Fight fight, short cell) {
+    public void applyToFight(EffectData data, Fighter caster, Fight fight, short cell) {
         Fighter target = fight.getMap().getFighter(cell);
         
         if(target == null || !target.isAlive())

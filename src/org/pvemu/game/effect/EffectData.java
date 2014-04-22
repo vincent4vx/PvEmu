@@ -4,20 +4,20 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.objects.spell.effect;
+package org.pvemu.game.effect;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class SpellEffectData {
-    final private SpellEffect effect;
+public class EffectData {
+    final private Effect effect;
     final private int min;
     final private int max;
     final private int duration;
     final private int target;
 
-    SpellEffectData(SpellEffect effect, int min, int max, int duration, int target) {
+    EffectData(Effect effect, int min, int max, int duration, int target) {
         this.effect = effect;
         this.min = min;
         this.max = max;
@@ -25,7 +25,7 @@ public class SpellEffectData {
         this.target = target;
     }
 
-    public SpellEffect getEffect() {
+    public Effect getEffect() {
         return effect;
     }
 
