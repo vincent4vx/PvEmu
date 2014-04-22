@@ -14,14 +14,6 @@ public class ItemTemplate implements Model {
     public int cost;
     public String condition;
     public String weaponData;
-    
-/*    public ItemStats createItem(){
-        return new ItemStats(this);
-    }
-    
-    public ItemStats createItem(boolean max){
-        return new ItemStats(this, max);
-    }*/
 
     @Override
     public int getPk() {
@@ -31,6 +23,11 @@ public class ItemTemplate implements Model {
     @Override
     public void clear() {
         id = 0;
+    }
+
+    @Override
+    public String toString() {
+        return "ItemTemplate{" + "id=" + id + ", type=" + type + ", name=" + name + ", level=" + level + ", statsTemplate=" + statsTemplate + ", pods=" + pods + ", itemset=" + itemset + ", cost=" + cost + ", condition=" + condition + ", weaponData=" + weaponData + '}';
     }
     
 }

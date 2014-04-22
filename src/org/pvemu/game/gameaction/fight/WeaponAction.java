@@ -14,7 +14,6 @@ import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
 import org.pvemu.game.objects.item.types.Weapon;
-import org.pvemu.game.effect.EffectData;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
@@ -49,6 +48,10 @@ public class WeaponAction implements GameAction<PlayerFighter>{
         }
         
         Weapon weapon = (Weapon)list.get(0);
+        
+        if(!data.getPerformer().getFight().canUseWeapon(data.getPerformer(), weapon, cell)){
+            return;
+        }
         
         GameSendersRegistry.getGameAction().unidentifiedGameActionToFight(
                 data.getPerformer().getFight(), 

@@ -9,6 +9,7 @@ package org.pvemu.game.objects.item.types;
 import java.util.Set;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.effect.EffectData;
+import org.pvemu.game.objects.item.WeaponData;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
 
@@ -17,9 +18,21 @@ import org.pvemu.models.ItemTemplate;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class Weapon extends Accessorie{
-    
-    public Weapon(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
+
+    private final WeaponData weaponData;
+
+    public Weapon(Stats stats, Set<EffectData> effects, WeaponData weaponData, InventoryEntry entry, ItemTemplate template) {
         super(stats, effects, entry, template);
+        this.weaponData = weaponData;
+    }
+
+    /**
+     * Get the value of weaponData
+     *
+     * @return the value of weaponData
+     */
+    public WeaponData getWeaponData() {
+        return weaponData;
     }
     
 }

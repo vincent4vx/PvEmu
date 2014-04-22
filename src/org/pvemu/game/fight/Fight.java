@@ -149,7 +149,14 @@ abstract public class Fight {
         return map.isFreeCell(dest) && fighter.getNumPM() >= nbPM;
     }
     
+    public boolean canUseWeapon(Fighter caster, Weapon weapon, short cell){
+        return caster.canPlay() && caster.getNumPA() >= weapon.getWeaponData().getPACost(); //TODO: PO
+    }
+    
     public void useWeapon(Fighter caster, Weapon weapon, short cell){
+        if(!canUseWeapon(caster, weapon, cell))
+            return;
+        
         Fighter target = map.getFighter(cell); //TODO: field effects and target
         
         if(target == null)
@@ -158,5 +165,12 @@ abstract public class Fight {
         for(EffectData effect : weapon.getEffects()){
             effect.getEffect().applyToFighter(effect, caster, target);
         }
+        
+        caster.removePA(weapon.getWeaponData().getPACost());
+        GameSendersRegistry.getEffect().removePAOnAction(
+                this, 
+                caster.getID(), 
+                weapon.getWeaponData().getPACost()
+        );
     }
 }

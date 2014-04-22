@@ -18,6 +18,10 @@ public class EffectSender {
         updatePoint(fight, fighterID, FightActionsRegistry.USE_PM, (short)-nb);
     }
     
+    public void removePAOnAction(Fight fight, int fighterID, short nb){
+        updatePoint(fight, fighterID, FightActionsRegistry.USE_PA_ON_ACTION, (short)-nb);
+    }
+    
     public void removePMOnWalk(Fight fight, int fighterID, short nb){
         updatePoint(fight, fighterID, FightActionsRegistry.USE_PM_ON_MOVE, (short)-nb);
     }

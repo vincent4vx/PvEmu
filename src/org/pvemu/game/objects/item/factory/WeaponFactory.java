@@ -11,6 +11,7 @@ import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.effect.EffectData;
+import org.pvemu.game.objects.item.WeaponData;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
 
@@ -22,7 +23,13 @@ public class WeaponFactory implements ItemFactoryInterface{
 
     @Override
     public GameItem newItem(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
-        return new Weapon(stats, effects, entry, template);
+        return new Weapon(
+                stats, 
+                effects,
+                WeaponData.getWeaponDataByTemplate(template),
+                entry, 
+                template
+        );
     }
     
 }

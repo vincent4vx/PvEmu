@@ -16,6 +16,7 @@ import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.effect.EffectFactory;
+import org.pvemu.game.objects.item.WeaponData;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
@@ -29,7 +30,8 @@ import org.pvemu.network.generators.GeneratorsRegistry;
 public class ItemsFactory {
     final static private Weapon punch = new Weapon(
             new Stats(), 
-            parseEffects("64#1#5#0#1d5+0"), 
+            parseEffects("64#1#5#0#1d5+0"),
+            new WeaponData((short)4, (short)1, (short)1, (byte)100, (byte)100, (short)10, false),
             new InventoryEntry(), 
             new ItemTemplate()
     );

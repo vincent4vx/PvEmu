@@ -26,6 +26,7 @@ public class ItemTemplateDAO extends FindableDAO<ItemTemplate> {
             T.statsTemplate = RS.getString("statsTemplate");
             T.pods = RS.getInt("pods");
             T.type = RS.getByte("type");
+            T.weaponData = RS.getString("weaponData");
             
             itemTemplateById.put(T.id, T);
             
