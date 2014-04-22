@@ -6,14 +6,22 @@
 
 package org.pvemu.game.effect;
 
-import org.pvemu.game.fight.Fighter;
+import org.pvemu.game.objects.dep.Stats;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public interface Effect {
-    public short id();
+public class AirAttackEffect extends BasicAttackEffect{
+
+    @Override
+    protected Stats.Element getActiveElement() {
+        return Stats.Element.AGILITE;
+    }
+
+    @Override
+    public short id() {
+        return 98;
+    }
     
-    public void applyToFighter(EffectData data, Fighter caster, Fighter target);
 }

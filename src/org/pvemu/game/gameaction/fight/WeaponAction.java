@@ -57,9 +57,7 @@ public class WeaponAction implements GameAction<PlayerFighter>{
                 cell
         );
         
-        for(EffectData effect : weapon.getEffects()){
-            effect.getEffect().applyToFight(effect, data.getPerformer(), data.getPerformer().getFight(), cell);
-        }
+        data.getPerformer().getFight().useWeapon(data.getPerformer(), weapon, cell);
     }
 
     @Override

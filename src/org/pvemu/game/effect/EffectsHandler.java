@@ -19,6 +19,10 @@ final public class EffectsHandler {
     
     private EffectsHandler() {
         registerEffect(new NeutralAttackEffect());
+        registerEffect(new WaterAttackEffect());
+        registerEffect(new GroundAttackEffect());
+        registerEffect(new AirAttackEffect());
+        registerEffect(new FireAttackEffect());
     }
     
     public void registerEffect(Effect effect){

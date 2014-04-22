@@ -11,6 +11,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import org.pvemu.game.effect.EffectData;
+import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -145,5 +147,16 @@ abstract public class Fight {
     
     public boolean canMove(Fighter fighter, short dest, short nbPM){
         return map.isFreeCell(dest) && fighter.getNumPM() >= nbPM;
+    }
+    
+    public void useWeapon(Fighter caster, Weapon weapon, short cell){
+        Fighter target = map.getFighter(cell); //TODO: field effects and target
+        
+        if(target == null)
+            return;
+        
+        for(EffectData effect : weapon.getEffects()){
+            effect.getEffect().applyToFighter(effect, caster, target);
+        }
     }
 }
