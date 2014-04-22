@@ -4,10 +4,13 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.gameaction;
+package org.pvemu.game.gameaction.game;
 
 import java.util.logging.Level;
 import org.pvemu.game.cinematic.CinematicsHandler;
+import org.pvemu.game.gameaction.GameAction;
+import org.pvemu.game.gameaction.GameActionData;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
@@ -15,7 +18,7 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class CinematicAction implements GameAction {
+public class CinematicAction implements GameAction<Player> {
 
     @Override
     public short id() {
@@ -23,16 +26,16 @@ public class CinematicAction implements GameAction {
     }
 
     @Override
-    public void start(GameActionData data) {
-        int id = data.getPlayer().getActionsManager().addGameAction(data);
-        GameSendersRegistry.getGameAction().gameAction(data.getPlayer().getSession(), id, data);
+    public void start(GameActionData<Player> data) {
+        int id = data.getPerformer().getActionsManager().addGameAction(data);
+        GameSendersRegistry.getGameAction().gameAction(data.getPerformer().getSession(), id, data);
     }
 
     @Override
-    public void end(GameActionData data, boolean success, String[] args) {
+    public void end(GameActionData<Player> data, boolean success, String[] args) {
         try{
             byte cinematic = Byte.parseByte(data.getArgument(0));
-            CinematicsHandler.instance().endOfCinematic(cinematic, data.getPlayer());
+            CinematicsHandler.instance().endOfCinematic(cinematic, data.getPerformer());
         }catch(Exception e){
             Loggin.game("Erreur cinématique", Level.WARNING, e);
         }

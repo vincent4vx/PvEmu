@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.pvemu.game.gameaction;
+package org.pvemu.game.gameaction.game;
 
+import org.pvemu.game.gameaction.GameAction;
+import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.map.InteractiveObject;
 import org.pvemu.game.objects.map.MapCell;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Pathfinding;
 
@@ -14,7 +17,7 @@ import org.pvemu.jelly.utils.Pathfinding;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class InteractiveObjectAction implements GameAction {
+public class InteractiveObjectAction implements GameAction<Player> {
 
     @Override
     public short id() {
@@ -22,25 +25,25 @@ public class InteractiveObjectAction implements GameAction {
     }
 
     @Override
-    public void start(GameActionData data) {
-        if (data.getPlayer().getActionsManager().isWalking()) {
-            data.getPlayer().getActionsManager().addPendingAction(data);
+    public void start(GameActionData<Player> data) {
+        if (data.getPerformer().getActionsManager().isWalking()) {
+            data.getPerformer().getActionsManager().addPendingAction(data);
         } else {
             end(data, true, null);
         }
     }
 
     @Override
-    public void end(GameActionData data, boolean success, String[] args) {
+    public void end(GameActionData<Player> data, boolean success, String[] args) {
         Loggin.debug("IOAction sur la map (cell = %s, action = %s)", data.getArgument(0), data.getArgument(1));
         short cellID = Short.parseShort(data.getArgument(0));
         int action = Integer.parseInt(data.getArgument(1));
 
-        if (!Pathfinding.isAdjacentCells(data.getPlayer().getCell().getID(), cellID)) {
+        if (!Pathfinding.isAdjacentCells(data.getPerformer().getCell().getID(), cellID)) {
             Loggin.debug("Personnage trop loin pour effectuer l'action !");
         }
 
-        MapCell cell = data.getPlayer().getMap().getCellById(cellID);
+        MapCell cell = data.getPerformer().getMap().getCellById(cellID);
 
         if (cell == null) {
             return;
@@ -52,7 +55,7 @@ public class InteractiveObjectAction implements GameAction {
             return;
         }
 
-        IO.startAction(data.getPlayer(), action);
+        IO.startAction(data.getPerformer(), action);
     }
 
 }

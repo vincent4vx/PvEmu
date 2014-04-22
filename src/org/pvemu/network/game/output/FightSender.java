@@ -6,14 +6,13 @@
 
 package org.pvemu.network.game.output;
 
-import java.util.Collection;
 import java.util.List;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.PlayerFighter;
-import org.pvemu.game.gameaction.GameActionsRegistry;
+import org.pvemu.game.gameaction.game.GameActionsRegistry;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;

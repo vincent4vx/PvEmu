@@ -11,10 +11,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
-import org.pvemu.game.gameaction.GameActionsRegistry;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Pathfinding;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

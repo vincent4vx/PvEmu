@@ -6,12 +6,12 @@
 
 package org.pvemu.game.gameaction;
 
+import org.pvemu.network.Sessionable;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public interface GameAction<T extends ActionPerformer> {
-    public short id();
-    public void start(GameActionData<T> data);
-    public void end(GameActionData<T> data, boolean success, String[] args);
+public interface ActionPerformer extends Sessionable {
+    public GameActionsManager getActionsManager();
 }

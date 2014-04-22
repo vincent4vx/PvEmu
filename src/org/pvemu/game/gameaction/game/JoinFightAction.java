@@ -4,17 +4,20 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.gameaction;
+package org.pvemu.game.gameaction.game;
 
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.FightFactory;
+import org.pvemu.game.gameaction.GameAction;
+import org.pvemu.game.gameaction.GameActionData;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class JoinFightAction implements GameAction{
+public class JoinFightAction implements GameAction<Player>{
     final static public char CHALLENGE_FULL            = 'c',
                              TEAM_FULL                 = 't',
                              TEAM_DIFFERENT_ALIGNMENT  = 'a',
@@ -40,7 +43,7 @@ public class JoinFightAction implements GameAction{
     }
 
     @Override
-    public void start(GameActionData data) {
+    public void start(GameActionData<Player> data) {
         int fightID;
         int teamID;
         
@@ -49,25 +52,25 @@ public class JoinFightAction implements GameAction{
             teamID = Integer.parseInt(data.getArgument(1));
         }catch(NumberFormatException e){
             GameSendersRegistry.getFight().joinFightError(
-                    data.getPlayer().getSession(), 
-                    data.getPlayer().getID(),
+                    data.getPerformer().getSession(), 
+                    data.getPerformer().getID(),
                     CANT_FIGHT
             );
             return;
         }
         
-        Fight fight = data.getPlayer().getMap().getFight(fightID);
+        Fight fight = data.getPerformer().getMap().getFight(fightID);
         
         if(fight == null){
             GameSendersRegistry.getFight().joinFightError(
-                    data.getPlayer().getSession(), 
-                    data.getPlayer().getID(),
+                    data.getPerformer().getSession(), 
+                    data.getPerformer().getID(),
                     CANT_FIGHT
             );
             return;
         }
         
-        fight.addToTeamById(FightFactory.newFighter(data.getPlayer(), fight), teamID);
+        fight.addToTeamById(FightFactory.newFighter(data.getPerformer(), fight), teamID);
     }
 
     @Override

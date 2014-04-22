@@ -24,6 +24,11 @@ final public class GameActionsManager {
     final private HashMap<Short, GameActionData> gameActions = new HashMap<>();
     final private ArrayList<GameActionData> pendingActions = new ArrayList<>();
     private int defianceTarget = NO_DEFIANCE_TARGET;
+    final private AbstractGameActionsRegistry registry;
+
+    public GameActionsManager(AbstractGameActionsRegistry registry) {
+        this.registry = registry;
+    }
 
     public boolean isWalking() {
         return walking;
@@ -45,7 +50,7 @@ final public class GameActionsManager {
         this.busy = busy;
     }
 
-    void setWalking(boolean walking) {
+    public void setWalking(boolean walking) {
         this.walking = walking;
     }
 
@@ -57,15 +62,15 @@ final public class GameActionsManager {
         this.inFight = inFight;
     }
     
-    void addPendingAction(GameActionData gad){
+    public void addPendingAction(GameActionData gad){
         pendingActions.add(gad);
     }
     
-    void clearPendingActions(){
+    public void clearPendingActions(){
         pendingActions.clear();
     }
     
-    short addGameAction(GameActionData gad){
+    public short addGameAction(GameActionData gad){
         short id = 0;
         Object[] keys = gameActions.keySet().toArray();
         if (keys.length > 0) {
@@ -76,24 +81,24 @@ final public class GameActionsManager {
         return id;
     }
     
-    ArrayList<GameActionData> getPendingActions(){
+    public ArrayList<GameActionData> getPendingActions(){
         return pendingActions;
     }
     
-    void performPendingActions(){
+    public void performPendingActions(){
         for(GameActionData data : pendingActions){
-            GameAction GA = GameActionsRegistry.instance().getGameAction(data.getGameActionID());
+            GameAction GA = registry.getGameAction(data.getGameActionID());
             GA.end(data, true, null);
         }
         pendingActions.clear();
     }
     
     public void startGameAction(GameActionData gad){
-        GameAction GA = GameActionsRegistry.instance().getGameAction(gad.getGameActionID());
+        GameAction GA = registry.getGameAction(gad.getGameActionID());
         
         if(GA == null){
             Loggin.debug("GameAction %d introuvable !", gad.getGameActionID());
-            GameSendersRegistry.getGameAction().error(gad.getPlayer().getSession());
+            GameSendersRegistry.getGameAction().error(gad.getPerformer().getSession());
             return;
         }
         
@@ -106,7 +111,7 @@ final public class GameActionsManager {
         if(gad == null) //error : no found game action
             return;
         
-        GameAction GA = GameActionsRegistry.instance().getGameAction(gad.getGameActionID());
+        GameAction GA = registry.getGameAction(gad.getGameActionID());
         GA.end(gad, success, args);
         gameActions.remove(id);
     }

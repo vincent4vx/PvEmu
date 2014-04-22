@@ -6,23 +6,18 @@
 
 package org.pvemu.game.gameaction;
 
-import org.pvemu.game.fight.PlayerFighter;
-import org.pvemu.game.objects.player.Player;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class GameActionData {
-    
-    final private Player player;
-    final private PlayerFighter fighter;
+public class GameActionData<T extends ActionPerformer> {
+    final private T performer;
     final private short gameActionID;
     final private String[] arguments;
 
-    public GameActionData(Player player, PlayerFighter fighter, short gameActionID, String[] arguments) {
-        this.player = player;
-        this.fighter = fighter;
+    public GameActionData(T performer, short gameActionID, String[] arguments) {
+        this.performer = performer;
         this.gameActionID = gameActionID;
         this.arguments = arguments;
     }
@@ -56,21 +51,8 @@ public class GameActionData {
         return gameActionID;
     }
 
-
-    /**
-     * Get the value of player
-     *
-     * @return the value of player
-     */
-    public Player getPlayer() {
-        return player;
+    public T getPerformer() {
+        return performer;
     }
 
-    public PlayerFighter getFighter() {
-        return fighter;
-    }
-
-    public boolean isFight(){
-        return fighter != null;
-    }
 }

@@ -4,8 +4,10 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.gameaction;
+package org.pvemu.game.gameaction.game;
 
+import org.pvemu.game.gameaction.GameAction;
+import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -14,7 +16,7 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class AskDefianceAction implements GameAction{
+public class AskDefianceAction implements GameAction<Player>{
 
     @Override
     public short id() {
@@ -22,46 +24,46 @@ public class AskDefianceAction implements GameAction{
     }
 
     @Override
-    public void start(GameActionData data) {
-        if(data.getPlayer().getActionsManager().isBusy()){
+    public void start(GameActionData<Player> data) {
+        if(data.getPerformer().getActionsManager().isBusy()){
             GameSendersRegistry.getDefiance().defianceCasterError(
-                    data.getPlayer().getSession(), 
-                    data.getPlayer().getID()
+                    data.getPerformer().getSession(), 
+                    data.getPerformer().getID()
             );
             return;
         }
         Player other;
         try{
             int target = Integer.parseInt(data.getArgument(0));
-            other = data.getPlayer().getMap().getPlayers().get(target);
+            other = data.getPerformer().getMap().getPlayers().get(target);
             
             if(other == null || other.getActionsManager().isBusy()){
                 GameSendersRegistry.getDefiance().defianceTargetBusyError(
-                        data.getPlayer().getSession(), 
-                        data.getPlayer().getID()
+                        data.getPerformer().getSession(), 
+                        data.getPerformer().getID()
                 );
                 return;
             }
         }catch(NumberFormatException e){
             GameSendersRegistry.getDefiance().defianceCasterError(
-                    data.getPlayer().getSession(), 
-                    data.getPlayer().getID()
+                    data.getPerformer().getSession(), 
+                    data.getPerformer().getID()
             );
             return;
         }
         
         GameSendersRegistry.getGameAction().unidentifiedGameActionToMap(
-                data.getPlayer().getMap(),
+                data.getPerformer().getMap(),
                 id(), 
-                data.getPlayer().getID(), 
+                data.getPerformer().getID(), 
                 other.getID()
         );
         
         other.getActionsManager().setBusy(true);
-        data.getPlayer().getActionsManager().setBusy(true);
-        other.getActionsManager().setDefianceTarget(data.getPlayer().getID());
-        data.getPlayer().getActionsManager().setDefianceTarget(other.getID());
-        Loggin.debug("asking for defiance : %s -> %s", data.getPlayer().getName(), other.getName());
+        data.getPerformer().getActionsManager().setBusy(true);
+        other.getActionsManager().setDefianceTarget(data.getPerformer().getID());
+        data.getPerformer().getActionsManager().setDefianceTarget(other.getID());
+        Loggin.debug("asking for defiance : %s -> %s", data.getPerformer().getName(), other.getName());
     }
 
     @Override

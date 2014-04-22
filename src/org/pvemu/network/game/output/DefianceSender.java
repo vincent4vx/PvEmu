@@ -7,8 +7,8 @@
 package org.pvemu.network.game.output;
 
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.game.gameaction.GameActionsRegistry;
-import org.pvemu.game.gameaction.JoinFightAction;
+import org.pvemu.game.gameaction.game.GameActionsRegistry;
+import org.pvemu.game.gameaction.game.JoinFightAction;
 
 /**
  *

@@ -16,8 +16,9 @@ import org.pvemu.models.Character;
 import org.pvemu.models.NpcQuestion;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.game.fight.PlayerFighter;
+import org.pvemu.game.gameaction.ActionPerformer;
 import org.pvemu.game.gameaction.GameActionsManager;
+import org.pvemu.game.gameaction.game.GameActionsRegistry;
 import org.pvemu.game.objects.Exchange;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.player.classes.ClassData;
@@ -28,7 +29,7 @@ import org.pvemu.network.Sessionable;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
 
-public class Player implements GMable, Inventoryable, Filterable, Sessionable, Creature {
+public class Player implements GMable, Inventoryable, Filterable, Sessionable, Creature, ActionPerformer {
 
     final private Character character;
     final private Account account;
@@ -45,7 +46,7 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
     public Byte orientation = 2;
     public NpcQuestion current_npc_question = null;
     private Exchange exchange = null;
-    private final GameActionsManager actionsManager = new GameActionsManager();
+    private final GameActionsManager actionsManager = new GameActionsManager(GameActionsRegistry.instance());
     private final SpellList spellList = new SpellList();
 
     /**

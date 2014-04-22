@@ -7,6 +7,7 @@
 package org.pvemu.network.game.input.game;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.gameaction.ActionPerformer;
 //import org.pvemu.game.GameActionHandler;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
@@ -29,12 +30,6 @@ public class GameActionOkPacket implements InputPacket {
     public void perform(String extra, IoSession session) {
         boolean ok = extra.charAt(0) == 'K';
 
-        Player player = SessionAttributes.PLAYER.getValue(session);//(Player) session.getAttribute("player");
-
-        if (player == null) {
-            return;
-        }
-
         short actionID = 0;
         String[] args;
 
@@ -45,41 +40,14 @@ public class GameActionOkPacket implements InputPacket {
             return;
         }
         
-        player.getActionsManager().endGameAction(actionID, ok, args);
+        ActionPerformer performer = SessionAttributes.FIGHTER.exists(session) ?
+                SessionAttributes.FIGHTER.getValue(session) :
+                SessionAttributes.PLAYER.getValue(session);
         
+        if(performer == null)
+            return;
         
-//
-//        GameActionHandler.GameAction GA = p.getActions().get(actionID);
-//
-//        if (GA == null) {
-//            Loggin.debug("GameAction %d non trouvée !", new Object[]{actionID});
-//            return;
-//        }
-//
-//        /*switch (GA.actionID) {
-//            case 1: //déplacement
-//                if (ok) {
-//                    short cellDest = (Short) GA.get("dest");
-//                    MapEvents.onArrivedOnCell(session, cellDest);
-//                } else {
-//                    short cellDest = Short.parseShort(args[1]);
-//                    MapEvents.onArrivedOnCell(session, cellDest);
-//                }
-//                p.orientation = (byte) GA.get("ori");
-//                break;
-//            case 2: //cinématiques
-//                switch ((int) GA.args[1]) {
-//                    case 7: //téléportation incarnam => astrub
-//                        short[] mapData = ClassData.getStatuesPos(p.getClassID());
-//                        p.teleport(mapData[0], mapData[1]);
-//                        p.setStartPos(mapData);
-//                        ChatEvents.onSendInfoMessage(p.getSession(), 6);
-//                        break;
-//                }
-//                break;
-//        }*/
-//        GA.apply(p, ok, args);
-//        GA.delete();
+        performer.getActionsManager().endGameAction(actionID, ok, args);
         
     }
     

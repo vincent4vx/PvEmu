@@ -13,7 +13,7 @@ import org.pvemu.game.objects.player.Player;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class GameActionFactory {
-    static public GameActionData newCinematic(Player player, Byte cinematic){
-        return new GameActionData(player, null, (short)2, new String[]{cinematic.toString()});
+    static public GameActionData<Player> newCinematic(Player player, Byte cinematic){
+        return new GameActionData(player, (short)2, new String[]{cinematic.toString()});
     }
 }

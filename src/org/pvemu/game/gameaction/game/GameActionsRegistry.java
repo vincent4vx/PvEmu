@@ -4,15 +4,16 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.gameaction;
+package org.pvemu.game.gameaction.game;
 
-import java.util.HashMap;
+import org.pvemu.game.gameaction.*;
+import org.pvemu.game.objects.player.Player;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-final public class GameActionsRegistry {
+public class GameActionsRegistry extends AbstractGameActionsRegistry<Player>{
     final static public short WALK               = 1;
     final static public short CINEMATIC          = 2;
     final static public short INTERACTIVE_OBJECT = 500;
@@ -23,8 +24,6 @@ final public class GameActionsRegistry {
     
     final static private GameActionsRegistry instance = new GameActionsRegistry();
     
-    final private HashMap<Short, GameAction> gameActions = new HashMap<>();
-    
     private GameActionsRegistry(){
         registerGameAction(new WalkAction());
         registerGameAction(new InteractiveObjectAction());
@@ -33,14 +32,6 @@ final public class GameActionsRegistry {
         registerGameAction(new CancelDefianceAction());
         registerGameAction(new AcceptDefianceAction());
         registerGameAction(new JoinFightAction());
-    }
-    
-    public void registerGameAction(GameAction GA){
-        gameActions.put(GA.id(), GA);
-    }
-    
-    public GameAction getGameAction(short gameActionID){
-        return gameActions.get(gameActionID);
     }
     
     static public GameActionsRegistry instance(){

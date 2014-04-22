@@ -8,6 +8,7 @@ package org.pvemu.network.game.output;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.fight.Fight;
+import org.pvemu.game.fight.PlayerFighter;
 import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.map.GameMap;
@@ -64,17 +65,17 @@ public class GameActionSender {
         );
     }
     
-    public void gameActionToMap(GameMap map, int id, GameActionData data){
+    public void gameActionToMap(GameMap map, int id, GameActionData<Player> data){
         Object[] args = new Object[data.getArguments().length + 1];
         System.arraycopy(data.getArguments(), 0, args, 1, data.getArguments().length);
-        args[0] = data.getPlayer().getID();
+        args[0] = data.getPerformer().getID();
         gameActionToMap(map, id, data.getGameActionID(), args);
     }
     
-    public void gameActionToFight(Fight fight, int id, GameActionData data){
+    public void gameActionToFight(Fight fight, int id, GameActionData<PlayerFighter> data){
         Object[] args = new Object[data.getArguments().length + 1];
         System.arraycopy(data.getArguments(), 0, args, 1, data.getArguments().length);
-        args[0] = data.getPlayer().getID();
+        args[0] = data.getPerformer().getID();
         gameActionToFight(fight, id, data.getGameActionID(), args);
     }
     

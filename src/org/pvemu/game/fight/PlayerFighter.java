@@ -7,12 +7,13 @@
 package org.pvemu.game.fight;
 
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.actions.ActionsRegistry;
+import org.pvemu.game.gameaction.ActionPerformer;
+import org.pvemu.game.gameaction.GameActionsManager;
+import org.pvemu.game.gameaction.fight.FightActionsRegistry;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.network.SessionAttributes;
-import org.pvemu.network.Sessionable;
 import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
@@ -20,8 +21,9 @@ import org.pvemu.network.generators.GeneratorsRegistry;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class PlayerFighter extends Fighter implements Sessionable{
+public class PlayerFighter extends Fighter implements ActionPerformer{
     final private Player player;
+    final private GameActionsManager actionsManager = new GameActionsManager(FightActionsRegistry.instance());
 
     PlayerFighter(Player player, Fight fight) {
         super(player.getTotalStats(), fight);
@@ -81,6 +83,11 @@ public class PlayerFighter extends Fighter implements Sessionable{
     @Override
     public IoSession getSession(){
         return player.getSession();
+    }
+
+    @Override
+    public GameActionsManager getActionsManager() {
+        return actionsManager;
     }
 
     @Override
