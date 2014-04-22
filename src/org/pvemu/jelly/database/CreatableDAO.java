@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 abstract public class CreatableDAO<T extends Model> extends FindableDAO<T> {
-    final protected PreparedStatement deleteStatement = Database.prepare("SELECT * FROM " + tableName() + " WHERE " + primaryKey() + " = ?");
+    final protected PreparedStatement deleteStatement = Database.prepare("DELETE FROM " + tableName() + " WHERE " + primaryKey() + " = ?");
     
     abstract public boolean create(T obj);
     

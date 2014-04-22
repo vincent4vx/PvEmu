@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.jelly.utils.Crypt;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.filters.AbstractFilterable;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.Sessionable;
