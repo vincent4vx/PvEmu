@@ -24,6 +24,28 @@ public class GameSendersRegistry {
     private static GameActionSender gameAction = null;
     private static DefianceSender defiance = null;
     private static FightSender fight = null;
+    private static EffectSender effect = null;
+
+    /**
+     * Get the value of effect
+     *
+     * @return the value of effect
+     */
+    public static EffectSender getEffect() {
+        if(effect == null)
+            effect = new EffectSender();
+        return effect;
+    }
+
+    /**
+     * Set the value of effect
+     *
+     * @param effect new value of effect
+     */
+    public static void setEffect(EffectSender effect) {
+        GameSendersRegistry.effect = effect;
+    }
+
 
     /**
      * Get the value of fight

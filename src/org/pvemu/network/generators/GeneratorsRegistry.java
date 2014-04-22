@@ -24,6 +24,28 @@ public class GeneratorsRegistry {
     private static GameActionGenerator gameAction = null;
     private static MonsterGenerator monster = null;
     private static FightGenerator fight = null;
+    private static EffectGenerator effect = null;
+
+    /**
+     * Get the value of effect
+     *
+     * @return the value of effect
+     */
+    public static EffectGenerator getEffect() {
+        if(effect == null)
+            effect = new EffectGenerator();
+        return effect;
+    }
+
+    /**
+     * Set the value of effect
+     *
+     * @param effect new value of effect
+     */
+    public static void setEffect(EffectGenerator effect) {
+        GeneratorsRegistry.effect = effect;
+    }
+
 
     /**
      * Get the value of fight

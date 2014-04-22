@@ -73,6 +73,7 @@ public class WalkAction implements GameAction<PlayerFighter>{
         );
         
         data.getPerformer().removePM(steps);
+        GameSendersRegistry.getEffect().removePMOnWalk(data.getPerformer().getFight(), data.getPerformer().getID(), steps);
     }
 
     @Override

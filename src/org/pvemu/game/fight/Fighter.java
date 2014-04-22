@@ -10,6 +10,7 @@ import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.map.GMable;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *

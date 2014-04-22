@@ -14,7 +14,9 @@ import org.pvemu.game.gameaction.AbstractGameActionsRegistry;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class FightActionsRegistry extends AbstractGameActionsRegistry<PlayerFighter>{
-    final static public short WALK = 1;
+    final static public short WALK           = 1;
+    final static public short USE_PM         = 128;
+    final static public short USE_PM_ON_MOVE = 129;
     
     final static private FightActionsRegistry instance = new FightActionsRegistry();
     
