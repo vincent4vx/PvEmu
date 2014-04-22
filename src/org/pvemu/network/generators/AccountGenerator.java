@@ -41,4 +41,8 @@ public class AccountGenerator {
         
         return sb.toString();
     }
+    
+    public String generateServerList(long premiumTime, byte serverID, int nbChar){
+        return premiumTime + "|" + serverID + "," + nbChar;
+    }
 }

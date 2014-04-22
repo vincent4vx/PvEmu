@@ -26,12 +26,6 @@ public class RealmIoHandler extends MinaIoHandler {
     
     @Override
     public void sessionClosed(IoSession session){
-        /*if(session.containsAttribute("account")){
-            Account acc = (Account)session.getAttribute("account");
-            if(acc != null){
-                acc.removeSession();
-            }
-        }*/
         Account account = SessionAttributes.ACCOUNT.getValue(session);
         
         if(account != null){
@@ -85,28 +79,6 @@ public class RealmIoHandler extends MinaIoHandler {
                         session.close(false);
                     }
                 } else {
-                    /*switch (packet.charAt(0)) {
-                        case 'A':
-                            switch (packet.charAt(1)) {
-                                case 'x':
-                                    RealmPacketEnum.SERVER_LIST.send(session);
-                                    break;
-                                case 'X':
-                                    AccountEvents.onServerSelected(session, packet.substring(2));
-                                    break;
-                                case 'L':
-                                    if(Constants.DOFUS_VER_ID < 1100){
-                                        AccountEvents.onCharactersList(session);
-                                    }
-                                    break;
-                                case 'S':
-                                    if(Constants.DOFUS_VER_ID < 1100){
-                                        CharacterEvents.onCharacterSelected(session, packet.substring(2));
-                                    }
-                                    break;
-                            }
-                            break;
-                    }*/
                     RealmInputHandler.instance().parsePacket(packet, session);
                 }
             }

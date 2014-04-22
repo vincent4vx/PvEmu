@@ -58,7 +58,7 @@ public enum RealmPacketEnum {
      * Sélection du serveur avec ip crypté (dofus 1.19)
      */
     SELECT_SERVER_CRYPT("AXK"),
-    SERVER_LIST("AxK31536000000|1,2");
+    SERVER_LIST("AxK");
     private String packet;
     private String param;
 
