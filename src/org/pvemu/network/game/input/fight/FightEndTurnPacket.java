@@ -29,7 +29,8 @@ public class FightEndTurnPacket implements InputPacket{
         if(fighter == null)
             return;
         
-        fighter.getFight().nextFighter();
+        if(fighter.canPlay())
+            fighter.getFight().nextFighter();
     }
     
 }
