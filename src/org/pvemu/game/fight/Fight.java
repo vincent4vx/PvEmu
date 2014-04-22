@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.objects.item.types.Weapon;
+import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -150,12 +151,23 @@ abstract public class Fight {
     }
     
     public boolean canUseWeapon(Fighter caster, Weapon weapon, short cell){
-        return caster.canPlay() && caster.getNumPA() >= weapon.getWeaponData().getPACost(); //TODO: PO
+        int dist = MapUtils.getDistanceBetween(map.getMap(), caster.getCellId(), cell);
+        return caster.canPlay() 
+                && caster.getNumPA() >= weapon.getWeaponData().getPACost()
+                && dist >= weapon.getWeaponData().getPOMin()
+                && dist <= weapon.getWeaponData().getPOMax();
     }
     
     public void useWeapon(Fighter caster, Weapon weapon, short cell){
         if(!canUseWeapon(caster, weapon, cell))
             return;
+        
+        caster.removePA(weapon.getWeaponData().getPACost());
+        GameSendersRegistry.getEffect().removePAOnAction(
+                this, 
+                caster.getID(), 
+                weapon.getWeaponData().getPACost()
+        );
         
         Fighter target = map.getFighter(cell); //TODO: field effects and target
         
@@ -165,12 +177,5 @@ abstract public class Fight {
         for(EffectData effect : weapon.getEffects()){
             effect.getEffect().applyToFighter(effect, caster, target);
         }
-        
-        caster.removePA(weapon.getWeaponData().getPACost());
-        GameSendersRegistry.getEffect().removePAOnAction(
-                this, 
-                caster.getID(), 
-                weapon.getWeaponData().getPACost()
-        );
     }
 }
