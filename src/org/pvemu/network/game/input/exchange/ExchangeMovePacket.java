@@ -72,7 +72,7 @@ public class ExchangeMovePacket implements InputPacket {
                 //ItemStats IS = p.getInventory().getItemById(itemID).getItemStats();
                 GameItem item = p.getInventory().getItemById(itemID);
                 //String p2 = qu == 0 ? p1 : new StringBuilder().append(p1).append('|').append(IS.getID()).append('|').append(IS.statsToString()).toString();
-                String p2 = qu == 0 ? p1 : new StringBuilder().append(p1).append('|').append(item.getTemplate().id).append('|').append(GeneratorsRegistry.getObject().generateStats(item.getStats())).toString();
+                String p2 = qu == 0 ? p1 : new StringBuilder().append(p1).append('|').append(item.getTemplate().id).append('|').append(GeneratorsRegistry.getObject().generateObjectData(item.getEntry())).toString();
                 
                 GamePacketEnum.EXCHANGE_LOCAL_MOVE_OK.send(session, p1);
                 GamePacketEnum.EXCHANGE_DISTANT_MOVE_OK.send(p.getExchange().getTarget().getSession(), p2);

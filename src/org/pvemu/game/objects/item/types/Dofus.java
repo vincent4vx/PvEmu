@@ -6,6 +6,8 @@
 
 package org.pvemu.game.objects.item.types;
 
+import java.util.Set;
+import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
@@ -16,8 +18,8 @@ import org.pvemu.models.ItemTemplate;
  */
 public class Dofus extends Wearable {
 
-    public Dofus(Stats stats, InventoryEntry entry, ItemTemplate template) {
-        super(stats, entry, template);
+    public Dofus(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
+        super(stats, effects, entry, template);
     }
     
 }

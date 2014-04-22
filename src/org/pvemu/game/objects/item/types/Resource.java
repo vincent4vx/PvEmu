@@ -6,6 +6,8 @@
 
 package org.pvemu.game.objects.item.types;
 
+import java.util.Set;
+import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.models.InventoryEntry;
@@ -17,8 +19,8 @@ import org.pvemu.models.ItemTemplate;
  */
 public class Resource extends GameItem {
     
-    public Resource(Stats stats, InventoryEntry entry, ItemTemplate template) {
-        super(stats, entry, template);
+    public Resource(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
+        super(stats, effects, entry, template);
     }
 
     @Override

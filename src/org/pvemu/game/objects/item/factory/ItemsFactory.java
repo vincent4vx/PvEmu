@@ -5,7 +5,9 @@
  */
 package org.pvemu.game.objects.item.factory;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.inventory.Inventoryable;
@@ -31,6 +33,8 @@ public class ItemsFactory {
             new InventoryEntry(), 
             new ItemTemplate()
     );
+    
+    final static private Map<Integer, Set<EffectData>> effectsByItem = new HashMap<>();
 
     static public enum ItemType {
 
@@ -175,7 +179,7 @@ public class ItemsFactory {
         if(template == null)
             return null;
         
-        return getTypeOfItem(template).getFactory().newItem(stats, entry, template);
+        return getTypeOfItem(template).getFactory().newItem(stats, getEffects(template), entry, template);
     }
     
     static public GameItem createItem(Inventoryable owner, ItemTemplate template, int qu, boolean maxStats){
@@ -190,7 +194,7 @@ public class ItemsFactory {
         entry.stats = GeneratorsRegistry.getObject().generateStats(stats);
         
         
-        return getTypeOfItem(template).getFactory().newItem(stats, entry, template);
+        return getTypeOfItem(template).getFactory().newItem(stats, getEffects(template), entry, template);
     }
     
     static public GameItem copyItem(GameItem src, Inventoryable dest_owner, int dest_qu, byte dest_pos){
@@ -204,7 +208,7 @@ public class ItemsFactory {
         
         Stats stats = new Stats(src.getStats());
         
-        return getTypeOfItem(src.getTemplate()).getFactory().newItem(stats, entry, src.getTemplate());
+        return getTypeOfItem(src.getTemplate()).getFactory().newItem(stats, getEffects(src.getTemplate()), entry, src.getTemplate());
     }
     
     static public GameItem copyItem(GameItem src, Inventoryable dest_owner, int dest_qu){
@@ -233,13 +237,13 @@ public class ItemsFactory {
                 int jet = useMax ? max : Utils.rand(min, max);
 
                 stats.add(elemID, (short)jet);
-            }catch(NumberFormatException ex){}
+            }catch(Exception ex){}
         }
             
         return stats;
     }
     
-    static Set<EffectData> parseEffects(String strEffets){
+    private static Set<EffectData> parseEffects(String strEffets){
         Set<EffectData> effects = new HashSet<>();
         
         for(String e : Utils.split(strEffets, ",")){
@@ -255,6 +259,14 @@ public class ItemsFactory {
         }
         
         return effects;
+    }
+    
+    static public Set<EffectData> getEffects(ItemTemplate template){
+        if(!effectsByItem.containsKey(template.id)){
+            effectsByItem.put(template.id, parseEffects(template.statsTemplate));
+        }
+        
+        return effectsByItem.get(template.id);
     }
 
     public static Weapon getPunch() {

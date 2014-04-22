@@ -2,6 +2,7 @@ package org.pvemu.game.objects.dep;
 
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
@@ -78,7 +79,7 @@ public class Stats{
     }
     
     private static final HashMap<Integer, Element> intToElement = new HashMap<>();
-    final private EnumMap<Element, Short> stats;
+    final private EnumMap<Element, Short> stats;    
     
     public Stats(){
         stats = new EnumMap<>(Element.class);

@@ -6,6 +6,8 @@
 
 package org.pvemu.game.objects.item.factory;
 
+import java.util.Set;
+import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.types.Resource;
@@ -19,8 +21,8 @@ import org.pvemu.models.ItemTemplate;
 class ResourceFactory implements ItemFactoryInterface {
 
     @Override
-    public GameItem newItem(Stats stats, InventoryEntry entry, ItemTemplate template) {
-        return new Resource(stats, entry, template);
+    public GameItem newItem(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
+        return new Resource(stats, effects, entry, template);
     }
     
 }

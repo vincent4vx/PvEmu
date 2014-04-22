@@ -6,19 +6,25 @@
 
 package org.pvemu.network.generators;
 
+import java.util.HashMap;
 import java.util.Map;
-import org.pvemu.game.objects.player.Player;
+import java.util.Set;
+import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.inventory.Inventory;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
+import org.pvemu.game.objects.item.factory.ItemsFactory;
 import org.pvemu.models.InventoryEntry;
+import org.pvemu.models.ItemTemplate;
+import org.pvemu.models.dao.DAOFactory;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class ObjectGenerator {
+    private Map<Integer, String> itemsEffects = new HashMap<>();
     
     public String generateInventoryEntry(InventoryEntry entry){
         return new StringBuilder(12 + entry.stats.length())
@@ -26,7 +32,7 @@ public class ObjectGenerator {
                 .append('~').append(Integer.toHexString(entry.item_id))
                 .append('~').append(Integer.toHexString(entry.qu))
                 .append('~').append(ItemPosition.DEFAULT_POSITION == entry.position ? "" : Integer.toHexString(entry.position))
-                .append('~').append(entry.stats)
+                .append('~').append(generateObjectData(entry))
                 .toString();
     }
     
@@ -45,6 +51,42 @@ public class ObjectGenerator {
         return s.toString();
     }
     
+    public String generateObjectData(InventoryEntry entry){
+        return generateItemTemplateEffects(entry.item_id) + entry.stats;
+    }
+    
+    public String generateItemTemplateEffects(int id){
+        if(!itemsEffects.containsKey(id)){
+            ItemTemplate template = DAOFactory.item().getById(id);
+            
+            if(template == null)
+                return "";
+            
+            itemsEffects.put(id, generateEffects(ItemsFactory.getEffects(template)));
+        }
+        
+        return itemsEffects.get(id);
+    }
+    
+    protected String generateEffects(Set<EffectData> effects){
+        StringBuilder s = new StringBuilder(effects.size() * 16);
+        
+        
+        for(EffectData data : effects){
+            s.append(Integer.toHexString(data.getEffect().id())).append('#')
+                    .append(Integer.toHexString(data.getMin())).append('#')
+                    .append(Integer.toHexString(data.getMax())).append("#0#");
+            
+            int p = data.getMax() - data.getMin();
+            int d = data.getMin() - p;
+            int e = data.getMax() - p;
+            
+            s.append(d).append('d').append(e).append('+').append(p).append(',');
+        }
+        
+        return s.toString();
+    }
+    
     public String generateInventory(Inventory inventory){
         StringBuilder s = new StringBuilder(32 * inventory.getItems().size());
         
@@ -54,14 +96,6 @@ public class ObjectGenerator {
         
         return s.toString();
     }
-    
-    /*public String generateMoveItem(GameItem item){
-        return new StringBuilder(8).append(item.getID()).append('|').append(item.getEntry().position).toString();
-    }
-    
-    public String generateQuantityChange(GameItem item){
-        return new StringBuilder(8).append(item.getID()).append('|').append(item.getEntry().qu).toString();
-    }*/
      
     public String generateMoveItem(InventoryEntry entry){
         return new StringBuilder(8).append(entry.id).append('|').append(entry.position).toString();

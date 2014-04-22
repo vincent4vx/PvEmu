@@ -6,6 +6,8 @@
 
 package org.pvemu.game.objects.item;
 
+import java.util.Set;
+import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
@@ -16,11 +18,13 @@ import org.pvemu.models.ItemTemplate;
  */
 public abstract class GameItem {
     final protected Stats stats;
+    final protected Set<EffectData> effects;
     final protected InventoryEntry entry;
     final protected ItemTemplate template;
 
-    protected GameItem(Stats stats, InventoryEntry entry, ItemTemplate template) {
+    protected GameItem(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
         this.stats = stats;
+        this.effects = effects;
         this.entry = entry;
         this.template = template;
     }
@@ -75,5 +79,9 @@ public abstract class GameItem {
      */
     final public int getPods(){
         return entry.qu * template.pods;
+    }
+
+    public Set<EffectData> getEffects() {
+        return effects;
     }
 }

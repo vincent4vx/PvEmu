@@ -6,6 +6,8 @@
 
 package org.pvemu.game.objects.item.factory;
 
+import java.util.Set;
+import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.types.Helmet;
@@ -19,8 +21,8 @@ import org.pvemu.models.ItemTemplate;
 class HelmetFactory implements ItemFactoryInterface {
 
     @Override
-    public GameItem newItem(Stats stats, InventoryEntry entry, ItemTemplate template) {
-        return new Helmet(stats, entry, template);
+    public GameItem newItem(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
+        return new Helmet(stats, effects, entry, template);
     }
     
 }

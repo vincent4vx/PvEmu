@@ -21,8 +21,7 @@ import org.pvemu.models.ItemTemplate;
 public class WeaponFactory implements ItemFactoryInterface{
 
     @Override
-    public GameItem newItem(Stats stats, InventoryEntry entry, ItemTemplate template) {
-        Set<EffectData> effects = ItemsFactory.parseEffects(template.statsTemplate);
+    public GameItem newItem(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
         return new Weapon(stats, effects, entry, template);
     }
     

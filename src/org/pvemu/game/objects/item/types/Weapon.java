@@ -17,15 +17,9 @@ import org.pvemu.models.ItemTemplate;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class Weapon extends Accessorie{
-    final private Set<EffectData> effects;
     
     public Weapon(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
-        super(stats, entry, template);
-        this.effects = effects;
-    }
-
-    public Set<EffectData> getEffects() {
-        return effects;
+        super(stats, effects, entry, template);
     }
     
 }
