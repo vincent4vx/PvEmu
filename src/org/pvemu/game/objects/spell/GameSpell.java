@@ -6,6 +6,7 @@
 
 package org.pvemu.game.objects.spell;
 
+import org.pvemu.game.objects.spell.effect.SpellEffectData;
 import java.util.Collections;
 import java.util.Set;
 import org.pvemu.models.Spell;

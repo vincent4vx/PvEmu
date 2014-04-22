@@ -6,14 +6,14 @@
 
 package org.pvemu.game.objects.spell;
 
+import org.pvemu.game.objects.spell.effect.SpellEffectData;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.pvemu.game.objects.spell.effect.SpellEffect;
-import org.pvemu.game.objects.spell.effect.SpellEffectsHandler;
+import org.pvemu.game.objects.spell.effect.SpellEffectFactory;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.Spell;
@@ -87,33 +87,12 @@ final public class SpellFactory {
             if(effectsArray[i].isEmpty() || effectsArray[i].equals("-1"))
                 continue;
             
-            String[] args = Utils.split(effectsArray[i], ";");
+            SpellEffectData effect = SpellEffectFactory.parseSpellEffect(effectsArray[i]);
             
-            try{
-                short id = Short.parseShort(args[0]);
-                String jet = args[6];
-                int duration = Integer.parseInt(args[4]);
-                int target = 0; //TODO: spell target
-                
-                String[] d = Utils.split(jet, "d");
-                String[] p = Utils.split(d[1], "+");
-                int min = Integer.parseInt(d[0]);
-                int max = Integer.parseInt(p[0]);
-                int fix = Integer.parseInt(p[1]);
-                min += fix;
-                max += fix;
-                
-                SpellEffect effect = SpellEffectsHandler.instance().getSpellEffect(id);
-                
-                if(effect == null){
-                    Loggin.debug("Cannot find effectID %d", id);
-                    continue;
-                }
-                
-                effects.add(new SpellEffectData(effect, min, max, duration, target));
-            }catch(Exception e){
-                Loggin.error("Cannot parse spell effect '" + effectsArray[i] + "'", e);
-            }
+            if(effect == null)
+                continue;
+            
+            effects.add(effect);
         }
         
         return effects;

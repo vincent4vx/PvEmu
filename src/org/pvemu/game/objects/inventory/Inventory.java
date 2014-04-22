@@ -264,7 +264,7 @@ final public class Inventory {
      * @param pos the position of items
      * @return the list of the items
      */
-    public ArrayList<GameItem> getItemsOnPos(ItemPosition pos){
+    public List<GameItem> getItemsOnPos(ItemPosition pos){
         ArrayList<GameItem> list = new ArrayList<>();
         
         for(byte posID : pos.getPosIds()){

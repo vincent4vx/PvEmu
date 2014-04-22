@@ -15,13 +15,16 @@ import org.pvemu.game.gameaction.AbstractGameActionsRegistry;
  */
 public class FightActionsRegistry extends AbstractGameActionsRegistry<PlayerFighter>{
     final static public short WALK           = 1;
+    final static public short UPDATE_VITA    = 110;
     final static public short USE_PM         = 128;
     final static public short USE_PM_ON_MOVE = 129;
+    final static public short WEAPON         = 303;
     
     final static private FightActionsRegistry instance = new FightActionsRegistry();
     
     private FightActionsRegistry(){
         registerGameAction(new WalkAction());
+        registerGameAction(new WeaponAction());
     }
 
     public static FightActionsRegistry instance() {

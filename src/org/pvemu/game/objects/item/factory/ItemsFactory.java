@@ -5,10 +5,15 @@
  */
 package org.pvemu.game.objects.item.factory;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.inventory.Inventoryable;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
+import org.pvemu.game.objects.item.types.Weapon;
+import org.pvemu.game.objects.spell.effect.SpellEffectData;
+import org.pvemu.game.objects.spell.effect.SpellEffectFactory;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
@@ -20,18 +25,24 @@ import org.pvemu.network.generators.GeneratorsRegistry;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class ItemsFactory {
+    final static private Weapon punch = new Weapon(
+            new Stats(), 
+            parseEffects("64#1#5#0#1d5+0"), 
+            new InventoryEntry(), 
+            new ItemTemplate()
+    );
 
     static public enum ItemType {
 
         NONE/* = 0*/,
         AMULET(new AmuletFactory())/* = 1*/,
-        ARC/* = 2*/,
-        BAGUETTE/* = 3*/,
-        BATON/* = 4*/,
-        DAGUES/* = 5*/,
-        EPEE/* = 6*/,
-        MARTEAU/* = 7*/,
-        PELLE/* = 8*/,
+        BOW(new WeaponFactory())/* = 2*/,
+        WAND(new WeaponFactory())/* = 3*/,
+        STAFF(new WeaponFactory())/* = 4*/,
+        DAGGER(new WeaponFactory())/* = 5*/,
+        SWORD(new WeaponFactory())/* = 6*/,
+        HAMMER(new WeaponFactory())/* = 7*/,
+        SHOVEL(new WeaponFactory())/* = 8*/,
         RING(new RingFactory())/* = 9*/,
         BELT(new BeltFactory())/* = 10*/,
         BOOTS(new BootsFactory())/* = 11*/,
@@ -42,10 +53,10 @@ public class ItemsFactory {
         HELMET(new HelmetFactory())/* = 16*/,
         MANTLE(new MantleFactory())/* = 17*/,
         PET(new PetFactory())/* = 18*/,
-        HACHE/* = 19*/,
-        OUTIL/* = 20*/,
-        PIOCHE/* = 21*/,
-        FAUX/* = 22*/,
+        AXE(new WeaponFactory())/* = 19*/,
+        TOOLS(new WeaponFactory())/* = 20*/,
+        PICKAXE(new WeaponFactory())/* = 21*/,
+        SCYTHE(new WeaponFactory())/* = 22*/,
         DOFUS(new DofusFactory())/* = 23*/,
         QUETES/* = 24*/,
         DOCUMENT/* = 25*/,
@@ -105,7 +116,7 @@ public class ItemsFactory {
         OBJET_MISSION/* = 80*/,
         SAC_DOS/* = 81*/,
         SHIELD(new ShieldFactory())/* = 82*/,
-        PIERRE_AME/* = 83*/,
+        SOUL_STONE(new WeaponFactory())/* = 83*/,
         CLEFS/* = 84*/,
         PIERRE_AME_PLEINE/* = 85*/,
         POPO_OUBLI_PERCEP/* = 86*/,
@@ -226,6 +237,28 @@ public class ItemsFactory {
         }
             
         return stats;
+    }
+    
+    static Set<SpellEffectData> parseEffects(String strEffets){
+        Set<SpellEffectData> effects = new HashSet<>();
+        
+        for(String e : Utils.split(strEffets, ",")){
+            if(e.isEmpty())
+                continue;
+            
+            SpellEffectData data = SpellEffectFactory.parseItemEffect(e);
+            
+            if(data == null)
+                continue;
+            
+            effects.add(data);
+        }
+        
+        return effects;
+    }
+
+    public static Weapon getPunch() {
+        return punch;
     }
 
 }

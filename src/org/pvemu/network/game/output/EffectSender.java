@@ -22,6 +22,10 @@ public class EffectSender {
         updatePoint(fight, fighterID, FightActionsRegistry.USE_PM_ON_MOVE, (short)-nb);
     }
     
+    public void removeVita(Fight fight, int fighterID, short nb){
+        updatePoint(fight, fighterID, FightActionsRegistry.UPDATE_VITA, (short)-nb);
+    }
+    
     private void updatePoint(Fight fight, int fighterID, short action, short nb){
         GameSendersRegistry.getGameAction().unidentifiedGameActionToFight(
                 fight, 

@@ -13,7 +13,6 @@ public class Stats{
 
     public enum Element {
         //basiques
-
         PA(new int[]{111, 120}, new int[]{101, 168}),
         PM(new int[]{78, 128}, new int[]{169, 127}),
         //primaires
@@ -39,7 +38,8 @@ public class Stats{
         //autres
         PODS(new int[]{158}, new int[]{159}),
         PROSPEC(new int[]{176}, new int[]{177}),
-        INVOC(new int[]{182}, new int[]{}),;
+        INVOC(new int[]{182}, new int[]{})
+        ;
         
         final private int[] add_id;
         final private int[] rem_id;

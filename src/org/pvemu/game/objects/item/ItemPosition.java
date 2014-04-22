@@ -17,7 +17,7 @@ import org.pvemu.jelly.Loggin;
 public enum ItemPosition {
     NOT_EQUIPED(new byte[]{-1}, new Class[]{GameItem.class}, true, false),
     AMULET(new byte[]{0}, new Class[]{Amulet.class}, false, true),
-    WEAPON(new byte[]{1}, new Class[]{}, false, true),
+    WEAPON(new byte[]{1}, new Class[]{Weapon.class}, false, true),
     RING(new byte[]{2, 4}, new Class[]{Ring.class}, false, true),
     BELT(new byte[]{3}, new Class[]{Belt.class}, false, true),
     BOOTS(new byte[]{5}, new Class[]{Boots.class}, false, true),

@@ -139,6 +139,17 @@ abstract public class Fighter implements GMable {
         if(numPM < 0)
             numPM = 0;
     }
+    
+    public void removeVita(short num){
+        currentVita -= num;
+        
+        if(currentVita <= 0){
+            currentVita = 0;
+            alive = false;
+        }
+        
+        GameSendersRegistry.getEffect().removeVita(fight, getID(), num);
+    }
 
     /**
      * Get the value of alive

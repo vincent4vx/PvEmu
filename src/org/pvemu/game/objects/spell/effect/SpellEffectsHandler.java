@@ -15,9 +15,10 @@ import java.util.Map;
  */
 final public class SpellEffectsHandler {
     final static private SpellEffectsHandler instance = new SpellEffectsHandler();
-    final static private Map<Short, SpellEffect> effects = new HashMap<>();
+    final private Map<Short, SpellEffect> effects = new HashMap<>();
     
     private SpellEffectsHandler() {
+        registerSpellEffect(new NeutralAttackEffect());
     }
     
     public void registerSpellEffect(SpellEffect effect){

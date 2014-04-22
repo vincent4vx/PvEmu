@@ -4,7 +4,7 @@
  */
 package org.pvemu.network.generators;
 
-import java.util.ArrayList;
+import java.util.List;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
@@ -92,30 +92,9 @@ public class PlayerGenerator {
     
     public String generateAccessories(Player p){
         StringBuilder s = new StringBuilder();
-        //HashMap<Byte, OldGameItem> wornItems = p.getInventory().getItemsByPos();
-
-        /*if (wornItems.containsKey(OldGameItem.POS_ARME) {
-            s.append(Integer.toHexString(wornItems.get(OldGameItem.POS_ARME).getItemStats().getID()));
-        }
-        s.append(',');
-        if (wornItems.containsKey(OldGameItem.POS_COIFFE)) {
-            s.append(Integer.toHexString(wornItems.get(OldGameItem.POS_COIFFE).getItemStats().getID()));
-        }
-        s.append(',');
-        if (wornItems.containsKey(OldGameItem.POS_CAPE)) {
-            s.append(Integer.toHexString(wornItems.get(OldGameItem.POS_CAPE).getItemStats().getID()));
-        }
-        s.append(',');
-        if (wornItems.containsKey(OldGameItem.POS_FAMILIER)) {
-            s.append(Integer.toHexString(wornItems.get(OldGameItem.POS_FAMILIER).getItemStats().getID()));
-        }
-        s.append(',');
-        if (wornItems.containsKey(OldGameItem.POS_BOUCLIER)) {
-            s.append(wornItems.get(OldGameItem.POS_BOUCLIER).getItemStats().getID());
-        }*/
         
         for(ItemPosition pos : ItemPosition.getAccessoriePositions()){
-            ArrayList<GameItem> items = p.getInventory().getItemsOnPos(pos);
+            List<GameItem> items = p.getInventory().getItemsOnPos(pos);
             
             if(!items.isEmpty())
                 s.append(Integer.toHexString(items.get(0).getTemplate().id));

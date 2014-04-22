@@ -70,4 +70,8 @@ public class FightMap {
     public boolean isFreeCell(short cell){
         return !fighters.containsKey(cell) && map.getCellById(cell).isWalkable();
     }
+    
+    public Fighter getFighter(short position){
+        return fighters.get(position);
+    }
 }

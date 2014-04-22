@@ -4,9 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.objects.spell;
-
-import org.pvemu.game.objects.spell.effect.SpellEffect;
+package org.pvemu.game.objects.spell.effect;
 
 /**
  *
