@@ -30,6 +30,11 @@ public class WeaponAction implements GameAction<PlayerFighter>{
 
     @Override
     public void start(GameActionData<PlayerFighter> data) {
+        if(!data.getPerformer().canPlay()){
+            GameSendersRegistry.getGameAction().error(data.getPerformer().getSession());
+            return;
+        }
+        
         short cell;
         
         try{
@@ -50,8 +55,14 @@ public class WeaponAction implements GameAction<PlayerFighter>{
         Weapon weapon = (Weapon)list.get(0);
         
         if(!data.getPerformer().getFight().canUseWeapon(data.getPerformer(), weapon, cell)){
+            GameSendersRegistry.getGameAction().error(data.getPerformer().getSession());
             return;
         }
+        
+        GameSendersRegistry.getGameAction().gameActionStartToFight(
+                data.getPerformer().getFight(), 
+                data.getPerformer().getID()
+        );
         
         GameSendersRegistry.getGameAction().unidentifiedGameActionToFight(
                 data.getPerformer().getFight(), 
@@ -61,6 +72,12 @@ public class WeaponAction implements GameAction<PlayerFighter>{
         );
         
         data.getPerformer().getFight().useWeapon(data.getPerformer(), weapon, cell);
+        
+        GameSendersRegistry.getGameAction().gameActionFinishToFight(
+                data.getPerformer().getFight(), 
+                0, 
+                data.getPerformer().getID()
+        );
     }
 
     @Override

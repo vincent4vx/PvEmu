@@ -167,4 +167,8 @@ public final class GameMap {
     public Fight getFight(int fightID){
         return fights.get(fightID);
     }
+    
+    public void removeFight(Fight fight){
+        fights.remove(fight.getId());
+    }
 }

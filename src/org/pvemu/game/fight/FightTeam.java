@@ -84,4 +84,12 @@ public class FightTeam {
         return 0;
     }
     
+    public boolean isAllDead(){
+        for(Fighter fighter : fighters.values()){
+            if(fighter.isAlive())
+                return false;
+        }
+        return true;
+    }
+    
 }

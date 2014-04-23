@@ -181,4 +181,18 @@ public class FightSender {
                 fighter
         );
     }
+    
+    public void gameEnd(Fight fight, byte winners){
+        GamePacketEnum.FIGHT_END.sendToFight(
+                fight, 
+                GeneratorsRegistry.getFight().generateGameEnd(fight, winners)
+        );
+    }
+    
+    public void clearFightMap(Fight fight){
+        GamePacketEnum.MAP_ELEM.sendToFight(
+                fight, 
+                GeneratorsRegistry.getFight().generateClearFightMap(fight.getFighters())
+        );
+    }
 }

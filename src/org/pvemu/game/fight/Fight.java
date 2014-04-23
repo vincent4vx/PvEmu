@@ -7,6 +7,8 @@
 package org.pvemu.game.fight;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -27,6 +29,7 @@ abstract public class Fight {
     final private int id;
     final private FightMap map;
     final private FightTeam[] teams;
+    final private int initID;
     final private FighterList fighters = new FighterList();
     final private static ScheduledExecutorService timers = Executors.newScheduledThreadPool(TIMERS_POOL_SIZE);
     private byte state;
@@ -38,10 +41,11 @@ abstract public class Fight {
     final static public byte STATE_ACTIVE   = 3;
     final static public byte STATE_FINISHED = 4;
 
-    Fight(int id, FightMap map, FightTeam[] teams) {
+    Fight(int id, FightMap map, FightTeam[] teams, int initID) {
         this.id = id;
         this.map = map;
         this.teams = teams;
+        this.initID = initID;
         state = STATE_INIT;
         GameSendersRegistry.getFight().flagsToMap(map.getMap(), this);
     }
@@ -125,6 +129,7 @@ abstract public class Fight {
     abstract public int spec();
     abstract public boolean isDuel();
     abstract public boolean canCancel();
+    abstract public boolean isHonnorFight();
 
     public byte getState() {
         return state;
@@ -144,6 +149,10 @@ abstract public class Fight {
 
     public int getId() {
         return id;
+    }
+
+    public int getInitID() {
+        return initID;
     }
     
     public boolean canMove(Fighter fighter, short dest, short nbPM){
@@ -171,11 +180,101 @@ abstract public class Fight {
         
         Fighter target = map.getFighter(cell); //TODO: field effects and target
         
-        if(target == null)
+        Set<Fighter> targets = new HashSet<>();
+        
+        if(target != null)
+            targets.add(target);
+        
+        applyEffectsToFighterList(caster, weapon.getEffects(), targets);
+    }
+    
+    protected void applyEffectsToFighterList(Fighter caster, Set<EffectData> effects, Collection<Fighter> targets){
+        if(targets.isEmpty() || effects.isEmpty())
             return;
         
-        for(EffectData effect : weapon.getEffects()){
-            effect.getEffect().applyToFighter(effect, caster, target);
+        for(EffectData effect : effects){
+            for(Fighter target : targets){
+                if(!target.isAlive())
+                    continue;
+                
+                effect.getEffect().applyToFighter(effect, caster, target);
+            }
         }
+        
+        for(Fighter target : targets){
+            if(!target.isAlive())
+                onFighterDie(target);
+        }
+    }
+    
+    public void onFighterDie(Fighter fighter){
+        if(state == STATE_FINISHED)
+            return;
+        
+        Loggin.debug("fighter %s die", fighter.getName());
+        map.removeFighter(fighter);
+        
+        GameSendersRegistry.getEffect().fighterDie(this, fighter.getID());
+        fighter.onDie();
+        
+        if(verifyEndOfGame()){
+            endOfGame();
+            return;
+        }
+        
+        if(fighter == fighters.getCurrent())
+            nextFighter();
+    }
+    
+    private boolean verifyEndOfGame(){
+        int count = 0;
+        
+        for(FightTeam team : teams){
+            if(!team.isAllDead())
+                ++count;
+        }
+        
+        return count <= 1;
+    }
+    
+    private byte getWinTeam(){
+        for(FightTeam team : teams){
+            if(!team.isAllDead())
+                return team.getNumber();
+        }
+        
+        return 0;
+    }
+    
+    private void endOfGame(){
+        Loggin.debug("end of fight %d", id);
+        if(timer != null && !timer.isDone() && !timer.isCancelled())
+            timer.cancel(true);
+        
+        fighters.getCurrent().setCanPlay(false);
+        
+        state = STATE_FINISHED;
+        map.getMap().removeFight(this);
+        
+        timers.schedule(new Runnable() {
+            @Override
+            public void run() {
+                byte winners = getWinTeam();
+                endRewards(winners);
+
+                for(Fighter fighter : fighters){
+                    boolean winner = fighter.getTeam().getNumber() == winners;
+                    fighter.onEnd(winner);
+                    endAction(fighter, winner);
+                }
+            }
+        }, 1, TimeUnit.SECONDS);
+    }
+    
+    abstract protected void endAction(Fighter fighter, boolean isWinner);
+    abstract protected void endRewards(byte winners);
+    
+    public long getTime(){
+        return (System.currentTimeMillis() - startTime) / 1000;
     }
 }

@@ -74,4 +74,8 @@ public class FightMap {
     public Fighter getFighter(short position){
         return fighters.get(position);
     }
+    
+    public void removeFighter(Fighter fighter){
+        fighters.remove(fighter.getCellId());
+    }
 }

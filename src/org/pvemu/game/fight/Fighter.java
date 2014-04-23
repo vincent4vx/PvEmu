@@ -162,6 +162,14 @@ abstract public class Fighter implements GMable {
     
     abstract public Creature getCreature();
     abstract public int getLevel();
+    
+    public void onDie(){
+        
+    }
+    
+    public void onEnd(boolean win){
+        
+    }
 
     @Override
     public String toString() {

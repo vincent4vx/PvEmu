@@ -140,4 +140,41 @@ public class FightGenerator {
     public String generateTurnStart(int fighterID){
         return fighterID + "|" + Constants.TURN_TIME * 1000;
     }
+    
+    public String generateGameEnd(Fight fight, byte winners){
+        StringBuilder packet = new StringBuilder();
+        
+        packet.append(fight.getTime()).append('|')
+                .append(fight.getInitID()).append('|')
+                .append(fight.isHonnorFight() ? "1" : "0");
+        
+        for(Fighter fighter : fight.getFighters()){
+            packet.append('|')
+                    .append(fighter.getTeam().getNumber() == winners ? "2" : "0").append(';')
+                    .append(fighter.getID()).append(';')
+                    .append(fighter.getName()).append(';')
+                    .append(fighter.getLevel()).append(';')
+                    .append(fighter.isAlive() ? "0" : "1").append(';');
+            
+            if(fight.isHonnorFight()){
+                
+            }else{
+                packet.append("0;0;0;0;0;0;") //minxp,curxp,maxxp,winxp,guildxp,mountxp
+                        .append(";") //drop
+                        .append("0"); //kamas
+            }
+        }
+        
+        return packet.toString();
+    }
+    
+    public String generateClearFightMap(Collection<Fighter> fighters){
+        StringBuilder packet = new StringBuilder(fighters.size() * 6);
+        
+        for(Fighter fighter : fighters){
+            packet.append("|-").append(fighter.getID());
+        }
+        
+        return packet.toString();
+    }
 }

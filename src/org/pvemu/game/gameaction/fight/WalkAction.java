@@ -27,6 +27,11 @@ public class WalkAction implements GameAction<PlayerFighter>{
 
     @Override
     public void start(GameActionData<PlayerFighter> data) {
+        if(!data.getPerformer().canPlay()){
+            GameSendersRegistry.getGameAction().error(data.getPerformer().getSession());
+            return;
+        }
+        
         AtomicReference<String> rPath = new AtomicReference<>((String) data.getArgument(0));
         short steps = Pathfinding.validatePath(
                 data.getPerformer().getFight().getMap().getMap(),

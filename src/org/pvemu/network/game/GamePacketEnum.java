@@ -292,6 +292,7 @@ public enum GamePacketEnum {
     FIGHT_TURN_MIDDLE("GTM"),
     FIGHT_TURN_START("GTS"),
     FIGHT_TURN_FNISH("GTF"),
+    FIGHT_END("GE"),
     PONG("pong"),
     QPONG("qpong");
     final private String packet;

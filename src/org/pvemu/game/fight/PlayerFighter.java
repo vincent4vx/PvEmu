@@ -94,6 +94,14 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     public int getLevel() {
         return 1;
     }
+
+    @Override
+    public void onEnd(boolean win) {
+        super.onEnd(win); //To change body of generated methods, choose Tools | Templates.
+        SessionAttributes.FIGHTER.removeValue(player.getSession());
+        player.getActionsManager().setInFight(false);
+        player.getActionsManager().setBusy(false);
+    }
     
     
 }

@@ -38,4 +38,13 @@ public class EffectSender {
                 fighterID + "," + nb
         );
     }
+    
+    public void fighterDie(Fight fight, int fighterID){
+        GameSendersRegistry.getGameAction().unidentifiedGameActionToFight(
+                fight, 
+                FightActionsRegistry.FIGHTER_DIE, 
+                fighterID,
+                fighterID
+        );
+    }
 }

@@ -34,7 +34,6 @@ public class PlayerActions {
             return;
         }
         
-        //GameMap map = DAOFactory.map().getById(mapID).getGameMap();
         GameMap map = MapFactory.getById(mapID);
         MapCell cell = map.getCellById(cellID);
         ActionsRegistry.getMap().removePlayer(player.getMap(), player);

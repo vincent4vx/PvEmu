@@ -26,7 +26,8 @@ public class FightFactory {
                 new FightTeam[]{
                     new FightTeam((byte)0, p1.getID() << 16, p1.getCellId(), MapUtils.parseCellList(places[0], map)),
                     new FightTeam((byte)1, p2.getID() << 16, p2.getCellId(), MapUtils.parseCellList(places[1], map))
-                }
+                },
+                p1.getID()
         );
         
         map.addFight(fight);
