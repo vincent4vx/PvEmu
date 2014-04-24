@@ -17,6 +17,7 @@ import org.pvemu.game.objects.inventory.Inventory;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
+import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
@@ -69,11 +70,13 @@ public class ObjectGenerator {
             
             for(String effect : Utils.split(template.statsTemplate, ",")){
                 try{
-                    short effectID = Short.parseShort(Utils.split(effect, "#")[0]);
+                    short effectID = Short.parseShort(Utils.split(effect, "#")[0], 16);
                     
                     if(EffectsHandler.instance().getEffect(effectID) != null)
                         strEffects.append(effect).append(',');
-                }catch(Exception e){}
+                }catch(Exception e){
+                    Loggin.warning("cannot generate effects string %s for template %d", effect, id);
+                }
             }
 
             itemsEffects.put(id, strEffects.toString());
