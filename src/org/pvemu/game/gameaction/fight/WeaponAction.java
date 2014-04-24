@@ -54,24 +54,15 @@ public class WeaponAction implements GameAction<PlayerFighter>{
         
         Weapon weapon = (Weapon)list.get(0);
         
-        if(!data.getPerformer().getFight().canUseWeapon(data.getPerformer(), weapon, cell)){
-            GameSendersRegistry.getGameAction().error(data.getPerformer().getSession());
-            return;
-        }
         
         GameSendersRegistry.getGameAction().gameActionStartToFight(
                 data.getPerformer().getFight(), 
                 data.getPerformer().getID()
         );
         
-        GameSendersRegistry.getGameAction().unidentifiedGameActionToFight(
-                data.getPerformer().getFight(), 
-                FightActionsRegistry.WEAPON,
-                data.getPerformer().getID(),
-                cell
-        );
-        
-        data.getPerformer().getFight().useWeapon(data.getPerformer(), weapon, cell);
+        if(!data.getPerformer().useWeapon(weapon, cell)){
+            GameSendersRegistry.getGameAction().error(data.getPerformer().getSession());
+        }
         
         GameSendersRegistry.getGameAction().gameActionFinishToFight(
                 data.getPerformer().getFight(), 

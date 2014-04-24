@@ -6,7 +6,10 @@
 
 package org.pvemu.game.objects.item.types;
 
+import java.util.Set;
+import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.objects.dep.Stats;
+import org.pvemu.game.objects.item.WeaponData;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
 
@@ -14,10 +17,10 @@ import org.pvemu.models.ItemTemplate;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class Amulet extends Wearable {
+public class Tools extends Weapon{
 
-    public Amulet(Stats stats, InventoryEntry entry, ItemTemplate template) {
-        super(stats, entry, template);
+    public Tools(Stats stats, Set<EffectData> effects, WeaponData weaponData, InventoryEntry entry, ItemTemplate template) {
+        super(stats, effects, weaponData, entry, template);
     }
     
 }

@@ -7,7 +7,6 @@
 package org.pvemu.game.fight;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -167,43 +166,32 @@ abstract public class Fight {
                 && dist <= weapon.getWeaponData().getPOMax();
     }
     
-    public void useWeapon(Fighter caster, Weapon weapon, short cell){
-        if(!canUseWeapon(caster, weapon, cell))
-            return;
-        
-        caster.removePA(weapon.getWeaponData().getPACost());
-        GameSendersRegistry.getEffect().removePAOnAction(
-                this, 
-                caster.getID(), 
-                weapon.getWeaponData().getPACost()
-        );
-        
-        Fighter target = map.getFighter(cell); //TODO: field effects and target
-        
-        Set<Fighter> targets = new HashSet<>();
-        
-        if(target != null)
-            targets.add(target);
-        
-        applyEffectsToFighterList(caster, weapon.getEffects(), targets);
-    }
-    
-    protected void applyEffectsToFighterList(Fighter caster, Set<EffectData> effects, Collection<Fighter> targets){
-        if(targets.isEmpty() || effects.isEmpty())
+    public void applyEffects(Fighter caster, Set<EffectData> effects, short cell){
+        if(effects.isEmpty())
             return;
         
         for(EffectData effect : effects){
-            for(Fighter target : targets){
+            Collection<Short> cells = MapUtils.getCellsFromArea(
+                    map.getMap(), 
+                    cell, 
+                    caster.getCellId(), 
+                    effect.getArea()
+            );
+            
+            Loggin.debug("Apply effect %d (min=%d, max=%d, area=%s) on cell %d", effect.getEffect().id(), effect.getMin(), effect.getMax(), effect.getArea(), cell);
+            
+            for(Fighter target : map.getFightersByCells(cells)){
+                if(state == STATE_FINISHED)
+                    return;
+                
                 if(!target.isAlive())
                     continue;
                 
                 effect.getEffect().applyToFighter(effect, caster, target);
+                
+                if(!target.isAlive())
+                    onFighterDie(target);
             }
-        }
-        
-        for(Fighter target : targets){
-            if(!target.isAlive())
-                onFighterDie(target);
         }
     }
     
@@ -268,7 +256,7 @@ abstract public class Fight {
                     endAction(fighter, winner);
                 }
             }
-        }, 1, TimeUnit.SECONDS);
+        }, 2, TimeUnit.SECONDS);
     }
     
     abstract protected void endAction(Fighter fighter, boolean isWinner);

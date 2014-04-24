@@ -14,7 +14,7 @@ import org.pvemu.jelly.utils.Utils;
  */
 final public class EffectFactory {
 
-    static public EffectData parseSpellEffect(String spellEffect) {
+    static public EffectData parseSpellEffect(String spellEffect, String area) {
 
         String[] args = Utils.split(spellEffect, ";");
 
@@ -39,7 +39,7 @@ final public class EffectFactory {
                 return null;
             }
 
-            return new EffectData(effect, min, max, duration, target);
+            return new EffectData(effect, min, max, duration, target, area);
 
         } catch (Exception e) {
             Loggin.error("error during parsing effect : " + spellEffect, e);
@@ -47,7 +47,7 @@ final public class EffectFactory {
         }
     }
     
-    static public EffectData parseItemEffect(String itemEffect){
+    static public EffectData parseItemEffect(String itemEffect, String area){
         
             if(itemEffect.isEmpty()){
                 return null;
@@ -71,6 +71,6 @@ final public class EffectFactory {
             if(effect == null)
                 return null;
             
-            return new EffectData(effect, min, max, 0, 0);
+            return new EffectData(effect, min, max, 0, 0, area);
     }
 }

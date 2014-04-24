@@ -6,8 +6,10 @@
 
 package org.pvemu.game.fight;
 
+import org.pvemu.game.gameaction.fight.FightActionsRegistry;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
+import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.objects.map.GMable;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -169,6 +171,35 @@ abstract public class Fighter implements GMable {
     
     public void onEnd(boolean win){
         
+    }
+    
+    abstract public boolean canUseWeapon(Weapon weapon, short dest);
+    
+    public boolean useWeapon(Weapon weapon, short dest){
+        if(!canUseWeapon(weapon, dest))
+            return false;
+        
+        GameSendersRegistry.getGameAction().unidentifiedGameActionToFight(
+                fight, 
+                FightActionsRegistry.WEAPON,
+                getID(),
+                dest
+        );
+        
+        fight.applyEffects(
+                this, 
+                weapon.getEffects(), 
+                dest
+        );
+        
+        removePA(weapon.getWeaponData().getPACost());
+        GameSendersRegistry.getEffect().removePAOnAction(
+                fight,
+                getID(),
+                weapon.getWeaponData().getPACost()
+        );
+        
+        return true;
     }
 
     @Override

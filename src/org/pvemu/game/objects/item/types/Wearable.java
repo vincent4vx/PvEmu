@@ -19,8 +19,8 @@ import org.pvemu.models.ItemTemplate;
  */
 abstract class Wearable extends GameItem {
 
-    public Wearable(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
-        super(stats, effects, entry, template);
+    public Wearable(Stats stats, InventoryEntry entry, ItemTemplate template) {
+        super(stats, entry, template);
     }
 
     @Override

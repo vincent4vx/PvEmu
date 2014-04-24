@@ -16,13 +16,15 @@ public class EffectData {
     final private int max;
     final private int duration;
     final private int target;
+    final private String area;
 
-    EffectData(Effect effect, int min, int max, int duration, int target) {
+    EffectData(Effect effect, int min, int max, int duration, int target, String area) {
         this.effect = effect;
         this.min = min;
         this.max = max;
         this.duration = duration;
         this.target = target;
+        this.area = area;
     }
 
     public Effect getEffect() {
@@ -43,5 +45,9 @@ public class EffectData {
 
     public int getTarget() {
         return target;
+    }
+
+    public String getArea() {
+        return area;
     }
 }

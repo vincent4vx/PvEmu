@@ -7,14 +7,17 @@
 package org.pvemu.network.generators;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.pvemu.game.effect.EffectData;
+import org.pvemu.game.effect.EffectsHandler;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.inventory.Inventory;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
+import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
 import org.pvemu.models.dao.DAOFactory;
@@ -62,7 +65,18 @@ public class ObjectGenerator {
             if(template == null)
                 return "";
             
-            itemsEffects.put(id, generateEffects(ItemsFactory.getEffects(template)));
+            StringBuilder strEffects = new StringBuilder();
+            
+            for(String effect : Utils.split(template.statsTemplate, ",")){
+                try{
+                    short effectID = Short.parseShort(Utils.split(effect, "#")[0]);
+                    
+                    if(EffectsHandler.instance().getEffect(effectID) != null)
+                        strEffects.append(effect).append(',');
+                }catch(Exception e){}
+            }
+
+            itemsEffects.put(id, strEffects.toString());
         }
         
         return itemsEffects.get(id);

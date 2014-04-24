@@ -12,6 +12,8 @@ import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
+import org.pvemu.game.objects.item.types.Weapon;
+import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -101,6 +103,38 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
         SessionAttributes.FIGHTER.removeValue(player.getSession());
         player.getActionsManager().setInFight(false);
         player.getActionsManager().setBusy(false);
+    }
+
+    @Override
+    public boolean canUseWeapon(Weapon weapon, short dest) {
+        if(weapon.getWeaponData().getPACost() > getNumPA()){
+            GameSendersRegistry.getInformativeMessage().error(
+                    player.getSession(), 
+                    170,
+                    getNumPA(),
+                    weapon.getWeaponData().getPACost()
+            );
+            return false;
+        }
+        
+        int dist = MapUtils.getDistanceBetween(
+                fight.getMap().getMap(), 
+                cell, 
+                dest
+        );
+        
+        if(dist > weapon.getWeaponData().getPOMax() || dist < weapon.getWeaponData().getPOMin()){
+            GameSendersRegistry.getInformativeMessage().error(
+                    player.getSession(), 
+                    171, 
+                    weapon.getWeaponData().getPOMin(),
+                    weapon.getWeaponData().getPOMax(),
+                    dist
+            );
+            return false;
+        }
+        
+        return true;
     }
     
     

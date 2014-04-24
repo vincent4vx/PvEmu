@@ -20,6 +20,7 @@ public class FightActionsRegistry extends AbstractGameActionsRegistry<PlayerFigh
     final static public short UPDATE_VITA      = 110;
     final static public short USE_PM           = 128;
     final static public short USE_PM_ON_MOVE   = 129;
+    final static public short SPELL            = 300;
     final static public short WEAPON           = 303;
     
     final static private FightActionsRegistry instance = new FightActionsRegistry();
@@ -27,6 +28,7 @@ public class FightActionsRegistry extends AbstractGameActionsRegistry<PlayerFigh
     private FightActionsRegistry(){
         registerGameAction(new WalkAction());
         registerGameAction(new WeaponAction());
+        registerGameAction(new SpellAction());
     }
 
     public static FightActionsRegistry instance() {

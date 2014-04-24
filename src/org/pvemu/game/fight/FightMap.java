@@ -6,7 +6,9 @@
 
 package org.pvemu.game.fight;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.pvemu.game.objects.map.GameMap;
@@ -73,6 +75,18 @@ public class FightMap {
     
     public Fighter getFighter(short position){
         return fighters.get(position);
+    }
+    
+    
+    public Collection<Fighter> getFightersByCells(Collection<Short> cells){
+        Collection<Fighter> list = new HashSet<>(cells.size());
+        for(short cell : cells){
+            Fighter fighter = fighters.get(cell);
+            
+            if(fighter != null)
+                list.add(fighter);
+        }
+        return list;
     }
     
     public void removeFighter(Fighter fighter){

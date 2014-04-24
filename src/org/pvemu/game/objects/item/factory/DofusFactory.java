@@ -21,8 +21,8 @@ import org.pvemu.models.ItemTemplate;
 class DofusFactory implements ItemFactoryInterface {
 
     @Override
-    public GameItem newItem(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
-        return new Dofus(stats, effects, entry, template);
+    public GameItem newItem(Stats stats, InventoryEntry entry, ItemTemplate template) {
+        return new Dofus(stats, entry, template);
     }
     
 }

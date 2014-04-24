@@ -18,8 +18,8 @@ import org.pvemu.models.ItemTemplate;
  */
 public class Shield extends Accessorie {
 
-    public Shield(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
-        super(stats, effects, entry, template);
+    public Shield(Stats stats, InventoryEntry entry, ItemTemplate template) {
+        super(stats, entry, template);
     }
     
 }

@@ -21,8 +21,8 @@ import org.pvemu.models.ItemTemplate;
 class AmuletFactory implements ItemFactoryInterface {
 
     @Override
-    public GameItem newItem(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
-        return new Amulet(stats, effects, entry, template);
+    public GameItem newItem(Stats stats, InventoryEntry entry, ItemTemplate template) {
+        return new Amulet(stats, entry, template);
     }
     
 }

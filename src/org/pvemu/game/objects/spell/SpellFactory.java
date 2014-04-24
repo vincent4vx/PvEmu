@@ -66,16 +66,18 @@ final public class SpellFactory {
         
         String[] tmp = Utils.split(data, ",");
         
-        if(tmp.length < 2)
+        if(tmp.length < 16)
             return null;
         
-        Set<EffectData> effects = parseSpellEffect(tmp[0]);
-        Set<EffectData> criticals = parseSpellEffect(tmp[1]);
+        String area = tmp[15];
+        
+        Set<EffectData> effects = parseSpellEffect(tmp[0], area.substring(0, area.length() / 2));
+        Set<EffectData> criticals = parseSpellEffect(tmp[1], area.substring(area.length() / 2));
         
         return new GameSpell(model, level, effects, criticals);
     }
     
-    static private Set<EffectData> parseSpellEffect(String strEffect){
+    static private Set<EffectData> parseSpellEffect(String strEffect, String area){
         Set<EffectData> effects = new HashSet<>();
         
         if(strEffect.isEmpty() || strEffect.equals("-1"))
@@ -87,7 +89,12 @@ final public class SpellFactory {
             if(effectsArray[i].isEmpty() || effectsArray[i].equals("-1"))
                 continue;
             
-            EffectData effect = EffectFactory.parseSpellEffect(effectsArray[i]);
+            String curArea = "Pa";
+            if(area.length() >= i * 2 + 2){
+                curArea = area.substring(i * 2, i * 2 + 2);
+            }
+            
+            EffectData effect = EffectFactory.parseSpellEffect(effectsArray[i], curArea);
             
             if(effect == null)
                 continue;

@@ -18,8 +18,8 @@ import org.pvemu.models.ItemTemplate;
  */
 abstract class Accessorie extends Wearable{
 
-    public Accessorie(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
-        super(stats, effects, entry, template);
+    public Accessorie(Stats stats, InventoryEntry entry, ItemTemplate template) {
+        super(stats, entry, template);
     }
 
     @Override

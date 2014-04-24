@@ -21,8 +21,8 @@ import org.pvemu.models.ItemTemplate;
 class ResourceFactory implements ItemFactoryInterface {
 
     @Override
-    public GameItem newItem(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template) {
-        return new Resource(stats, effects, entry, template);
+    public GameItem newItem(Stats stats, InventoryEntry entry, ItemTemplate template) {
+        return new Resource(stats, entry, template);
     }
     
 }

@@ -6,8 +6,6 @@
 
 package org.pvemu.game.objects.item.factory;
 
-import java.util.Set;
-import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.models.InventoryEntry;
@@ -18,5 +16,5 @@ import org.pvemu.models.ItemTemplate;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public interface ItemFactoryInterface {
-    public GameItem newItem(Stats stats, Set<EffectData> effects, InventoryEntry entry, ItemTemplate template);
+    public GameItem newItem(Stats stats, InventoryEntry entry, ItemTemplate template);
 }

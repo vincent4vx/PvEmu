@@ -30,7 +30,7 @@ import org.pvemu.network.generators.GeneratorsRegistry;
 public class ItemsFactory {
     final static private Weapon punch = new Weapon(
             new Stats(), 
-            parseEffects("64#1#5#0#1d5+0"),
+            parseEffects("64#1#5#0#1d5+0", "Pa"),
             new WeaponData((short)4, (short)1, (short)1, (byte)100, (byte)100, (short)10, false),
             new InventoryEntry(), 
             new ItemTemplate()
@@ -42,13 +42,13 @@ public class ItemsFactory {
 
         NONE/* = 0*/,
         AMULET(new AmuletFactory())/* = 1*/,
-        BOW(new WeaponFactory())/* = 2*/,
-        WAND(new WeaponFactory())/* = 3*/,
-        STAFF(new WeaponFactory())/* = 4*/,
-        DAGGER(new WeaponFactory())/* = 5*/,
-        SWORD(new WeaponFactory())/* = 6*/,
-        HAMMER(new WeaponFactory())/* = 7*/,
-        SHOVEL(new WeaponFactory())/* = 8*/,
+        BOW(new BowFactory())/* = 2*/,
+        WAND(new WandFactory())/* = 3*/,
+        STAFF(new StaffFactory())/* = 4*/,
+        DAGGER(new DaggerFactory())/* = 5*/,
+        SWORD(new SwordFactory())/* = 6*/,
+        HAMMER(new HammerFactory())/* = 7*/,
+        SHOVEL(new ShovelFactory())/* = 8*/,
         RING(new RingFactory())/* = 9*/,
         BELT(new BeltFactory())/* = 10*/,
         BOOTS(new BootsFactory())/* = 11*/,
@@ -59,10 +59,10 @@ public class ItemsFactory {
         HELMET(new HelmetFactory())/* = 16*/,
         MANTLE(new MantleFactory())/* = 17*/,
         PET(new PetFactory())/* = 18*/,
-        AXE(new WeaponFactory())/* = 19*/,
-        TOOLS(new WeaponFactory())/* = 20*/,
-        PICKAXE(new WeaponFactory())/* = 21*/,
-        SCYTHE(new WeaponFactory())/* = 22*/,
+        AXE(new AxeFactory())/* = 19*/,
+        TOOLS(new ToolsFactory())/* = 20*/,
+        PICKAXE(new PickaxeFactory())/* = 21*/,
+        SCYTHE(new ScytheFactory())/* = 22*/,
         DOFUS(new DofusFactory())/* = 23*/,
         QUETES/* = 24*/,
         DOCUMENT/* = 25*/,
@@ -122,7 +122,7 @@ public class ItemsFactory {
         OBJET_MISSION/* = 80*/,
         SAC_DOS/* = 81*/,
         SHIELD(new ShieldFactory())/* = 82*/,
-        SOUL_STONE(new WeaponFactory())/* = 83*/,
+        SOUL_STONE(new SoulStoneFactory())/* = 83*/,
         CLEFS/* = 84*/,
         PIERRE_AME_PLEINE/* = 85*/,
         POPO_OUBLI_PERCEP/* = 86*/,
@@ -181,7 +181,7 @@ public class ItemsFactory {
         if(template == null)
             return null;
         
-        return getTypeOfItem(template).getFactory().newItem(stats, getEffects(template), entry, template);
+        return getTypeOfItem(template).getFactory().newItem(stats, entry, template);
     }
     
     static public GameItem createItem(Inventoryable owner, ItemTemplate template, int qu, boolean maxStats){
@@ -196,7 +196,7 @@ public class ItemsFactory {
         entry.stats = GeneratorsRegistry.getObject().generateStats(stats);
         
         
-        return getTypeOfItem(template).getFactory().newItem(stats, getEffects(template), entry, template);
+        return getTypeOfItem(template).getFactory().newItem(stats, entry, template);
     }
     
     static public GameItem copyItem(GameItem src, Inventoryable dest_owner, int dest_qu, byte dest_pos){
@@ -210,7 +210,7 @@ public class ItemsFactory {
         
         Stats stats = new Stats(src.getStats());
         
-        return getTypeOfItem(src.getTemplate()).getFactory().newItem(stats, getEffects(src.getTemplate()), entry, src.getTemplate());
+        return getTypeOfItem(src.getTemplate()).getFactory().newItem(stats, entry, src.getTemplate());
     }
     
     static public GameItem copyItem(GameItem src, Inventoryable dest_owner, int dest_qu){
@@ -245,14 +245,14 @@ public class ItemsFactory {
         return stats;
     }
     
-    private static Set<EffectData> parseEffects(String strEffets){
+    private static Set<EffectData> parseEffects(String strEffects, String area){
         Set<EffectData> effects = new HashSet<>();
         
-        for(String e : Utils.split(strEffets, ",")){
+        for(String e : Utils.split(strEffects, ",")){
             if(e.isEmpty())
                 continue;
             
-            EffectData data = EffectFactory.parseItemEffect(e);
+            EffectData data = EffectFactory.parseItemEffect(e, area);
             
             if(data == null)
                 continue;
@@ -263,9 +263,9 @@ public class ItemsFactory {
         return effects;
     }
     
-    static public Set<EffectData> getEffects(ItemTemplate template){
+    static public Set<EffectData> getEffects(ItemTemplate template, String area){
         if(!effectsByItem.containsKey(template.id)){
-            effectsByItem.put(template.id, parseEffects(template.statsTemplate));
+            effectsByItem.put(template.id, parseEffects(template.statsTemplate, area));
         }
         
         return effectsByItem.get(template.id);
