@@ -13,9 +13,9 @@ package org.pvemu.game.objects.player.classes;
 public class Sadida extends ClassData{
 
     public Sadida() {
-        addSpell(1, 183);
-        addSpell(1, 200);
-        addSpell(1, 193);
+        addSpell(1, 183, 'b');
+        addSpell(1, 200, 'c');
+        addSpell(1, 193, 'd');
         addSpell(3, 198);
         addSpell(6, 195);
         addSpell(9, 182);

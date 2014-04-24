@@ -13,9 +13,9 @@ package org.pvemu.game.objects.player.classes;
 public class Feca extends ClassData{
 
     public Feca() {
-        addSpell(1, 3);
-        addSpell(1, 6);
-        addSpell(1, 17);
+        addSpell(1, 3, 'b');
+        addSpell(1, 6, 'c');
+        addSpell(1, 17, 'd');
         addSpell(3, 4);
         addSpell(6, 2);
         addSpell(9, 1);

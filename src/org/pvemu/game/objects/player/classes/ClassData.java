@@ -14,19 +14,22 @@ import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.game.objects.spell.SpellFactory;
 import org.pvemu.game.objects.spell.SpellLevels;
+import org.pvemu.game.objects.player.SpellList;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 abstract public class ClassData {
-    static private class PairSpellLevel{
+    static private class SpellByLevelData{
         final private int level;
         final private GameSpell spell;
+        final private char position;
 
-        PairSpellLevel(int level, GameSpell spell) {
+        SpellByLevelData(int level, GameSpell spell, char position) {
             this.level = level;
             this.spell = spell;
+            this.position = position;
         }
 
         public int getLevel() {
@@ -36,11 +39,15 @@ abstract public class ClassData {
         public GameSpell getSpell() {
             return spell;
         }
+
+        public char getPosition() {
+            return position;
+        }
     }
     
-    final private Set<PairSpellLevel> spellsByLevel = new HashSet<>();
+    final private Set<SpellByLevelData> spellsByLevel = new HashSet<>();
     
-    public void addSpell(int level, int spellID){
+    public void addSpell(int level, int spellID, char position){
         SpellLevels spellLevels = SpellFactory.getSpellLevelsById(spellID);
         
         if(spellLevels == null)
@@ -51,16 +58,20 @@ abstract public class ClassData {
         if(spell == null)
             return;
         
-        spellsByLevel.add(new PairSpellLevel(level, spell));
+        spellsByLevel.add(new SpellByLevelData(level, spell, position));
+    }
+    
+    public void addSpell(int level, int spellID){
+        addSpell(level, spellID, SpellList.DEFAULT_POS);
     }
     
     public void learnClassSpells(Player player){
-        for(PairSpellLevel psl : spellsByLevel){
-            if(player.getLevel() < psl.getLevel() 
-               || player.getSpellList().hasAlreadyLearnedSpell(psl.getSpell().getModel().id))
+        for(SpellByLevelData sld : spellsByLevel){
+            if(player.getLevel() < sld.getLevel() 
+               || player.getSpellList().hasAlreadyLearnedSpell(sld.getSpell().getModel().id))
                 continue;
             
-            player.getSpellList().learnSpell(psl.getSpell());
+            player.getSpellList().learnSpell(sld.getSpell(), sld.getPosition());
         }
     }
     

@@ -13,9 +13,9 @@ package org.pvemu.game.objects.player.classes;
 public class Eniripsa extends ClassData{
 
     public Eniripsa() {
-        addSpell(1, 125);
-        addSpell(1, 128);
-        addSpell(1, 121);
+        addSpell(1, 125, 'b');
+        addSpell(1, 128, 'c');
+        addSpell(1, 121, 'd');
         addSpell(3, 124);
         addSpell(6, 122);
         addSpell(9, 126);

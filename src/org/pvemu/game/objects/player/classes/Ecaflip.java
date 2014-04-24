@@ -13,9 +13,9 @@ package org.pvemu.game.objects.player.classes;
 public class Ecaflip extends ClassData{
 
     public Ecaflip() {
-        addSpell(1, 102);
-        addSpell(1, 103);
-        addSpell(1, 105);
+        addSpell(1, 102, 'b');
+        addSpell(1, 103, 'c');
+        addSpell(1, 105, 'd');
         addSpell(3, 109);
         addSpell(6, 113);
         addSpell(9, 111);

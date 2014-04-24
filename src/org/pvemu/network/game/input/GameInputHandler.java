@@ -34,6 +34,7 @@ import org.pvemu.network.game.input.account.AttachAccountPacket;
 import org.pvemu.network.InputPacketsHandler;
 import org.pvemu.network.game.input.fight.FightEndTurnPacket;
 import org.pvemu.network.game.input.fight.FightReadyPacket;
+import org.pvemu.network.game.input.spell.MoveSpellPacket;
 
 /**
  *
@@ -90,6 +91,9 @@ public class GameInputHandler extends InputPacketsHandler {
         registerPacket(new FightChangePlacePacket());
         registerPacket(new FightReadyPacket());
         registerPacket(new FightEndTurnPacket());
+        
+        //spells packets
+        registerPacket(new MoveSpellPacket());
     }
     
     static public GameInputHandler instance(){

@@ -13,9 +13,9 @@ package org.pvemu.game.objects.player.classes;
 public class Xelor extends ClassData{
 
     public Xelor() {
-        addSpell(1, 81);
-        addSpell(1, 82);
-        addSpell(1, 83);
+        addSpell(1, 81, 'b');
+        addSpell(1, 82, 'c');
+        addSpell(1, 83, 'd');
         addSpell(3, 84);
         addSpell(6, 100);
         addSpell(9, 92);

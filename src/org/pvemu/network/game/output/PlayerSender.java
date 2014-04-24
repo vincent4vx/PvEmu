@@ -8,7 +8,7 @@ package org.pvemu.network.game.output;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.game.objects.spell.SpellList;
+import org.pvemu.game.objects.player.SpellList;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
 

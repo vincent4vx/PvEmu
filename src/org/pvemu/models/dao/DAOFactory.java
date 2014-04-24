@@ -15,6 +15,14 @@ public class DAOFactory {
     private static NpcResponseActionDAO responseAction = null;
     private static MonsterDAO monster = null;
     private static SpellDAO spell = null;
+    private static LearnedSpellDAO learnedSpell = null;
+
+    public static LearnedSpellDAO learnedSpell() {
+        if(learnedSpell == null)
+            learnedSpell = new LearnedSpellDAO();
+        return learnedSpell;
+    }
+
 
     /**
      * Get the value of spell

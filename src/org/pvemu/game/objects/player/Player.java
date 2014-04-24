@@ -22,7 +22,6 @@ import org.pvemu.game.gameaction.game.GameActionsRegistry;
 import org.pvemu.game.objects.Exchange;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.player.classes.ClassData;
-import org.pvemu.game.objects.spell.SpellList;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.Filterable;
 import org.pvemu.network.Sessionable;
@@ -38,6 +37,7 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
     final private Inventory inventory = new Inventory(this);
     private Stats baseStats;
     private Stats stuffStats;
+    private final SpellList spellList;
     private GameMap curMap;
     private MapCell curCell;
     private IoSession session = null;
@@ -47,7 +47,6 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
     public NpcQuestion current_npc_question = null;
     private Exchange exchange = null;
     private final GameActionsManager actionsManager = new GameActionsManager(GameActionsRegistry.instance());
-    private final SpellList spellList = new SpellList();
 
     /**
      * Get the value of spellList
@@ -64,16 +63,18 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
      *
      * @return the value of actionsManager
      */
+    @Override
     public GameActionsManager getActionsManager() {
         return actionsManager;
     }
 
-    Player(Character character, Account account, ClassData classData, String[] colors, Stats baseStats, GameMap curMap, MapCell curCell) {
+    Player(Character character, Account account, ClassData classData, String[] colors, Stats baseStats, SpellList spellList, GameMap curMap, MapCell curCell) {
         this.character = character;
         this.account = account;
         this.classData = classData;
         this.colors = colors;
         this.baseStats = baseStats;
+        this.spellList = spellList;
         this.curMap = curMap;
         this.curCell = curCell;
     }    
@@ -288,6 +289,7 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
         
         character.baseStats = stats.toString();
         inventory.save();
+        spellList.save();
         
         character.orientation = orientation;
         

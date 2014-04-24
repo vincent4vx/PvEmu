@@ -13,9 +13,9 @@ package org.pvemu.game.objects.player.classes;
 public class Pandawa extends ClassData{
 
     public Pandawa() {
-        addSpell(1, 686);
-        addSpell(1, 692);
-        addSpell(1, 687);
+        addSpell(1, 686, 'b');
+        addSpell(1, 692, 'c');
+        addSpell(1, 687, 'd');
         addSpell(3, 689);
         addSpell(6, 690);
         addSpell(9, 691);

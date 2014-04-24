@@ -13,9 +13,9 @@ package org.pvemu.game.objects.player.classes;
 public class Sram extends ClassData{
 
     public Sram() {
-        addSpell(1, 61);
-        addSpell(1, 72);
-        addSpell(1, 65);
+        addSpell(1, 61, 'b');
+        addSpell(1, 72, 'c');
+        addSpell(1, 65, 'd');
         addSpell(3, 66);
         addSpell(6, 68);
         addSpell(9, 63);

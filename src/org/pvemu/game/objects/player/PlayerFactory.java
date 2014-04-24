@@ -16,6 +16,7 @@ import org.pvemu.game.objects.player.classes.ClassesHandler;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.Account;
+import org.pvemu.models.dao.DAOFactory;
 
 /**
  *
@@ -25,12 +26,14 @@ final public class PlayerFactory {
     static public Player getPlayer(org.pvemu.models.Character character, Account account){
         GameMap map = getValidCurrentMap(character);
         ClassData cd = ClassesHandler.instance().getClass(character.classId);
+        SpellList spells = new SpellList(character.id, DAOFactory.learnedSpell().getLearnedSpells(character.id));
         Player player = new Player(
                 character,
                 account,
                 cd,
                 getColors(character),
-                getBaseStats(character.baseStats), 
+                getBaseStats(character.baseStats),
+                spells,
                 map,
                 getValidCurrentCell(character, map)
         );

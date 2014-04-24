@@ -16,9 +16,9 @@ import org.pvemu.game.objects.dep.Stats.Element;
 public class Enutrof extends ClassData {
 
     public Enutrof() {
-        addSpell(1, 51);
-        addSpell(1, 43);
-        addSpell(1, 41);
+        addSpell(1, 51, 'b');
+        addSpell(1, 43, 'c');
+        addSpell(1, 41, 'd');
         addSpell(3, 49);
         addSpell(6, 42);
         addSpell(9, 47);

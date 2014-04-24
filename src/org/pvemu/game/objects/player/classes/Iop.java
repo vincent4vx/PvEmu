@@ -13,9 +13,9 @@ package org.pvemu.game.objects.player.classes;
 public class Iop extends ClassData {
 
     public Iop() {
-        addSpell(1, 141);
-        addSpell(1, 142);
-        addSpell(1, 143);
+        addSpell(1, 141, 'b');
+        addSpell(1, 142, 'c');
+        addSpell(1, 143, 'd');
         addSpell(3, 144);
         addSpell(6, 145);
         addSpell(9, 146);

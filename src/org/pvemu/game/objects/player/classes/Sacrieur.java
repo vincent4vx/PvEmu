@@ -13,9 +13,9 @@ package org.pvemu.game.objects.player.classes;
 public class Sacrieur extends ClassData{
 
     public Sacrieur() {
-        addSpell(1, 431);
-        addSpell(1, 432);
-        addSpell(1, 434);
+        addSpell(1, 431, 'b');
+        addSpell(1, 432, 'c');
+        addSpell(1, 434, 'd');
         addSpell(3, 444);
         addSpell(6, 449);
         addSpell(9, 436);

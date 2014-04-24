@@ -13,9 +13,9 @@ package org.pvemu.game.objects.player.classes;
 public class Cra extends ClassData{
 
     public Cra() {
-        addSpell(1, 161);
-        addSpell(1, 169);
-        addSpell(1, 164);
+        addSpell(1, 161, 'b');
+        addSpell(1, 169, 'c');
+        addSpell(1, 164, 'd');
         addSpell(3, 163);
         addSpell(6, 165);
         addSpell(9, 172);

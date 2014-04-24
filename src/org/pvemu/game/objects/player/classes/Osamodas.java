@@ -13,9 +13,9 @@ package org.pvemu.game.objects.player.classes;
 public class Osamodas extends ClassData{
 
     public Osamodas() {
-        addSpell(1, 34);
-        addSpell(1, 21);
-        addSpell(1, 23);
+        addSpell(1, 34, 'b');
+        addSpell(1, 21, 'c');
+        addSpell(1, 23, 'd');
         addSpell(3, 26);
         addSpell(6, 22);
         addSpell(9, 35);
