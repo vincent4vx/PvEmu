@@ -11,6 +11,7 @@ import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.objects.map.GMable;
+import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
@@ -186,12 +187,6 @@ abstract public class Fighter implements GMable {
                 dest
         );
         
-        fight.applyEffects(
-                this, 
-                weapon.getEffects(), 
-                dest
-        );
-        
         removePA(weapon.getWeaponData().getPACost());
         GameSendersRegistry.getEffect().removePAOnAction(
                 fight,
@@ -199,8 +194,41 @@ abstract public class Fighter implements GMable {
                 weapon.getWeaponData().getPACost()
         );
         
+        fight.applyEffects(
+                this, 
+                weapon.getEffects(), 
+                dest
+        );
+        
         return true;
     }
+    
+    abstract public boolean canUseSpell(GameSpell spell, short dest);
+    
+    public boolean castSpell(GameSpell spell, short dest){
+        if(!canUseSpell(spell, dest))
+            return false;
+        
+        GameSendersRegistry.getEffect().castSpell(
+                fight, 
+                getID(), 
+                spell, 
+                dest
+        );
+        
+        removePA(spell.getPACost());
+        GameSendersRegistry.getEffect().removePAOnAction(
+                fight,
+                getID(),
+                spell.getPACost()
+        );
+        
+        fight.applyEffects(this, spell.getEffects(), dest); //TODO critical / fail
+        
+        return true;
+    }
+    
+    abstract public GameSpell getSpellById(int spellID);
 
     @Override
     public String toString() {

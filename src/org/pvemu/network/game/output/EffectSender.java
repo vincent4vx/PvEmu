@@ -8,6 +8,7 @@ package org.pvemu.network.game.output;
 
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
+import org.pvemu.game.objects.spell.GameSpell;
 
 /**
  *
@@ -45,6 +46,19 @@ public class EffectSender {
                 FightActionsRegistry.FIGHTER_DIE, 
                 fighterID,
                 fighterID
+        );
+    }
+    
+    public void castSpell(Fight fight, int fighterID, GameSpell spell, short dest){
+        GameSendersRegistry.getGameAction().unidentifiedGameActionToFight(
+                fight, 
+                FightActionsRegistry.SPELL, 
+                fighterID,
+                spell.getModel().id + "," + 
+                        dest + "," + 
+                        spell.getModel().sprite + "," +
+                        spell.getLevel() + "," +
+                        spell.getModel().spriteInfos                
         );
     }
 }

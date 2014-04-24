@@ -71,10 +71,37 @@ final public class SpellFactory {
         
         String area = tmp[15];
         
+        short PACost = 6;
+        byte POMin, POMax, criticalRate, failRate;
+        
+        try{
+            PACost = Short.parseShort(tmp[2].trim());
+        }catch(NumberFormatException e){}
+        
+        try{
+            POMin = Byte.parseByte(tmp[3].trim());
+            POMax = Byte.parseByte(tmp[4].trim());
+            criticalRate = Byte.parseByte(tmp[5].trim());
+            failRate = Byte.parseByte(tmp[6].trim());
+        }catch(NumberFormatException e){
+            Loggin.error("cannot parse spell '" + data + "'", e);
+            return null;
+        }
+        
         Set<EffectData> effects = parseSpellEffect(tmp[0], area.substring(0, area.length() / 2));
         Set<EffectData> criticals = parseSpellEffect(tmp[1], area.substring(area.length() / 2));
         
-        return new GameSpell(model, level, effects, criticals);
+        return new GameSpell(
+                model, 
+                level, 
+                effects, 
+                criticals,
+                PACost,
+                POMin,
+                POMax, 
+                criticalRate,
+                failRate
+        );
     }
     
     static private Set<EffectData> parseSpellEffect(String strEffect, String area){

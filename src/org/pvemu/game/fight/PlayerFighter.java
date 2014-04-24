@@ -15,6 +15,7 @@ import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.game.objects.player.Player;
+import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
@@ -135,6 +136,43 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
         }
         
         return true;
+    }
+
+    @Override
+    public boolean canUseSpell(GameSpell spell, short dest) {
+        if(spell.getPACost() > getNumPA()){
+            GameSendersRegistry.getInformativeMessage().error(
+                    player.getSession(), 
+                    170,
+                    getNumPA(),
+                    spell.getPACost()
+            );
+            return false;
+        }
+        
+        int dist = MapUtils.getDistanceBetween(
+                fight.getMap().getMap(), 
+                cell, 
+                dest
+        );
+        
+        if(dist > spell.getPOMax() || dist < spell.getPOMin()){
+            GameSendersRegistry.getInformativeMessage().error(
+                    player.getSession(), 
+                    171, 
+                    spell.getPOMin(),
+                    spell.getPOMax(),
+                    dist
+            );
+            return false;
+        }
+        
+        return true;
+    }
+
+    @Override
+    public GameSpell getSpellById(int spellID) {
+        return player.getSpellList().getSpell(spellID);
     }
     
     

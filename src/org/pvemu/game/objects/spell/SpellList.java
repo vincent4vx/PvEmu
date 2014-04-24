@@ -37,4 +37,8 @@ public class SpellList {
     public boolean hasAlreadyLearnedSpell(int spellID){
         return spells.containsKey(spellID);
     }
+    
+    public GameSpell getSpell(int id){
+        return spells.get(id);
+    }
 }
