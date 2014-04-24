@@ -27,6 +27,7 @@ public class CommandsHandler {
         registerCommand(new ExecCommand());
         registerCommand(new ItemCommand());
         registerCommand(new DebugCommand());
+        registerCommand(new SaveCommand());
     }
     
     /**

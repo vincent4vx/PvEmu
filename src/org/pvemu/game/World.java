@@ -128,8 +128,8 @@ public class World {
     public void save() {
         Database.setAutocommit(true);
         Shell.println("Sauvegarde des personnages...", GraphicRenditionEnum.YELLOW);
-        for (Player P : online.values()) {
-            DAOFactory.character().update(P.getCharacter());
+        for (Player player : online.values()) {
+            player.save();
         }
         Shell.println("Sauvegarde terminé !", GraphicRenditionEnum.GREEN);
         Database.setAutocommit(false);
