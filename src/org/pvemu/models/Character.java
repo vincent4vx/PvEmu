@@ -4,8 +4,6 @@
  */
 package org.pvemu.models;
 
-import org.pvemu.game.objects.player.Player;
-
 /**
  *
  * @author vincent
@@ -16,6 +14,7 @@ public class Character implements org.pvemu.jelly.database.Model {
     public String name;
     public int accountId;
     public short level = 1;
+    public long experience;
     public int color1;
     public int color2;
     public int color3;
@@ -40,5 +39,10 @@ public class Character implements org.pvemu.jelly.database.Model {
     @Override
     public int getPk() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return "Character{" + "id=" + id + ", name=" + name + ", accountId=" + accountId + ", level=" + level + ", experience=" + experience + ", color1=" + color1 + ", color2=" + color2 + ", color3=" + color3 + ", gfxid=" + gfxid + ", sexe=" + sexe + ", classId=" + classId + ", lastMap=" + lastMap + ", lastCell=" + lastCell + ", startMap=" + startMap + ", startCell=" + startCell + ", baseStats=" + baseStats + ", orientation=" + orientation + ", spellPoints=" + spellPoints + ", boostPoints=" + boostPoints + ", kamas=" + kamas + '}';
     }
 }

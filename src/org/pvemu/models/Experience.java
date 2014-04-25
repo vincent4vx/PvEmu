@@ -1,8 +1,21 @@
 package org.pvemu.models;
 
-import java.util.TreeMap;
+import org.pvemu.jelly.database.Model;
 
-public class Experience {
+public class Experience implements Model{
+    public short lvl;
+    public long player;
+    public long job;
+    public long honnor;
 
-    protected TreeMap<Integer, Integer> _character = new TreeMap<>();
+    @Override
+    public int getPk() {
+        return lvl;
+    }
+
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
 }

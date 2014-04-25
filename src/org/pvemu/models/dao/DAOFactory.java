@@ -16,6 +16,19 @@ public class DAOFactory {
     private static MonsterDAO monster = null;
     private static SpellDAO spell = null;
     private static LearnedSpellDAO learnedSpell = null;
+    private static ExperienceDAO experience = null;
+
+    /**
+     * Get the value of experience
+     *
+     * @return the value of experience
+     */
+    public static ExperienceDAO experience() {
+        if(experience == null)
+            experience = new ExperienceDAO();
+        return experience;
+    }
+
 
     public static LearnedSpellDAO learnedSpell() {
         if(learnedSpell == null)

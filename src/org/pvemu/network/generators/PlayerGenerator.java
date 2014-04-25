@@ -5,6 +5,7 @@
 package org.pvemu.network.generators;
 
 import java.util.List;
+import org.pvemu.game.ExperienceHandler;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
@@ -12,7 +13,9 @@ import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.game.objects.player.SpellList;
 import org.pvemu.jelly.Constants;
+import org.pvemu.jelly.utils.Pair;
 import org.pvemu.jelly.utils.Utils;
+import org.pvemu.models.Experience;
 
 /**
  * Génère les packets pour les joueurs
@@ -114,7 +117,8 @@ public class PlayerGenerator {
 
     public String generateAs(Player p) {        
         StringBuilder ASData = new StringBuilder();
-        ASData.append("0,0,0").append("|"); //xp: cur/min/max
+        Pair<Experience, Experience> xps = ExperienceHandler.instance().getLevel(p.getLevel());
+        ASData.append(p.getCharacter().experience).append(',').append(xps.getFirst().player).append(',').append(xps.getSecond().player).append("|"); //xp: cur/min/max
         ASData.append(p.getCharacter().kamas).append("|").append(p.getCharacter().boostPoints).append("|").append(p.getCharacter().spellPoints).append("|"); //kamas|boostPoints|spellPoints
         ASData.append(0).append("~").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append((false ? "1" : "0")).append("|");
 

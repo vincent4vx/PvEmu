@@ -63,8 +63,14 @@ final public class PlayerFactory {
             return stats;
         
         for (String data : Utils.split(strStats, "|")) {
+            if(data.isEmpty())
+                continue;
+            String[] arr = Utils.split(data, ";");
+            
+            if(arr.length < 2)
+                continue;
+            
             try {
-                String[] arr = Utils.split(data, ";");
                 int elemID = Integer.parseInt(arr[0]);
                 short qu = Short.parseShort(arr[1]);
                 stats.add(elemID, qu);

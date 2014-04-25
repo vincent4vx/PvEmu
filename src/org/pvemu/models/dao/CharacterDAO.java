@@ -22,7 +22,7 @@ public class CharacterDAO extends UpdatableDAO<Character> {
 
     public CharacterDAO() {
         createStatement = Database.prepareInsert("INSERT INTO characters(name, class, sexe, color1, color2, color3, account, gfxid, lastMap, lastCell, startMap, startCell) VALUES(?,?,?,?,?,?,?,?,?,?,?,?);");
-        updateStatement = Database.prepare("UPDATE characters SET level = ?, gfxid = ?, lastMap = ?, lastCell = ?, startMap = ?, startCell = ?, baseStats = ?, orientation = ? WHERE id = ?");
+        updateStatement = Database.prepare("UPDATE characters SET level = ?, experience = ?, gfxid = ?, lastMap = ?, lastCell = ?, startMap = ?, startCell = ?, baseStats = ?, orientation = ?, boostPoints = ?, spellPoints = ? WHERE id = ?");
         findByNameStatement = Database.prepare("SELECT * FROM characters WHERE name = ?");
         getByAccountId = Database.prepare("SELECT * FROM characters WHERE account = ?");
         countNameStatement = Database.prepare("SELECT COUNT(*) AS count FROM characters WHERE name = ?");
@@ -49,6 +49,7 @@ public class CharacterDAO extends UpdatableDAO<Character> {
             p.gfxid = RS.getShort("gfxid");
             p.sexe = RS.getByte("sexe");
             p.level = RS.getShort("level");
+            p.experience = RS.getLong("experience");
             p.lastMap = RS.getShort("lastMap");
             p.lastCell = RS.getShort("lastCell");
             p.startMap = RS.getShort("startMap");
@@ -111,23 +112,27 @@ public class CharacterDAO extends UpdatableDAO<Character> {
     public boolean update(Character P) {
         try {
             synchronized (updateStatement) {
-                updateStatement.setInt(1, P.level);
-                updateStatement.setInt(2, P.gfxid);
-                updateStatement.setShort(3, P.lastMap);
-                updateStatement.setShort(4, P.lastCell);
-                updateStatement.setShort(5, P.startMap);
-                updateStatement.setShort(6, P.startCell);
-                updateStatement.setString(7, P.baseStats);
-                updateStatement.setByte(8, P.orientation);
+                int i = 0;
+                updateStatement.setShort(++i, P.level);
+                updateStatement.setLong(++i, P.experience);
+                updateStatement.setInt(++i, P.gfxid);
+                updateStatement.setShort(++i, P.lastMap);
+                updateStatement.setShort(++i, P.lastCell);
+                updateStatement.setShort(++i, P.startMap);
+                updateStatement.setShort(++i, P.startCell);
+                updateStatement.setString(++i, P.baseStats);
+                updateStatement.setByte(++i, P.orientation);
+                updateStatement.setInt(++i, P.boostPoints);
+                updateStatement.setInt(++i, P.spellPoints);
 
-                updateStatement.setInt(9, P.id);
+                updateStatement.setInt(++i, P.id);
 
                 updateStatement.execute();
             }
 
             return true;
         } catch (SQLException e) {
-            Loggin.error("Impossible de sauvegarder le personnage " + P.name, e);
+            Loggin.error("Impossible de sauvegarder le personnage " + P, e);
             return false;
         }
     }
