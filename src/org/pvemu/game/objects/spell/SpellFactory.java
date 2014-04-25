@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.pvemu.game.objects.spell;
 
 import org.pvemu.game.effect.EffectData;
@@ -71,7 +65,7 @@ final public class SpellFactory {
         
         String area = tmp[15];
         
-        short PACost = 6;
+        short PACost = 6, minLevel;
         byte POMin, POMax, criticalRate, failRate;
         
         try{
@@ -83,6 +77,7 @@ final public class SpellFactory {
             POMax = Byte.parseByte(tmp[4].trim());
             criticalRate = Byte.parseByte(tmp[5].trim());
             failRate = Byte.parseByte(tmp[6].trim());
+            minLevel = Short.parseShort(tmp[tmp.length - 2].trim());
         }catch(NumberFormatException e){
             Loggin.error("cannot parse spell '" + data + "'", e);
             return null;
@@ -100,7 +95,8 @@ final public class SpellFactory {
                 POMin,
                 POMax, 
                 criticalRate,
-                failRate
+                failRate,
+                minLevel
         );
     }
     

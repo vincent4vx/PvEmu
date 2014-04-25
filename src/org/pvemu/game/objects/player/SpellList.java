@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.game.objects.spell.SpellFactory;
+import org.pvemu.game.objects.spell.SpellLevels;
+import org.pvemu.jelly.Loggin;
 import org.pvemu.models.LearnedSpell;
 import org.pvemu.models.dao.DAOFactory;
 
@@ -84,5 +86,41 @@ public class SpellList {
         }
         
         ls.position = dest;
+    }
+    
+    private boolean canBoostSpell(Player player, GameSpell spell){
+        if(spell.getLevel() >= SpellLevels.LEVEL_MAX){
+            Loggin.debug("spell already on max level");
+            return false;
+        }
+        
+        GameSpell next = spell.getSpellLevels().getNext(spell);
+        
+        if(player.getCharacter().spellPoints < spell.getLevel()){
+            Loggin.debug("Player doesn't have enought spell points (%d/%d)", player.getCharacter().spellPoints, spell.getLevel());
+            return false;
+        }
+        
+        if(player.getLevel() < next.getMinLevel()){
+            Loggin.debug("Player is to low to boost this spell (%d/%d)", player.getLevel(), next.getMinLevel());
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public byte boostSpell(Player player, int spellID){
+        GameSpell spell = spells.get(spellID);
+        
+        if(spell == null || !canBoostSpell(player, spell))
+            return -1;
+        
+        player.getCharacter().spellPoints -= spell.getLevel();
+        GameSpell next = spell.getSpellLevels().getNext(spell);
+        spells.put(spellID, next);
+        LearnedSpell ls = learnedSpells.get(spellID);
+        ls.level = next.getLevel();
+        
+        return next.getLevel();
     }
 }

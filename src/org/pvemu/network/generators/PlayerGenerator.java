@@ -114,8 +114,8 @@ public class PlayerGenerator {
 
     public String generateAs(Player p) {        
         StringBuilder ASData = new StringBuilder();
-        ASData.append("0,0").append("|");
-        ASData.append(0).append("|").append(0).append("|").append(0).append("|");
+        ASData.append("0,0,0").append("|"); //xp: cur/min/max
+        ASData.append(p.getCharacter().kamas).append("|").append(p.getCharacter().boostPoints).append("|").append(p.getCharacter().spellPoints).append("|"); //kamas|boostPoints|spellPoints
         ASData.append(0).append("~").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append((false ? "1" : "0")).append("|");
 
         ASData.append(p.getTotalStats().get(Stats.Element.VITA)).append(",").append(p.getTotalStats().get(Stats.Element.VITA)).append("|");

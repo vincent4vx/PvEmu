@@ -25,8 +25,9 @@ public class GameSpell {
     final private byte POMax;
     final private byte criticalRate;
     final private byte failRate;
+    final private short minLevel;
 
-    public GameSpell(Spell model, byte level, Set<EffectData> effects, Set<EffectData> critical, short PACost, byte POMin, byte POMax, byte criticalRate, byte failRate) {
+    public GameSpell(Spell model, byte level, Set<EffectData> effects, Set<EffectData> critical, short PACost, byte POMin, byte POMax, byte criticalRate, byte failRate, short minLevel) {
         this.model = model;
         this.level = level;
         this.effects = Collections.unmodifiableSet(effects);
@@ -36,6 +37,7 @@ public class GameSpell {
         this.POMax = POMax;
         this.criticalRate = criticalRate;
         this.failRate = failRate;
+        this.minLevel = minLevel;
     }
 
     public Spell getModel() {
@@ -76,5 +78,9 @@ public class GameSpell {
 
     public byte getFailRate() {
         return failRate;
+    }
+
+    public short getMinLevel() {
+        return minLevel;
     }
 }

@@ -293,6 +293,8 @@ public enum GamePacketEnum {
     FIGHT_TURN_START("GTS"),
     FIGHT_TURN_FNISH("GTF"),
     FIGHT_END("GE"),
+    SPELL_UPGRADE_OK("SUK"),
+    SPELL_UPGRADE_ERROR("SUE"),
     PONG("pong"),
     QPONG("qpong");
     final private String packet;

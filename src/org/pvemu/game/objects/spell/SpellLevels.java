@@ -15,6 +15,8 @@ import org.pvemu.models.Spell;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class SpellLevels {
+    final static public byte LEVEL_MAX = 6;
+    
     final private Spell model;
     final private List<GameSpell> spells;
 

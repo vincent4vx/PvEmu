@@ -25,6 +25,28 @@ public class GameSendersRegistry {
     private static DefianceSender defiance = null;
     private static FightSender fight = null;
     private static EffectSender effect = null;
+    private static SpellSender spell = null;
+
+    /**
+     * Get the value of spell
+     *
+     * @return the value of spell
+     */
+    public static SpellSender getSpell() {
+        if(spell == null)
+            spell = new SpellSender();
+        return spell;
+    }
+
+    /**
+     * Set the value of spell
+     *
+     * @param spell new value of spell
+     */
+    public static void setSpell(SpellSender spell) {
+        GameSendersRegistry.spell = spell;
+    }
+
 
     /**
      * Get the value of effect

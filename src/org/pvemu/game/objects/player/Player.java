@@ -77,7 +77,7 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
         this.spellList = spellList;
         this.curMap = curMap;
         this.curCell = curCell;
-    }    
+    }
 
     /**
      * Charge les stats du perso

@@ -55,6 +55,9 @@ public class CharacterDAO extends UpdatableDAO<Character> {
             p.startCell = RS.getShort("startCell");
             p.baseStats = RS.getString("baseStats");
             p.orientation = RS.getByte("orientation");
+            p.spellPoints = RS.getInt("spellPoints");
+            p.boostPoints = RS.getInt("boostPoints");
+            p.kamas = RS.getInt("kamas");
 
             charactersById.put(p.id, p);
 

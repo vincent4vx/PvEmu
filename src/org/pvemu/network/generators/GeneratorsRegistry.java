@@ -25,6 +25,28 @@ public class GeneratorsRegistry {
     private static MonsterGenerator monster = null;
     private static FightGenerator fight = null;
     private static EffectGenerator effect = null;
+    private static SpellGenerator spell = null;
+
+    /**
+     * Get the value of spell
+     *
+     * @return the value of spell
+     */
+    public static SpellGenerator getSpell() {
+        if(spell == null)
+            spell = new SpellGenerator();
+        return spell;
+    }
+
+    /**
+     * Set the value of spell
+     *
+     * @param spell new value of spell
+     */
+    public static void setSpell(SpellGenerator spell) {
+        GeneratorsRegistry.spell = spell;
+    }
+
 
     /**
      * Get the value of effect

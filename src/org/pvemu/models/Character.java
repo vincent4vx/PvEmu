@@ -28,14 +28,9 @@ public class Character implements org.pvemu.jelly.database.Model {
     public short startCell;
     public String baseStats;
     public byte orientation = 0;
-    private Player player = null;
-
-/*    public Player getPlayer() {
-        if (_player == null) {
-            _player = new Player(this);
-        }
-        return _player;
-    }*/
+    public int spellPoints;
+    public int boostPoints;
+    public int kamas;
 
     @Override
     public void clear() {
