@@ -37,6 +37,34 @@ public class Enutrof extends ClassData {
         addSpell(90, 57);
         addSpell(100, 60);
         addSpell(200, 1903);
+        
+        setBoostStatsCost(Stats.Element.VITA, Stats.MAX_VALUE, 1);
+        setBoostStatsCost(Stats.Element.SAGESSE, Stats.MAX_VALUE, 3);
+        
+        setBoostStatsCost(Stats.Element.FORCE, (short)50, 1);
+        setBoostStatsCost(Stats.Element.FORCE, (short)150, 2);
+        setBoostStatsCost(Stats.Element.FORCE, (short)250, 3);
+        setBoostStatsCost(Stats.Element.FORCE, (short)350, 4);
+        
+        setBoostStatsCost(Stats.Element.AGILITE, (short)20, 1);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)40, 2);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)60, 3);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)80, 4);
+        
+        setBoostStatsCost(Element.CHANCE, (short)100, 1);
+        setBoostStatsCost(Element.CHANCE, (short)150, 2);
+        setBoostStatsCost(Element.CHANCE, (short)230, 3);
+        setBoostStatsCost(Element.CHANCE, (short)330, 4);
+        
+        setBoostStatsCost(Element.INTEL, (short)20, 1);
+        setBoostStatsCost(Element.INTEL, (short)60, 2);
+        setBoostStatsCost(Element.INTEL, (short)100, 3);
+        setBoostStatsCost(Element.INTEL, (short)140, 4);
+        
+        setBoostStatsCost(Stats.Element.FORCE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.CHANCE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.AGILITE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.INTEL, Stats.MAX_VALUE, 5);
     }
 
     @Override

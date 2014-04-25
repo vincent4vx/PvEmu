@@ -6,6 +6,8 @@
 
 package org.pvemu.game.objects.player.classes;
 
+import org.pvemu.game.objects.dep.Stats;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
@@ -34,6 +36,25 @@ public class Pandawa extends ClassData{
         addSpell(90, 704);
         addSpell(100, 705);
         addSpell(200, 1912);
+        
+        setBoostStatsCost(Stats.Element.VITA, Stats.MAX_VALUE, 1);
+        setBoostStatsCost(Stats.Element.SAGESSE, Stats.MAX_VALUE, 3);
+        
+        setBoostStatsCost(Stats.Element.FORCE, (short)50, 1);
+        setBoostStatsCost(Stats.Element.FORCE, (short)200, 2);
+        setBoostStatsCost(Stats.Element.FORCE, Stats.MAX_VALUE, 3);
+        
+        setBoostStatsCost(Stats.Element.CHANCE, (short)50, 1);
+        setBoostStatsCost(Stats.Element.CHANCE, (short)200, 2);
+        setBoostStatsCost(Stats.Element.CHANCE, Stats.MAX_VALUE, 3);
+        
+        setBoostStatsCost(Stats.Element.INTEL, (short)50, 1);
+        setBoostStatsCost(Stats.Element.INTEL, (short)200, 2);
+        setBoostStatsCost(Stats.Element.INTEL, Stats.MAX_VALUE, 3);
+        
+        setBoostStatsCost(Stats.Element.AGILITE, (short)50, 1);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)200, 2);
+        setBoostStatsCost(Stats.Element.AGILITE, Stats.MAX_VALUE, 3);
     }
 
     @Override

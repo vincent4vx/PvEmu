@@ -6,6 +6,8 @@
 
 package org.pvemu.game.objects.player.classes;
 
+import org.pvemu.game.objects.dep.Stats;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
@@ -34,6 +36,13 @@ public class Sacrieur extends ClassData{
         addSpell(90, 435);
         addSpell(100, 450);
         addSpell(200, 1911);
+        
+        setBoostStatsCost(Stats.Element.VITA, Stats.MAX_VALUE, (float)0.5);
+        setBoostStatsCost(Stats.Element.SAGESSE, Stats.MAX_VALUE, 3);
+        setBoostStatsCost(Stats.Element.AGILITE, Stats.MAX_VALUE, 3);
+        setBoostStatsCost(Stats.Element.FORCE, Stats.MAX_VALUE, 3);
+        setBoostStatsCost(Stats.Element.CHANCE, Stats.MAX_VALUE, 3);
+        setBoostStatsCost(Stats.Element.INTEL, Stats.MAX_VALUE, 3);
     }
 
     @Override

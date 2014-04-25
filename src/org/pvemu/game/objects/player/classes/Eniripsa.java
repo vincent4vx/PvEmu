@@ -6,6 +6,8 @@
 
 package org.pvemu.game.objects.player.classes;
 
+import org.pvemu.game.objects.dep.Stats;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
@@ -34,6 +36,33 @@ public class Eniripsa extends ClassData{
         addSpell(90, 139);
         addSpell(100, 140);
         addSpell(200, 1907);
+        
+        setBoostStatsCost(Stats.Element.VITA, Stats.MAX_VALUE, 1);
+        setBoostStatsCost(Stats.Element.SAGESSE, Stats.MAX_VALUE, 3);
+        
+        setBoostStatsCost(Stats.Element.FORCE, (short)50, 2);
+        setBoostStatsCost(Stats.Element.FORCE, (short)150, 3);
+        setBoostStatsCost(Stats.Element.FORCE, (short)250, 4);
+        
+        setBoostStatsCost(Stats.Element.CHANCE, (short)20, 1);
+        setBoostStatsCost(Stats.Element.CHANCE, (short)40, 2);
+        setBoostStatsCost(Stats.Element.CHANCE, (short)60, 3);
+        setBoostStatsCost(Stats.Element.CHANCE, (short)80, 4);
+        
+        setBoostStatsCost(Stats.Element.AGILITE, (short)20, 1);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)40, 2);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)60, 3);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)80, 4);
+        
+        setBoostStatsCost(Stats.Element.INTEL, (short)100, 1);
+        setBoostStatsCost(Stats.Element.INTEL, (short)200, 2);
+        setBoostStatsCost(Stats.Element.INTEL, (short)300, 3);
+        setBoostStatsCost(Stats.Element.INTEL, (short)400, 4);
+        
+        setBoostStatsCost(Stats.Element.FORCE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.CHANCE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.AGILITE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.INTEL, Stats.MAX_VALUE, 5);
     }
 
     @Override

@@ -407,6 +407,34 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
     public String[] getColors() {
         return colors;
     }
+    
+    public boolean boostStats(int statsID){
+        Element element = Stats.getElementByBoostID(statsID);
+        
+        if(element == null)
+            return false;
+        
+        Loggin.debug("[%s] try to boost stats %s", character.name, element);
+        
+        float cost = classData.getBoostStatsCost(this, element);
+        
+        if(cost > character.boostPoints)
+            return false;
+        
+        short qu;
+        
+        if(cost < 1){
+            qu = (short)(1 / cost);
+            cost = 1;
+        }else{
+            qu = 1;
+        }
+        
+        baseStats.add(element, qu);
+        character.boostPoints -= cost;
+        
+        return true;
+    }
 
     @Override
     public String toString() {

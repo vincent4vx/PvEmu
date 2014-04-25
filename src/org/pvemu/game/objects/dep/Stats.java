@@ -2,7 +2,7 @@ package org.pvemu.game.objects.dep;
 
 import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
@@ -17,12 +17,12 @@ public class Stats{
         PA(new int[]{111, 120}, new int[]{101, 168}),
         PM(new int[]{78, 128}, new int[]{169, 127}),
         //primaires
-        FORCE(new int[]{118}, new int[]{157}),
-        INTEL(new int[]{126}, new int[]{155}),
-        AGILITE(new int[]{119}, new int[]{154}),
-        CHANCE(new int[]{123}, new int[]{152}),
-        SAGESSE(new int[]{124}, new int[]{156}),
-        VITA(new int[]{125, 110}, new int[]{153}),
+        FORCE(new int[]{118}, new int[]{157}, 10),
+        INTEL(new int[]{126}, new int[]{155}, 15),
+        AGILITE(new int[]{119}, new int[]{154}, 14),
+        CHANCE(new int[]{123}, new int[]{152}, 13),
+        SAGESSE(new int[]{124}, new int[]{156}, 12),
+        VITA(new int[]{125, 110}, new int[]{153}, 11),
         //secondaires
         DOMMAGE(new int[]{112}, new int[]{145, 220}),
         PERDOM(new int[]{138, 142}, new int[]{}),
@@ -44,10 +44,18 @@ public class Stats{
         
         final private int[] add_id;
         final private int[] rem_id;
+        final private int boostID;
 
-        Element(int[] add_id, int[] rem_id) {
+        Element(int[] add_id, int[] rem_id, int boostID) {
             this.add_id = add_id;
             this.rem_id = rem_id;
+            this.boostID = boostID;
+        }
+
+        private Element(int[] add_id, int[] rem_id) {
+            this.add_id = add_id;
+            this.rem_id = rem_id;
+            this.boostID = -1;
         }
 
         /**
@@ -76,9 +84,15 @@ public class Stats{
             }
             return -1;
         }
+
+        public int getBoostID() {
+            return boostID;
+        }
     }
     
+    final static public short MAX_VALUE = Short.MAX_VALUE;
     private static final HashMap<Integer, Element> intToElement = new HashMap<>();
+    private static final Map<Integer, Element> elementsByBoostID = new HashMap<>();
     final private EnumMap<Element, Short> stats;    
     
     public Stats(){
@@ -185,8 +199,18 @@ public class Stats{
                 intToElement.put(id, e);
                 num++;
             }
+            if(e.getBoostID() != -1)
+                elementsByBoostID.put(e.getBoostID(), e);
         }
         Shell.println(num + " éléments chargées !", GraphicRenditionEnum.GREEN);
+    }
+    
+    static public Element getElementById(int elemID){
+        return intToElement.get(elemID);
+    }
+    
+    static public Element getElementByBoostID(int boostID){
+        return elementsByBoostID.get(boostID);
     }
 
     @Override

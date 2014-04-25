@@ -6,6 +6,8 @@
 
 package org.pvemu.game.objects.player.classes;
 
+import org.pvemu.game.objects.dep.Stats;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
@@ -34,6 +36,34 @@ public class Iop extends ClassData {
         addSpell(90, 160);
         addSpell(100, 159);
         addSpell(200, 1908);
+        
+        setBoostStatsCost(Stats.Element.VITA, Stats.MAX_VALUE, 1);
+        setBoostStatsCost(Stats.Element.SAGESSE, Stats.MAX_VALUE, 3);
+        
+        setBoostStatsCost(Stats.Element.FORCE, (short)100, 1);
+        setBoostStatsCost(Stats.Element.FORCE, (short)200, 2);
+        setBoostStatsCost(Stats.Element.FORCE, (short)300, 3);
+        setBoostStatsCost(Stats.Element.FORCE, (short)400, 4);
+        
+        setBoostStatsCost(Stats.Element.INTEL, (short)20, 1);
+        setBoostStatsCost(Stats.Element.INTEL, (short)40, 2);
+        setBoostStatsCost(Stats.Element.INTEL, (short)60, 3);
+        setBoostStatsCost(Stats.Element.INTEL, (short)80, 4);
+        
+        setBoostStatsCost(Stats.Element.CHANCE, (short)20, 1);
+        setBoostStatsCost(Stats.Element.CHANCE, (short)40, 2);
+        setBoostStatsCost(Stats.Element.CHANCE, (short)60, 3);
+        setBoostStatsCost(Stats.Element.CHANCE, (short)80, 4);
+        
+        setBoostStatsCost(Stats.Element.AGILITE, (short)20, 1);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)40, 2);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)60, 3);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)80, 4);
+        
+        setBoostStatsCost(Stats.Element.FORCE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.CHANCE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.AGILITE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.INTEL, Stats.MAX_VALUE, 5);
     }
 
     @Override

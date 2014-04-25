@@ -6,6 +6,8 @@
 
 package org.pvemu.game.objects.player.classes;
 
+import org.pvemu.game.objects.dep.Stats;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
@@ -34,6 +36,34 @@ public class Sadida extends ClassData{
         addSpell(90, 188);
         addSpell(100, 187);
         addSpell(200, 1910);
+        
+        setBoostStatsCost(Stats.Element.VITA, Stats.MAX_VALUE, 1);
+        setBoostStatsCost(Stats.Element.SAGESSE, Stats.MAX_VALUE, 3);
+        
+        setBoostStatsCost(Stats.Element.FORCE, (short)50, 1);
+        setBoostStatsCost(Stats.Element.FORCE, (short)250, 2);
+        setBoostStatsCost(Stats.Element.FORCE, (short)300, 3);
+        setBoostStatsCost(Stats.Element.FORCE, (short)400, 4);
+        
+        setBoostStatsCost(Stats.Element.CHANCE, (short)100, 1);
+        setBoostStatsCost(Stats.Element.CHANCE, (short)200, 2);
+        setBoostStatsCost(Stats.Element.CHANCE, (short)300, 3);
+        setBoostStatsCost(Stats.Element.CHANCE, (short)400, 4);
+        
+        setBoostStatsCost(Stats.Element.AGILITE, (short)20, 1);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)40, 2);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)60, 3);
+        setBoostStatsCost(Stats.Element.AGILITE, (short)80, 4);
+        
+        setBoostStatsCost(Stats.Element.INTEL, (short)100, 1);
+        setBoostStatsCost(Stats.Element.INTEL, (short)200, 2);
+        setBoostStatsCost(Stats.Element.INTEL, (short)300, 3);
+        setBoostStatsCost(Stats.Element.INTEL, (short)400, 4);
+        
+        setBoostStatsCost(Stats.Element.FORCE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.CHANCE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.AGILITE, Stats.MAX_VALUE, 5);
+        setBoostStatsCost(Stats.Element.INTEL, Stats.MAX_VALUE, 5);
     }
 
     @Override
