@@ -295,6 +295,7 @@ public enum GamePacketEnum {
     FIGHT_END("GE"),
     SPELL_UPGRADE_OK("SUK"),
     SPELL_UPGRADE_ERROR("SUE"),
+    NEW_LEVEL("AN"),
     PONG("pong"),
     QPONG("qpong");
     final private String packet;

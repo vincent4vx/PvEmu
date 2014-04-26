@@ -40,6 +40,10 @@ public class Utils {
     static public int rand(int max){
         return rand.nextInt(max);
     }
+    
+    static public long randLong(long min, long max){
+        return (rand.nextLong() % (max - min)) + min;
+    }
 
     /**
      * Décodage des packets encodé (cf: pass)

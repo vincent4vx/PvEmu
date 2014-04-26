@@ -6,8 +6,14 @@
 
 package org.pvemu.game.fight;
 
+import java.util.HashSet;
 import org.pvemu.actions.ActionsRegistry;
+import org.pvemu.game.ExperienceHandler;
 import org.pvemu.game.objects.player.Player;
+import org.pvemu.jelly.Loggin;
+import org.pvemu.jelly.utils.Pair;
+import org.pvemu.jelly.utils.Utils;
+import org.pvemu.models.Experience;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
@@ -55,6 +61,41 @@ public class DefianceFight extends Fight{
 
     @Override
     protected void endRewards(byte winners) {
+        int winTeamLevel = getTeams()[winners].getTeamLevel();
+        int loseTeamLevel = 0;
+        
+        for(FightTeam team : getTeams()){
+            if(team.getNumber() != winners)
+                loseTeamLevel += team.getTeamLevel();
+        }
+        
+        for(Fighter fighter : getFighters()){
+            if(fighter.getTeam().getNumber() == winners){
+                fighter.setFightButtin(new FightButtin(100, getWinExperience(fighter, winTeamLevel, loseTeamLevel), new HashSet<Pair<Integer, Integer>>()));
+            }else{
+                fighter.setFightButtin(FightButtin.emptyButtin());
+            }
+        }
+        
         GameSendersRegistry.getFight().gameEnd(this, winners);
     }
+
+    @Override
+    public long getWinExperience(Fighter fighter, int winTeamLevel, int loseTeamLevel) {
+        double fact = loseTeamLevel / winTeamLevel;
+        fact *= 1;
+        fact *= (10 / fighter.getLevel()) + 1;
+        
+        
+        Pair<Experience, Experience> xps = ExperienceHandler.instance().getLevel(fighter.getLevel());
+        long inter = xps.getSecond().player - xps.getFirst().player;
+        
+        long ret = (long)(Utils.randLong((long)(0.01 * inter), (long)(0.1 * inter)) * fact);
+        
+        if(ret < 0)
+            ret = 0;
+        
+        return ret;
+    }
+    
 }

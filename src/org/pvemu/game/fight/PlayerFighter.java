@@ -12,10 +12,15 @@ import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
+import org.pvemu.game.objects.item.GameItem;
+import org.pvemu.game.objects.item.factory.ItemsFactory;
 import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.spell.GameSpell;
+import org.pvemu.jelly.utils.Pair;
+import org.pvemu.models.ItemTemplate;
+import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
@@ -27,6 +32,7 @@ import org.pvemu.network.generators.GeneratorsRegistry;
 public class PlayerFighter extends Fighter implements ActionPerformer{
     final private Player player;
     final private GameActionsManager actionsManager = new GameActionsManager(FightActionsRegistry.instance());
+    private FightButtin fightButtin;
 
     PlayerFighter(Player player, Fight fight) {
         super(player.getTotalStats(), fight);
@@ -94,8 +100,8 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     }
 
     @Override
-    public int getLevel() {
-        return 1;
+    public short getLevel() {
+        return player.getLevel();
     }
 
     @Override
@@ -174,6 +180,24 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     public GameSpell getSpellById(int spellID) {
         return player.getSpellList().getSpell(spellID);
     }
-    
-    
+
+    @Override
+    public FightButtin getFightButtin() {
+        return fightButtin;
+    }
+
+    @Override
+    public void setFightButtin(FightButtin fightButtin) {
+        this.fightButtin = fightButtin;
+        player.getCharacter().kamas += fightButtin.getKamas();
+        
+        for(Pair<Integer, Integer> item : fightButtin.getItems()){
+            ItemTemplate template = DAOFactory.item().getById(item.getFirst());
+            int qu = item.getSecond();
+            GameItem gi = ItemsFactory.createItem(player, template, qu, false);
+            player.getInventory().addItem(gi);
+        }
+        
+        player.addXp(fightButtin.getExperience());
+    }
 }

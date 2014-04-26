@@ -16,6 +16,7 @@ import org.pvemu.models.Character;
 import org.pvemu.models.NpcQuestion;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.ExperienceHandler;
 import org.pvemu.game.gameaction.ActionPerformer;
 import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.gameaction.game.GameActionsRegistry;
@@ -25,6 +26,7 @@ import org.pvemu.game.objects.player.classes.ClassData;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.Filterable;
 import org.pvemu.network.Sessionable;
+import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
 
@@ -77,27 +79,6 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
         this.spellList = spellList;
         this.curMap = curMap;
         this.curCell = curCell;
-    }
-
-    /**
-     * Charge les stats du perso
-     */
-    private void loadStats() {
-        if (character.baseStats == null || character.baseStats.isEmpty()) {
-            //OldClassData.setStartStats(this);
-            return;
-        } else {
-            for (String data : character.baseStats.split("\\|")) {
-                try {
-                    String[] arr = data.split(";");
-                    int elemID = Integer.parseInt(arr[0]);
-                    short qu = Short.parseShort(arr[1]);
-                    baseStats.add(elemID, qu);
-                } catch (Exception e) {
-                }
-            }
-        }
-        loadStuffStats();
     }
 
     /**
@@ -205,14 +186,6 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
         return p;
     }
     
-//    /**
-//     * Retourne le nombre de pdv max du perso
-//     * @return 
-//     */
-//    public Short getPDVMax(){
-//        return (short)((level - 1) * OldClassData.VITA_PER_LVL + OldClassData.BASE_VITA + getTotalStats().get(Element.VITA));
-//    }
-    
     public ClassData getClassData() {
         return classData;
     }
@@ -305,14 +278,6 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
     public byte getOwnerType() {
         return 1;
     }
-    
-//    /**
-//     * Retourne le GameActionHandler du joueur
-//     * @return 
-//     */
-//    public GameActionHandler getActions(){
-//        return actions;
-//    }
     
     /**
      * Retourne l'échange en cours (si il existe)
@@ -434,6 +399,26 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
         character.boostPoints -= cost;
         
         return true;
+    }
+    
+    public void addXp(long qu){
+        character.experience += qu;
+        
+        short newLevel = ExperienceHandler.instance().getPlayerLevelByXp(character.experience);
+        
+        if(newLevel > character.level){
+            character.level = newLevel;
+            character.boostPoints += 5;
+            ++character.spellPoints;
+            classData.learnClassSpells(this);
+            GameSendersRegistry.getPlayer().stats(this, session);
+            GameSendersRegistry.getPlayer().spellList(spellList, session);
+            GameSendersRegistry.getPlayer().newLevel(session, newLevel);
+        }else{
+            GameSendersRegistry.getPlayer().stats(this, session);
+        }
+        
+        save();
     }
 
     @Override

@@ -6,6 +6,8 @@
 
 package org.pvemu.commands;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.commands.askers.ClientAsker;
 import org.pvemu.game.World;
@@ -20,6 +22,85 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class AddCommand extends Command{
+    private abstract interface AddSubCommand{
+        String subName();
+        String utility();
+        void perform(Player target, int qu, Asker asker);
+    }
+    
+    private class AddSpellPoints implements AddSubCommand{
+
+        @Override
+        public String subName() {
+            return "spellpoints";
+        }
+
+        @Override
+        public String utility() {
+            return "Ajoute [qu] points de sort à {player}";
+        }
+
+        @Override
+        public void perform(Player target, int qu, Asker asker) {
+            target.getCharacter().spellPoints += qu;
+            GameSendersRegistry.getPlayer().stats(target, target.getSession());
+            asker.write(qu + " points de sort ont été ajouté au joueur " + target.getName() + ". Il en a maintenant " + target.getCharacter().spellPoints);
+        }
+        
+    }
+    
+    private class AddBoostPoints implements AddSubCommand{
+
+        @Override
+        public String subName() {
+            return "boostpoints";
+        }
+
+        @Override
+        public String utility() {
+            return "Ajoute [qu] points de boost (stats) à {player}";
+        }
+
+        @Override
+        public void perform(Player target, int qu, Asker asker) {
+            target.getCharacter().boostPoints += qu;
+            GameSendersRegistry.getPlayer().stats(target, target.getSession());
+            asker.write(qu + " points de boost ont été ajouté au joueur " + target.getName() + ". Il en a maintenant " + target.getCharacter().boostPoints);
+        }
+        
+    }
+    
+    private class AddXpPoints implements AddSubCommand{
+
+        @Override
+        public String subName() {
+            return "xp";
+        }
+
+        @Override
+        public String utility() {
+            return "Ajoute [qu] points d'xp à {player}";
+        }
+
+        @Override
+        public void perform(Player target, int qu, Asker asker) {
+            target.addXp(qu);
+            asker.write(qu + " points  d'xp a été ajouté au joueur " + target.getName() + ". Il a maintenant " + target.getCharacter().experience + " points d'xp");
+        }
+        
+    }
+    
+    final private Map<String, AddSubCommand> subCommands = new HashMap<>();
+    
+    public AddCommand() {
+        registerSubCommand(new AddSpellPoints());
+        registerSubCommand(new AddBoostPoints());
+        registerSubCommand(new AddXpPoints());
+    }
+    
+    private void registerSubCommand(AddSubCommand cmd){
+        subCommands.put(cmd.subName().toLowerCase(), cmd);
+    }
 
     @Override
     public String name() {
@@ -65,28 +146,14 @@ public class AddCommand extends Command{
             return;
         }
         
-        switch(args[1].toLowerCase()){
-            case "spellpoints":
-                addSpellPoints(target, qu, asker);
-                break;
-            case "boostpoints":
-                addBoostPoints(target, qu, asker);
-                break;
-            default:
-                asker.writeError("Argument n°1 invalide !");
+        AddSubCommand cmd = subCommands.get(args[1].toLowerCase().trim());
+        
+        if(cmd == null){
+            asker.writeError("Argument n°1 invalide !");
+            return;
         }
-    }
-    
-    private void addSpellPoints(Player target, short qu, Asker asker){
-        target.getCharacter().spellPoints += qu;
-        GameSendersRegistry.getPlayer().stats(target, target.getSession());
-        asker.write(qu + " points de sort ont été ajouté au joueur " + target.getName() + ". Il en a maintenant " + target.getCharacter().spellPoints);
-    }
-    
-    private void addBoostPoints(Player target, short qu, Asker asker){
-        target.getCharacter().boostPoints += qu;
-        GameSendersRegistry.getPlayer().stats(target, target.getSession());
-        asker.write(qu + " points de boost ont été ajouté au joueur " + target.getName() + ". Il en a maintenant " + target.getCharacter().boostPoints);
+        
+        cmd.perform(target, qu, asker);
     }
 
     @Override
@@ -96,13 +163,18 @@ public class AddCommand extends Command{
 
     @Override
     public String[] usage() {
-        return new String[]{
-            "Ajoute des élément à un joueur",
-            "Schéma général : add [element] [qu] {player}",
-            "Si {player} n'est pas fournis, le joueur courant est pris.",
-            "add spellpoints [qu] {player} - ajoute [qu] points de sort au joueur {player}",
-            "add boostpoints [qu] {player} - ajoute [qu] points de boost (stats) au joueur {player}"
-        };
+        String[] tmp = new String[3 + subCommands.size()];
+        
+        int i = 0;
+        tmp[i++] = "Ajoute des éléments à un joueur";
+        tmp[i++] = "Schéma général : add [element] [qu] {player}";
+        tmp[i++] = "Si {player} n'est pas fournis, le joueur courant est pris.";
+        
+        for(AddSubCommand cmd : subCommands.values()){
+            tmp[i++] = "add " + cmd.subName() + " [qu] {player} - " + cmd.utility();
+        }
+        
+        return tmp;
     }
     
 }

@@ -92,4 +92,13 @@ public class FightTeam {
         return true;
     }
     
+    public int getTeamLevel(){
+        int level = 0;
+        
+        for(Fighter fighter : fighters.values())
+            level += fighter.getLevel();
+        
+        return level;
+    }
+    
 }

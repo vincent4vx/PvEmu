@@ -7,12 +7,15 @@
 package org.pvemu.network.generators;
 
 import java.util.Collection;
+import org.pvemu.game.ExperienceHandler;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.PlayerFighter;
 import org.pvemu.jelly.Constants;
+import org.pvemu.jelly.utils.Pair;
 import org.pvemu.jelly.utils.Utils;
+import org.pvemu.models.Experience;
 
 /**
  *
@@ -158,10 +161,19 @@ public class FightGenerator {
             
             if(fight.isHonnorFight()){
                 
-            }else{
-                packet.append("0;0;0;0;0;0;") //minxp,curxp,maxxp,winxp,guildxp,mountxp
-                        .append(";") //drop
-                        .append("0"); //kamas
+            }else if(fighter instanceof PlayerFighter){
+                Pair<Experience, Experience> xps = ExperienceHandler.instance().getLevel(fighter.getLevel());
+                packet.append(xps.getFirst().player).append(';')
+                        .append(((PlayerFighter)fighter).getPlayer().getCharacter().experience).append(';')
+                        .append(xps.getSecond().player).append(';')
+                        .append(fighter.getFightButtin().getExperience()).append(';')
+                        .append("0;0;"); //guildxp;mountxp;
+                
+                for(Pair<Integer, Integer> item : fighter.getFightButtin().getItems()){
+                    packet.append(item.getFirst()).append('~').append(item.getSecond()).append(',');
+                }
+                
+                packet.append(';').append(fighter.getFightButtin().getKamas());
             }
         }
         

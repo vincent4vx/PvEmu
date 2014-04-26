@@ -44,4 +44,8 @@ public class PlayerSender {
                 GeneratorsRegistry.getPlayer().generateSpellList(list)
         );
     }
+    
+    public void newLevel(IoSession session, short level){
+        GamePacketEnum.NEW_LEVEL.send(session, level);
+    }
 }

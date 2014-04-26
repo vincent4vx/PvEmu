@@ -57,7 +57,7 @@ final public class ExperienceHandler {
         
         do{
             pair = it.next().getValue();
-        }while(it.hasNext() && pair.getFirst().player < xp);
+        }while(it.hasNext() && pair.getSecond().player < xp);
         
         return pair.getFirst().lvl;
     }

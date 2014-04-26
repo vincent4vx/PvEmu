@@ -265,4 +265,6 @@ abstract public class Fight {
     public long getTime(){
         return (System.currentTimeMillis() - startTime) / 1000;
     }
+    
+    abstract public long getWinExperience(Fighter fighter, int winTeamLevel, int loseTeamLevel);
 }

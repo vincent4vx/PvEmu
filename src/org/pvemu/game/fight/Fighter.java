@@ -164,7 +164,7 @@ abstract public class Fighter implements GMable {
     }
     
     abstract public Creature getCreature();
-    abstract public int getLevel();
+    abstract public short getLevel();
     
     public void onDie(){
         
@@ -229,6 +229,10 @@ abstract public class Fighter implements GMable {
     }
     
     abstract public GameSpell getSpellById(int spellID);
+
+    abstract public FightButtin getFightButtin();
+
+    abstract public void setFightButtin(FightButtin fightButtin);
 
     @Override
     public String toString() {
