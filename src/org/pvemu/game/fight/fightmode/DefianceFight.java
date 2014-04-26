@@ -52,11 +52,6 @@ public class DefianceFight extends Fight{
 
     @Override
     protected void endAction(Fighter fighter, boolean isWinner) {
-        if(fighter instanceof PlayerFighter){
-            Player player = ((PlayerFighter)fighter).getPlayer();
-            GameSendersRegistry.getMap().clear(player.getSession());
-            ActionsRegistry.getMap().addPlayer(player.getMap(), player);
-        }
     }
     
 }
