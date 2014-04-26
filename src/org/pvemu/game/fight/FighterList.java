@@ -65,7 +65,7 @@ class FighterList implements Collection<Fighter>{
     public boolean add(Fighter fighter) {
         synchronized(fighters){
             fighters.add(fighter);
-            for(int i = fighters.size() - 1; i >= 0 && fighter.getInitiative() > fighters.get(i).getInitiative(); --i){
+            for(int i = fighters.size() - 2; i >= 0 && fighter.getInitiative() > fighters.get(i).getInitiative(); --i){
                 Fighter tmp = fighters.get(i);
                 fighters.set(i, fighter);
                 fighters.set(i + 1, tmp);
