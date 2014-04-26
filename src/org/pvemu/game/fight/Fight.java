@@ -8,10 +8,7 @@ package org.pvemu.game.fight;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.fight.buttin.FightButtinFactory;
 import org.pvemu.game.objects.item.types.Weapon;
@@ -25,17 +22,17 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 abstract public class Fight {
-    final static int TIMERS_POOL_SIZE = Runtime.getRuntime().availableProcessors() * 4;
     final private int id;
     final private FightMap map;
     final private FightTeam[] teams;
     final private int initID;
     final private FighterList fighters = new FighterList();
-    final private static ScheduledExecutorService timers = Executors.newScheduledThreadPool(TIMERS_POOL_SIZE);
     private byte state;
     private long startTime = 0;
     private ScheduledFuture timer;
     private int lastID = -1;
+    private int startCountdown = Constants.START_FIGHT_TIME;
+    private ScheduledFuture startCountdownTimer = null;
     
     final static public byte STATE_INIT     = 1;
     final static public byte STATE_PLACE    = 2;
@@ -49,6 +46,7 @@ abstract public class Fight {
         this.initID = initID;
         state = STATE_INIT;
         GameSendersRegistry.getFight().flagsToMap(map.getMap(), this);
+        FightUtils.startCountdownTimer(this);
     }
     
     public void addFighterToTeamByNumber(Fighter fighter, byte number){
@@ -84,8 +82,15 @@ abstract public class Fight {
         
         startFight();
     }
+
+    public void setStartCountdownTimer(ScheduledFuture startCountdownTimer) {
+        this.startCountdownTimer = startCountdownTimer;
+    }
     
-    protected void startFight(){
+    public void startFight(){
+        if(startCountdownTimer != null)
+            startCountdownTimer.cancel(true);
+        
         state = STATE_ACTIVE;
         startTime = System.currentTimeMillis();
         GameSendersRegistry.getFight().removeFlags(map.getMap(), id);
@@ -114,16 +119,7 @@ abstract public class Fight {
         fighter.startTurn();
         GameSendersRegistry.getFight().turnStart(this, fighter.getID());
         
-        timer = startTimer(new Runnable() {
-            @Override
-            public void run() {
-                nextFighter();
-            }
-        }); //start another timer
-    }
-
-    public static ScheduledFuture startTimer(Runnable callback){
-        return timers.schedule(callback, Constants.TURN_TIME, TimeUnit.SECONDS);
+        timer = FightUtils.turnTimer(this);
     }
     
     abstract public byte getType();
@@ -131,6 +127,14 @@ abstract public class Fight {
     abstract public boolean canReady();
     abstract public boolean canCancel();
     abstract public boolean isHonnorFight();
+
+    public int getStartCountdown() {
+        return startCountdown;
+    }
+    
+    public int decrementCountdown(){
+        return --startCountdown;
+    }
 
     public byte getState() {
         return state;
@@ -246,7 +250,7 @@ abstract public class Fight {
         state = STATE_FINISHED;
         map.getMap().removeFight(this);
         
-        timers.schedule(new Runnable() {
+        FightUtils.scheduleTask(new Runnable() {
             @Override
             public void run() {
                 byte winners = getWinTeam();
@@ -258,7 +262,7 @@ abstract public class Fight {
                     endAction(fighter, winner);
                 }
             }
-        }, 2, TimeUnit.SECONDS);
+        }, 2);
     }
     
     abstract protected void endAction(Fighter fighter, boolean isWinner);

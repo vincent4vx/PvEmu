@@ -69,7 +69,7 @@ public class FightGenerator {
                 .append(fight.canCancel() ? 1 : 0).append('|')
                 .append(fight.canReady() ? 1 : 0).append('|')
                 .append(fight.spec()).append('|')
-                .append(Constants.TURN_TIME * 1000).append('|')
+                .append(fight.canCancel() ? 0 : fight.getStartCountdown() * 1000).append('|')
                 .append(fight.getType()).toString();
     }
     
