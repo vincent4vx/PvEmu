@@ -22,8 +22,8 @@ abstract class BasicAttackEffect implements Effect{
     public void applyToFighter(EffectData data, Fighter caster, Fighter target) {
         int jet = Utils.rand(data.getMin(), data.getMax());
         
-        jet *= (1 + .01 * (double)(caster.getCurrentStats().get(getActiveElement()) + caster.getCurrentStats().get(Stats.Element.PERDOM)));
-        jet += caster.getCurrentStats().get(Stats.Element.DOMMAGE);
+        jet *= (1 + .01 * (double)(caster.getTotalStats().get(getActiveElement()) + caster.getTotalStats().get(Stats.Element.PERDOM)));
+        jet += caster.getTotalStats().get(Stats.Element.DOMMAGE);
         
         target.removeVita((short)jet);
     }

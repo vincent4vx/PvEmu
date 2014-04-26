@@ -9,6 +9,7 @@ import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
+import org.pvemu.game.objects.monster.MonsterGroup;
 import org.pvemu.game.triggeraction.TriggerActionHandler;
 import org.pvemu.game.triggeraction.TriggerFactory;
 
@@ -20,6 +21,7 @@ public class MapCell {
     final private InteractiveObject obj;
     final private boolean canSight;
     final private ConcurrentHashMap<Integer, Player> players = new ConcurrentHashMap<>();
+    final private ConcurrentHashMap<Integer, MonsterGroup> monstersGroups = new ConcurrentHashMap<>();
     final private ArrayList<org.pvemu.game.triggeraction.Trigger> actions = new ArrayList<>();
 
     public MapCell(short id, short map, boolean walkable, boolean canSight, InteractiveObject obj) {
@@ -52,6 +54,14 @@ public class MapCell {
 
     public ConcurrentHashMap<Integer, Player> getPlayers() {
         return players;
+    }
+
+    public ConcurrentHashMap<Integer, MonsterGroup> getMonstersGroups() {
+        return monstersGroups;
+    }
+    
+    public void addMonsterGroup(MonsterGroup group){
+        monstersGroups.put(group.getID(), group);
     }
 
     /**

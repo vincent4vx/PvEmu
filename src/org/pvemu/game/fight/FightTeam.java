@@ -15,14 +15,14 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class FightTeam {
+abstract public class FightTeam {
     final private byte number;
     final private int id;
     final private short cell;
     final private Map<Integer, Fighter> fighters = new HashMap<>();
     final private List<Short> places;
 
-    FightTeam(byte number, int id, short cell, List<Short> places) {
+    public FightTeam(byte number, int id, short cell, List<Short> places) {
         if(id > 0) //set the id negative
             id = -id;
         
@@ -76,13 +76,7 @@ public class FightTeam {
         return -1;
     }
     
-    /**
-     * @todo sub classes
-     * @return 
-     */
-    public byte getType(){
-        return 0;
-    }
+    abstract public byte getType();
     
     public boolean isAllDead(){
         for(Fighter fighter : fighters.values()){

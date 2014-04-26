@@ -4,15 +4,15 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.fight;
+package org.pvemu.game.fight.fightmode;
 
-import org.pvemu.game.fight.buttin.FightButtin;
-import java.util.HashSet;
 import org.pvemu.actions.ActionsRegistry;
-import org.pvemu.game.fight.buttin.FightButtinFactory;
+import org.pvemu.game.fight.Fight;
+import org.pvemu.game.fight.FightMap;
+import org.pvemu.game.fight.FightTeam;
+import org.pvemu.game.fight.Fighter;
+import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.utils.Pair;
-import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -35,7 +35,7 @@ public class DefianceFight extends Fight{
     }
 
     @Override
-    public boolean isDuel() {
+    public boolean canReady() {
         return true;
     }
 

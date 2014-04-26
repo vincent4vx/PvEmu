@@ -14,12 +14,14 @@ import org.pvemu.models.Monster;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class MonsterTemplate {
+    final private byte grade;
     final private Monster model;
     final private short level;
     final private Stats basicStats;
     final private int xp;
 
-    MonsterTemplate(Monster model, short level, Stats basicStats, int xp) {
+    MonsterTemplate(byte grade, Monster model, short level, Stats basicStats, int xp) {
+        this.grade = grade;
         this.model = model;
         this.level = level;
         this.basicStats = basicStats;
@@ -41,6 +43,9 @@ public class MonsterTemplate {
     public int getXp() {
         return xp;
     }
-    
+
+    public byte getGrade() {
+        return grade;
+    }
     
 }

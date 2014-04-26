@@ -20,14 +20,13 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-abstract public class Fighter implements GMable {
+abstract public class Fighter implements GMable, Creature {
     
     private boolean alive = true;
     private boolean canPlay = false;
-    private boolean ready;
     protected int currentVita;
     final private Stats baseStats;
-    protected Stats currentStats;
+    protected Stats totalStats;
     private short numPA;
     private short numPM;
     protected short cell;
@@ -37,14 +36,14 @@ abstract public class Fighter implements GMable {
 
     public Fighter(Stats baseStats, Fight fight) {
         this.baseStats = baseStats;
+        totalStats = new Stats(baseStats);
         this.fight = fight;
     }
     
     public void enterFight(){
-        currentStats = new Stats(baseStats);
         currentVita = getTotalVita();
-        numPA = currentStats.get(Stats.Element.PA);
-        numPM = currentStats.get(Stats.Element.PM);
+        numPA = totalStats.get(Stats.Element.PA);
+        numPM = totalStats.get(Stats.Element.PM);
     }
     
     public void startTurn(){
@@ -52,8 +51,8 @@ abstract public class Fighter implements GMable {
     }
     
     public void endTurn(){
-        numPA = currentStats.get(Stats.Element.PA);
-        numPM = currentStats.get(Stats.Element.PM);
+        numPA = totalStats.get(Stats.Element.PA);
+        numPM = totalStats.get(Stats.Element.PM);
     }
 
     public FightTeam getTeam() {
@@ -72,13 +71,7 @@ abstract public class Fighter implements GMable {
         this.canPlay = canPlay;
     }
 
-    public boolean isReady() {
-        return ready;
-    }
-
-    public void setReady(boolean ready) {
-        this.ready = ready;
-    }
+    abstract public boolean isReady();
 
     /**
      * Get the value of cell
@@ -112,15 +105,17 @@ abstract public class Fighter implements GMable {
         return currentVita;
     }
     
-    abstract public int getTotalVita();
-    abstract public int getInitiative();
+    public int getTotalVita(){
+        return totalStats.get(Stats.Element.VITA);
+    }
     
     public Stats getBaseStats(){
         return baseStats;
     }
 
-    public Stats getCurrentStats() {
-        return currentStats;
+    @Override
+    public Stats getTotalStats() {
+        return totalStats;
     }
 
     public short getNumPA() {
@@ -165,8 +160,7 @@ abstract public class Fighter implements GMable {
         return alive;
     }
     
-    abstract public Creature getCreature();
-    abstract public short getLevel();
+    //abstract public Creature getCreature();
     
     public void onDie(){
         

@@ -49,6 +49,7 @@ public final class GameMap {
         
         addGMable(group);
         monsterGroups.put(group.getID(), group);
+        getCellById(group.getCellId()).addMonsterGroup(group);
     }
 
     /**

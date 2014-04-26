@@ -8,9 +8,9 @@ package org.pvemu.game.fight.buttin.defiance;
 
 import java.util.HashSet;
 import org.pvemu.game.ExperienceHandler;
-import org.pvemu.game.fight.DefianceFight;
+import org.pvemu.game.fight.fightmode.DefianceFight;
 import org.pvemu.game.fight.Fighter;
-import org.pvemu.game.fight.PlayerFighter;
+import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.fight.buttin.FightButtin;
 import org.pvemu.game.fight.buttin.FighterFightButtinFactory;
 import org.pvemu.jelly.utils.Pair;

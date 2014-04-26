@@ -20,11 +20,11 @@ public interface Creature {
      *
      * @return
      */
-    public Short getInitiative();
+    public short getInitiative();
 
-    public Short getLevel();
+    public short getLevel();
 
-    public Short getGfxID();
+    public short getGfxID();
 
     public String[] getColors();
 }

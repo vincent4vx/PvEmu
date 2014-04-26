@@ -146,7 +146,7 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
     }
 
     @Override
-    public Integer getID() {
+    public int getID() {
         return character.id;
     }
 
@@ -329,7 +329,7 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
     }
 
     @Override
-    public Short getInitiative(){
+    public short getInitiative(){
         short fact = 4;
         short pvmax = 100;
         short pv = 100;
@@ -359,12 +359,12 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
 
 
     @Override
-    public Short getLevel() {
+    public short getLevel() {
         return character.level;
     }
 
     @Override
-    public Short getGfxID() {
+    public short getGfxID() {
         return character.gfxid;
     }
 

@@ -11,7 +11,8 @@ import org.pvemu.game.ExperienceHandler;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
-import org.pvemu.game.fight.PlayerFighter;
+import org.pvemu.game.fight.fightertype.MonsterFighter;
+import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.utils.Pair;
 import org.pvemu.jelly.utils.Utils;
@@ -47,12 +48,28 @@ public class FightGenerator {
         return packet.toString();
     }
     
+    public String generateMonsterGMPacket(MonsterFighter monster){
+        StringBuilder packet = new StringBuilder(generateGMPacket(monster));
+        
+        packet.append("-2").append(';')
+                .append(monster.getGfxID()).append("^100;")
+                .append(monster.getMonster().getGrade()).append(';')
+                .append(Utils.join(monster.getColors(), ";")).append(';')
+                .append("0,0,0,0;")
+                .append(monster.getTotalVita()).append(';')
+                .append(monster.getNumPA()).append(';')
+                .append(monster.getNumPM()).append(';')
+                .append(monster.getTeam().getNumber());
+        
+        return packet.toString();
+    }
+    
     public String generateJoinFightOk(Fight fight){
         return new StringBuilder().append(fight.getState()).append('|')
                 .append(fight.canCancel() ? 1 : 0).append('|')
-                .append(fight.isDuel() ? 1 : 0).append('|')
+                .append(fight.canReady() ? 1 : 0).append('|')
                 .append(fight.spec()).append('|')
-                .append(Constants.TURN_TIME).append('|')
+                .append(Constants.TURN_TIME * 1000).append('|')
                 .append(fight.getType()).toString();
     }
     

@@ -11,10 +11,9 @@ import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
-import org.pvemu.game.fight.PlayerFighter;
+import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.gameaction.game.GameActionsRegistry;
 import org.pvemu.game.objects.map.GameMap;
-import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
@@ -67,12 +66,7 @@ public class FightSender {
             packet.append(fighter.getGMData());
         }
         
-        for(Fighter fighter : fight.getFighters()){
-            if(fighter instanceof PlayerFighter){
-                Player player = (Player)fighter.getCreature();
-                GamePacketEnum.MAP_ELEM.send(player.getSession(), packet);
-            }
-        }
+        GamePacketEnum.MAP_ELEM.sendToFight(fight, packet);
     }
     
     public void GMList(IoSession session, Fight fight){
@@ -92,13 +86,7 @@ public class FightSender {
     
     public void GMToFight(Fight fight, Fighter fighter){
         String packet = fighter.getGMData();
-        
-        for(Fighter f : fight.getFighters()){
-            if(f instanceof PlayerFighter){
-                Player player = (Player)f.getCreature();
-                GamePacketEnum.MAP_ELEM.send(player.getSession(), packet);
-            }
-        }
+        GamePacketEnum.MAP_ELEM.sendToFight(fight, packet);
     }
     
     public void fightPlaces(PlayerFighter fighter){

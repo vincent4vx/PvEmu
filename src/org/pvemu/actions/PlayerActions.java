@@ -8,12 +8,15 @@ package org.pvemu.actions;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.World;
+import org.pvemu.game.fight.FightFactory;
 import org.pvemu.game.gameaction.GameActionsManager;
+import org.pvemu.game.objects.map.GMable;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapCell;
 import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.game.objects.map.MapUtils;
+import org.pvemu.game.objects.monster.MonsterGroup;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -54,6 +57,12 @@ public class PlayerActions {
         player.getCell().addPlayer(player);
 
         Loggin.debug("Joueur %s arrivé sur la cellule %d avec succès !", player.getName(), player.getCell().getID());
+        
+        if(!player.getCell().getMonstersGroups().isEmpty()){
+            MonsterGroup group = player.getCell().getMonstersGroups().values().iterator().next();
+            FightFactory.pvm(player, group);
+            return;
+        }
         
         player.getCell().performCellAction(player);
     }

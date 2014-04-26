@@ -86,7 +86,7 @@ public class GameNpc implements GMable {
     }    
 
     @Override
-    public Integer getID() {
+    public int getID() {
         return id;
     }
 }

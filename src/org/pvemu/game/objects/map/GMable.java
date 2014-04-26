@@ -14,7 +14,7 @@ public interface GMable {
      * Retourne l'id sur map
      * @return 
      */
-    public Integer getID();
+    public int getID();
     
     public short getCellId();
     public byte getOrientation();

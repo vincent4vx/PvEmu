@@ -6,7 +6,7 @@
 
 package org.pvemu.game.gameaction.fight;
 
-import org.pvemu.game.fight.PlayerFighter;
+import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.gameaction.GameAction;
 import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.spell.GameSpell;

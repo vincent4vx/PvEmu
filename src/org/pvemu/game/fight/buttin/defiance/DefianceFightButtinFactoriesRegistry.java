@@ -6,7 +6,7 @@
 
 package org.pvemu.game.fight.buttin.defiance;
 
-import org.pvemu.game.fight.DefianceFight;
+import org.pvemu.game.fight.fightmode.DefianceFight;
 import org.pvemu.game.fight.buttin.FightButtinFactoriesRegistry;
 
 /**

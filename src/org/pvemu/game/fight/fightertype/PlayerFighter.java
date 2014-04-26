@@ -4,14 +4,15 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.fight;
+package org.pvemu.game.fight.fightertype;
 
 import org.pvemu.game.fight.buttin.FightButtin;
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.fight.Fight;
+import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.gameaction.ActionPerformer;
 import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
-import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
@@ -33,8 +34,9 @@ import org.pvemu.network.generators.GeneratorsRegistry;
 public class PlayerFighter extends Fighter implements ActionPerformer{
     final private Player player;
     final private GameActionsManager actionsManager = new GameActionsManager(FightActionsRegistry.instance());
+    private boolean ready = false;
 
-    PlayerFighter(Player player, Fight fight) {
+    public PlayerFighter(Player player, Fight fight) {
         super(player.getTotalStats(), fight);
         this.player = player;
         cell = player.getCellId();
@@ -56,13 +58,8 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     
     
     @Override
-    public Integer getID() {
+    public int getID() {
         return player.getID();
-    }
-
-    @Override
-    public Creature getCreature() {
-        return player;
     }
 
     public Player getPlayer() {
@@ -70,12 +67,7 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     }
 
     @Override
-    public int getTotalVita() {
-        return player.getTotalStats().get(Stats.Element.VITA);
-    }
-
-    @Override
-    public int getInitiative() {
+    public short getInitiative() {
         return player.getInitiative();
     }
 
@@ -87,6 +79,16 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     @Override
     public String getGMData() {
         return GeneratorsRegistry.getFight().generatePlayerGMPacket(this);
+    }
+
+    @Override
+    public short getGfxID() {
+        return player.getGfxID();
+    }
+
+    @Override
+    public String[] getColors() {
+        return player.getColors();
     }
     
     @Override
@@ -102,6 +104,15 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     @Override
     public short getLevel() {
         return player.getLevel();
+    }
+
+    @Override
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
     }
 
     @Override

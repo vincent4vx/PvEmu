@@ -35,13 +35,14 @@ abstract public class Fight {
     private byte state;
     private long startTime = 0;
     private ScheduledFuture timer;
+    private int lastID = -1;
     
     final static public byte STATE_INIT     = 1;
     final static public byte STATE_PLACE    = 2;
     final static public byte STATE_ACTIVE   = 3;
     final static public byte STATE_FINISHED = 4;
 
-    Fight(int id, FightMap map, FightTeam[] teams, int initID) {
+    public Fight(int id, FightMap map, FightTeam[] teams, int initID) {
         this.id = id;
         this.map = map;
         this.teams = teams;
@@ -50,7 +51,7 @@ abstract public class Fight {
         GameSendersRegistry.getFight().flagsToMap(map.getMap(), this);
     }
     
-    void addFighterToTeamByNumber(Fighter fighter, byte number){
+    public void addFighterToTeamByNumber(Fighter fighter, byte number){
         addToTeam(fighter, teams[number]);
     }
     
@@ -127,7 +128,7 @@ abstract public class Fight {
     
     abstract public byte getType();
     abstract public int spec();
-    abstract public boolean isDuel();
+    abstract public boolean canReady();
     abstract public boolean canCancel();
     abstract public boolean isHonnorFight();
 
@@ -280,5 +281,9 @@ abstract public class Fight {
     
     public long getTime(){
         return (System.currentTimeMillis() - startTime) / 1000;
+    }
+    
+    public int getNewId(){
+        return --lastID;
     }
 }

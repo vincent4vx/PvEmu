@@ -8,7 +8,7 @@ package org.pvemu.network.game.output;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.fight.Fight;
-import org.pvemu.game.fight.PlayerFighter;
+import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.map.GameMap;

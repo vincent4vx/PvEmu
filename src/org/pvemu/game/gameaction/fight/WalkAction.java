@@ -7,7 +7,7 @@
 package org.pvemu.game.gameaction.fight;
 
 import java.util.concurrent.atomic.AtomicReference;
-import org.pvemu.game.fight.PlayerFighter;
+import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.gameaction.GameAction;
 import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.jelly.Loggin;

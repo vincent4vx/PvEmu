@@ -119,7 +119,7 @@ final public class MonsterFactory {
         String[] points = Utils.split(model.points, "|");
         String[] inits = Utils.split(model.inits, "|");
         String[] exps = Utils.split(model.exps, "|");
-        for(int i = 0; 
+        for(byte i = 0; 
                 i < grades.length
                 && i < stats.length
                 && i < pdvs.length
@@ -166,7 +166,7 @@ final public class MonsterFactory {
             
             int xp = Integer.parseInt(exps[i]);
             
-            gradesObj.addTemplate(new MonsterTemplate(model, level, statsObj, xp));
+            gradesObj.addTemplate(new MonsterTemplate(i, model, level, statsObj, xp));
         }
     }
 }

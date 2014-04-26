@@ -7,7 +7,7 @@
 package org.pvemu.network;
 
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.game.fight.PlayerFighter;
+import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.models.Account;
 

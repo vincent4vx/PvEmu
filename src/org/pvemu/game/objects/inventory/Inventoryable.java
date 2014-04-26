@@ -14,5 +14,5 @@ public interface Inventoryable {
      * @return 
      */
     public byte getOwnerType();
-    public Integer getID();
+    public int getID();
 }
