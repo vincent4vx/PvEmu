@@ -6,6 +6,7 @@
 
 package org.pvemu.game.fight;
 
+import org.pvemu.game.fight.buttin.FightButtin;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
 import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.dep.Stats;
@@ -32,6 +33,7 @@ abstract public class Fighter implements GMable {
     protected short cell;
     private FightTeam team;
     final protected Fight fight;
+    private FightButtin fightButtin;
 
     public Fighter(Stats baseStats, Fight fight) {
         this.baseStats = baseStats;
@@ -230,9 +232,13 @@ abstract public class Fighter implements GMable {
     
     abstract public GameSpell getSpellById(int spellID);
 
-    abstract public FightButtin getFightButtin();
+    public FightButtin getFightButtin() {
+        return fightButtin;
+    }
 
-    abstract public void setFightButtin(FightButtin fightButtin);
+    public void setFightButtin(FightButtin fightButtin) {
+        this.fightButtin = fightButtin;
+    }
 
     @Override
     public String toString() {

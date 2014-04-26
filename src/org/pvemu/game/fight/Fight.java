@@ -13,6 +13,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import org.pvemu.game.effect.EffectData;
+import org.pvemu.game.fight.buttin.FightButtinFactory;
 import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Constants;
@@ -260,11 +261,24 @@ abstract public class Fight {
     }
     
     abstract protected void endAction(Fighter fighter, boolean isWinner);
-    abstract protected void endRewards(byte winners);
+    
+    private void endRewards(byte winners){
+        int winTeamLevel = getTeams()[winners].getTeamLevel();
+        int loseTeamLevel = 0;
+        
+        for(FightTeam team : getTeams()){
+            if(team.getNumber() != winners)
+                loseTeamLevel += team.getTeamLevel();
+        }
+        
+        for(Fighter fighter : getFighters()){
+            fighter.setFightButtin(FightButtinFactory.instance().getButtin(this, fighter, winners, winTeamLevel, loseTeamLevel));
+        }
+        
+        GameSendersRegistry.getFight().gameEnd(this, winners);
+    }
     
     public long getTime(){
         return (System.currentTimeMillis() - startTime) / 1000;
     }
-    
-    abstract public long getWinExperience(Fighter fighter, int winTeamLevel, int loseTeamLevel);
 }

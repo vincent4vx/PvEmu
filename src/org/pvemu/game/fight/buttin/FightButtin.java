@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.fight;
+package org.pvemu.game.fight.buttin;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -6,6 +6,7 @@
 
 package org.pvemu.game.fight;
 
+import org.pvemu.game.fight.buttin.FightButtin;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.gameaction.ActionPerformer;
 import org.pvemu.game.gameaction.GameActionsManager;
@@ -32,7 +33,6 @@ import org.pvemu.network.generators.GeneratorsRegistry;
 public class PlayerFighter extends Fighter implements ActionPerformer{
     final private Player player;
     final private GameActionsManager actionsManager = new GameActionsManager(FightActionsRegistry.instance());
-    private FightButtin fightButtin;
 
     PlayerFighter(Player player, Fight fight) {
         super(player.getTotalStats(), fight);
@@ -182,13 +182,8 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     }
 
     @Override
-    public FightButtin getFightButtin() {
-        return fightButtin;
-    }
-
-    @Override
     public void setFightButtin(FightButtin fightButtin) {
-        this.fightButtin = fightButtin;
+        super.setFightButtin(fightButtin);
         player.getCharacter().kamas += fightButtin.getKamas();
         
         for(Pair<Integer, Integer> item : fightButtin.getItems()){
