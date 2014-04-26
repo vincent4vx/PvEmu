@@ -169,6 +169,10 @@ public final class GameMap {
         return fights.get(fightID);
     }
     
+    public Collection<Fight> getFights(){
+        return fights.values();
+    }
+    
     public void removeFight(Fight fight){
         fights.remove(fight.getId());
     }

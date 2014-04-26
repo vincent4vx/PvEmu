@@ -10,7 +10,6 @@ import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.World;
 import org.pvemu.game.fight.FightFactory;
 import org.pvemu.game.gameaction.GameActionsManager;
-import org.pvemu.game.objects.map.GMable;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapCell;

@@ -7,6 +7,7 @@
 package org.pvemu.network.game.input.game;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.fight.Fight;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
@@ -33,6 +34,13 @@ public class InitMapPacket implements InputPacket {
         
         GameSendersRegistry.getMap().addGMable(player.getMap(), player);
         GameSendersRegistry.getMap().getAllGMable(player.getMap(), session);
+        
+        for(Fight fight : player.getMap().getFights()){
+            if(fight.getState() == Fight.STATE_PLACE){
+                GameSendersRegistry.getFight().flagsToMap(player.getMap(), fight);
+            }
+        }
+        
         GamePacketEnum.MAP_LOADED.send(session);
     }
     
