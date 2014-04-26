@@ -13,6 +13,7 @@ import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.objects.player.Player;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -53,6 +54,7 @@ public class DefianceFight extends Fight{
     protected void endAction(Fighter fighter, boolean isWinner) {
         if(fighter instanceof PlayerFighter){
             Player player = ((PlayerFighter)fighter).getPlayer();
+            GameSendersRegistry.getMap().clear(player.getSession());
             ActionsRegistry.getMap().addPlayer(player.getMap(), player);
         }
     }

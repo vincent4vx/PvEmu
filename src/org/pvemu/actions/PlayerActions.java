@@ -39,10 +39,7 @@ public class PlayerActions {
         GameMap map = MapFactory.getById(mapID);
         MapCell cell = map.getCellById(cellID);
         ActionsRegistry.getMap().removePlayer(player.getMap(), player);
-        GameSendersRegistry.getGameAction().unidentifiedGameAction(
-                player.getSession(), 
-                (short)2
-        );
+        GameSendersRegistry.getMap().clear(player.getSession());
         
         player.setMap(map);
         player.setCell(cell);

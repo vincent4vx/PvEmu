@@ -13,7 +13,6 @@ import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.gameaction.ActionPerformer;
 import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
-import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
 import org.pvemu.game.objects.item.types.Weapon;
