@@ -205,4 +205,9 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
         
         player.addXp(fightButtin.getExperience());
     }
+    
+    public void leave(){
+        alive = false;
+        fight.onFighterDie(this);
+    }
 }

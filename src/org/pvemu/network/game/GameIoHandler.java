@@ -6,6 +6,7 @@ import org.pvemu.jelly.Loggin;
 import org.pvemu.models.Account;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.actions.ActionsRegistry;
+import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.network.MinaIoHandler;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.input.GameInputHandler;
@@ -24,21 +25,12 @@ public class GameIoHandler extends MinaIoHandler {
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
-        Player player = SessionAttributes.PLAYER.getValue(session);
+        PlayerFighter fighter = SessionAttributes.FIGHTER.getValue(session);
         
-        /*if(p != null)
-            ActionsRegistry.getMap().removePlayer(p.getMap(), p);
-
-        if (p == null) {
-            Account acc = SessionAttributes.ACCOUNT.getValue(session);
-            if (acc != null) {
-                acc.removeSession();
-            }
-            return;
-        }
-
-        Loggin.debug("Déconnexion de %s", new Object[]{p.getName()});
-        p.getCharacter().logout();*/
+        if(fighter != null)
+            fighter.leave();
+        
+        Player player = SessionAttributes.PLAYER.getValue(session);
         
         if(player != null)
             ActionsRegistry.getPlayer().logout(player);

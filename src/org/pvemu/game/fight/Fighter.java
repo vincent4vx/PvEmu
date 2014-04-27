@@ -22,7 +22,7 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  */
 abstract public class Fighter implements GMable, Creature {
     
-    private boolean alive = true;
+    protected boolean alive = true;
     private boolean canPlay = false;
     protected int currentVita;
     final private Stats baseStats;
