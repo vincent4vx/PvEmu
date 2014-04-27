@@ -18,6 +18,7 @@ import org.pvemu.game.objects.monster.MonsterGroup;
 import org.pvemu.game.objects.monster.MonsterTemplate;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.utils.Utils;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -54,6 +55,8 @@ public class FightFactory {
     
     static public PvMFight pvm(Player player, MonsterGroup group){
         GameMap map = player.getMap();
+        map.removeMonsterGroup(group);
+        GameSendersRegistry.getMap().removeGMable(map, group);
         
         String[] places = Utils.split(map.getModel().places, "|", 2);
         

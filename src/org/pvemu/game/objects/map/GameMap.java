@@ -51,6 +51,12 @@ public final class GameMap {
         monsterGroups.put(group.getID(), group);
         getCellById(group.getCellId()).addMonsterGroup(group);
     }
+    
+    public void removeMonsterGroup(MonsterGroup group){
+        removeGMable(group);
+        monsterGroups.remove(group.getID());
+        getCellById(group.getCellId()).removeMonsterGroup(group);
+    }
 
     /**
      * Ajoute un joueur à la map

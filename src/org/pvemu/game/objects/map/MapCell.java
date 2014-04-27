@@ -63,6 +63,10 @@ public class MapCell {
     public void addMonsterGroup(MonsterGroup group){
         monstersGroups.put(group.getID(), group);
     }
+    
+    public void removeMonsterGroup(MonsterGroup group){
+        monstersGroups.remove(group.getID());
+    }
 
     /**
      * Ajoute une action sur la cellule
