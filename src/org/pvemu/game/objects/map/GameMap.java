@@ -181,5 +181,6 @@ public final class GameMap {
     
     public void removeFight(Fight fight){
         fights.remove(fight.getId());
+        GameSendersRegistry.getMap().fightCountToMap(this);
     }
 }
