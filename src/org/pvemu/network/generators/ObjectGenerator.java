@@ -7,7 +7,6 @@
 package org.pvemu.network.generators;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.pvemu.game.effect.EffectData;
@@ -16,7 +15,7 @@ import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.inventory.Inventory;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
-import org.pvemu.game.objects.item.factory.ItemsFactory;
+import org.pvemu.game.objects.item.itemset.ItemSetHandler;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.InventoryEntry;
@@ -120,5 +119,25 @@ public class ObjectGenerator {
     
     public String generateQuantityChange(InventoryEntry entry){
         return new StringBuilder(8).append(entry.id).append('|').append(entry.qu).toString();
+    }
+    
+    public String generateItemSet(int itemset, ItemSetHandler handler){
+        
+        Set<GameItem> items = handler.getItemsInItemSet(itemset);
+        
+        if(items == null || items.isEmpty()){
+            return "-" + itemset;
+        }
+        StringBuilder packet = new StringBuilder();
+        
+        packet.append('+').append(itemset).append('|');
+        
+        for(GameItem item : items){
+            packet.append(item.getTemplate().id).append(';');
+        }
+        
+        packet.append('|').append(generateStats(handler.getStatsByItemSet(itemset)));
+        
+        return packet.toString();
     }
 }

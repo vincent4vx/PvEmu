@@ -17,22 +17,24 @@ public class DAOFactory {
     private static SpellDAO spell = null;
     private static LearnedSpellDAO learnedSpell = null;
     private static ExperienceDAO experience = null;
-    
-    public static void init(){
-        account = new AccountDAO();
-        player = new CharacterDAO();
-        map = new MapDAO();
-        trigger = new TriggerDAO();
-        inventory = new InventoryDAO();
-        item = new ItemTemplateDAO();
-        npcTemplate = new NpcTemplateDAO();
-        mapNpcs = new MapNpcsDAO();
-        question = new NpcQuestionDAO();
-        responseAction = new NpcResponseActionDAO();
-        monster = new MonsterDAO();
-        spell = new SpellDAO();
-        learnedSpell = new LearnedSpellDAO();
-        experience = new ExperienceDAO();
+    private static ItemSetDAO itemSet = null;
+
+    /**
+     * Get the value of itemSet
+     *
+     * @return the value of itemSet
+     */
+    public static ItemSetDAO getItemSet() {
+        return itemSet;
+    }
+
+    /**
+     * Set the value of itemSet
+     *
+     * @param itemSet new value of itemSet
+     */
+    public static void setItemSet(ItemSetDAO itemSet) {
+        DAOFactory.itemSet = itemSet;
     }
 
     /**
@@ -108,5 +110,24 @@ public class DAOFactory {
     
     public static NpcResponseActionDAO responseAction(){
         return responseAction;
+    }
+
+    
+    public static void init(){
+        account = new AccountDAO();
+        player = new CharacterDAO();
+        map = new MapDAO();
+        trigger = new TriggerDAO();
+        inventory = new InventoryDAO();
+        item = new ItemTemplateDAO();
+        npcTemplate = new NpcTemplateDAO();
+        mapNpcs = new MapNpcsDAO();
+        question = new NpcQuestionDAO();
+        responseAction = new NpcResponseActionDAO();
+        monster = new MonsterDAO();
+        spell = new SpellDAO();
+        learnedSpell = new LearnedSpellDAO();
+        experience = new ExperienceDAO();
+        itemSet = new ItemSetDAO();
     }
 }

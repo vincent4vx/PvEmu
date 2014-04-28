@@ -45,7 +45,7 @@ public class CreateGamePacket implements InputPacket {
         }
         GamePacketEnum.CHARACTER_RESTRICTION.send(session, player.restriction);
         GameSendersRegistry.getInformativeMessage().error(session, 89);
-        //MapEvents.onArrivedInGame(session);
+        GameSendersRegistry.getObject().itemSets(session, player.getItemSetHandler(), player.getItemSetHandler().getItemSets());
         ActionsRegistry.getMap().addPlayer(player.getMap(), player);
         
         if(Constants.DOFUS_VER_ID < 1100){

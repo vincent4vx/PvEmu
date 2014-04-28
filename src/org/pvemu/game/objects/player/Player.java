@@ -22,6 +22,7 @@ import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.gameaction.game.GameActionsRegistry;
 import org.pvemu.game.objects.Exchange;
 import org.pvemu.game.objects.item.ItemPosition;
+import org.pvemu.game.objects.item.itemset.ItemSetHandler;
 import org.pvemu.game.objects.player.classes.ClassData;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.Filterable;
@@ -51,26 +52,7 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
     private final GameActionsManager actionsManager = new GameActionsManager(GameActionsRegistry.instance());
     private short lastCurrentVita;
     private long lastCurrentVitaSet;
-
-    /**
-     * Get the value of spellList
-     *
-     * @return the value of spellList
-     */
-    public SpellList getSpellList() {
-        return spellList;
-    }
-
-
-    /**
-     * Get the value of actionsManager
-     *
-     * @return the value of actionsManager
-     */
-    @Override
-    public GameActionsManager getActionsManager() {
-        return actionsManager;
-    }
+    final private ItemSetHandler itemSetHandler = new ItemSetHandler(inventory);
 
     Player(Character character, Account account, ClassData classData, String[] colors, Stats baseStats, SpellList spellList, GameMap curMap, MapCell curCell) {
         this.character = character;
@@ -108,6 +90,8 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
                 stuffStats.addAll(item.getStats());
             }
         }
+        
+        stuffStats.addAll(itemSetHandler.getAllStats());
     }
 
     /**
@@ -436,6 +420,30 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
         }
         
         save();
+    }
+
+    /**
+     * Get the value of spellList
+     *
+     * @return the value of spellList
+     */
+    public SpellList getSpellList() {
+        return spellList;
+    }
+
+
+    /**
+     * Get the value of actionsManager
+     *
+     * @return the value of actionsManager
+     */
+    @Override
+    public GameActionsManager getActionsManager() {
+        return actionsManager;
+    }
+
+    public ItemSetHandler getItemSetHandler() {
+        return itemSetHandler;
     }
 
     @Override

@@ -197,6 +197,7 @@ public enum GamePacketEnum {
      * Packet pour affichage des accessoires (coiffe cape arme bouclier et familier
      */
     OBJECT_ACCESSORIES("Oa"),
+    OBJECT_SET("OS"),
     /**
      * Cinématique du début
      */

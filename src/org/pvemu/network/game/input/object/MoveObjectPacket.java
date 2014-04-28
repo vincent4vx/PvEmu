@@ -6,10 +6,9 @@
 
 package org.pvemu.network.game.input.object;
 
+import java.util.Set;
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.game.objects.inventory.entrystate.EntryState;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
@@ -65,9 +64,11 @@ public class MoveObjectPacket implements InputPacket {
         }
         
         if(item.isWearable()){
+            Set<Integer> updatedItemSets = player.getItemSetHandler().updateItemSets();
             player.loadStuffStats();
             GameSendersRegistry.getPlayer().weightUsed(player, session);
             GameSendersRegistry.getPlayer().stats(player, session);
+            GameSendersRegistry.getObject().itemSets(session, player.getItemSetHandler(), updatedItemSets);
             
             if(item.isAccessorie())
                 GameSendersRegistry.getPlayer().accessories(player);

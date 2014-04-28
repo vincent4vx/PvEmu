@@ -39,6 +39,7 @@ final public class PlayerFactory {
         );
         
         player.getInventory().load();
+        player.getItemSetHandler().loadItemSets();
         player.loadStuffStats();
         cd.learnClassSpells(player);
         player.setCurrentVita(character.currentVita);
