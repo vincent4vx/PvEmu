@@ -16,6 +16,7 @@ import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.fight.buttin.FightButtin;
 import org.pvemu.game.fight.buttin.FighterFightButtinFactory;
 import org.pvemu.game.objects.dep.Stats;
+import org.pvemu.jelly.Config;
 import org.pvemu.jelly.utils.Pair;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.Experience;
@@ -45,8 +46,11 @@ public class PlayerFighterDefianceFightButtinFactory implements FighterFightButt
     }
     
     public long getWinExperience(PlayerFighter fighter, int winTeamLevel, int loseTeamLevel) {
+        if(Config.RATE_DEFIANCE.getValue() <= 0)
+            return 0;
+        
         double fact = loseTeamLevel / winTeamLevel;
-        fact *= 1;
+        fact *= Config.RATE_DEFIANCE.getValue();
         fact *= (10 / fighter.getLevel()) + 1;
         fact *= (double)(((double)fighter.getPlayer().getTotalStats().get(Stats.Element.SAGESSE) / 100) + (double)1);
         
