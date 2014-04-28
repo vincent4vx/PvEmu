@@ -21,6 +21,7 @@ abstract public class FightTeam {
     final private short cell;
     final private Map<Integer, Fighter> fighters = new HashMap<>();
     final private List<Short> places;
+    private int teamLevel = 0;
 
     public FightTeam(byte number, int id, short cell, List<Short> places) {
         if(id > 0) //set the id negative
@@ -32,12 +33,13 @@ abstract public class FightTeam {
         this.places = places;
     }
     
-    public void addFighter(Fighter fighter){
+    synchronized public void addFighter(Fighter fighter){
         fighters.put(fighter.getID(), fighter);
         fighter.setTeam(this);
         GameSendersRegistry.getFight().addToTeam(fighter.getFight().getMap().getMap(), fighter);
         fighter.setCell(fighter.getFight().getMap().getFreeRandomCell(places));
         GameSendersRegistry.getFight().GMToFight(fighter.getFight(), fighter);
+        teamLevel += fighter.getLevel();
     }
 
     public int getId() {
@@ -87,12 +89,7 @@ abstract public class FightTeam {
     }
     
     public int getTeamLevel(){
-        int level = 0;
-        
-        for(Fighter fighter : fighters.values())
-            level += fighter.getLevel();
-        
-        return level;
+        return teamLevel;
     }
     
 }

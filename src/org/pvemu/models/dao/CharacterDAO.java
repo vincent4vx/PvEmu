@@ -1,6 +1,5 @@
 package org.pvemu.models.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -16,10 +15,10 @@ public class CharacterDAO extends UpdatableDAO<Character> {
 
     final private Query findByName = DatabaseHandler.instance().prepareQuery("SELECT * FROM characters WHERE name = ?");
     final private Query getByAccountId = DatabaseHandler.instance().prepareQuery("SELECT * FROM characters WHERE account = ?");
-    final private Query create = DatabaseHandler.instance().prepareInsert("INSERT INTO characters(name, class, sexe, color1, color2, color3, account, gfxid, lastMap, lastCell, startMap, startCell) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
+    final private Query create = DatabaseHandler.instance().prepareInsert("INSERT INTO characters(name, class, sexe, color1, color2, color3, account, gfxid, lastMap, lastCell, startMap, startCell, currentVita, level, experience) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     final private Query countName = DatabaseHandler.instance().prepareQuery("SELECT COUNT(*) AS count FROM characters WHERE name = ?");
     final private Query countByAccount = DatabaseHandler.instance().prepareQuery("SELECT COUNT(*) AS count FROM characters WHERE account = ?");
-    final private Query update = DatabaseHandler.instance().prepareQuery("UPDATE characters SET level = ?, experience = ?, gfxid = ?, lastMap = ?, lastCell = ?, startMap = ?, startCell = ?, baseStats = ?, orientation = ?, boostPoints = ?, spellPoints = ? WHERE id = ?");
+    final private Query update = DatabaseHandler.instance().prepareQuery("UPDATE characters SET level = ?, experience = ?, gfxid = ?, lastMap = ?, lastCell = ?, startMap = ?, startCell = ?, baseStats = ?, orientation = ?, boostPoints = ?, spellPoints = ?, currentVita = ? WHERE id = ?");
     final private ConcurrentHashMap<Integer, Character> charactersById = new ConcurrentHashMap<>();
 
     @Override
@@ -52,6 +51,7 @@ public class CharacterDAO extends UpdatableDAO<Character> {
             p.spellPoints = RS.getInt("spellPoints");
             p.boostPoints = RS.getInt("boostPoints");
             p.kamas = RS.getInt("kamas");
+            p.currentVita = RS.getShort("currentVita");
 
             charactersById.put(p.id, p);
 
@@ -78,6 +78,9 @@ public class CharacterDAO extends UpdatableDAO<Character> {
             query.getStatement().setShort(10, p.lastCell);
             query.getStatement().setShort(11, p.startMap);
             query.getStatement().setShort(12, p.startCell);
+            query.getStatement().setShort(13, p.currentVita);
+            query.getStatement().setShort(14, p.level);
+            query.getStatement().setLong(15, p.experience);
 
             query.getStatement().executeUpdate();
 
@@ -120,6 +123,7 @@ public class CharacterDAO extends UpdatableDAO<Character> {
             query.getStatement().setByte(++i, P.orientation);
             query.getStatement().setInt(++i, P.boostPoints);
             query.getStatement().setInt(++i, P.spellPoints);
+            query.getStatement().setShort(++i, P.currentVita);
 
             query.getStatement().setInt(++i, P.id);
 

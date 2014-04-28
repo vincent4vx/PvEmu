@@ -4,19 +4,16 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.fight.buttin;
+package org.pvemu.game.fight.endactions;
 
-import java.util.Collection;
 import org.pvemu.game.fight.Fight;
-import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public interface FighterFightButtinFactory<T extends Fighter, E extends Fight>{
-    public Class<T> fighterClass();
-    
-    public FightButtin makeButtin(E fight, T fighter, FightTeam winners, Collection<FightTeam> loosers);
+public interface FighterEndActions<T extends Fight, E extends Fighter>{
+    public Class<E> getFighterClass();
+    public void apply(T fight, E fighter, boolean isWinner);
 }

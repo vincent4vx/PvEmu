@@ -33,6 +33,8 @@ public class Config {
     
     final static public ConfigItem<Integer> CHAR_PER_ACCOUNT = new ConfigIntItem("CHAR_PER_ACCOUNT", 5);
     
+    final static public ConfigItem<Integer> START_LEVEL      = new ConfigIntItem("START_LEVEL", 1);
+    
     final static public ConfigItem<Boolean> PRELOAD          = new ConfigBoolItem("PRELOAD", false);
     
     abstract static public class ConfigItem<T>{

@@ -6,14 +6,9 @@
 
 package org.pvemu.game.fight.fightmode;
 
-import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.FightMap;
 import org.pvemu.game.fight.FightTeam;
-import org.pvemu.game.fight.Fighter;
-import org.pvemu.game.fight.fightertype.PlayerFighter;
-import org.pvemu.game.objects.player.Player;
-import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -48,10 +43,6 @@ public class DefianceFight extends Fight{
     @Override
     public boolean isHonnorFight() {
         return false;
-    }
-
-    @Override
-    protected void endAction(Fighter fighter, boolean isWinner) {
     }
     
 }

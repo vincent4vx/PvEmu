@@ -7,10 +7,12 @@
 package org.pvemu.game.fight;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.fight.buttin.FightButtinFactory;
+import org.pvemu.game.fight.endactions.EndActionsHandler;
 import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Constants;
@@ -231,13 +233,14 @@ abstract public class Fight {
         return count <= 1;
     }
     
-    private byte getWinTeam(){
-        for(FightTeam team : teams){
-            if(!team.isAllDead())
-                return team.getNumber();
+    private FightTeam getWinTeam(){
+        FightTeam team = teams[0];
+        
+        while(team.isAllDead()){
+            team = teams[team.getNumber() + 1];
         }
         
-        return 0;
+        return team;
     }
     
     private void endOfGame(){
@@ -253,34 +256,33 @@ abstract public class Fight {
         FightUtils.scheduleTask(new Runnable() {
             @Override
             public void run() {
-                byte winners = getWinTeam();
+                FightTeam winners = getWinTeam();
+                endActions(winners);
                 endRewards(winners);
-
-                for(Fighter fighter : fighters){
-                    boolean winner = fighter.getTeam().getNumber() == winners;
-                    fighter.onEnd(winner);
-                    endAction(fighter, winner);
-                }
             }
         }, 2);
     }
     
-    abstract protected void endAction(Fighter fighter, boolean isWinner);
+    private void endActions(FightTeam winners){
+        for(Fighter fighter : fighters){
+            fighter.onEnd(fighter.getTeam() == winners);
+            EndActionsHandler.instance().applyEndActions(this, fighter, fighter.getTeam() == winners);
+        }
+    }
     
-    private void endRewards(byte winners){
-        int winTeamLevel = getTeams()[winners].getTeamLevel();
-        int loseTeamLevel = 0;
+    private void endRewards(FightTeam winners){
+        Collection<FightTeam> loosers = new HashSet<>();
         
-        for(FightTeam team : getTeams()){
-            if(team.getNumber() != winners)
-                loseTeamLevel += team.getTeamLevel();
+        for(FightTeam team : teams){
+            if(team != winners)
+                loosers.add(team);
         }
         
         for(Fighter fighter : getFighters()){
-            fighter.setFightButtin(FightButtinFactory.instance().getButtin(this, fighter, winners, winTeamLevel, loseTeamLevel));
+            fighter.setFightButtin(FightButtinFactory.instance().getButtin(this, fighter, winners, loosers));
         }
         
-        GameSendersRegistry.getFight().gameEnd(this, winners);
+        GameSendersRegistry.getFight().gameEnd(this, winners.getNumber());
     }
     
     public long getTime(){

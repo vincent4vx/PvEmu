@@ -6,13 +6,16 @@
 
 package org.pvemu.game.fight.buttin.defiance;
 
+import java.util.Collection;
 import java.util.HashSet;
 import org.pvemu.game.ExperienceHandler;
+import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.fightmode.DefianceFight;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.fight.buttin.FightButtin;
 import org.pvemu.game.fight.buttin.FighterFightButtinFactory;
+import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.jelly.utils.Pair;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.Experience;
@@ -29,18 +32,23 @@ public class PlayerFighterDefianceFightButtinFactory implements FighterFightButt
     }
 
     @Override
-    public FightButtin makeButtin(DefianceFight fight, PlayerFighter fighter, byte winners, int winTeamLevel, int loseLeamLevel) {
-        if(fighter.getTeam().getNumber() == winners)
-            return new FightButtin(0, getWinExperience(fighter, winTeamLevel, loseLeamLevel), new HashSet<Pair<Integer, Integer>>());
+    public FightButtin makeButtin(DefianceFight fight, PlayerFighter fighter, FightTeam winners, Collection<FightTeam> loosers) {
+        int loosersLevel = 0;
+        
+        for(FightTeam team : loosers)
+            loosersLevel += team.getTeamLevel();
+        
+        if(fighter.getTeam() == winners)
+            return new FightButtin(0, getWinExperience(fighter, winners.getTeamLevel(), loosersLevel), new HashSet<Pair<Integer, Integer>>());
         
         return FightButtin.emptyButtin();
     }
     
-    public long getWinExperience(Fighter fighter, int winTeamLevel, int loseTeamLevel) {
+    public long getWinExperience(PlayerFighter fighter, int winTeamLevel, int loseTeamLevel) {
         double fact = loseTeamLevel / winTeamLevel;
         fact *= 1;
         fact *= (10 / fighter.getLevel()) + 1;
-        
+        fact *= (double)(((double)fighter.getPlayer().getTotalStats().get(Stats.Element.SAGESSE) / 100) + (double)1);
         
         Pair<Experience, Experience> xps = ExperienceHandler.instance().getLevel(fighter.getLevel());
         long inter = xps.getSecond().player - xps.getFirst().player;

@@ -6,9 +6,11 @@
 
 package org.pvemu.game.fight.buttin;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import org.pvemu.game.fight.Fight;
+import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.buttin.defiance.DefianceFightButtinFactoriesRegistry;
 import org.pvemu.jelly.Loggin;
@@ -34,7 +36,7 @@ final public class FightButtinFactory {
         return registries.get(clazz);
     }
     
-    public FightButtin getButtin(Fight fight, Fighter fighter, byte winners, int winTeamLevel, int loseLeamLevel){
+    public FightButtin getButtin(Fight fight, Fighter fighter, FightTeam winners, Collection<FightTeam> loosers){
         FightButtinFactoriesRegistry registry = registries.get(fight.getClass());
         
         if(registry == null){
@@ -49,7 +51,7 @@ final public class FightButtinFactory {
             return FightButtin.emptyButtin();
         }
         
-        return factory.makeButtin(fight, fighter, winners, winTeamLevel, loseLeamLevel);
+        return factory.makeButtin(fight, fighter, winners, loosers);
     }
     
     static public FightButtinFactory instance(){

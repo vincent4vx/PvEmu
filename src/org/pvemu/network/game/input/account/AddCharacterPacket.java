@@ -7,6 +7,8 @@
 package org.pvemu.network.game.input.account;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.ExperienceHandler;
+import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.player.classes.ClassData;
 import org.pvemu.game.objects.player.classes.ClassesHandler;
 //import org.pvemu.game.objects.player.OldClassData;
@@ -63,6 +65,9 @@ public class AddCharacterPacket implements InputPacket {
             c.gfxid = classData.getGfxID(c.sexe);
             c.startMap = c.lastMap = classData.getStartMap();
             c.startCell = c.lastCell = classData.getStartCell();
+            c.currentVita = classData.getClassStats(1).get(Stats.Element.VITA);
+            c.level = Config.START_LEVEL.getValue().shortValue();
+            c.experience = ExperienceHandler.instance().getPlayerMinXp(c.level);
 
             if (!DAOFactory.character().create(c)) {
                 GamePacketEnum.CREATE_CHARACTER_ERROR.send(session);

@@ -30,6 +30,7 @@ public class Character implements org.pvemu.jelly.database.Model {
     public int spellPoints;
     public int boostPoints;
     public int kamas;
+    public short currentVita;
 
     @Override
     public void clear() {
@@ -45,4 +46,5 @@ public class Character implements org.pvemu.jelly.database.Model {
     public String toString() {
         return "Character{" + "id=" + id + ", name=" + name + ", accountId=" + accountId + ", level=" + level + ", experience=" + experience + ", color1=" + color1 + ", color2=" + color2 + ", color3=" + color3 + ", gfxid=" + gfxid + ", sexe=" + sexe + ", classId=" + classId + ", lastMap=" + lastMap + ", lastCell=" + lastCell + ", startMap=" + startMap + ", startCell=" + startCell + ", baseStats=" + baseStats + ", orientation=" + orientation + ", spellPoints=" + spellPoints + ", boostPoints=" + boostPoints + ", kamas=" + kamas + '}';
     }
+
 }

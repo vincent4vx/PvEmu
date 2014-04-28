@@ -24,7 +24,7 @@ abstract public class Fighter implements GMable, Creature {
     
     protected boolean alive = true;
     private boolean canPlay = false;
-    protected int currentVita;
+    protected short currentVita;
     final private Stats baseStats;
     protected Stats totalStats;
     private short numPA;
@@ -101,11 +101,11 @@ abstract public class Fighter implements GMable, Creature {
      *
      * @return the value of currentVita
      */
-    public int getCurrentVita() {
+    public short getCurrentVita() {
         return currentVita;
     }
     
-    public int getTotalVita(){
+    public short getTotalVita(){
         return totalStats.get(Stats.Element.VITA);
     }
     

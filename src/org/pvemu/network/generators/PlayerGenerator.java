@@ -122,7 +122,7 @@ public class PlayerGenerator {
         ASData.append(p.getCharacter().kamas).append("|").append(p.getCharacter().boostPoints).append("|").append(p.getCharacter().spellPoints).append("|"); //kamas|boostPoints|spellPoints
         ASData.append(0).append("~").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append(0).append(",").append((false ? "1" : "0")).append("|");
 
-        ASData.append(p.getTotalStats().get(Stats.Element.VITA)).append(",").append(p.getTotalStats().get(Stats.Element.VITA)).append("|");
+        ASData.append(p.getCurrentVita()).append(",").append(p.getTotalStats().get(Stats.Element.VITA)).append("|");
         ASData.append(10000).append(",10000|");
 
         ASData.append(p.getInitiative()).append("|");

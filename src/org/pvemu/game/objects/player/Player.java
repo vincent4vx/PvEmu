@@ -49,6 +49,8 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
     public NpcQuestion current_npc_question = null;
     private Exchange exchange = null;
     private final GameActionsManager actionsManager = new GameActionsManager(GameActionsRegistry.instance());
+    private short lastCurrentVita;
+    private long lastCurrentVitaSet;
 
     /**
      * Get the value of spellList
@@ -79,6 +81,18 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
         this.spellList = spellList;
         this.curMap = curMap;
         this.curCell = curCell;
+    }
+    
+    public void setCurrentVita(short vita){
+        if(vita > getTotalStats().get(Element.VITA))
+            vita = getTotalStats().get(Element.VITA);
+        
+        lastCurrentVita = vita;
+        lastCurrentVitaSet = System.currentTimeMillis();
+    }
+    
+    public short getCurrentVita(){
+        return lastCurrentVita; //TODO: regen
     }
 
     /**
@@ -263,6 +277,8 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
         character.baseStats = stats.toString();
         inventory.save();
         spellList.save();
+        character.currentVita = getCurrentVita();
+        setCurrentVita(character.currentVita);
         
         character.orientation = orientation;
         

@@ -39,10 +39,5 @@ public class PvMFight extends Fight{
     public boolean isHonnorFight() {
         return false;
     }
-
-    @Override
-    protected void endAction(Fighter fighter, boolean isWinner) {
-        
-    }
     
 }
