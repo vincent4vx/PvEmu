@@ -47,5 +47,4 @@ public class MonsterTemplate {
     public byte getGrade() {
         return grade;
     }
-    
 }

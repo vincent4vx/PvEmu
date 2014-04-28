@@ -22,6 +22,7 @@ abstract public class FightTeam {
     final private Map<Integer, Fighter> fighters = new HashMap<>();
     final private List<Short> places;
     private int teamLevel = 0;
+    private int levelMax = 0;
 
     public FightTeam(byte number, int id, short cell, List<Short> places) {
         if(id > 0) //set the id negative
@@ -40,6 +41,9 @@ abstract public class FightTeam {
         fighter.setCell(fighter.getFight().getMap().getFreeRandomCell(places));
         GameSendersRegistry.getFight().GMToFight(fighter.getFight(), fighter);
         teamLevel += fighter.getLevel();
+        
+        if(fighter.getLevel() > levelMax)
+            levelMax = fighter.getLevel();
     }
 
     public int getId() {
@@ -91,5 +95,12 @@ abstract public class FightTeam {
     public int getTeamLevel(){
         return teamLevel;
     }
+
+    public int getLevelMax() {
+        return levelMax;
+    }
     
+    public int size(){
+        return fighters.size();
+    }
 }

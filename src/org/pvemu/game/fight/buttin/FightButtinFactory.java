@@ -13,6 +13,7 @@ import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.buttin.defiance.DefianceFightButtinFactoriesRegistry;
+import org.pvemu.game.fight.buttin.pvm.PvMFightButtinFactoriesRegistry;
 import org.pvemu.jelly.Loggin;
 
 /**
@@ -26,6 +27,7 @@ final public class FightButtinFactory {
 
     private FightButtinFactory() {
         registerRegistry(new DefianceFightButtinFactoriesRegistry());
+        registerRegistry(new PvMFightButtinFactoriesRegistry());
     }
     
     public void registerRegistry(FightButtinFactoriesRegistry registry){
