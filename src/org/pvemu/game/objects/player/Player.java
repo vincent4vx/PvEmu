@@ -423,9 +423,10 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
         short newLevel = ExperienceHandler.instance().getPlayerLevelByXp(character.experience);
         
         if(newLevel > character.level){
+            short lvlDiff = (short)(newLevel - character.level);
             character.level = newLevel;
-            character.boostPoints += 5;
-            ++character.spellPoints;
+            character.boostPoints += 5 * lvlDiff;
+            character.spellPoints += lvlDiff;
             classData.learnClassSpells(this);
             GameSendersRegistry.getPlayer().stats(this, session);
             GameSendersRegistry.getPlayer().spellList(spellList, session);
