@@ -6,13 +6,14 @@
 
 package org.pvemu.models.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashSet;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.Database;
+import org.pvemu.jelly.database.DatabaseHandler;
+import org.pvemu.jelly.database.Query;
+import org.pvemu.jelly.database.ReservedQuery;
 import org.pvemu.jelly.database.UpdatableDAO;
 import org.pvemu.models.LearnedSpell;
 
@@ -21,39 +22,43 @@ import org.pvemu.models.LearnedSpell;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class LearnedSpellDAO extends UpdatableDAO<LearnedSpell>{
-    final private PreparedStatement updateStatement = Database.prepare("UPDATE " + tableName() + " SET level = ?, position = ? WHERE player = ? AND spell = ?");
-    final private PreparedStatement createStatement = Database.prepare("INSERT INTO " + tableName() + "(player, spell, level, position) VALUES(?,?,?,?)");
-    final private PreparedStatement getLearnedSpellsStatement = Database.prepare("SELECT * FROM " + tableName() + " WHERE player = ?");
+    final private Query update = DatabaseHandler.instance().prepareQuery("UPDATE " + tableName() + " SET level = ?, position = ? WHERE player = ? AND spell = ?");
+    final private Query create = DatabaseHandler.instance().prepareQuery("INSERT INTO " + tableName() + "(player, spell, level, position) VALUES(?,?,?,?)");
+    final private Query getLearnedSpells = DatabaseHandler.instance().prepareQuery("SELECT * FROM " + tableName() + " WHERE player = ?");
     
     @Override
     public boolean update(LearnedSpell obj) {
-        Loggin.debug("saving %s", obj);
+        ReservedQuery query = update.reserveQuery();
         try {
-            updateStatement.setByte(1, obj.level);
-            updateStatement.setString(2, String.valueOf(obj.position));
-            updateStatement.setInt(3, obj.player);
-            updateStatement.setInt(4, obj.spell);
+            query.getStatement().setByte(1, obj.level);
+            query.getStatement().setString(2, String.valueOf(obj.position));
+            query.getStatement().setInt(3, obj.player);
+            query.getStatement().setInt(4, obj.spell);
             
-            return updateStatement.execute();
+            return query.getStatement().execute();
         } catch (SQLException ex) {
             Loggin.error("Cannot save " + obj, ex);
             return false;
+        }finally{
+            query.release();
         }
     }
 
     @Override
     public boolean create(LearnedSpell obj) {
-        Loggin.debug("creating new %s", obj);
+        ReservedQuery query = create.reserveQuery();
         try {
-            createStatement.setInt(1, obj.player);
-            createStatement.setInt(2, obj.spell);
-            createStatement.setByte(3, obj.level);
-            createStatement.setString(4, String.valueOf(obj.position));
+            query.getStatement().setInt(1, obj.player);
+            query.getStatement().setInt(2, obj.spell);
+            query.getStatement().setByte(3, obj.level);
+            query.getStatement().setString(4, String.valueOf(obj.position));
             
-            return createStatement.execute();
+            return query.getStatement().execute();
         } catch (SQLException ex) {
             Loggin.error("Cannot create " + obj, ex);
             return false;
+        }finally{
+            query.release();
         }
     }
 
@@ -86,9 +91,11 @@ public class LearnedSpellDAO extends UpdatableDAO<LearnedSpell>{
     
     public Collection<LearnedSpell> getLearnedSpells(int player){
         Collection<LearnedSpell> list = new HashSet<>();
+        
+        ReservedQuery query = getLearnedSpells.reserveQuery();
         try {
-            getLearnedSpellsStatement.setInt(1, player);
-            ResultSet RS = getLearnedSpellsStatement.executeQuery();
+            query.getStatement().setInt(1, player);
+            ResultSet RS = query.getStatement().executeQuery();
             
             while(RS.next()){
                 LearnedSpell ls = createByResultSet(RS);
@@ -99,6 +106,8 @@ public class LearnedSpellDAO extends UpdatableDAO<LearnedSpell>{
             
         } catch (SQLException ex) {
             Loggin.error("cannot load learned spell of " + player, ex);
+        }finally{
+            query.release();
         }
         
         return list;

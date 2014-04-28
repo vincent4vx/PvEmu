@@ -24,6 +24,7 @@ public class Config {
     final static public ConfigItem<String> DB_PASS           = new ConfigStringItem("DB_PASS", "");
     final static public ConfigItem<String> DB_NAME           = new ConfigStringItem("DB_NAME", "pvemu");
     final static public ConfigItem<Integer> DB_COMMIT_TIME   = new ConfigIntItem("DB_COMMIT_TIME", 600);
+    final static public ConfigItem<Integer> DB_POOL_SIZE     = new ConfigIntItem("DB_POOL_SIZE", 8);
     
     final static public ConfigItem<Boolean> CRYPT_IP         = new ConfigBoolItem("CRYPT_IP", false);
     final static public ConfigItem<String> IP                = new ConfigStringItem("IP", "127.0.0.1");

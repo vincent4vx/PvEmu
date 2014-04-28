@@ -34,5 +34,10 @@ public class InventoryEntry implements Model {
         stats = null;
         qu = 0;
     }
+
+    @Override
+    public String toString() {
+        return "InventoryEntry{" + "id=" + id + ", item_id=" + item_id + ", position=" + position + ", owner=" + owner + ", owner_type=" + owner_type + ", stats=" + stats + ", qu=" + qu + '}';
+    }
     
 }

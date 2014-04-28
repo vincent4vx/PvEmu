@@ -1,20 +1,17 @@
 package org.pvemu.models.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.Database;
+import org.pvemu.jelly.database.DatabaseHandler;
 import org.pvemu.jelly.database.FindableDAO;
+import org.pvemu.jelly.database.Query;
+import org.pvemu.jelly.database.ReservedQuery;
 import org.pvemu.models.MapNpcs;
 
 public class MapNpcsDAO extends FindableDAO<MapNpcs> {
-    private PreparedStatement getByMapIdStatement = null;
-    
-    public MapNpcsDAO(){
-        getByMapIdStatement = Database.prepare("SELECT * FROM map_npcs WHERE mapid = ?");
-    }
+    final private Query getByMapId = DatabaseHandler.instance().prepareQuery("SELECT * FROM map_npcs WHERE mapid = ?");
 
     @Override
     protected String tableName() {
@@ -41,10 +38,11 @@ public class MapNpcsDAO extends FindableDAO<MapNpcs> {
     public ArrayList<MapNpcs> getByMapId(short mapID){
         ArrayList<MapNpcs> list = new ArrayList<>();
         
+        ReservedQuery query = getByMapId.reserveQuery();
         try {
-            getByMapIdStatement.setShort(1, mapID);
+            query.getStatement().setShort(1, mapID);
             
-            ResultSet RS = getByMapIdStatement.executeQuery();
+            ResultSet RS = query.getStatement().executeQuery();
             
             while(RS.next()){
                 MapNpcs MN = createByResultSet(RS);
@@ -54,7 +52,9 @@ public class MapNpcsDAO extends FindableDAO<MapNpcs> {
                 }
             }
         } catch (SQLException ex) {
-            Loggin.error("Impossible de charger les pnj de la map " + mapID, ex);
+            Loggin.error("Cannot load npcs on map " + mapID, ex);
+        }finally{
+            query.release();
         }
         
         return list;

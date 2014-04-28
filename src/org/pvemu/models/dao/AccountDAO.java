@@ -1,12 +1,13 @@
 package org.pvemu.models.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.Database;
+import org.pvemu.jelly.database.DatabaseHandler;
+import org.pvemu.jelly.database.Query;
+import org.pvemu.jelly.database.ReservedQuery;
 import org.pvemu.jelly.database.UpdatableDAO;
 import org.pvemu.models.Account;
 
@@ -14,11 +15,7 @@ public class AccountDAO extends UpdatableDAO<Account> {
 
     private final Map<String, Account> accountsByName = new ConcurrentHashMap<>();
     private final Map<Integer, Account> accountsById = new ConcurrentHashMap<>();
-    private PreparedStatement getByNameStatement = null;
-
-    public AccountDAO() {
-        getByNameStatement = Database.prepare("SELECT * FROM accounts WHERE account = ?");
-    }
+    final private Query getByName = DatabaseHandler.instance().prepareQuery("SELECT * FROM accounts WHERE account = ?");
 
     @Override
     protected String tableName() {
@@ -66,19 +63,20 @@ public class AccountDAO extends UpdatableDAO<Account> {
      */
     public Account getByName(String name) {
         if (!accountsByName.containsKey(name.toLowerCase())) {
+            ReservedQuery query = getByName.reserveQuery();
             try {
-                synchronized (getByNameStatement) {
-                    getByNameStatement.setString(1, name);
-                    ResultSet RS = getByNameStatement.executeQuery();
+                    query.getStatement().setString(1, name);
+                    ResultSet RS = query.getStatement().executeQuery();
                     if (RS.next()) {
                         return createByResultSet(RS);
                     } else {
                         return null;
                     }
-                }
-            } catch (SQLException ex) {
-                Loggin.error("Impossible de charge le compte " + name, ex);
+            }catch (SQLException ex) {
+                Loggin.error("Cannot load account " + name, ex);
                 return null;
+            }finally{
+                query.release();
             }
         }
         return accountsByName.get(name);

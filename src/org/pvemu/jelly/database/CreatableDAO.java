@@ -8,28 +8,31 @@ package org.pvemu.jelly.database;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import org.pvemu.jelly.Loggin;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 abstract public class CreatableDAO<T extends Model> extends FindableDAO<T> {
-    final protected PreparedStatement deleteStatement = Database.prepare("DELETE FROM " + tableName() + " WHERE " + primaryKey() + " = ?");
+    final protected Query delete = DatabaseHandler.instance().prepareQuery("DELETE FROM " + tableName() + " WHERE " + primaryKey() + " = ?");
     
     abstract public boolean create(T obj);
     
     public boolean delete(int pk) {
+        ReservedQuery query = delete.reserveQuery();
         try {
             if (primaryKey().isEmpty()) {
                 return false;
             }
 
-            synchronized (deleteStatement) {
-                deleteStatement.setInt(1, pk);
-                return deleteStatement.execute();
-            }
+            query.getStatement().setInt(1, pk);
+            return query.getStatement().execute();
         } catch (SQLException e) {
+            Loggin.error("Cannot execute query " + delete, e);
             return false;
+        }finally{
+            query.release();
         }
     }
 

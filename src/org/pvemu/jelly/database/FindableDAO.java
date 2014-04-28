@@ -6,7 +6,6 @@
 
 package org.pvemu.jelly.database;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import org.pvemu.jelly.Loggin;
  */
 abstract public class FindableDAO<T extends Model> extends DAO<T> {
     
-    final protected PreparedStatement findStatement = Database.prepare("SELECT * FROM " + tableName() + " WHERE " + primaryKey() + " = ?");
+    final protected Query find = DatabaseHandler.instance().prepareQuery("SELECT * FROM " + tableName() + " WHERE " + primaryKey() + " = ?");
 
     /**
      * find an element by his primary key
@@ -32,10 +31,11 @@ abstract public class FindableDAO<T extends Model> extends DAO<T> {
             return null;
         }
 
+        ReservedQuery query = find.reserveQuery();
+        
         try {
-            synchronized (findStatement) {
-                findStatement.setInt(1, pk);
-                ResultSet RS = findStatement.executeQuery();
+                query.getStatement().setInt(1, pk);
+                ResultSet RS = query.getStatement().executeQuery();
 
                 if (!RS.next()) {
                     Loggin.debug("Impossible de trouver la pk %d dans la table %s", pk, tableName());
@@ -43,23 +43,25 @@ abstract public class FindableDAO<T extends Model> extends DAO<T> {
                 }
 
                 return createByResultSet(RS);
-            }
         } catch (SQLException e) {
-            Loggin.error("Chargement impossible !", e);
+            Loggin.error("Cannot execute query " + find, e);
             return null;
+        }finally{
+            query.release();
         }
     }
 
     public List<T> getAll() {
         List<T> list = new ArrayList<>();
-
-        ResultSet RS = Database.query("SELECT * FROM " + tableName());
-
+        String query = "SELECT * FROM " + tableName();
+        
         try {
+            ResultSet RS = DatabaseHandler.instance().executeQuery(query);
             while (RS.next()) {
                 list.add(createByResultSet(RS));
             }
         } catch (SQLException ex) {
+            Loggin.error("Cannot execute query " + query, ex);
         }
 
         return list;

@@ -2,9 +2,10 @@ package org.pvemu.jelly;
 
 import org.pvemu.game.World;
 import org.pvemu.jelly.Shell.GraphicRenditionEnum;
-import org.pvemu.jelly.database.Database;
+import org.pvemu.jelly.database.DatabaseHandler;
 import org.pvemu.jelly.scripting.API;
 import org.pvemu.jelly.utils.SystemStats;
+import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.game.GameServer;
 import org.pvemu.network.realm.RealmServer;
 
@@ -57,7 +58,8 @@ public class Jelly {
         start = System.currentTimeMillis();
         Config.load();
         API.initialise();
-        Database.connect();
+        DatabaseHandler.init();
+        DAOFactory.init();
         World.instance().create(Config.PRELOAD.getValue());
         RealmServer.start();
         GameServer.start();
@@ -89,7 +91,7 @@ public class Jelly {
             running = false;
             Shell.println("Arrêt du serveur en cours...", GraphicRenditionEnum.RED);
             World.instance().destroy();
-            Database.close();
+            DatabaseHandler.instance().close();
             RealmServer.stop();
             GameServer.stop();
             Shell.println("JellyEmu : arrêt", GraphicRenditionEnum.RED);

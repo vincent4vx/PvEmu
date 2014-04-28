@@ -1,26 +1,25 @@
 package org.pvemu.models.dao;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.Database;
+import org.pvemu.jelly.database.DatabaseHandler;
+import org.pvemu.jelly.database.Query;
+import org.pvemu.jelly.database.ReservedQuery;
 import org.pvemu.jelly.database.UpdatableDAO;
 import org.pvemu.models.InventoryEntry;
 
 public class InventoryDAO extends UpdatableDAO<InventoryEntry> {
 
-    private PreparedStatement getByOwnerStatement = null;
-    private PreparedStatement createStatement = null;
-    private PreparedStatement updateStatement = null;
-    private PreparedStatement getAccessoriesByPlayerIdStatement = null;
+    final private Query getByOwner = DatabaseHandler.instance().prepareQuery("SELECT * FROM inventory_entries WHERE owner = ? AND owner_type = ?");
+    final private Query create = DatabaseHandler.instance().prepareInsert("INSERT INTO inventory_entries(item_id, owner, owner_type, position, stats, qu) VALUES(?,?,?,?,?,?)");
+    final private Query update = DatabaseHandler.instance().prepareQuery("UPDATE inventory_entries SET position = ?, qu = ?, stats = ? WHERE id = ?");
+    final private Query getAccessoriesByPlayerId;
 
     public InventoryDAO() {
-        getByOwnerStatement = Database.prepare("SELECT * FROM inventory_entries WHERE owner = ? AND owner_type = ?");
-        
         StringBuilder query = new StringBuilder();
         query.append("SELECT t.id AS aID, e.position AS aPOS FROM inventory_entries e ")
                 .append("JOIN item_templates t ON e.item_id = t.id ")
@@ -35,9 +34,7 @@ public class InventoryDAO extends UpdatableDAO<InventoryEntry> {
         query.setLength(query.length() - 1);
                         
         query.append(") AND owner = ? AND owner_type = 1");
-        getAccessoriesByPlayerIdStatement = Database.prepare(query.toString());
-        updateStatement = Database.prepare("UPDATE inventory_entries SET position = ?, qu = ?, stats = ? WHERE id = ?");
-        createStatement = Database.prepareInsert("INSERT INTO inventory_entries(item_id, owner, owner_type, position, stats, qu) VALUES(?,?,?,?,?,?)");
+        getAccessoriesByPlayerId = DatabaseHandler.instance().prepareQuery(query.toString());
     }
 
     @Override
@@ -74,11 +71,12 @@ public class InventoryDAO extends UpdatableDAO<InventoryEntry> {
     public ArrayList<InventoryEntry> getByOwner(byte type, int id) {
         ArrayList<InventoryEntry> list = new ArrayList<>();
         
+        ReservedQuery query = getByOwner.reserveQuery();
         try {
-            getByOwnerStatement.setInt(1, id);
-            getByOwnerStatement.setByte(2, type);
+            query.getStatement().setInt(1, id);
+            query.getStatement().setByte(2, type);
 
-            ResultSet RS = getByOwnerStatement.executeQuery();
+            ResultSet RS = query.getStatement().executeQuery();
 
             while (RS.next()) {
                 InventoryEntry I = createByResultSet(RS);
@@ -92,7 +90,9 @@ public class InventoryDAO extends UpdatableDAO<InventoryEntry> {
                 list.add(I);
             }
         } catch (SQLException ex) {
-            Loggin.error("Impossible de charger l'inventaire de " + id, ex);
+            Loggin.error("Cannot load inventory of " + id, ex);
+        }finally{
+            query.release();
         }
 
         return list;
@@ -101,15 +101,18 @@ public class InventoryDAO extends UpdatableDAO<InventoryEntry> {
     public HashMap<Byte, Integer> getAccessoriesByPlayerId(int id) {
         HashMap<Byte, Integer> list = new HashMap<>();
 
+        ReservedQuery query = getAccessoriesByPlayerId.reserveQuery();
         try {
-            getAccessoriesByPlayerIdStatement.setInt(1, id);
-            ResultSet RS = getAccessoriesByPlayerIdStatement.executeQuery();
+            query.getStatement().setInt(1, id);
+            ResultSet RS = query.getStatement().executeQuery();
 
             while (RS.next()) {
                 list.put(RS.getByte("aPOS"), RS.getInt("aID"));
             }
         } catch (SQLException ex) {
-            Loggin.error("Impossible de charger les accéssoires du personnage " + id, ex);
+            Loggin.error("Cannot load accessories of " + id, ex);
+        }finally{
+            query.release();
         }
 
         return list;
@@ -117,32 +120,37 @@ public class InventoryDAO extends UpdatableDAO<InventoryEntry> {
 
     @Override
     public boolean update(InventoryEntry obj) {
+        ReservedQuery query = update.reserveQuery();
         try {
-            updateStatement.setByte(1, obj.position);
-            updateStatement.setInt(2, obj.qu);
-            updateStatement.setString(3, obj.stats);
-            updateStatement.setInt(4, obj.id);
+            query.getStatement().setByte(1, obj.position);
+            query.getStatement().setInt(2, obj.qu);
+            query.getStatement().setString(3, obj.stats);
+            query.getStatement().setInt(4, obj.id);
 
-            return updateStatement.execute();
+            return query.getStatement().execute();
         } catch (SQLException ex) {
-            Loggin.error("Impossible d'enregistrer l'item !", ex);
+            Loggin.error("Cannot save item " + obj, ex);
             return false;
+        }finally{
+            query.release();
         }
 
     }
 
     @Override
     public boolean create(InventoryEntry obj) {
+        ReservedQuery query = create.reserveQuery();
         try {
-            createStatement.setInt(1, obj.item_id);
-            createStatement.setInt(2, obj.owner);
-            createStatement.setByte(3, obj.owner_type);
-            createStatement.setByte(4, obj.position);
-            createStatement.setString(5, obj.stats);
-            createStatement.setInt(6, obj.qu);
+            query.getStatement().setInt(1, obj.item_id);
+            query.getStatement().setInt(2, obj.owner);
+            query.getStatement().setByte(3, obj.owner_type);
+            query.getStatement().setByte(4, obj.position);
+            query.getStatement().setString(5, obj.stats);
+            query.getStatement().setInt(6, obj.qu);
 
-            createStatement.executeUpdate();
-            ResultSet RS = createStatement.getGeneratedKeys();
+            query.getStatement().execute();
+            
+            ResultSet RS = query.getStatement().getGeneratedKeys();
 
             int id = -1;
             while (RS.next()) {
@@ -156,8 +164,10 @@ public class InventoryDAO extends UpdatableDAO<InventoryEntry> {
             return true;
 
         } catch (SQLException ex) {
-            Loggin.error("Enregistrement impossible de l'item dans la dbb", ex);
+            Loggin.error("Cannot create " + obj, ex);
             return false;
+        }finally{
+            query.release();
         }
     }
 }

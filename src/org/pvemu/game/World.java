@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.jelly.Shell;
 import org.pvemu.jelly.Shell.GraphicRenditionEnum;
-import org.pvemu.jelly.database.Database;
 import org.pvemu.models.dao.DAOFactory;
 
 /**
@@ -126,13 +125,11 @@ public class World {
      * Sauvegarde le monde
      */
     public void save() {
-        Database.setAutocommit(true);
         Shell.println("Sauvegarde des personnages...", GraphicRenditionEnum.YELLOW);
         for (Player player : online.values()) {
             player.save();
         }
         Shell.println("Sauvegarde terminé !", GraphicRenditionEnum.GREEN);
-        Database.setAutocommit(false);
     }
 
     /**
