@@ -1,4 +1,4 @@
-package org.pvemu.game.objects.inventory;
+package org.pvemu.game.objects.itemlist;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,30 +6,42 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.game.objects.inventory.entrystate.EntryState;
-import org.pvemu.game.objects.inventory.entrystate.EntryStateFactory;
+import org.pvemu.game.objects.itemlist.entrystate.EntryState;
+import org.pvemu.game.objects.itemlist.entrystate.EntryStateFactory;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.dao.DAOFactory;
 
-final public class Inventory {
+final public class Inventory implements ItemList{
     
     final private Map<Integer, GameItem> items = new HashMap<>();
     final private Map<Byte, ArrayList<GameItem>> itemsByPos = new HashMap<>();
     final private List<EntryState> waitingStates = new ArrayList<>();
-    final private Inventoryable owner;
+    final private Player owner;
     
-    public Inventory(Inventoryable owner){
+    public Inventory(Player owner){
         this.owner = owner;
     }
+
+    @Override
+    public byte type() {
+        return InventoryEntry.OWNER_PLAYER;
+    }
+
+    @Override
+    public int id() {
+        return owner.getID();
+    }
+    
     
     public void load(){
         items.clear();
         itemsByPos.clear();
         
-        for(InventoryEntry entry : DAOFactory.inventory().getByOwner(owner.getOwnerType(), owner.getID())){
+        for(InventoryEntry entry : DAOFactory.inventory().getByOwner(type(), id())){
             GameItem item = ItemsFactory.recoverItem(entry);
             
             if(!canAddItem(item)){
@@ -46,6 +58,9 @@ final public class Inventory {
     }
     
     public void addOrStackItem(GameItem item){
+        if(!testCanEquip(item, true))
+            return;
+        
         if(!canAddItem(item)){
             waitingStates.add(EntryStateFactory.errorState(item.getEntry(), "Permission refusée"));
             return;
@@ -69,6 +84,7 @@ final public class Inventory {
      * @param item the item to test
      * @return true if it can be add
      */
+    @Override
     public boolean canAddItem(GameItem item){
         return canMoveItem(item, item.getEntry().position);
     }
@@ -83,6 +99,9 @@ final public class Inventory {
         ItemPosition pos = ItemPosition.getByPosID(position);
         
         if(!pos.isValidPosition(item))
+            return false;
+        
+        if(!testCanEquip(item, false))
             return false;
         
         if(pos.isMultiplePlace()) //can have multiple items in this position
@@ -143,7 +162,11 @@ final public class Inventory {
      * Add the item if possible
      * @param item the item to add
      */
+    @Override
     public void addItem(GameItem item){
+        if(!testCanEquip(item, true))
+            return;
+        
         if(!canAddItem(item)){
             waitingStates.add(EntryStateFactory.errorState(item.getEntry(), "Permission refusée"));
             return;
@@ -156,6 +179,39 @@ final public class Inventory {
         
         addGameItem(item);
         waitingStates.add(EntryStateFactory.addState(item.getEntry()));
+    }
+    
+    /**
+     * Test if can equip this item
+     * @param item the item to test
+     * @param position the destination position
+     * @param states add a state on waiting states
+     * @return true if ok
+     */
+    private boolean testCanEquip(GameItem item, ItemPosition position, boolean states){
+        if(!position.isWearPlace())
+            return true;
+        
+        if(item.getTemplate().level > owner.getLevel()){
+            if(states)
+                waitingStates.add(EntryStateFactory.badLevelState(item.getEntry()));
+            
+            return false;
+        }
+        
+        //TODO: conditions
+        
+        return true;
+    }
+    
+    /**
+     * Test if can equip this item
+     * @param item the item to test
+     * @param states add a wainting state
+     * @return true if ok
+     */
+    private boolean testCanEquip(GameItem item, boolean  states){
+        return testCanEquip(item, ItemPosition.getByPosID(item.getEntry().position), states);
     }
     
     /**
@@ -200,6 +256,9 @@ final public class Inventory {
      * @param dest_pos the target position
      */
     public void moveItem(GameItem item, int dest_qu, byte dest_pos){
+        if(!testCanEquip(item, ItemPosition.getByPosID(dest_pos), true))
+            return;
+        
         if(dest_pos == item.getEntry().position 
                 || !canMoveItem(item, dest_pos)
                 || !items.containsValue(item)
@@ -208,11 +267,9 @@ final public class Inventory {
             return;
         }
         
-        //GameItem newItem;
         if(dest_qu == item.getEntry().qu){
             getItemsOnPos(item.getEntry().position).remove(item);
             item.getEntry().position = dest_pos;
-            //newItem = item;
             
             GameItem other = getSameItem(item);
             if(other != null){
@@ -224,7 +281,7 @@ final public class Inventory {
                 waitingStates.add(EntryStateFactory.moveState(item.getEntry()));
             }
         }else{
-            GameItem newItem = ItemsFactory.copyItem(item, owner, dest_qu, dest_pos);
+            GameItem newItem = ItemsFactory.copyItem(item, this, dest_qu, dest_pos);
             item.getEntry().qu -= dest_qu;
             waitingStates.add(EntryStateFactory.stackState(item.getEntry()));
             addOrStackItem(newItem);
@@ -239,6 +296,7 @@ final public class Inventory {
      * Get the list of items
      * @return 
      */
+    @Override
     public Collection<GameItem> getItems(){
         return items.values();
     }
@@ -279,6 +337,7 @@ final public class Inventory {
      * @param id id of the item
      * @return 
      */
+    @Override
     public GameItem getItemById(int id){
         return items.get(id);
     }
@@ -309,6 +368,7 @@ final public class Inventory {
         itemsByPos.get(item.getEntry().position).remove(item);
     }
     
+    @Override
     public void delete(GameItem item, int quantity){
         if(!items.containsValue(item)){
             waitingStates.add(EntryStateFactory.errorState(item.getEntry(), "Impossible de supprimer un item qui ne vous appartient pas"));

@@ -184,6 +184,7 @@ public enum GamePacketEnum {
      * Ajoute un objet à l'inventaire
      */
     OBJECT_ADD_OK("OAKO"),
+    OBJECT_ADD_ERROR_LEVEL("OAEL"),
     /**
      * Supprime l'objet de l'inventaire
      */

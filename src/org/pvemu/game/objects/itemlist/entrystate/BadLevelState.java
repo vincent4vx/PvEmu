@@ -4,31 +4,27 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.objects.inventory.entrystate;
+package org.pvemu.game.objects.itemlist.entrystate;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.models.InventoryEntry;
-import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-class DeleteState extends EntryState {
+public class BadLevelState extends EntryState{
 
-    DeleteState(InventoryEntry entry) {
+    public BadLevelState(InventoryEntry entry) {
         super(entry);
     }
 
     @Override
     public void commit(IoSession out) {
-        if(entry.isCreated()){
-            GameSendersRegistry.getObject().removeItem(entry, out);
-            Loggin.debug("Suppression de l'item %d", entry.id);
-            DAOFactory.inventory().delete(entry);
-        }
+        Loggin.debug("Bad level for equip item");
+        GameSendersRegistry.getObject().badLevel(out);
     }
     
 }

@@ -6,8 +6,7 @@ import org.pvemu.game.objects.dep.Creature;
 import org.pvemu.game.objects.map.GMable;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.dep.Stats.Element;
-import org.pvemu.game.objects.inventory.Inventory;
-import org.pvemu.game.objects.inventory.Inventoryable;
+import org.pvemu.game.objects.itemlist.Inventory;
 import org.pvemu.game.objects.map.MapCell;
 import java.util.Map.Entry;
 import org.pvemu.jelly.Loggin;
@@ -31,7 +30,7 @@ import org.pvemu.network.game.output.GameSendersRegistry;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
 
-public class Player implements GMable, Inventoryable, Filterable, Sessionable, Creature, ActionPerformer {
+public class Player implements GMable, Filterable, Sessionable, Creature, ActionPerformer {
 
     final private Character character;
     final private Account account;
@@ -269,14 +268,8 @@ public class Player implements GMable, Inventoryable, Filterable, Sessionable, C
         DAOFactory.character().update(character);
     }
 
-    @Override
     public Inventory getInventory() {
         return inventory;
-    }
-
-    @Override
-    public byte getOwnerType() {
-        return 1;
     }
     
     /**

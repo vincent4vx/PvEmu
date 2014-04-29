@@ -199,7 +199,7 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
         for(Pair<Integer, Integer> item : fightButtin.getItems()){
             ItemTemplate template = DAOFactory.item().getById(item.getFirst());
             int qu = item.getSecond();
-            GameItem gi = ItemsFactory.createItem(player, template, qu, false);
+            GameItem gi = ItemsFactory.createItem(player.getInventory(), template, qu, false);
             player.getInventory().addItem(gi);
         }
         

@@ -10,13 +10,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.pvemu.game.objects.dep.Stats;
-import org.pvemu.game.objects.inventory.Inventoryable;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.effect.EffectFactory;
 import org.pvemu.game.objects.item.WeaponData;
+import org.pvemu.game.objects.itemlist.ItemList;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
@@ -184,11 +184,11 @@ public class ItemsFactory {
         return getTypeOfItem(template).getFactory().newItem(stats, entry, template);
     }
     
-    static public GameItem createItem(Inventoryable owner, ItemTemplate template, int qu, boolean maxStats){
+    static public GameItem createItem(ItemList itemList, ItemTemplate template, int qu, boolean maxStats){
         InventoryEntry entry = new InventoryEntry();
         entry.item_id = template.id;
-        entry.owner = owner.getID();
-        entry.owner_type = owner.getOwnerType();
+        entry.owner = itemList.id();
+        entry.owner_type = itemList.type();
         entry.position = ItemPosition.DEFAULT_POSITION;
         entry.qu = qu;
         
@@ -199,11 +199,11 @@ public class ItemsFactory {
         return getTypeOfItem(template).getFactory().newItem(stats, entry, template);
     }
     
-    static public GameItem copyItem(GameItem src, Inventoryable dest_owner, int dest_qu, byte dest_pos){
+    static public GameItem copyItem(GameItem src, ItemList dest, int dest_qu, byte dest_pos){
         InventoryEntry entry = new InventoryEntry();
         entry.item_id = src.getTemplate().id;
-        entry.owner = dest_owner.getID();
-        entry.owner_type = dest_owner.getOwnerType();
+        entry.owner = dest.id();
+        entry.owner_type = dest.type();
         entry.position = dest_pos;
         entry.qu = dest_qu;
         entry.stats = src.getEntry().stats;
@@ -213,8 +213,8 @@ public class ItemsFactory {
         return getTypeOfItem(src.getTemplate()).getFactory().newItem(stats, entry, src.getTemplate());
     }
     
-    static public GameItem copyItem(GameItem src, Inventoryable dest_owner, int dest_qu){
-        return copyItem(src, dest_owner, dest_qu, ItemPosition.DEFAULT_POSITION);
+    static public GameItem copyItem(GameItem src, ItemList dest, int dest_qu){
+        return copyItem(src, dest, dest_qu, ItemPosition.DEFAULT_POSITION);
     }
     
     static private ItemType getTypeOfItem(ItemTemplate template){

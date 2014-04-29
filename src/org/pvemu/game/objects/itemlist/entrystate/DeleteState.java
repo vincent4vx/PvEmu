@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.objects.inventory.entrystate;
+package org.pvemu.game.objects.itemlist.entrystate;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.jelly.Loggin;
@@ -16,17 +16,19 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-class AddState extends EntryState {
+class DeleteState extends EntryState {
 
-    AddState(InventoryEntry entry) {
+    DeleteState(InventoryEntry entry) {
         super(entry);
     }
 
     @Override
     public void commit(IoSession out) {
-        GameSendersRegistry.getObject().addItem(entry, out);
-        DAOFactory.inventory().update(entry);
-        Loggin.debug("Ajout de l'item %d", entry.id);
+        if(entry.isCreated()){
+            GameSendersRegistry.getObject().removeItem(entry, out);
+            Loggin.debug("Suppression de l'item %d", entry.id);
+            DAOFactory.inventory().delete(entry);
+        }
     }
     
 }

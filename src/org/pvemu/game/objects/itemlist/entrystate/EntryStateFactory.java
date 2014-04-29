@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.objects.inventory.entrystate;
+package org.pvemu.game.objects.itemlist.entrystate;
 
 import org.pvemu.models.InventoryEntry;
 
@@ -31,5 +31,9 @@ public class EntryStateFactory {
     
     static public EntryState stackState(InventoryEntry entry){
         return new StackState(entry);
+    }
+    
+    static public EntryState badLevelState(InventoryEntry entry){
+        return new BadLevelState(entry);
     }
 }

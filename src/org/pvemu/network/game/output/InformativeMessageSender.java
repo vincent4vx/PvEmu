@@ -7,6 +7,7 @@
 package org.pvemu.network.game.output;
 
 import org.apache.mina.core.session.IoSession;
+import org.pvemu.jelly.utils.Pair;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
@@ -25,5 +26,17 @@ public class InformativeMessageSender {
     
     public void pvp(IoSession session, int msgID, Object... args){
         GamePacketEnum.PVP_INFORMATION_MESSAGE.send(session, GeneratorsRegistry.getInformativeMessage().generateIm(msgID, args));
+    }
+    
+    public void info(IoSession session, Pair<Integer, Object[]>[] msgs){
+        GamePacketEnum.INFORMATION_MESSAGE.send(session, GeneratorsRegistry.getInformativeMessage().generateIm(msgs));
+    }
+    
+    public void error(IoSession session, Pair<Integer, Object[]>[] msgs){
+        GamePacketEnum.ERROR_INFORMATION_MESSAGE.send(session, GeneratorsRegistry.getInformativeMessage().generateIm(msgs));
+    }
+    
+    public void pvp(IoSession session, Pair<Integer, Object[]>[] msgs){
+        GamePacketEnum.PVP_INFORMATION_MESSAGE.send(session, GeneratorsRegistry.getInformativeMessage().generateIm(msgs));
     }
 }

@@ -99,7 +99,7 @@ public class Exchange {
             int quantity = pendingItems.get(key);
             
             GameItem item = owner.getInventory().getItemById(key);
-            GameItem copy = ItemsFactory.copyItem(item, target, quantity);
+            GameItem copy = ItemsFactory.copyItem(item, target.getInventory(), quantity);
             
             ActionsRegistry.getObject().addItem(copy, target);
             ActionsRegistry.getObject().deleteItem(item, quantity, owner);

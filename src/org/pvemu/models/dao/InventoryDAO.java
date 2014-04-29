@@ -63,8 +63,7 @@ public class InventoryDAO extends UpdatableDAO<InventoryEntry> {
     }
 
     /**
-     * Charge l'inventaire d'un perso
-     *
+     * Load an item list
      * @param id
      * @return
      */

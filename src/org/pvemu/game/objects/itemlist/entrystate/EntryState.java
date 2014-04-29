@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.objects.inventory.entrystate;
+package org.pvemu.game.objects.itemlist.entrystate;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.models.InventoryEntry;

@@ -69,4 +69,8 @@ public class ObjectSender {
             );
         }
     }
+    
+    public void badLevel(IoSession session){
+        GamePacketEnum.OBJECT_ADD_ERROR_LEVEL.send(session);
+    }
 }
