@@ -63,7 +63,7 @@ final public class SpellFactory {
         if(tmp.length < 16)
             return null;
         
-        String area = tmp[15];
+        String area = tmp[15].trim();
         
         short PACost = 6, minLevel;
         byte POMin, POMax, criticalRate, failRate;
