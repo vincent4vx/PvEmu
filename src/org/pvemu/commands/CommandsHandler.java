@@ -29,6 +29,7 @@ public class CommandsHandler {
         registerCommand(new DebugCommand());
         registerCommand(new SaveCommand());
         registerCommand(new AddCommand());
+        registerCommand(new TeleportCommand());
     }
     
     /**
