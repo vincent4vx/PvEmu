@@ -14,6 +14,7 @@ import java.util.Map;
 import org.pvemu.game.objects.GameNpc;
 import org.pvemu.game.objects.monster.MonsterFactory;
 import org.pvemu.jelly.utils.Crypt;
+import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.MapModel;
 import org.pvemu.models.MapNpcs;
 import org.pvemu.models.Trigger;
@@ -40,11 +41,17 @@ final public class MapFactory {
             return null;
         
         short id = model.id;
-        List<MapCell> cells = new ArrayList<>(model.mapData.length() / 10);
+        List<MapCell> cells; /*= new ArrayList<>(model.mapData.length() / 10);
 
         for (short f = 0, i = 0; f < model.mapData.length(); f += 10, ++i) {
             String cellData = model.mapData.substring(f, f + 10);
             cells.add(parseCellData(id, i, cellData));
+        }*/
+        
+        if(model.mapData == null || model.mapData.isEmpty()){
+            cells = getCellsFromCellsString(model.cells, id);
+        }else{
+            cells = getCellsFromMapData(model.mapData, id);
         }
         
         GameMap map = new GameMap(
@@ -58,7 +65,9 @@ final public class MapFactory {
             map.addGMable(new GameNpc(MN, map.getNextGmId()));
         }
         
+        //free memory
         model.mapData = null;
+        model.cells = null;
 
         for (Trigger T : DAOFactory.trigger().getByMapID(id)) {
             MapCell cell = map.getCellById(T.cellID);
@@ -69,6 +78,45 @@ final public class MapFactory {
         }
         
         return map;
+    }
+    
+    static private List<MapCell> getCellsFromMapData(String mapData, short mapID){
+        List<MapCell> cells = new ArrayList<>(mapData.length() / 10);
+
+        for (short f = 0, i = 0; f < mapData.length(); f += 10, ++i) {
+            String cellData = mapData.substring(f, f + 10);
+            cells.add(parseCellData(mapID, i, cellData));
+        }
+        
+        return cells;
+    }
+    
+    static private List<MapCell> getCellsFromCellsString(String strCells, short mapID){
+        List<MapCell> cells = new ArrayList<>();
+        
+        for(String str : Utils.split(strCells, "|")){
+            String[] data = Utils.split(str, ",");
+            
+            boolean walkable = true;
+            boolean canSight = true;
+            short id = -1;
+            int IO = -1;
+            
+            try{
+                id = Short.parseShort(data[0].trim());
+                canSight = data[1].trim().equals("1");
+                walkable = data[2].trim().equals("1");
+                
+                if(data.length > 3 && !data[3].trim().isEmpty()){
+                    IO = Integer.parseInt(data[3].trim());
+                }
+            }catch(Exception e){}
+            
+            InteractiveObject obj = IO == -1 ? null : new InteractiveObject(IO, id, mapID);
+            cells.add(new MapCell(id, mapID, walkable, canSight, obj));
+        }
+        
+        return cells;
     }
     
     static private MapCell parseCellData(short mapID, short cellID, String cellData){

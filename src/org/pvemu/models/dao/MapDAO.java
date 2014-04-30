@@ -29,8 +29,8 @@ public class MapDAO extends FindableDAO<MapModel> {
             }
             
             map.mapData = RS.getString("mapData");
+            map.cells = RS.getString("cells");
             map.monsters = RS.getString("monsters");
-            //map.capabilities = RS.getByte("capabilities");
             map.mappos = RS.getString("mappos");
             map.numgroup = RS.getByte("numgroup");
             map.groupmaxsize = RS.getByte("groupmaxsize");

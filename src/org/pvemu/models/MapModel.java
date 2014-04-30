@@ -10,6 +10,7 @@ public class MapModel implements Model {
     public String places;
     public String key;
     public String mapData;
+    public String cells;
     public String monsters;
     public byte capabilities;
     public String mappos;
