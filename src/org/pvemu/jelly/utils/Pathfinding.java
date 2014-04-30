@@ -30,7 +30,7 @@ public class Pathfinding {
                     Loggin.debug("Case %d non marchable", currentCell);
                     stop = true;
                 }else if(endCell == currentCell && cell.getObj() != null){ //Use the IO
-                    Loggin.debug("IO %d trouvé", cell.getObj().getID());
+                    Loggin.debug("IO %d trouvé", cell.getObj().getObjID());
                     stop = true;
                 }
                 

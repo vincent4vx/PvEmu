@@ -5,6 +5,7 @@
  */
 package org.pvemu.game.objects.map;
 
+import org.pvemu.game.objects.map.interactiveobject.InteractiveObject;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
 import java.util.ArrayList;

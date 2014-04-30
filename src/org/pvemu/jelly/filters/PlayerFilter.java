@@ -15,6 +15,7 @@ import org.pvemu.jelly.filters.comparators.YesComparator;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class PlayerFilter extends Filter<Player>{
+    private Comparator<Short> level = new YesComparator<>();
     private Comparator<Boolean> inFight = new YesComparator<>();
 
     public Comparator<Boolean> getInFight() {
@@ -24,10 +25,19 @@ public class PlayerFilter extends Filter<Player>{
     public void setInFight(Comparator<Boolean> inFight) {
         this.inFight = inFight;
     }
+
+    public Comparator<Short> getLevel() {
+        return level;
+    }
+
+    public void setLevel(Comparator<Short> level) {
+        this.level = level;
+    }
     
     @Override
     public boolean corresponds(Player obj) {
-        return inFight.compare(obj.getActionsManager().isInFight());
+        return inFight.compare(obj.getActionsManager().isInFight())
+                && level.compare(obj.getLevel());
     }
     
 }

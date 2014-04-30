@@ -7,7 +7,7 @@ package org.pvemu.game.gameaction.game;
 
 import org.pvemu.game.gameaction.GameAction;
 import org.pvemu.game.gameaction.GameActionData;
-import org.pvemu.game.objects.map.InteractiveObject;
+import org.pvemu.game.objects.map.interactiveobject.InteractiveObject;
 import org.pvemu.game.objects.map.MapCell;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;

@@ -6,12 +6,14 @@
 
 package org.pvemu.game.objects.map;
 
+import org.pvemu.game.objects.map.interactiveobject.InteractiveObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.pvemu.game.objects.GameNpc;
+import org.pvemu.game.objects.map.interactiveobject.InteractiveObjectFactory;
 import org.pvemu.game.objects.monster.MonsterFactory;
 import org.pvemu.jelly.utils.Crypt;
 import org.pvemu.jelly.utils.Utils;
@@ -112,7 +114,7 @@ final public class MapFactory {
                 }
             }catch(Exception e){}
             
-            InteractiveObject obj = IO == -1 ? null : new InteractiveObject(IO, id, mapID);
+            InteractiveObject obj = IO == -1 ? null : InteractiveObjectFactory.getInteractiveObject(IO, id, mapID);
             cells.add(new MapCell(id, mapID, walkable, canSight, obj));
         }
         
@@ -124,7 +126,7 @@ final public class MapFactory {
         boolean canSight = (Crypt.getHashIndex(cellData.charAt(0)) & 1) != 0;
         int layerObject2 = ((Crypt.getHashIndex(cellData.charAt(0)) & 2) << 12) + ((Crypt.getHashIndex(cellData.charAt(7)) & 1) << 12) + (Crypt.getHashIndex(cellData.charAt(8)) << 6) + Crypt.getHashIndex(cellData.charAt(9));
         boolean layerObject2Interactive = ((Crypt.getHashIndex(cellData.charAt(7)) & 2) >> 1) != 0;
-        InteractiveObject obj = (layerObject2Interactive ? new InteractiveObject(layerObject2, cellID, mapID) : null);
+        InteractiveObject obj = (layerObject2Interactive ? InteractiveObjectFactory.getInteractiveObject(layerObject2, cellID, mapID) : null);
         
         return new MapCell(cellID, mapID, walkable, canSight, obj);
     }
