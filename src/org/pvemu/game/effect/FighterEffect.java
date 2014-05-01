@@ -24,6 +24,10 @@ abstract public class FighterEffect implements Effect {
 
     @Override
     public void applyToFight(EffectData data, Fight fight, Fighter caster, short cell) {
+        if (fight.getState() == Fight.STATE_FINISHED) {
+            return;
+        }
+        
         Collection<Short> cells = MapUtils.getCellsFromArea(
                 fight.getFightMap().getMap(),
                 cell,
@@ -34,9 +38,6 @@ abstract public class FighterEffect implements Effect {
         Loggin.debug("Apply %s on cell %d", data, cell);
 
         for (Fighter target : fight.getFightMap().getFightersByCells(cells)) {
-            if (fight.getState() == Fight.STATE_FINISHED) {
-                return;
-            }
             
             if(!isGoodTarget(data.getTarget(), caster, target)){
                 continue;
