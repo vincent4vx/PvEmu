@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.pvemu.jelly.utils.Crypt;
 import org.pvemu.jelly.utils.Pathfinding;
 import org.pvemu.jelly.utils.Utils;
@@ -204,5 +205,25 @@ final public class MapUtils {
             }
         }
         return 0;
+    }
+    
+    static public Set<Short> getAdjencentCells(GameMap map, short cell){
+        Set<Short> cells = new HashSet<>(4);
+        
+        if(cell > 15)
+            cells.add((short)(cell - 15));
+        
+        if(cell > 14)
+            cells.add((short)(cell - 14));
+        
+        int size = map.getCells().size();
+        
+        if(cell + 15 < size)
+            cells.add((short)(cell + 15));
+        
+        if(cell + 14 < size)
+            cells.add((short)(cell + 14));
+        
+        return cells;
     }
 }

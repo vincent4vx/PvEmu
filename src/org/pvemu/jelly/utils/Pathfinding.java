@@ -1,8 +1,21 @@
 package org.pvemu.jelly.utils;
 
+import com.sun.jmx.remote.internal.ArrayQueue;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import org.pvemu.game.objects.map.GameMap;
 import java.util.concurrent.atomic.AtomicReference;
+import org.pvemu.game.fight.Fight;
 import org.pvemu.game.objects.map.MapCell;
+import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Loggin;
 
 public class Pathfinding {
@@ -125,5 +138,134 @@ public class Pathfinding {
         
         short d = (short) Math.abs(cell1-cell2);
         return d == 14 || d == 15;
+    }
+    
+    static private class AStar{
+        private class Node{
+            final int startDist;
+            final int destDist;
+            final int totalDist;
+            final short parent;
+
+            public Node(int startDist, int destDist, int totalDist, short parent) {
+                this.startDist = startDist;
+                this.destDist = destDist;
+                this.totalDist = totalDist;
+                this.parent = parent;
+            }
+
+            public int getStartDist() {
+                return startDist;
+            }
+
+            public int getDestDist() {
+                return destDist;
+            }
+
+            public int getTotalDist() {
+                return totalDist;
+            }
+
+            public short getParent() {
+                return parent;
+            }
+            
+        }
+        
+        final private Fight fight;
+        final private short start;
+        final private short dest;
+        final private Map<Short, Node> openList = new HashMap<>();
+        final private Map<Short, Node> closeList = new HashMap<>();
+
+        public AStar(Fight fight, short start, short dest) {
+            this.fight = fight;
+            this.start = start;
+            this.dest = dest;
+        }
+        
+        private void addAdjacentCells(short cell){
+            for(short c : MapUtils.getAdjencentCells(fight.getFightMap().getMap(), cell)){
+                if(!fight.getFightMap().getMap().getCellById(c).isWalkable())
+                    continue;
+                
+                if(c != dest && fight.getFightMap().getFighter(c) != null)
+                    continue;
+                
+                if(!closeList.containsKey(c)){
+                    int startDist = closeList.get(cell).getStartDist() + 1;
+                    int destDist = MapUtils.getDistanceBetween(fight.getFightMap().getMap(), c, dest);
+                    int totalDist = startDist + destDist;
+                    Node node = new Node(startDist, destDist, totalDist, cell);
+                    
+                    if(openList.containsKey(c)){
+                        if(node.getTotalDist() < openList.get(c).getTotalDist()){
+                            openList.put(c, node);
+                        }
+                    }else{
+                        openList.put(c, node);
+                    }
+                }
+            }
+        }
+        
+        private short getBestNode(){
+            Iterator<Entry<Short, Node>> it = openList.entrySet().iterator();
+            Entry<Short, Node> best = it.next();
+            
+            for(Entry<Short, Node> entry = best; it.hasNext(); entry = it.next()){
+                if(entry.getValue().getTotalDist() < best.getValue().getTotalDist())
+                    best = entry;
+            }
+            
+            return best.getKey();
+        }
+        
+        private void addToCloseList(short cell){
+            Node node = openList.remove(cell);
+            closeList.put(cell, node);
+            
+            if(node == null){
+                Loggin.warning("Cannot found cell %d in openList", cell);
+            }
+        }
+        
+        private LinkedList<Short> getPath(){
+            LinkedList<Short> path = new LinkedList<>();
+            
+            short last = dest;
+            
+            do{
+                Node node = closeList.get(last);
+                path.addFirst(node.getParent());
+                last = node.getParent();
+            }while(last != start);
+            
+            return path;
+        }
+        
+        public Collection<Short> computePath(){
+            short current = start;
+            openList.put(start, new Node(0, 0, 0, current));
+            
+            do{
+                Loggin.debug("current cell : %d", current);
+                addToCloseList(current);
+                addAdjacentCells(current);
+                current = getBestNode();
+            }while(current != dest && !openList.isEmpty());
+            
+            addToCloseList(current);
+            
+            if(current == dest){ //path found
+                return getPath();
+            }
+            
+            return null;
+        }
+    }
+    
+    static public Collection<Short> findPath(Fight fight, short start, short dest){
+        return new AStar(fight, start, dest).computePath();
     }
 }

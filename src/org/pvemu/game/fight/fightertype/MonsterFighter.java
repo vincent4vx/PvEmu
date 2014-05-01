@@ -2,6 +2,7 @@ package org.pvemu.game.fight.fightertype;
 
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
+import org.pvemu.game.fight.ai.AIHandler;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.objects.monster.MonsterTemplate;
@@ -26,16 +27,7 @@ public class MonsterFighter extends Fighter{
     @Override
     public void startTurn() {
         super.startTurn();
-        (new Thread(){
-            @Override
-            public void run(){
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException ex) {
-                }
-                fight.nextFighter();
-            }
-        }).start();
+        AIHandler.instance().runAI(monster.getModel().AI_type, fight, this);
     }
     
 

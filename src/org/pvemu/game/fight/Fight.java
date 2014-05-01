@@ -94,6 +94,9 @@ abstract public class Fight {
     }
     
     public void nextFighter(){
+        if(state == STATE_FINISHED)
+            return;
+        
         if(timer != null && !timer.isCancelled() && !timer.isDone()){
             timer.cancel(true); //stop the timer if is not stoped
         }
