@@ -14,14 +14,13 @@ import org.pvemu.jelly.utils.Utils;
  */
 final public class EffectFactory {
 
-    static public EffectData parseSpellEffect(String spellEffect, String area) {
+    static public EffectData parseSpellEffect(String spellEffect, String area, byte target) {
 
         String[] args = Utils.split(spellEffect, ";");
 
         try {
             short id = Short.parseShort(args[0]);
             int duration = Integer.parseInt(args[4]);
-            int target = 0; //TODO: spell target
             
             int min = Integer.parseInt(args[1].trim());
             int max = Integer.parseInt(args[2].trim());
@@ -68,6 +67,6 @@ final public class EffectFactory {
             if(effect == null)
                 return null;
             
-            return new EffectData(effect, min, max, 0, 0, area);
+            return new EffectData(effect, min, max, 0, (byte)2, area);
     }
 }

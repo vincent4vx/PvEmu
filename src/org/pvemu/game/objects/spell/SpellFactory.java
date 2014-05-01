@@ -68,6 +68,17 @@ final public class SpellFactory {
         short PACost = 6, minLevel;
         byte POMin, POMax, criticalRate, failRate;
         
+        String[] ets = Utils.split(model.effectTarget, ":");
+        String normalTargets;
+        String criticalTargets;
+        
+        if(ets.length == 1){
+            normalTargets = criticalTargets = ets[0];
+        }else{
+            normalTargets = ets[0];
+            criticalTargets = ets[1];
+        }
+        
         try{
             PACost = Short.parseShort(tmp[2].trim());
         }catch(NumberFormatException e){}
@@ -83,8 +94,8 @@ final public class SpellFactory {
             return null;
         }
         
-        Set<EffectData> effects = parseSpellEffect(tmp[0], area.substring(0, area.length() / 2));
-        Set<EffectData> criticals = parseSpellEffect(tmp[1], area.substring(area.length() / 2));
+        Set<EffectData> effects = parseSpellEffect(tmp[0], area.substring(0, area.length() / 2), normalTargets);
+        Set<EffectData> criticals = parseSpellEffect(tmp[1], area.substring(area.length() / 2), criticalTargets);
         
         return new GameSpell(
                 model, 
@@ -100,13 +111,14 @@ final public class SpellFactory {
         );
     }
     
-    static private Set<EffectData> parseSpellEffect(String strEffect, String area){
+    static private Set<EffectData> parseSpellEffect(String strEffect, String area, String targets){
         Set<EffectData> effects = new HashSet<>();
         
         if(strEffect.isEmpty() || strEffect.equals("-1"))
             return effects;
         
         String[] effectsArray = Utils.split(strEffect, "|");
+        String[] targetsArray = Utils.split(targets, ";");
         
         for(int i = 0; i < effectsArray.length; ++i){
             if(effectsArray[i].isEmpty() || effectsArray[i].equals("-1"))
@@ -117,7 +129,13 @@ final public class SpellFactory {
                 curArea = area.substring(i * 2, i * 2 + 2);
             }
             
-            EffectData effect = EffectFactory.parseSpellEffect(effectsArray[i], curArea);
+            byte target = 0;
+            
+            try{
+                target = Byte.parseByte(targetsArray[i]);
+            }catch(Exception e){}
+            
+            EffectData effect = EffectFactory.parseSpellEffect(effectsArray[i], curArea, target);
             
             if(effect == null)
                 continue;

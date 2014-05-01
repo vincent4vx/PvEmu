@@ -38,6 +38,10 @@ abstract public class FighterEffect implements Effect {
             if (fight.getState() == Fight.STATE_FINISHED) {
                 return;
             }
+            
+            if(!isGoodTarget(data.getTarget(), caster, target)){
+                continue;
+            }
 
             if (!target.isAlive()) {
                 continue;
@@ -50,6 +54,32 @@ abstract public class FighterEffect implements Effect {
             }
         }
 
+    }
+    
+    private boolean isGoodTarget(byte ET, Fighter caster, Fighter target){
+        if(target == null)
+            return false;
+        
+        //don't affect friends
+        if(((ET & 1) == 1) && (target.getTeam() == caster.getTeam()))
+            return false;
+        //don't affect caster
+        if((((ET>>1) & 1) == 1) && (target == caster))
+            return false;
+        //affect only friends
+        if((((ET>>2) & 1) == 1) && (target.getTeam() != caster.getTeam()))
+            return false;
+        //TODO: affect only invocation
+        /*if((((ET>>3) & 1) == 1) && (!target.isInvocation()))
+            return false;*/
+        //TODO: don't affect invocations
+        /*if((((ET>>4) & 1) == 1) && (target.isInvocation()))
+            return false;*/
+        //affect only caster
+        if((((ET>>5) & 1) == 1) && (target != caster))
+            return false;
+        
+        return true;
     }
 
 }
