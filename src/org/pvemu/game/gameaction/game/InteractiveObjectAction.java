@@ -9,9 +9,9 @@ import org.pvemu.game.gameaction.GameAction;
 import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.map.interactiveobject.InteractiveObject;
 import org.pvemu.game.objects.map.MapCell;
+import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Pathfinding;
 
 /**
  *
@@ -39,7 +39,7 @@ public class InteractiveObjectAction implements GameAction<Player> {
         short cellID = Short.parseShort(data.getArgument(0));
         int action = Integer.parseInt(data.getArgument(1));
 
-        if (!Pathfinding.isAdjacentCells(data.getPerformer().getCell().getID(), cellID)) {
+        if (!MapUtils.isAdjacentCells(data.getPerformer().getCell().getID(), cellID)) {
             Loggin.debug("Personnage trop loin pour effectuer l'action !");
         }
 

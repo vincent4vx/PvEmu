@@ -6,6 +6,7 @@ import org.pvemu.game.gameaction.GameAction;
 import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.jelly.utils.Crypt;
 import org.pvemu.jelly.utils.Pathfinding;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -40,7 +41,7 @@ public class WalkAction implements GameAction<Player> {
         }
 
         String newPath = "a"
-                + Pathfinding.cellID_To_Code(
+                + Crypt.cellID_To_Code(
                         data.getPerformer().getCell().getID()
                 )
                 + rPath.get();
@@ -63,7 +64,7 @@ public class WalkAction implements GameAction<Player> {
         short cellDest;
 
         if (success) {
-            cellDest = Pathfinding.cellCode_To_ID(data.getArgument(0).substring(data.getArgument(0).length() - 2));
+            cellDest = Crypt.cellCode_To_ID(data.getArgument(0).substring(data.getArgument(0).length() - 2));
         } else {
             cellDest = Short.parseShort(args[1]);
         }

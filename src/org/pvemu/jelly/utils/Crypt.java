@@ -217,4 +217,24 @@ public class Crypt {
         
         return decypherData(mapData, key, Integer.parseInt(checksum(key) + "", 16) * 2);
     }
+    
+    public static short cellCode_To_ID(String cellCode) {
+        char char1 = cellCode.charAt(0), char2 = cellCode.charAt(1);
+        short code1 = 0, code2 = 0, a = 0;
+        while (a < HASH.length) {
+            if (HASH[a] == char1) {
+                code1 = (short) (a * 64);
+            }
+            if (HASH[a] == char2) {
+                code2 = a;
+            }
+            a++;
+        }
+        return (short) (code1 + code2);
+    }
+
+    public static String cellID_To_Code(short cellID) {
+        int char1 = cellID / 64, char2 = cellID % 64;
+        return HASH[char1] + "" + HASH[char2];
+    }
 }

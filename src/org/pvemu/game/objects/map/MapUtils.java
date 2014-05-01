@@ -74,7 +74,7 @@ final public class MapUtils {
         List<Short> list = new ArrayList<>(cellList.length() / 2);
 
         for (int i = 0; i < cellList.length(); i += 2) {
-            short cell = Pathfinding.cellCode_To_ID(cellList.substring(i, i + 2));
+            short cell = Crypt.cellCode_To_ID(cellList.substring(i, i + 2));
 
             if (map.getCellById(cell) != null && map.getCellById(cell).isWalkable()) {
                 list.add(cell);
@@ -129,7 +129,7 @@ final public class MapUtils {
                 short lastCell = start;
                 for (char d : new char[]{'b', 'd', 'f', 'h'}) {
                     for (byte i = 0; i < size; ++i) {
-                        short cell = Pathfinding.getCellIDFromDirrection(lastCell, d, map, true);
+                        short cell = getCellIDFromDirrection(lastCell, d, map, true);
 
                         if (cell == -1) {
                             break;
@@ -145,7 +145,7 @@ final public class MapUtils {
                 char dir = getDirBetweenTwoCase(casterCell, start, map, true);
                 short lastCell = start;
                 for(byte i = 0; i < size; ++i){
-                    short cell = Pathfinding.getCellIDFromDirrection(lastCell, dir, map, true);
+                    short cell = getCellIDFromDirrection(lastCell, dir, map, true);
                     
                     if(cell != -1){
                         lastCell = cell;
@@ -155,8 +155,8 @@ final public class MapUtils {
             }break;
             case 'H':{//horizontal line
                 char dir = getDirBetweenTwoCase(casterCell, start, map, true);
-                short cl = Pathfinding.getCellIDFromDirrection(start, (char)(dir - 1), map, true);
-                short cr = Pathfinding.getCellIDFromDirrection(start, (char)(dir + 1), map, true);
+                short cl = getCellIDFromDirrection(start, (char)(dir - 1), map, true);
+                short cr = getCellIDFromDirrection(start, (char)(dir + 1), map, true);
                 
                 if(cl != -1)
                     cells.add(cl);
@@ -173,7 +173,7 @@ final public class MapUtils {
         Collection<Short> cells = new HashSet<>(4);
 
         for (char c : new char[]{'b', 'd', 'f', 'h'}) {
-            short cur = Pathfinding.getCellIDFromDirrection(cell, c, map, true);
+            short cur = getCellIDFromDirrection(cell, c, map, true);
 
             if (cur != -1) {
                 cells.add(cur);
@@ -198,10 +198,10 @@ final public class MapUtils {
         for (char c : dirs) {
             short cell = cell1ID;
             for (byte i = 0; i <= 64; i++) {
-                if (Pathfinding.getCellIDFromDirrection(cell, c, map, inFight) == cell2ID) {
+                if (getCellIDFromDirrection(cell, c, map, inFight) == cell2ID) {
                     return c;
                 }
-                cell = Pathfinding.getCellIDFromDirrection(cell, c, map, inFight);
+                cell = getCellIDFromDirrection(cell, c, map, inFight);
             }
         }
         return 0;
@@ -225,5 +225,43 @@ final public class MapUtils {
             cells.add((short)(cell + 14));
         
         return cells;
+    }
+    
+    
+    /**
+     * Test if cells are adjencents (directly near)
+     * @param cell1
+     * @param cell2
+     * @return 
+     */
+    public static boolean isAdjacentCells(short cell1, short cell2){
+        if(cell1 == cell2){
+            return false;
+        }
+        
+        short d = (short) Math.abs(cell1-cell2);
+        return d == 14 || d == 15;
+    }
+
+    public static short getCellIDFromDirrection(short CaseID, char Direction, GameMap map, boolean inFight) {
+        switch (Direction) {
+            case 'a':
+                return (short) (inFight ? -1 : CaseID + 1);
+            case 'b':
+                return (short) (CaseID + map.getWidth());
+            case 'c':
+                return (short) (inFight ? -1 : CaseID + (map.getWidth() * 2 - 1));
+            case 'd':
+                return (short) (CaseID + (map.getWidth() - 1));
+            case 'e':
+                return (short) (inFight ? -1 : CaseID - 1);
+            case 'f':
+                return (short) (CaseID - map.getWidth());
+            case 'g':
+                return (short) (inFight ? -1 : CaseID - (map.getWidth() * 2 - 1));
+            case 'h':
+                return (short) (CaseID - map.getWidth() + 1);
+        }
+        return -1;
     }
 }

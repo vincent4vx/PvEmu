@@ -13,6 +13,7 @@ import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.jelly.utils.Crypt;
 import org.pvemu.jelly.utils.Pathfinding;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
@@ -53,7 +54,7 @@ final public class AIUtils {
         if(fighter.getNumPM() <= 0)
             return false;
         
-        if(Pathfinding.isAdjacentCells(fighter.getCellId(), target.getCellId()))
+        if(MapUtils.isAdjacentCells(fighter.getCellId(), target.getCellId()))
             return false;
         
         Collection<Short> path;
@@ -84,7 +85,7 @@ final public class AIUtils {
                         true
                 ));
             }
-            strPath.append(Pathfinding.cellID_To_Code(cell));
+            strPath.append(Crypt.cellID_To_Code(cell));
             last = cell;
             
             if(++pm >= fighter.getNumPM())

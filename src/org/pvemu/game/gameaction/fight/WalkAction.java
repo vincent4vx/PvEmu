@@ -11,6 +11,7 @@ import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.gameaction.GameAction;
 import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.jelly.utils.Crypt;
 import org.pvemu.jelly.utils.Pathfinding;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
@@ -48,7 +49,7 @@ public class WalkAction implements GameAction<PlayerFighter>{
             return;
         }
         
-        short dest = Pathfinding.cellCode_To_ID(rPath.get().substring(rPath.get().length() - 2));
+        short dest = Crypt.cellCode_To_ID(rPath.get().substring(rPath.get().length() - 2));
         
         if(!data.getPerformer().getFight().canMove(data.getPerformer(), dest, steps)){
             Loggin.debug("[Fight] %s can't move", data.getPerformer().getName());
@@ -57,7 +58,7 @@ public class WalkAction implements GameAction<PlayerFighter>{
         }
 
         String newPath = "a"
-                + Pathfinding.cellID_To_Code(
+                + Crypt.cellID_To_Code(
                         data.getPerformer().getCellId()
                 )
                 + rPath.get();
@@ -86,7 +87,7 @@ public class WalkAction implements GameAction<PlayerFighter>{
         short cellDest;
 
         if (success) {
-            cellDest = Pathfinding.cellCode_To_ID(data.getArgument(0).substring(data.getArgument(0).length() - 2));
+            cellDest = Crypt.cellCode_To_ID(data.getArgument(0).substring(data.getArgument(0).length() - 2));
         } else {
             cellDest = Short.parseShort(args[1]);
         }
