@@ -31,6 +31,10 @@ public class EffectSender {
         updatePoint(fight, fighterID, FightActionsRegistry.UPDATE_VITA, (short)-nb);
     }
     
+    public void addVita(Fight fight, int fighterID, short nb){
+        updatePoint(fight, fighterID, FightActionsRegistry.UPDATE_VITA, nb);
+    }
+    
     private void updatePoint(Fight fight, int fighterID, short action, short nb){
         GameSendersRegistry.getGameAction().unidentifiedGameActionToFight(
                 fight, 

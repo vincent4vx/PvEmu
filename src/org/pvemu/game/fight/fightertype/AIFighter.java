@@ -38,6 +38,9 @@ abstract public class AIFighter extends Fighter{
     @Override
     public void startTurn() {
         super.startTurn();
+        try{
+            Thread.sleep(10); //wait for the timer
+        }catch(InterruptedException e){}
         AIHandler.instance().runAI(AIType(), fight, this);
     }
     

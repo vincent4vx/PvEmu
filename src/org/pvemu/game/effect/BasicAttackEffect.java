@@ -31,7 +31,7 @@ abstract class BasicAttackEffect extends FighterEffect{
 
     @Override
     protected int getEfficiencyForOneFighter(EffectData data, Fight fight, Fighter caster, Fighter target) {
-        int avgJet = (data.getMin() + data.getMax()) / 2;
+        float avgJet = (data.getMin() + data.getMax()) / 2;
         int coef = 1 + caster.getTotalStats().get(getActiveElement());
         
         if(coef < 1)
@@ -42,8 +42,16 @@ abstract class BasicAttackEffect extends FighterEffect{
         if(res > 1)
             res = 1;
         
-        return (int)(10 * avgJet * coef * (1 - res));
+        int efficiency = (int)(10 * avgJet * coef * (1 - res));
+        
+        if(target.getTeam() == caster.getTeam())
+            efficiency = -efficiency;
+        
+        return efficiency;
     }
-    
-    
+
+    @Override
+    public EffectType getEffectType() {
+        return EffectType.ATTACK;
+    }
 }

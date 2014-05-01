@@ -3,6 +3,7 @@ package org.pvemu.game.fight.ai;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.fightertype.AIFighter;
+import org.pvemu.jelly.Loggin;
 
 /**
  *
@@ -19,11 +20,16 @@ public class NormalAI extends AIType{
     public boolean actions(Fight fight, AIFighter fighter) {
         Fighter target = AIUtils.getNearestEnnemy(fight, fighter);
         
-        if(target == null)
+        if(target == null){
+            Loggin.warning("No ennemy found for %s", fighter);
             return false;
+        }
         
         if(!AIUtils.moveNear(fight, fighter, target)){
-            return AIUtils.attackTargetWithBestSpell(fight, fighter, target);
+            if(!AIUtils.attack(fight, fighter)){
+                AIUtils.leavePlaceForFriends(fight, fighter);
+                return false;
+            }
         }
         return true;
     }

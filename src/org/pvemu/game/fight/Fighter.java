@@ -141,6 +141,9 @@ abstract public class Fighter implements GMable, Creature {
     }
     
     public void removeVita(short num){
+        if(num > currentVita)
+            num = currentVita;
+        
         currentVita -= num;
         
         if(currentVita <= 0){
@@ -149,6 +152,16 @@ abstract public class Fighter implements GMable, Creature {
         }
         
         GameSendersRegistry.getEffect().removeVita(fight, getID(), num);
+    }
+    
+    public void addVita(short num){
+        short max = (short)(totalStats.get(Stats.Element.VITA) - currentVita);
+        
+        if(num > max)
+            num = max;
+        
+        currentVita += num;
+        GameSendersRegistry.getEffect().addVita(fight, getID(), num);
     }
 
     /**
@@ -159,8 +172,6 @@ abstract public class Fighter implements GMable, Creature {
     public boolean isAlive() {
         return alive;
     }
-    
-    //abstract public Creature getCreature();
     
     public void onDie(){
         

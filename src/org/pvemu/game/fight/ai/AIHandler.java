@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.fightertype.AIFighter;
+import org.pvemu.jelly.Loggin;
 
 /**
  *
@@ -33,12 +34,15 @@ final public class AIHandler {
         fighter.setAITask(service.submit(new Runnable() {
             @Override
             public void run() {
+                Loggin.debug("Start IA %d for fighter %s", type.typeID(), fighter);
                 while(fighter.isAlive() && fighter.canPlay()){
                     if(!type.actions(fight, fighter)){
                         break;
                     }
                 }
-                fight.nextFighter();
+                
+                if(fighter.canPlay())
+                    fight.nextFighter();
             }
         }));
     }

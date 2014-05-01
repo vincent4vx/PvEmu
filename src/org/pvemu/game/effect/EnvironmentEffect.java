@@ -10,5 +10,11 @@ package org.pvemu.game.effect;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public interface EnvironmentEffect extends Effect{
+abstract public class EnvironmentEffect implements Effect{
+
+    @Override
+    public EffectType getEffectType(){
+        return EffectType.ENVIRONMENT;
+    }
+    
 }

@@ -23,6 +23,7 @@ final public class EffectsHandler {
         registerEffect(new GroundAttackEffect());
         registerEffect(new AirAttackEffect());
         registerEffect(new FireAttackEffect());
+        registerEffect(new HealEffect());
     }
     
     public void registerEffect(Effect effect){

@@ -2,10 +2,7 @@ package org.pvemu.game.fight.fightertype;
 
 import java.util.Collection;
 import org.pvemu.game.fight.Fight;
-import org.pvemu.game.fight.Fighter;
-import org.pvemu.game.fight.ai.AIHandler;
 import org.pvemu.game.objects.dep.Stats;
-import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.objects.monster.MonsterTemplate;
 import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.jelly.utils.Utils;
