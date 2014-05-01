@@ -7,7 +7,7 @@
 package org.pvemu.game.fight.ai;
 
 import org.pvemu.game.fight.Fight;
-import org.pvemu.game.fight.Fighter;
+import org.pvemu.game.fight.fightertype.AIFighter;
 
 /**
  *
@@ -21,7 +21,7 @@ public class PoutchAI extends AIType{
     }
 
     @Override
-    public boolean actions(Fight fight, Fighter fighter) {
+    public boolean actions(Fight fight, AIFighter fighter) {
         return false;
     }
     

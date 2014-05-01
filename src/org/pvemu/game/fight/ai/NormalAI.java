@@ -1,13 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.pvemu.game.fight.ai;
 
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
+import org.pvemu.game.fight.fightertype.AIFighter;
 
 /**
  *
@@ -21,13 +16,16 @@ public class NormalAI extends AIType{
     }
 
     @Override
-    public boolean actions(Fight fight, Fighter fighter) {
+    public boolean actions(Fight fight, AIFighter fighter) {
         Fighter target = AIUtils.getNearestEnnemy(fight, fighter);
         
         if(target == null)
             return false;
         
-        return AIUtils.moveNear(fight, fighter, target);
+        if(!AIUtils.moveNear(fight, fighter, target)){
+            return AIUtils.attackTargetWithBestSpell(fight, fighter, target);
+        }
+        return true;
     }
     
 }

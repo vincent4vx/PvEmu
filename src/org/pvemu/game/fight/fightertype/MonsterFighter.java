@@ -1,5 +1,6 @@
 package org.pvemu.game.fight.fightertype;
 
+import java.util.Collection;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.ai.AIHandler;
@@ -14,7 +15,7 @@ import org.pvemu.network.generators.GeneratorsRegistry;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class MonsterFighter extends Fighter{
+public class MonsterFighter extends AIFighter{
     final private int id;
     final private MonsterTemplate monster;
 
@@ -25,25 +26,18 @@ public class MonsterFighter extends Fighter{
     }
 
     @Override
-    public void startTurn() {
-        super.startTurn();
-        AIHandler.instance().runAI(monster.getModel().AI_type, fight, this);
-    }
-    
-
-    @Override
-    public boolean canUseWeapon(Weapon weapon, short dest) {
-        throw new UnsupportedOperationException("A monster doesn't have any weapon");
-    }
-
-    @Override
-    public boolean canUseSpell(GameSpell spell, short dest) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    protected byte AIType() {
+        return monster.getModel().AI_type;
     }
 
     @Override
     public GameSpell getSpellById(int spellID) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return monster.getSpells().get(spellID);
+    }
+    
+    @Override
+    public Collection<GameSpell> getSpellList(){
+        return monster.getSpells().values();
     }
 
     @Override
@@ -89,6 +83,4 @@ public class MonsterFighter extends Fighter{
     public boolean isReady() {
         return true;
     }
-    
-    
 }

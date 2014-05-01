@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.pvemu.game.fight.Fight;
-import org.pvemu.game.fight.Fighter;
+import org.pvemu.game.fight.fightertype.AIFighter;
 
 /**
  *
@@ -27,10 +27,10 @@ final public class AIHandler {
         aiTypes.put(type.typeID(), type);
     }
     
-    public void runAI(byte typeID, final Fight fight, final Fighter fighter){
+    public void runAI(byte typeID, final Fight fight, final AIFighter fighter){
         final AIType type = aiTypes.containsKey(typeID) ? aiTypes.get(typeID) : DEFAULT_AI;
         
-        service.submit(new Runnable() {
+        fighter.setAITask(service.submit(new Runnable() {
             @Override
             public void run() {
                 while(fighter.isAlive() && fighter.canPlay()){
@@ -40,7 +40,7 @@ final public class AIHandler {
                 }
                 fight.nextFighter();
             }
-        });
+        }));
     }
 
     public static AIHandler instance() {

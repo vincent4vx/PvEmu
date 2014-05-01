@@ -180,7 +180,6 @@ public class Pathfinding {
             openList.put(start, new Node(0, 0, 0, current));
             
             do{
-                Loggin.debug("current cell : %d", current);
                 addToCloseList(current);
                 addAdjacentCells(current);
                 current = getBestNode();

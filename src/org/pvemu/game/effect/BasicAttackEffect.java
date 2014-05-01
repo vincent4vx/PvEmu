@@ -1,5 +1,6 @@
 package org.pvemu.game.effect;
 
+import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.jelly.utils.Utils;
@@ -27,5 +28,22 @@ abstract class BasicAttackEffect extends FighterEffect{
         
         target.removeVita((short)jet);
     }
+
+    @Override
+    protected int getEfficiencyForOneFighter(EffectData data, Fight fight, Fighter caster, Fighter target) {
+        int avgJet = (data.getMin() + data.getMax()) / 2;
+        int coef = 1 + caster.getTotalStats().get(getActiveElement());
+        
+        if(coef < 1)
+            coef = 1;
+        
+        float res = .01f * target.getTotalStats().get(getResistanceElement());
+        
+        if(res > 1)
+            res = 1;
+        
+        return (int)(10 * avgJet * coef * (1 - res));
+    }
+    
     
 }

@@ -15,9 +15,13 @@ import org.pvemu.game.objects.dep.Stats.Element;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapCell;
 import org.pvemu.game.objects.map.MapUtils;
+import org.pvemu.game.objects.spell.GameSpell;
+import org.pvemu.game.objects.spell.SpellFactory;
+import org.pvemu.game.objects.spell.SpellLevels;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.Monster;
+import org.pvemu.models.Spell;
 import org.pvemu.models.dao.DAOFactory;
 
 /**
@@ -119,13 +123,15 @@ final public class MonsterFactory {
         String[] points = Utils.split(model.points, "|");
         String[] inits = Utils.split(model.inits, "|");
         String[] exps = Utils.split(model.exps, "|");
+        String[] spells = Utils.split(model.spells, "|");
         for(byte i = 0; 
                 i < grades.length
                 && i < stats.length
                 && i < pdvs.length
                 && i < points.length
                 && i < inits.length
-                && i < exps.length;
+                && i < exps.length
+                && i < spells.length;
                 ++i){
             String[] tmp = Utils.split(grades[i], "@", 2);
             
@@ -168,9 +174,42 @@ final public class MonsterFactory {
             statsObj.add(Element.VITA, Short.parseShort(pdvs[i]));
             statsObj.add(Element.INIT, Short.parseShort(inits[i]));
             
+            Map<Integer, GameSpell> spellList = new HashMap<>();
+            for(String spellData : Utils.split(spells[i], ";")){
+                tmp = Utils.split(spellData, "@");
+                int spellID;
+                byte spellLevel = 1;
+                
+                try{
+                    spellID = Integer.parseInt(tmp[0].trim());
+                    
+                    if(tmp.length > 1)
+                        spellLevel = Byte.parseByte(tmp[1].trim());
+                }catch(NumberFormatException e){
+                    Loggin.debug("Error during loading spells of %s grade : %d", model, i);
+                    continue;
+                }
+                
+                SpellLevels spellLevels = SpellFactory.getSpellLevelsById(spellID);
+                
+                if(spellLevels == null){
+                    Loggin.debug("Cannot find spell %d", spellID);
+                    continue;
+                }
+                
+                GameSpell gs = spellLevels.getSpellByLevel(spellLevel);
+                
+                if(gs == null){
+                    Loggin.debug("Cannot find spell %d at level %d", spellID, spellLevel);
+                    continue;
+                }
+                
+                spellList.put(spellID, gs);
+            }
+            
             int xp = Integer.parseInt(exps[i]);
             
-            gradesObj.addTemplate(new MonsterTemplate(i, model, level, statsObj, xp));
+            gradesObj.addTemplate(new MonsterTemplate(i, model, level, statsObj, spellList, xp));
         }
     }
 }

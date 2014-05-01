@@ -7,7 +7,7 @@
 package org.pvemu.game.fight.ai;
 
 import org.pvemu.game.fight.Fight;
-import org.pvemu.game.fight.Fighter;
+import org.pvemu.game.fight.fightertype.AIFighter;
 
 /**
  *
@@ -15,5 +15,5 @@ import org.pvemu.game.fight.Fighter;
  */
 abstract public class AIType{
     abstract public byte typeID();
-    abstract public boolean actions(Fight fight, Fighter fighter);
+    abstract public boolean actions(Fight fight, AIFighter fighter);
 }

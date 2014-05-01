@@ -2,7 +2,6 @@ package org.pvemu.game.effect;
 
 import java.util.Collection;
 import org.pvemu.game.fight.Fight;
-import static org.pvemu.game.fight.Fight.STATE_FINISHED;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Loggin;
@@ -56,7 +55,7 @@ abstract public class FighterEffect implements Effect {
 
     }
     
-    private boolean isGoodTarget(byte ET, Fighter caster, Fighter target){
+    protected boolean isGoodTarget(byte ET, Fighter caster, Fighter target){
         if(target == null)
             return false;
         
@@ -82,4 +81,32 @@ abstract public class FighterEffect implements Effect {
         return true;
     }
 
+    abstract protected int getEfficiencyForOneFighter(EffectData data, Fight fight, Fighter caster, Fighter target);
+
+    @Override
+    public int getEfficiency(EffectData data, Fight fight, Fighter caster, short cell){
+        int efficiency = 0;
+        
+        Collection<Short> cells = MapUtils.getCellsFromArea(
+                fight.getFightMap().getMap(),
+                cell,
+                caster.getCellId(),
+                data.getArea()
+        );
+        
+        for (Fighter target : fight.getFightMap().getFightersByCells(cells)) {            
+            if(!isGoodTarget(data.getTarget(), caster, target)){
+                continue;
+            }
+
+            if (!target.isAlive()) {
+                continue;
+            }
+
+            efficiency += getEfficiencyForOneFighter(data, fight, caster, target);
+        }
+        
+        return efficiency;
+    }
+    
 }

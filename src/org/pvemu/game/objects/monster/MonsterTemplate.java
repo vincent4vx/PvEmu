@@ -6,7 +6,9 @@
 
 package org.pvemu.game.objects.monster;
 
+import java.util.Map;
 import org.pvemu.game.objects.dep.Stats;
+import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.models.Monster;
 
 /**
@@ -18,13 +20,15 @@ public class MonsterTemplate {
     final private Monster model;
     final private short level;
     final private Stats basicStats;
+    final private Map<Integer, GameSpell> spells;
     final private int xp;
 
-    MonsterTemplate(byte grade, Monster model, short level, Stats basicStats, int xp) {
+    MonsterTemplate(byte grade, Monster model, short level, Stats basicStats, Map<Integer, GameSpell> spells, int xp) {
         this.grade = grade;
         this.model = model;
         this.level = level;
         this.basicStats = basicStats;
+        this.spells = spells;
         this.xp = xp;
     }
 
@@ -46,5 +50,9 @@ public class MonsterTemplate {
 
     public byte getGrade() {
         return grade;
+    }
+
+    public Map<Integer, GameSpell> getSpells() {
+        return spells;
     }
 }

@@ -28,4 +28,14 @@ public interface Effect {
      * @param cell the target cell
      */
     public void applyToFight(EffectData data, Fight fight, Fighter caster, short cell);
+    
+    /**
+     * Return the efficience of a spell for the fight
+     * @param data the effect data
+     * @param fight the current fight
+     * @param caster the spell caster
+     * @param cell the target cell
+     * @return a negative value for friend efficiency, a positive value for attack efficiency
+     */
+    public int getEfficiency(EffectData data, Fight fight, Fighter caster, short cell);
 }
