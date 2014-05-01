@@ -16,6 +16,7 @@ public class Stats{
         //basiques
         PA(new int[]{111, 120}, new int[]{101, 168}),
         PM(new int[]{78, 128}, new int[]{169, 127}),
+        
         //primaires
         FORCE(new int[]{118}, new int[]{157}, 10),
         INTEL(new int[]{126}, new int[]{155}, 15),
@@ -23,6 +24,7 @@ public class Stats{
         CHANCE(new int[]{123}, new int[]{152}, 13),
         SAGESSE(new int[]{124}, new int[]{156}, 12),
         VITA(new int[]{125, 110}, new int[]{153}, 11),
+        
         //secondaires
         DOMMAGE(new int[]{112}, new int[]{145, 220}),
         PERDOM(new int[]{138, 142}, new int[]{}),
@@ -34,7 +36,13 @@ public class Stats{
         PO(new int[]{117}, new int[]{116}),
         INIT(new int[]{174}, new int[]{175}),
         SOIN(new int[]{178}, new int[]{179}),
+        
         //resistances
+        RES_FIRE(new int[]{240}, new int[]{245}),
+        RES_NEUTRAL(new int[]{241}, new int[]{246}),
+        RES_GROUND(new int[]{242}, new int[]{247}),
+        RES_WATER(new int[]{243}, new int[]{248}),
+        RES_AIR(new int[]{244}, new int[]{249}),
 
         //autres
         PODS(new int[]{158}, new int[]{159}),

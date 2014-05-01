@@ -20,6 +20,11 @@ public class NeutralAttackEffect extends BasicAttackEffect{
     }
 
     @Override
+    protected Stats.Element getResistanceElement() {
+        return Stats.Element.RES_NEUTRAL;
+    }
+
+    @Override
     public short id() {
         return 100;
     }

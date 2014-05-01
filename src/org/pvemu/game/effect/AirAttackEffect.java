@@ -14,6 +14,11 @@ public class AirAttackEffect extends BasicAttackEffect{
     }
 
     @Override
+    protected Stats.Element getResistanceElement() {
+        return Stats.Element.RES_AIR;
+    }
+
+    @Override
     public short id() {
         return 98;
     }

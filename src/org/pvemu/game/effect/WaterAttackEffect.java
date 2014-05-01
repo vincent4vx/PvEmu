@@ -20,6 +20,11 @@ public class WaterAttackEffect extends BasicAttackEffect{
     }
 
     @Override
+    protected Stats.Element getResistanceElement() {
+        return Stats.Element.RES_WATER;
+    }
+
+    @Override
     public short id() {
         return 96;
     }

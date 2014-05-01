@@ -20,6 +20,11 @@ public class FireAttackEffect extends BasicAttackEffect{
     }
 
     @Override
+    protected Stats.Element getResistanceElement() {
+        return Stats.Element.RES_FIRE;
+    }
+
+    @Override
     public short id() {
         return 99;
     }

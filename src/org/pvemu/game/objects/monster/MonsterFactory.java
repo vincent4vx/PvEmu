@@ -31,13 +31,13 @@ final public class MonsterFactory {
     final static private byte CHANCE  = 3;
     final static private byte AGILITE = 4;
     
-    final static private byte RES_NEUTRE = 0;
-    final static private byte RES_TERRE  = 1; 
-    final static private byte RES_FEU    = 2;
-    final static private byte RES_EAU    = 3;
-    final static private byte RES_AIR    = 4;
-    final static private byte RES_PA     = 5;
-    final static private byte RES_PM     = 6;
+    final static private byte RES_NEUTRAL = 0;
+    final static private byte RES_GROUND  = 1; 
+    final static private byte RES_FIRE    = 2;
+    final static private byte RES_WATER   = 3;
+    final static private byte RES_AIR     = 4;
+    final static private byte RES_PA      = 5;
+    final static private byte RES_PM      = 6;
     
     final static private byte PA = 0;
     final static private byte PM = 1;
@@ -159,7 +159,11 @@ final public class MonsterFactory {
             statsObj.add(Element.SAGESSE, Short.parseShort(basicStats[SAGESSE]));
             statsObj.add(Element.AGILITE, Short.parseShort(basicStats[AGILITE]));
             
-            //TODO: resistances
+            statsObj.add(Element.RES_NEUTRAL, Short.parseShort(resis[RES_NEUTRAL]));
+            statsObj.add(Element.RES_FIRE, Short.parseShort(resis[RES_FIRE]));
+            statsObj.add(Element.RES_GROUND, Short.parseShort(resis[RES_GROUND]));
+            statsObj.add(Element.RES_WATER, Short.parseShort(resis[RES_WATER]));
+            statsObj.add(Element.RES_AIR, Short.parseShort(resis[RES_AIR]));
             
             statsObj.add(Element.VITA, Short.parseShort(pdvs[i]));
             statsObj.add(Element.INIT, Short.parseShort(inits[i]));

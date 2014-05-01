@@ -20,6 +20,11 @@ public class GroundAttackEffect extends BasicAttackEffect{
     }
 
     @Override
+    protected Stats.Element getResistanceElement() {
+        return Stats.Element.RES_GROUND;
+    }
+
+    @Override
     public short id() {
         return 97;
     }
