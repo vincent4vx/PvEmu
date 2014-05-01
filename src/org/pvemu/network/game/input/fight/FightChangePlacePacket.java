@@ -41,12 +41,12 @@ public class FightChangePlacePacket implements InputPacket{
             return;
         }
         
-        if(!fighter.getFight().getMap().isValidPlace(fighter, cellID)){
+        if(!fighter.getFight().getFightMap().isValidPlace(fighter, cellID)){
             GameSendersRegistry.getFight().changePlaceError(session);
             return;
         }
         
-        fighter.getFight().getMap().moveFighter(fighter, cellID);
+        fighter.getFight().getFightMap().moveFighter(fighter, cellID);
         GameSendersRegistry.getFight().changePlace(fighter.getFight(), fighter);
     }
     

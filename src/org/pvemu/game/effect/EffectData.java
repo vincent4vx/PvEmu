@@ -50,4 +50,9 @@ public class EffectData {
     public String getArea() {
         return area;
     }
+
+    @Override
+    public String toString() {
+        return "EffectData{" + "effect=" + effect + ", min=" + min + ", max=" + max + ", duration=" + duration + ", target=" + target + ", area=" + area + '}';
+    }
 }

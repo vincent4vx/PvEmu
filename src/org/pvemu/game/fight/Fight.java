@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.pvemu.game.fight;
 
 import java.util.Collection;
@@ -13,8 +7,6 @@ import java.util.concurrent.ScheduledFuture;
 import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.fight.buttin.FightButtinFactory;
 import org.pvemu.game.fight.endactions.EndActionsHandler;
-import org.pvemu.game.objects.item.types.Weapon;
-import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -150,7 +142,7 @@ abstract public class Fight {
         return fighters;
     }
 
-    public FightMap getMap() {
+    public FightMap getFightMap() {
         return map;
     }
 
@@ -166,40 +158,12 @@ abstract public class Fight {
         return map.isFreeCell(dest) && fighter.getNumPM() >= nbPM;
     }
     
-    public boolean canUseWeapon(Fighter caster, Weapon weapon, short cell){
-        int dist = MapUtils.getDistanceBetween(map.getMap(), caster.getCellId(), cell);
-        return caster.canPlay() 
-                && caster.getNumPA() >= weapon.getWeaponData().getPACost()
-                && dist >= weapon.getWeaponData().getPOMin()
-                && dist <= weapon.getWeaponData().getPOMax();
-    }
-    
     public void applyEffects(Fighter caster, Set<EffectData> effects, short cell){
         if(effects.isEmpty())
             return;
         
         for(EffectData effect : effects){
-            Collection<Short> cells = MapUtils.getCellsFromArea(
-                    map.getMap(), 
-                    cell, 
-                    caster.getCellId(), 
-                    effect.getArea()
-            );
-            
-            Loggin.debug("Apply effect %d (min=%d, max=%d, area=%s) on cell %d", effect.getEffect().id(), effect.getMin(), effect.getMax(), effect.getArea(), cell);
-            
-            for(Fighter target : map.getFightersByCells(cells)){
-                if(state == STATE_FINISHED)
-                    return;
-                
-                if(!target.isAlive())
-                    continue;
-                
-                effect.getEffect().applyToFighter(effect, caster, target);
-                
-                if(!target.isAlive())
-                    onFighterDie(target);
-            }
+            effect.getEffect().applyToFight(effect, this, caster, cell);
         }
     }
     

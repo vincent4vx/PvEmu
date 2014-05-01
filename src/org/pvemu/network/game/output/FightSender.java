@@ -93,7 +93,7 @@ public class FightSender {
         GamePacketEnum.FIGHT_PLACES.send(
                 fighter.getSession(), 
                 GeneratorsRegistry.getFight().generateFightPlaces(
-                        fighter.getFight().getMap().getMap().getModel().places, 
+                        fighter.getFight().getFightMap().getMap().getModel().places, 
                         fighter.getTeam().getNumber()
                 )
         );

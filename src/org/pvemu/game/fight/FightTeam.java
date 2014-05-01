@@ -37,8 +37,8 @@ abstract public class FightTeam {
     synchronized public void addFighter(Fighter fighter){
         fighters.put(fighter.getID(), fighter);
         fighter.setTeam(this);
-        GameSendersRegistry.getFight().addToTeam(fighter.getFight().getMap().getMap(), fighter);
-        fighter.setCell(fighter.getFight().getMap().getFreeRandomCell(places));
+        GameSendersRegistry.getFight().addToTeam(fighter.getFight().getFightMap().getMap(), fighter);
+        fighter.setCell(fighter.getFight().getFightMap().getFreeRandomCell(places));
         GameSendersRegistry.getFight().GMToFight(fighter.getFight(), fighter);
         teamLevel += fighter.getLevel();
         

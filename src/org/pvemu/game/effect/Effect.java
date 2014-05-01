@@ -6,6 +6,7 @@
 
 package org.pvemu.game.effect;
 
+import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
 
 /**
@@ -13,7 +14,18 @@ import org.pvemu.game.fight.Fighter;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public interface Effect {
+    /**
+     * Get the effect ID
+     * @return 
+     */
     public short id();
     
-    public void applyToFighter(EffectData data, Fighter caster, Fighter target);
+    /**
+     * Apply this effect to the fight
+     * @param data the effect data
+     * @param fight the current fight
+     * @param caster the spell caster
+     * @param cell the target cell
+     */
+    public void applyToFight(EffectData data, Fight fight, Fighter caster, short cell);
 }

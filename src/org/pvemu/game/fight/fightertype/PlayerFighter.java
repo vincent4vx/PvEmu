@@ -135,7 +135,7 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
         }
         
         int dist = MapUtils.getDistanceBetween(
-                fight.getMap().getMap(), 
+                fight.getFightMap().getMap(), 
                 cell, 
                 dest
         );
@@ -167,7 +167,7 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
         }
         
         int dist = MapUtils.getDistanceBetween(
-                fight.getMap().getMap(), 
+                fight.getFightMap().getMap(), 
                 cell, 
                 dest
         );

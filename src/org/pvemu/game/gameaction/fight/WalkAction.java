@@ -34,7 +34,7 @@ public class WalkAction implements GameAction<PlayerFighter>{
         
         AtomicReference<String> rPath = new AtomicReference<>((String) data.getArgument(0));
         short steps = Pathfinding.validatePath(
-                data.getPerformer().getFight().getMap().getMap(),
+                data.getPerformer().getFight().getFightMap().getMap(),
                 data.getPerformer().getCellId(),
                 rPath,
                 true
@@ -91,7 +91,7 @@ public class WalkAction implements GameAction<PlayerFighter>{
             cellDest = Short.parseShort(args[1]);
         }
 
-        data.getPerformer().getFight().getMap().moveFighter(data.getPerformer(), cellDest);
+        data.getPerformer().getFight().getFightMap().moveFighter(data.getPerformer(), cellDest);
         
         Loggin.debug("[Fight] %s arrived to cell %d", data.getPerformer().getName(), cellDest);
         
