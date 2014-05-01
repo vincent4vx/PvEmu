@@ -20,17 +20,14 @@ final public class EffectFactory {
 
         try {
             short id = Short.parseShort(args[0]);
-            String jet = args[6];
             int duration = Integer.parseInt(args[4]);
             int target = 0; //TODO: spell target
-
-            String[] d = Utils.split(jet, "d");
-            String[] p = Utils.split(d[1], "+");
-            int min = Integer.parseInt(d[0]);
-            int max = Integer.parseInt(p[0]);
-            int fix = Integer.parseInt(p[1]);
-            min += fix;
-            max += fix;
+            
+            int min = Integer.parseInt(args[1].trim());
+            int max = Integer.parseInt(args[2].trim());
+            
+            if(max < min)
+                max = min;
 
             Effect effect = EffectsHandler.instance().getEffect(id);
 
