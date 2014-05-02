@@ -244,4 +244,17 @@ public class Pathfinding {
     static public Collection<Short> findPath(Fight fight, short start, short dest, boolean addStart, boolean addDest){
         return new AStar(fight, start, dest).computePath(addStart, addDest);
     }
+    
+    static public Collection<Short> findPath(Fight fight, short start, short dest, boolean addStart, boolean addDest, int limit){
+        Collection<Short> path = findPath(fight, start, dest, addStart, addDest);
+        
+        List<Short> newPath = new ArrayList<>(limit);
+        Iterator<Short> it = path.iterator();
+        
+        while(it.hasNext() && limit-- > 0){
+            newPath.add(it.next());
+        }
+        
+        return newPath;
+    }
 }

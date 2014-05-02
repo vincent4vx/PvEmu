@@ -9,6 +9,7 @@ import java.util.Set;
 import org.pvemu.game.effect.Effect;
 import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.fight.Fight;
+import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.fightertype.AIFighter;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
@@ -26,6 +27,43 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  */
 final public class AIUtils {
     static private interface EfficiencyCoefficient{
+        final static EfficiencyCoefficient ATTACK = new EfficiencyCoefficient() {
+            @Override
+            public float coefficient(Effect.EffectType ET) {
+                if(ET == Effect.EffectType.ATTACK)
+                    return 1;
+                
+                return ET.isFriendEffect() ? 0 : .5f;
+            }
+        };
+        final static EfficiencyCoefficient HEAL = new EfficiencyCoefficient() {
+            @Override
+            public float coefficient(Effect.EffectType ET) {
+                if(ET == Effect.EffectType.HEAL)
+                    return 1;
+                
+                return ET.isFriendEffect() ? .5f : 0;
+            }
+        };
+        final static EfficiencyCoefficient BUFF = new EfficiencyCoefficient() {
+            @Override
+            public float coefficient(Effect.EffectType ET) {
+                if(ET == Effect.EffectType.BUFF)
+                    return 1;
+                
+                return ET.isFriendEffect() ? .5f : 0;
+            }
+        };
+        final static EfficiencyCoefficient DEBUFF = new EfficiencyCoefficient() {
+            @Override
+            public float coefficient(Effect.EffectType ET) {
+                if(ET == Effect.EffectType.DEBUFF)
+                    return 1;
+                
+                return ET.isFriendEffect() ? 0 : .5f;
+            }
+        };
+        
         float coefficient(Effect.EffectType ET);
     }
     
@@ -62,7 +100,7 @@ final public class AIUtils {
         if(MapUtils.isAdjacentCells(fighter.getCellId(), target.getCellId()))
             return false;
         
-        Collection<Short> path = Pathfinding.findPath(fight, fighter.getCellId(), target.getCellId(), false, false);
+        Collection<Short> path = Pathfinding.findPath(fight, fighter.getCellId(), target.getCellId(), false, false, fighter.getNumPM());
         
         if(path == null){ //no direct path : try to get the nearest cell arround target
             Loggin.debug("try to get nearest accessible cell");
@@ -71,22 +109,13 @@ final public class AIUtils {
             if(dest == -1 || dest == fighter.getCellId())
                 return false;
             
-            path = Pathfinding.findPath(fight, fighter.getCellId(), dest, false, true);
+            path = Pathfinding.findPath(fight, fighter.getCellId(), dest, false, true, fighter.getNumPM());
             
             if(path == null)
                 return false;
         }
         
-        List<Short> newPath = new ArrayList<>(fighter.getNumPM());
-        
-        Iterator<Short> it = path.iterator();
-        
-        int pm = fighter.getNumPM();
-        while(it.hasNext() && pm-- > 0){
-            newPath.add(it.next());
-        }
-        
-        return move(fight, fighter, newPath);
+        return move(fight, fighter, path);
     }
     
     static public short getNearestAccessibleCellArroundTarget(Fight fight, AIFighter fighter, short target){
@@ -116,6 +145,134 @@ final public class AIUtils {
         return best;
     }
     
+    static public short getFarestAcessibleCell(Fight fight, AIFighter fighter){
+        if(fighter.getNumPM() <= 0)
+            return -1;
+        
+        Collection<Short> possibleCells = MapUtils.getCellsFromArea(
+                fight.getFightMap().getMap(),
+                fighter.getCellId(),
+                fighter.getCellId(),
+                "C" + Crypt.HASH[fighter.getNumPM()]
+        );
+        
+        short best = fighter.getCellId();
+        int dist = averageEnnemyDistance(fight, fighter.getTeam(), best);
+        for(short cell : possibleCells){
+            if(!fight.getFightMap().isFreeCell(cell))
+                continue;
+            
+            int curDist = averageEnnemyDistance(fight, fighter.getTeam(), cell);
+            if(dist < curDist){
+                best = cell;
+                dist = curDist;
+            }
+        }
+        
+        return best;
+    }
+    
+    static public int averageEnnemyDistance(Fight fight, FightTeam friends, short cell){
+        int sum = 0;
+        int count = 0;
+        for(Fighter fighter : fight.getFighters()){
+            if(fighter.getTeam() == friends)
+                continue;
+            
+            sum += MapUtils.getDistanceBetween(
+                    fight.getFightMap().getMap(),
+                    cell, 
+                    fighter.getCellId()
+            );
+            ++count;
+        }
+        
+        return sum / count;
+    }
+    
+    static public boolean moveFar(Fight fight, AIFighter fighter){
+        if(fighter.getNumPM() <= 0)
+            return false;
+        
+        short cell = getFarestAcessibleCell(fight, fighter);
+        
+        if(cell == -1 || cell == fighter.getCellId())
+            return false;
+        
+        Collection<Short> path = Pathfinding.findPath(fight, fighter.getCellId(), cell, false, true, fighter.getNumPM());
+        
+        if(path == null)
+            return false;
+        
+        return move(fight, fighter, path);
+    }
+    
+    static private boolean moveForUsingSpell(Fight fight, AIFighter fighter, EfficiencyCoefficient EC){
+        if(fighter.getNumPM() <= 0 || fighter.getNumPA() <= 0)
+            return false;
+        
+        Collection<Short> possibleCells = MapUtils.getCellsFromArea(
+                fight.getFightMap().getMap(),
+                fighter.getCellId(),
+                fighter.getCellId(),
+                "C" + Crypt.HASH[fighter.getNumPM()]
+        );
+        short target = -1;
+        int distance = Integer.MAX_VALUE;
+        
+        for(short cell : possibleCells){
+            if(!haveSpellInRangeAtCell(fight, fighter, cell, EC)){
+                continue;
+            }
+            
+            int curDist = MapUtils.getDirBetweenTwoCase(cell, fighter.getCellId(), fight.getFightMap().getMap(), true);
+            
+            if(curDist < distance){
+                target = cell;
+                distance = curDist;
+            }
+        }
+        
+        if(target == -1 || target == fighter.getCellId())
+            return false;
+        
+        Collection<Short> path = Pathfinding.findPath(fight, fighter.getCellId(), target, false, true, fighter.getNumPM());
+        
+        if(path == null)
+            return false;
+        
+        return move(fight, fighter, path);
+    }
+    
+    static public boolean moveForAttack(Fight fight, AIFighter fighter){
+        return moveForUsingSpell(fight, fighter, EfficiencyCoefficient.ATTACK);
+    }
+    
+    static private boolean haveSpellInRangeAtCell(Fight fight, AIFighter fighter, short cell, EfficiencyCoefficient EC){
+        if(fighter.getNumPA() <= 0)
+            return false;
+        
+        short lastCell = fighter.getCellId();
+        fighter.setCell(cell); //tmp position changing (for canUseSpell)
+        
+        boolean found = false;
+        
+        for(GameSpell spell : fighter.getSpellList()){
+            for(Fighter target : fight.getFighters()){
+                if(!fighter.canUseSpell(spell, target.getCellId()))
+                    continue;
+                
+                if(getSpellEfficiency(fight, fighter, spell, target.getCellId(), EC) > 0){
+                    found = true;
+                    break;
+                }
+            }
+        }
+        
+        fighter.setCell(lastCell);
+        return found;
+    }
+    
     static private GameSpell getBestSpellForDest(Fight fight, AIFighter fighter, short dest, EfficiencyCoefficient EC){
         GameSpell best = null;
         int efficiency = 0;
@@ -141,39 +298,15 @@ final public class AIUtils {
     }
     
     static public GameSpell getBestAttackSpellForDest(Fight fight, AIFighter fighter, short dest){
-        return getBestSpellForDest(fight, fighter, dest, new EfficiencyCoefficient() {
-            @Override
-            public float coefficient(Effect.EffectType ET) {
-                if(ET == Effect.EffectType.ATTACK)
-                    return 1;
-                
-                return ET.isFriendEffect() ? -1 : .5f;
-            }
-        });
+        return getBestSpellForDest(fight, fighter, dest, EfficiencyCoefficient.ATTACK);
     }
     
     static public GameSpell getBestHealSpellForDest(Fight fight, AIFighter fighter, short dest){
-        return getBestSpellForDest(fight, fighter, dest, new EfficiencyCoefficient() {
-            @Override
-            public float coefficient(Effect.EffectType ET) {
-                if(ET == Effect.EffectType.HEAL)
-                    return 1;
-                
-                return ET.isFriendEffect() ? .5f : -1;
-            }
-        });
+        return getBestSpellForDest(fight, fighter, dest, EfficiencyCoefficient.HEAL);
     }
     
     static public GameSpell getBestBuffSpellForDest(Fight fight, AIFighter caster, short dest){
-        return getBestSpellForDest(fight, caster, dest, new EfficiencyCoefficient() {
-            @Override
-            public float coefficient(Effect.EffectType ET) {
-                if(ET == Effect.EffectType.BUFF)
-                    return 1;
-                
-                return ET.isFriendEffect() ? .5f : -1;
-            }
-        });
+        return getBestSpellForDest(fight, caster, dest, EfficiencyCoefficient.BUFF);
     }
     
     static public boolean attackTarget(Fight fight, AIFighter caster, Fighter target){
@@ -310,15 +443,7 @@ final public class AIUtils {
     }
     
     static public boolean attack(Fight fight, AIFighter fighter){
-        Pair<Short, GameSpell> spellTarget = getBestSpellTarget(fight, fighter, new EfficiencyCoefficient() {
-            @Override
-            public float coefficient(Effect.EffectType ET) {
-                if(ET == Effect.EffectType.ATTACK)
-                    return 1;
-                
-                return ET.isFriendEffect() ? -1 : .5f;
-            }
-        });
+        Pair<Short, GameSpell> spellTarget = getBestSpellTarget(fight, fighter, EfficiencyCoefficient.ATTACK);
         
         if(spellTarget == null)
             return false;

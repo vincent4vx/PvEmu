@@ -22,6 +22,7 @@ final public class AIHandler {
     private AIHandler() {
         registerAI(new PoutchAI());
         registerAI(DEFAULT_AI);
+        registerAI(new RunawayAI());
     }
     
     public void registerAI(AIType type){
