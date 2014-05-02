@@ -24,6 +24,7 @@ public class WalkAction implements GameAction<Player> {
 
     @Override
     public void start(GameActionData<Player> data) {
+        Loggin.debug("path : %s", Pathfinding.parsePath(data.getPerformer().getMap(), data.getPerformer().getCellId(), data.getArgument(0), false));
         AtomicReference<String> rPath = new AtomicReference<>((String) data.getArgument(0));
         short steps = Pathfinding.validatePath(
                 data.getPerformer().getMap(),

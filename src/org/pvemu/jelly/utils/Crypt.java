@@ -1,7 +1,9 @@
 package org.pvemu.jelly.utils;
 
+import java.util.Collection;
+import org.pvemu.game.objects.map.GameMap;
+import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Constants;
-import org.pvemu.jelly.Loggin;
 
 public class Crypt {
 
@@ -236,5 +238,25 @@ public class Crypt {
     public static String cellID_To_Code(short cellID) {
         int char1 = cellID / 64, char2 = cellID % 64;
         return HASH[char1] + "" + HASH[char2];
+    }
+    
+    static public String compressPath(GameMap map, short startCell, Collection<Short> path, boolean inFight){
+        StringBuilder sb = new StringBuilder(path.size() * 3);
+        
+        short lastCell = startCell;
+        char lastDirection = 'a';
+        for(short cell : path){
+            char direction = MapUtils.getDirBetweenTwoCase(lastCell, cell, map, inFight);
+            
+            if(direction != lastDirection){
+                sb.append(lastDirection).append(cellID_To_Code(lastCell));
+                lastDirection = direction;
+            }
+            lastCell = cell;
+        }
+        
+        sb.append(lastDirection).append(cellID_To_Code(lastCell));
+        
+        return sb.toString();
     }
 }

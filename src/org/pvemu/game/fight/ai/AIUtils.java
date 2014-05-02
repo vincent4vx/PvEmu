@@ -1,8 +1,10 @@
 package org.pvemu.game.fight.ai;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import org.pvemu.game.effect.Effect;
 import org.pvemu.game.effect.EffectData;
@@ -32,7 +34,6 @@ final public class AIUtils {
         int dist = Integer.MAX_VALUE;
         
         for(Fighter f : fight.getFighters()){
-            Loggin.debug("found %s", f);
             if(f.getTeam() == fighter.getTeam())
                 continue;
             
@@ -55,27 +56,64 @@ final public class AIUtils {
         if(fight == null || fighter == null || target == null)
             return false;
         
-        Loggin.debug("try to move near %s", target);
-        
         if(fighter.getNumPM() <= 0)
             return false;
         
         if(MapUtils.isAdjacentCells(fighter.getCellId(), target.getCellId()))
             return false;
         
-        Collection<Short> path;
+        Collection<Short> path = Pathfinding.findPath(fight, fighter.getCellId(), target.getCellId(), false, false);
         
-        try{
-            path = Pathfinding.findPath(fight, fighter.getCellId(), target.getCellId());
-        }catch(Exception e){
-            Loggin.error("Cannot find path", e);
-            return false;
+        if(path == null){ //no direct path : try to get the nearest cell arround target
+            Loggin.debug("try to get nearest accessible cell");
+            short dest = getNearestAccessibleCellArroundTarget(fight, fighter, target.getCellId());
+            
+            if(dest == -1 || dest == fighter.getCellId())
+                return false;
+            
+            path = Pathfinding.findPath(fight, fighter.getCellId(), dest, false, true);
+            
+            if(path == null)
+                return false;
         }
         
-        if(path == null)
-            return false;
+        List<Short> newPath = new ArrayList<>(fighter.getNumPM());
         
-        return move(fight, fighter, path);
+        Iterator<Short> it = path.iterator();
+        
+        int pm = fighter.getNumPM();
+        while(it.hasNext() && pm-- > 0){
+            newPath.add(it.next());
+        }
+        
+        return move(fight, fighter, newPath);
+    }
+    
+    static public short getNearestAccessibleCellArroundTarget(Fight fight, AIFighter fighter, short target){
+        if(fighter.getNumPM() <= 0)
+            return -1;
+        
+        Collection<Short> possibleCells = MapUtils.getCellsFromArea(
+                fight.getFightMap().getMap(),
+                fighter.getCellId(),
+                fighter.getCellId(),
+                "C" + Crypt.HASH[fighter.getNumPM()]
+        );
+        
+        short best = fighter.getCellId();
+        int dist = MapUtils.getDistanceBetween(fight.getFightMap().getMap(), fighter.getCellId(), target);
+        for(short cell : possibleCells){
+            if(!fight.getFightMap().isFreeCell(cell))
+                continue;
+            
+            int curDist = MapUtils.getDistanceBetween(fight.getFightMap().getMap(), cell, target);
+            if(dist > curDist){
+                best = cell;
+                dist = curDist;
+            }
+        }
+        
+        return best;
     }
     
     static private GameSpell getBestSpellForDest(Fight fight, AIFighter fighter, short dest, EfficiencyCoefficient EC){
@@ -218,9 +256,11 @@ final public class AIUtils {
             return new Pair<>(target.getCellId(), efficiency);
         }
         
-        Collection<Short> cells = MapUtils.parseCellList(
-                "C" + Crypt.HASH[spell.getPOMax()], 
-                fight.getFightMap().getMap()
+        Collection<Short> cells = MapUtils.getCellsFromArea(
+                fight.getFightMap().getMap(),
+                caster.getCellId(),
+                caster.getCellId(),
+                "C" + Crypt.HASH[spell.getPOMax()]
         );
         
         int efficiency = 0;
@@ -311,30 +351,18 @@ final public class AIUtils {
     }
     
     static public boolean move(Fight fight, AIFighter fighter, Collection<Short> path){
-        short last = fighter.getCellId();
-        short pm = -1;
-        StringBuilder strPath = new StringBuilder(3 * fighter.getNumPM());
-        boolean first = true;
-        for(short cell : path){
-            if(first){
-                strPath.append('a');
-                first = false;
-            }else{
-                strPath.append(MapUtils.getDirBetweenTwoCase(
-                        last, 
-                        cell, 
-                        fight.getFightMap().getMap(), 
-                        true
-                ));
-            }
-            strPath.append(Crypt.cellID_To_Code(cell));
-            last = cell;
-            
-            if(++pm >= fighter.getNumPM())
-                break;
+        if(path.isEmpty())
+            return false;
+        
+        short cost = (short)path.size();
+        
+        Iterator<Short> it = path.iterator();
+        short dest = it.next();
+        while(it.hasNext()){
+            dest = it.next();
         }
         
-        if(!fight.canMove(fighter, last, pm)){
+        if(!fight.canMove(fighter, dest, cost)){
             Loggin.debug("%s can't move", fighter);
             return false;
         }
@@ -344,18 +372,18 @@ final public class AIUtils {
                 1, 
                 FightActionsRegistry.WALK,
                 fighter.getID(),
-                strPath.toString()
+                Crypt.compressPath(fight.getFightMap().getMap(), fighter.getCellId(), path, true)
         );
         
         try{
-            Thread.sleep(800 + 200 * pm);
+            Thread.sleep(900 + 200 * cost);
         }catch(InterruptedException e){}
         
-        fighter.removePM(pm);
-        GameSendersRegistry.getEffect().removePMOnWalk(fight, fighter.getID(), pm);
+        fighter.removePM(cost);
+        GameSendersRegistry.getEffect().removePMOnWalk(fight, fighter.getID(), cost);
         
-        fight.getFightMap().moveFighter(fighter, last);
-        Loggin.debug("[AI/Fight] %s arrived on cell %d", fighter, last);
+        fight.getFightMap().moveFighter(fighter, dest);
+        Loggin.debug("[AI/Fight] %s arrived on cell %d", fighter, dest);
         return true;
     }
 }

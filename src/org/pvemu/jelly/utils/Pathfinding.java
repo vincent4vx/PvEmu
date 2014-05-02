@@ -1,11 +1,15 @@
 package org.pvemu.jelly.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import org.pvemu.game.objects.map.GameMap;
 import java.util.concurrent.atomic.AtomicReference;
 import org.pvemu.game.fight.Fight;
@@ -69,6 +73,40 @@ public class Pathfinding {
         }
         
         return steps;
+    }
+    
+    static public Collection<Short> parsePath(GameMap map, short startCell, String strPath, boolean inFight){
+        List<Short> path = new ArrayList<>();
+        
+        short lastCell = startCell;
+        char lastDir;
+        for(int i = 0; i < strPath.length(); i += 3){
+            String strStep = strPath.substring(i, i+3);
+            short stepCell = Crypt.cellCode_To_ID(strStep.substring(1));
+            lastDir = strStep.charAt(0);
+            List<Short> step = new ArrayList<>(12);
+            
+            int s = map.getWidth() * 2 + 1;
+            
+            while(lastCell != stepCell 
+                    && map.getCellById(lastCell) != null 
+                    && map.getCellById(lastCell).isWalkable()
+                    && s-- > 0
+            ){
+                step.add(lastCell);
+                lastCell = MapUtils.getCellIDFromDirrection(lastCell, lastDir, map, inFight);
+            }
+            
+            if(s == 0){
+                Loggin.debug("Cannot found path !");
+                break;
+            }
+            
+            lastCell = stepCell;
+            path.addAll(step);
+        }
+        
+        return path;
     }
     
     static private class AStar{
@@ -141,6 +179,8 @@ public class Pathfinding {
         }
         
         private short getBestNode(){
+            if(openList.isEmpty())
+                return -1;
             Iterator<Entry<Short, Node>> it = openList.entrySet().iterator();
             Entry<Short, Node> best = it.next();
             
@@ -161,21 +201,24 @@ public class Pathfinding {
             }
         }
         
-        private LinkedList<Short> getPath(){
+        private LinkedList<Short> getPath(boolean addStart, boolean addDest){
             LinkedList<Short> path = new LinkedList<>();
             
-            short last = dest;
+            short last = addDest ? dest : closeList.get(dest).getParent();
             
             do{
+                path.addFirst(last);
                 Node node = closeList.get(last);
-                path.addFirst(node.getParent());
                 last = node.getParent();
             }while(last != start);
+            
+            if(addStart)
+                path.addFirst(start);
             
             return path;
         }
         
-        public Collection<Short> computePath(){
+        public Collection<Short> computePath(boolean addStart, boolean addDest){
             short current = start;
             openList.put(start, new Node(0, 0, 0, current));
             
@@ -183,19 +226,22 @@ public class Pathfinding {
                 addToCloseList(current);
                 addAdjacentCells(current);
                 current = getBestNode();
+                
+                if(current == -1) //there is no nodes
+                    return null;
             }while(current != dest && !openList.isEmpty());
             
             addToCloseList(current);
             
             if(current == dest){ //path found
-                return getPath();
+                return getPath(addStart, addDest);
             }
             
             return null;
         }
     }
     
-    static public Collection<Short> findPath(Fight fight, short start, short dest){
-        return new AStar(fight, start, dest).computePath();
+    static public Collection<Short> findPath(Fight fight, short start, short dest, boolean addStart, boolean addDest){
+        return new AStar(fight, start, dest).computePath(addStart, addDest);
     }
 }

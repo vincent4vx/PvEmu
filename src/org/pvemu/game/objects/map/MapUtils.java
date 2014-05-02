@@ -5,8 +5,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Crypt;
-import org.pvemu.jelly.utils.Pathfinding;
 import org.pvemu.jelly.utils.Utils;
 
 /**
@@ -30,6 +30,11 @@ final public class MapUtils {
 
         public int getY() {
             return y;
+        }
+
+        @Override
+        public String toString() {
+            return "Coordinates{" + "x=" + x + ", y=" + y + '}';
         }
 
     }
@@ -184,28 +189,54 @@ final public class MapUtils {
     }
 
     public static char getDirBetweenTwoCase(short cell1ID, short cell2ID, GameMap map, boolean inFight) {
-        Collection<Character> dirs = new HashSet<>();
-        dirs.add('b');
-        dirs.add('d');
-        dirs.add('f');
-        dirs.add('h');
-        if (!inFight) {
-            dirs.add('a');
-            dirs.add('b');
-            dirs.add('c');
-            dirs.add('d');
-        }
-        for (char c : dirs) {
-            short cell = cell1ID;
-            for (byte i = 0; i <= 64; i++) {
-                if (getCellIDFromDirrection(cell, c, map, inFight) == cell2ID) {
-                    return c;
-                }
-                cell = getCellIDFromDirrection(cell, c, map, inFight);
+        char dir = Crypt.HASH[getDirection(map, cell1ID, cell2ID)];
+        
+        if(inFight){
+            for(char c : new char[]{'a', 'c', 'e', 'g'}){ //exclude list
+                if(c == dir)
+                    return 0;
             }
         }
-        return 0;
+        
+        return dir;
     }
+    
+    static public int getDirection(GameMap mapHandler, short nCell1, short nCell2)
+    {
+        int _loc3 = mapHandler.getWidth();
+        int[] _loc4 = new int[]{1, _loc3, _loc3 * 2 - 1, _loc3 - 1, -1, -_loc3, -_loc3 * 2 + 1, -(_loc3 - 1)};
+        int _loc2 = nCell2 - nCell1;
+        for (int _loc1 = 7; _loc1 >= 0; --_loc1)
+        {
+            if (_loc4[_loc1] == _loc2)
+            {
+                return (_loc1);
+            } // end if
+        } // end of for
+        Coordinates _loc7 = getCellCoordinates(mapHandler, nCell1);
+        Coordinates _loc6 = getCellCoordinates(mapHandler, nCell2);
+        int _loc5 = _loc6.x - _loc7.x;
+        int _loc8 = _loc6.y - _loc7.y;
+        if (_loc5 == 0)
+        {
+            if (_loc8 > 0)
+            {
+                return (3);
+            }
+            else
+            {
+                return (7);
+            } // end else if
+        }
+        else if (_loc5 > 0)
+        {
+            return (1);
+        }
+        else
+        {
+            return (5);
+        } // end else if
+    } // End of the function
     
     static public Set<Short> getAdjencentCells(GameMap map, short cell){
         Set<Short> cells = new HashSet<>(4);
