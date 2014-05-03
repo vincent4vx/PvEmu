@@ -13,7 +13,6 @@ import org.pvemu.game.fight.fightmode.PvMFight;
 import org.pvemu.game.fight.teamtype.MonsterTeam;
 import org.pvemu.game.fight.teamtype.PlayerTeam;
 import org.pvemu.game.objects.map.GameMap;
-import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.game.objects.monster.MonsterGroup;
 import org.pvemu.game.objects.monster.MonsterTemplate;
 import org.pvemu.game.objects.player.Player;
@@ -27,15 +26,22 @@ import org.pvemu.network.game.output.GameSendersRegistry;
 public class FightFactory {
     static public DefianceFight defiance(Player p1, Player p2){
         GameMap map = p1.getMap();
-        String[] places = Utils.split(map.getModel().places, "|", 2);
+        
+        if(!map.canFight())
+            return null;
+        
+        boolean b = Utils.randBool();
+        
+        FightTeam team1 = new PlayerTeam((byte)(b ? 1 : 0), p1.getID() << 16, p1.getCellId(), map.getPlaces()[(b ? 1 : 0)]);
+        FightTeam team2 = new PlayerTeam((byte)(b ? 0 : 1), p2.getID() << 16, p2.getCellId(), map.getPlaces()[(b ? 0 : 1)]);
+        FightTeam[] teams = new FightTeam[2];
+        teams[team1.getNumber()] = team1;
+        teams[team2.getNumber()] = team2;
         
         DefianceFight fight = new DefianceFight(
                 map.getFreeFightId(),
                 new FightMap(map),
-                new FightTeam[]{
-                    new PlayerTeam((byte)0, p1.getID() << 16, p1.getCellId(), MapUtils.parseCellList(places[0], map)),
-                    new PlayerTeam((byte)1, p2.getID() << 16, p2.getCellId(), MapUtils.parseCellList(places[1], map))
-                },
+                teams,
                 p1.getID()
         );
         
@@ -43,8 +49,8 @@ public class FightFactory {
         
         fight.setState(Fight.STATE_PLACE);
         
-        fight.addFighterToTeamByNumber(new PlayerFighter(p1, fight), (byte)0);
-        fight.addFighterToTeamByNumber(new PlayerFighter(p2, fight), (byte)1);
+        fight.addToTeam(new PlayerFighter(p1, fight), team1);
+        fight.addToTeam(new PlayerFighter(p2, fight), team2);
         
         return fight;
     }
@@ -55,18 +61,26 @@ public class FightFactory {
     
     static public PvMFight pvm(Player player, MonsterGroup group){
         GameMap map = player.getMap();
+        
+        if(!map.canFight())
+            return null;
+        
         map.removeMonsterGroup(group);
         GameSendersRegistry.getMap().removeGMable(map, group);
         
-        String[] places = Utils.split(map.getModel().places, "|", 2);
+        boolean b = Utils.randBool();
+        
+        FightTeam team1 = new PlayerTeam((byte)(b ? 1 : 0), player.getID() << 16, player.getCellId(), map.getPlaces()[(b ? 1 : 0)]);
+        FightTeam team2 = new MonsterTeam((byte)(b ? 0 : 1), group.getID() << 16, group.getCellId(), map.getPlaces()[(b ? 0 : 1)]);
+        
+        FightTeam[] teams = new FightTeam[2];
+        teams[team1.getNumber()] = team1;
+        teams[team2.getNumber()] = team2;
         
         PvMFight fight = new PvMFight(
                 map.getFreeFightId(), 
                 new FightMap(map), 
-                new FightTeam[]{
-                    new PlayerTeam((byte)0, player.getID() << 16, player.getCellId(), MapUtils.parseCellList(places[0], map)),
-                    new MonsterTeam((byte)1, group.getID() << 16, group.getCellId(), MapUtils.parseCellList(places[1], map))
-                }, 
+                teams, 
                 player.getID()
         );
         
@@ -75,10 +89,10 @@ public class FightFactory {
         
         fight.setState(Fight.STATE_PLACE);
         
-        fight.addFighterToTeamByNumber(newFighter(player, fight), (byte)0);
+        fight.addToTeam(newFighter(player, fight), team1);
         
         for(MonsterTemplate template : group.getMonsters()){
-            fight.addFighterToTeamByNumber(newMonsterFighter(template, fight), (byte)1);
+            fight.addToTeam(newMonsterFighter(template, fight), team2);
         }
         
         return fight;

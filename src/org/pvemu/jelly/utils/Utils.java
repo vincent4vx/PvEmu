@@ -216,7 +216,6 @@ public class Utils {
      */
     public static String stringAleat(int size) {
         String alphabet = "abcdefghijklmnopqrstuvwxyz";
-        Random rand = new Random();
 
         StringBuilder str = new StringBuilder(size);
 
@@ -234,5 +233,9 @@ public class Utils {
         }
         
         return false;
+    }
+    
+    static public boolean randBool(){
+        return rand.nextBoolean();
     }
 }

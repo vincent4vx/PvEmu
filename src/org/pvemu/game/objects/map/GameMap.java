@@ -22,12 +22,14 @@ public final class GameMap {
     final private List<MonsterTemplate> availableMonsters;
     final private Map<Integer, MonsterGroup> monsterGroups = new ConcurrentHashMap<>();
     final private Map<Integer, Fight> fights = new ConcurrentHashMap<>();
+    final private List<Short>[] places;
     private int lastGMId = 0;
 
-    GameMap(short id, MapModel model, List<MapCell> cells, List<MonsterTemplate> availableMonsters) {
+    GameMap(short id, MapModel model, List<MapCell> cells, List<MonsterTemplate> availableMonsters, List<Short>[] places) {
         this.id = id;
         this.model = model;
         this.cells = cells;
+        this.places = places;
         this.availableMonsters = availableMonsters;
         refreshMobs();
     }
@@ -182,5 +184,21 @@ public final class GameMap {
     public void removeFight(Fight fight){
         fights.remove(fight.getId());
         GameSendersRegistry.getMap().fightCountToMap(this);
+    }
+
+    public List<Short>[] getPlaces() {
+        return places;
+    }
+    
+    public boolean canFight(){
+        if(places.length < 2)
+            return false;
+        
+        for(List p : places){
+            if(p.isEmpty())
+                return false;
+        }
+        
+        return true;
     }
 }

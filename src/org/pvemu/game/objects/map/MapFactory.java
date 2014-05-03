@@ -43,12 +43,7 @@ final public class MapFactory {
             return null;
         
         short id = model.id;
-        List<MapCell> cells; /*= new ArrayList<>(model.mapData.length() / 10);
-
-        for (short f = 0, i = 0; f < model.mapData.length(); f += 10, ++i) {
-            String cellData = model.mapData.substring(f, f + 10);
-            cells.add(parseCellData(id, i, cellData));
-        }*/
+        List<MapCell> cells;
         
         if(model.mapData == null || model.mapData.isEmpty()){
             cells = getCellsFromCellsString(model.cells, id);
@@ -56,11 +51,20 @@ final public class MapFactory {
             cells = getCellsFromMapData(model.mapData, id);
         }
         
+        String[] tmp = Utils.split(model.places, "|");
+        
+        List<Short>[] places = new List[tmp.length];
+        
+        for(int i = 0; i < tmp.length; ++i){
+            places[i] = MapUtils.parseCellList(tmp[i].trim(), cells);
+        }
+        
         GameMap map = new GameMap(
                 id, 
                 model,
                 Collections.unmodifiableList(cells),
-                MonsterFactory.parseMonsterList(model.monsters)
+                MonsterFactory.parseMonsterList(model.monsters),
+                places
         );
         
         for(MapNpcs MN : DAOFactory.mapNpcs().getByMapId(id)){

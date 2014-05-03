@@ -89,6 +89,11 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     public String[] getColors() {
         return player.getColors();
     }
+
+    @Override
+    public byte getAlignment() {
+        return player.getAlignment();
+    }
     
     @Override
     public IoSession getSession(){

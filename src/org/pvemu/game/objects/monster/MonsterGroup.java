@@ -77,7 +77,10 @@ public class MonsterGroup implements GMable {
         
         return sb.toString();
     }
-    
-    
+
+    @Override
+    public byte getAlignment() {
+        return -1; //TODO: alignment
+    }    
     
 }

@@ -19,4 +19,5 @@ public interface GMable {
     public short getCellId();
     public byte getOrientation();
     public String getName();
+    public byte getAlignment();
 }

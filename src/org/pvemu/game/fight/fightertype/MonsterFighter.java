@@ -77,6 +77,11 @@ public class MonsterFighter extends AIFighter{
     }
 
     @Override
+    public byte getAlignment() {
+        return monster.getModel().align;
+    }
+
+    @Override
     public boolean isReady() {
         return true;
     }

@@ -54,7 +54,7 @@ public class PlayerActions {
 
         Loggin.debug("Joueur %s arrivé sur la cellule %d avec succès !", player.getName(), player.getCell().getID());
         
-        if(!player.getCell().getMonstersGroups().isEmpty()){
+        if(!player.getCell().getMonstersGroups().isEmpty() && player.getMap().canFight()){
             MonsterGroup group = player.getCell().getMonstersGroups().values().iterator().next();
             FightFactory.pvm(player, group);
             return;

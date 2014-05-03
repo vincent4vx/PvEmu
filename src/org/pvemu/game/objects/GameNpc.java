@@ -10,24 +10,24 @@ import org.pvemu.models.dao.DAOFactory;
 
 public class GameNpc implements GMable {
 
-    private int id;
-    private NpcTemplate _template;
-    private byte orientation;
-    private short cellID;
-    private NpcQuestion _question;
+    final private int id;
+    final private NpcTemplate template;
+    final private byte orientation;
+    final private short cellID;
+    final private NpcQuestion question;
 
     public GameNpc(MapNpcs data, int id) {
-        _template = data.getTemplate();
+        template = data.getTemplate();
         this.id = id;
         orientation = data.orientation;
         cellID = data.cellid;
         
-        _question = DAOFactory.question().getById(_template.initQuestion);
+        question = DAOFactory.question().getById(template.initQuestion);
     }
 
     @Override
     public String getGMData() {
-        if(_template == null){
+        if(template == null){
             Loggin.debug("NpcTemplate manquant !");
             return "";
         }
@@ -41,21 +41,21 @@ public class GameNpc implements GMable {
         }
         
         packet.append(id).append(";");
-        packet.append(_template.id).append(";");
+        packet.append(template.id).append(";");
         packet.append("-4").append(";");//type = NPC
 
         StringBuilder taille = new StringBuilder();
-        if (_template.scaleX == _template.scaleY) {
-            taille.append(_template.scaleY);
+        if (template.scaleX == template.scaleY) {
+            taille.append(template.scaleY);
         } else {
-            taille.append(_template.scaleX).append("x").append(_template.scaleY);
+            taille.append(template.scaleX).append("x").append(template.scaleY);
         }
-        packet.append(_template.gfxID).append("^").append(taille.toString()).append(";");
-        packet.append(_template.sex).append(";");
-        packet.append((_template.color1 != -1 ? Integer.toHexString(_template.color1) : "-1")).append(";");
-        packet.append((_template.color2 != -1 ? Integer.toHexString(_template.color2) : "-1")).append(";");
-        packet.append((_template.color3 != -1 ? Integer.toHexString(_template.color3) : "-1")).append(";");
-        packet.append(_template.accessories).append(";");
+        packet.append(template.gfxID).append("^").append(taille.toString()).append(";");
+        packet.append(template.sex).append(";");
+        packet.append((template.color1 != -1 ? Integer.toHexString(template.color1) : "-1")).append(";");
+        packet.append((template.color2 != -1 ? Integer.toHexString(template.color2) : "-1")).append(";");
+        packet.append((template.color3 != -1 ? Integer.toHexString(template.color3) : "-1")).append(";");
+        packet.append(template.accessories).append(";");
         packet.append("").append(";"); //extra clip
         //packet.append(_template.get_customArtWork());
         
@@ -67,7 +67,7 @@ public class GameNpc implements GMable {
      * @return 
      */
     public NpcQuestion getQuestion(){
-        return _question;
+        return question;
     }
 
     @Override
@@ -82,11 +82,16 @@ public class GameNpc implements GMable {
 
     @Override
     public String getName() {
-        return "" + _template.id;
+        return "" + template.id;
     }    
 
     @Override
     public int getID() {
         return id;
+    }
+
+    @Override
+    public byte getAlignment() {
+        return -1;
     }
 }

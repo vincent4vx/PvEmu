@@ -365,6 +365,11 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
     public String[] getColors() {
         return colors;
     }
+
+    @Override
+    public byte getAlignment() {
+        return -1; //TODO: alignment
+    }
     
     public boolean boostStats(int statsID){
         Element element = Stats.getElementByBoostID(statsID);

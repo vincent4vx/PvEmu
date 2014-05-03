@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Crypt;
 import org.pvemu.jelly.utils.Utils;
 
@@ -76,18 +75,23 @@ final public class MapUtils {
     }
 
     static public List<Short> parseCellList(String cellList, GameMap map) {
+        return parseCellList(cellList, map.getCells());
+    }
+    
+    static public List<Short> parseCellList(String cellList, List<MapCell> availableCells) {
         List<Short> list = new ArrayList<>(cellList.length() / 2);
 
         for (int i = 0; i < cellList.length(); i += 2) {
             short cell = Crypt.cellCode_To_ID(cellList.substring(i, i + 2));
 
-            if (map.getCellById(cell) != null && map.getCellById(cell).isWalkable()) {
+            if (availableCells.get(cell) != null && availableCells.get(cell).isWalkable()) {
                 list.add(cell);
             }
         }
 
         return list;
     }
+
 
     static public Coordinates getCellCoordinates(GameMap map, short cell) {
         int width = map.getWidth();

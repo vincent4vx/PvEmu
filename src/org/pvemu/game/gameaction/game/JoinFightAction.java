@@ -44,6 +44,24 @@ public class JoinFightAction implements GameAction<Player>{
 
     @Override
     public void start(GameActionData<Player> data) {
+        if(data.getPerformer().getCurrentVita() <= 0){ //Zombie
+            GameSendersRegistry.getFight().joinFightError(
+                    data.getPerformer().getSession(), 
+                    data.getPerformer().getID(), 
+                    NO_ZOMBIE_ALLOWED
+            );
+            return;
+        }
+        
+        if(!data.getPerformer().getMap().canFight()){
+            GameSendersRegistry.getFight().joinFightError(
+                    data.getPerformer().getSession(), 
+                    data.getPerformer().getID(), 
+                    CANT_FIGHT
+            );
+            return;
+        }
+        
         int fightID;
         int teamID;
         
@@ -70,7 +88,24 @@ public class JoinFightAction implements GameAction<Player>{
             return;
         }
         
-        fight.addToTeamById(FightFactory.newFighter(data.getPerformer(), fight), teamID);
+        if(fight.getState() != Fight.STATE_PLACE){
+            GameSendersRegistry.getFight().joinFightError(
+                    data.getPerformer().getSession(), 
+                    data.getPerformer().getID(), 
+                    CANT_DO_TOO_LATE
+            );
+            return;
+        }
+        
+        char error = fight.addToTeamById(FightFactory.newFighter(data.getPerformer(), fight), teamID);
+        
+        if(error != 0){
+            GameSendersRegistry.getFight().joinFightError(
+                    data.getPerformer().getSession(), 
+                    data.getPerformer().getID(), 
+                    error
+            );
+        }
     }
 
     @Override

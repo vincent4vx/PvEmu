@@ -9,6 +9,7 @@ package org.pvemu.game.fight;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.pvemu.game.gameaction.game.JoinFightAction;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
@@ -23,6 +24,7 @@ abstract public class FightTeam {
     final private List<Short> places;
     private int teamLevel = 0;
     private int levelMax = 0;
+    private boolean closed = false;
 
     public FightTeam(byte number, int id, short cell, List<Short> places) {
         if(id > 0) //set the id negative
@@ -35,6 +37,9 @@ abstract public class FightTeam {
     }
     
     synchronized public void addFighter(Fighter fighter){
+        if(canAddToTeam(fighter) != 0)
+            return;
+        
         fighters.put(fighter.getID(), fighter);
         fighter.setTeam(this);
         GameSendersRegistry.getFight().addToTeam(fighter.getFight().getFightMap().getMap(), fighter);
@@ -63,7 +68,25 @@ abstract public class FightTeam {
     }
     
     public boolean isFull(){
-        return fighters.size() >= places.size();
+        return fighters.size() >= 8 || fighters.size() >= places.size();
+    }
+    
+    /**
+     * Return the character error (constant in JoinFightAction)
+     * @param fighter the fighter to add
+     * @return the error or 0 if can join
+     */
+    public char canAddToTeam(Fighter fighter){
+        if(isFull())
+            return JoinFightAction.TEAM_FULL;
+        
+        if(getAlignement() != fighter.getAlignment())
+            return JoinFightAction.TEAM_DIFFERENT_ALIGNMENT;
+        
+        if(closed)
+            return JoinFightAction.TEAM_CLOSED;
+        
+        return 0;
     }
 
     public List<Short> getPlaces() {
@@ -102,5 +125,13 @@ abstract public class FightTeam {
     
     public int size(){
         return fighters.size();
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 }

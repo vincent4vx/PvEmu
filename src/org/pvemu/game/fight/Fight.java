@@ -7,6 +7,7 @@ import java.util.concurrent.ScheduledFuture;
 import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.fight.buttin.FightButtinFactory;
 import org.pvemu.game.fight.endactions.EndActionsHandler;
+import org.pvemu.game.gameaction.game.JoinFightAction;
 import org.pvemu.jelly.Constants;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -43,11 +44,14 @@ abstract public class Fight {
         FightUtils.startCountdownTimer(this);
     }
     
-    public void addFighterToTeamByNumber(Fighter fighter, byte number){
-        addToTeam(fighter, teams[number]);
+    public char addFighterToTeamByNumber(Fighter fighter, byte number){
+        if(teams.length < number)
+            return JoinFightAction.CANT_FIGHT;
+        
+        return addToTeam(fighter, teams[number]);
     }
     
-    public void addToTeamById(Fighter fighter, int teamID){
+    public char addToTeamById(Fighter fighter, int teamID){
         FightTeam team;
         int number = 0;
         
@@ -55,15 +59,22 @@ abstract public class Fight {
             team = teams[number++];
         }while(team.getId() != teamID && teams.length < number);
         
-        addToTeam(fighter, team);
+        return addToTeam(fighter, team);
     }
     
-    private void addToTeam(Fighter fighter, FightTeam team){
+    public char addToTeam(Fighter fighter, FightTeam team){
+        char error = team.canAddToTeam(fighter);
+        
+        if(error != 0)
+            return error;
+        
         Loggin.debug("new player (%s) into fight (there are %d players)", fighter.getName(), fighters.size());
         team.addFighter(fighter);
         fighters.add(fighter);
         map.addFighter(fighter);
         fighter.enterFight();
+        
+        return 0;
     }
 
     public FightTeam[] getTeams() {
@@ -212,13 +223,12 @@ abstract public class Fight {
     }
     
     private FightTeam getWinTeam(){
-        FightTeam team = teams[0];
-        
-        while(team.isAllDead()){
-            team = teams[team.getNumber() + 1];
+        for(FightTeam team : teams){
+            if(!team.isAllDead())
+                return team;
         }
-        
-        return team;
+        Loggin.warning("No winner team found !");
+        return teams[0];
     }
     
     private void endOfGame(){
@@ -234,9 +244,13 @@ abstract public class Fight {
         FightUtils.scheduleTask(new Runnable() {
             @Override
             public void run() {
-                FightTeam winners = getWinTeam();
-                endActions(winners);
-                endRewards(winners);
+                try{
+                    FightTeam winners = getWinTeam();
+                    endActions(winners);
+                    endRewards(winners);
+                }catch(Exception e){
+                    Loggin.error("Cannot terminate fight !", e);
+                }
             }
         }, 2);
     }
