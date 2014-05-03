@@ -33,11 +33,7 @@ abstract public class FighterEffect implements Effect {
 
         Loggin.debug("Apply %s on cell %d", data, cell);
 
-        for (Fighter target : fight.getFightMap().getFightersByCells(cells)) {
-            if (fight.getState() == Fight.STATE_FINISHED) {
-                return;
-            }
-            
+        for (Fighter target : fight.getFightMap().getFightersByCells(cells)) {            
             if(!isGoodTarget(data.getTarget(), caster, target)){
                 continue;
             }
@@ -47,12 +43,9 @@ abstract public class FighterEffect implements Effect {
             }
 
             applyToFighter(data, caster, target);
-
-            if (!target.isAlive()) {
-                fight.onFighterDie(target);
-            }
         }
-
+        
+        fight.checkZombies();
     }
     
     protected boolean isGoodTarget(byte ET, Fighter caster, Fighter target){

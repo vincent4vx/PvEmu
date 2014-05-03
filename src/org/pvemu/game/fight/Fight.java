@@ -170,7 +170,7 @@ abstract public class Fight {
         }
     }
     
-    public void onFighterDie(Fighter fighter){
+    protected void onFighterDie(Fighter fighter){
         if(state == STATE_FINISHED)
             return;
         
@@ -187,6 +187,17 @@ abstract public class Fight {
         
         if(fighter == fighters.getCurrent())
             nextFighter();
+    }
+    
+    /**
+     * Check if there are zombies and kill them
+     */
+    public void checkZombies(){
+        for(Fighter fighter : fighters){
+            if(fighter.isZombie()){
+                onFighterDie(fighter);
+            }
+        }
     }
     
     private boolean verifyEndOfGame(){

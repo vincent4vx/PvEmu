@@ -1,10 +1,8 @@
 package org.pvemu.game.fight.ai;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import org.pvemu.game.effect.Effect;
 import org.pvemu.game.effect.EffectData;

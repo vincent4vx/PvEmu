@@ -22,7 +22,8 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  */
 abstract public class Fighter implements GMable, Creature {
     
-    protected boolean alive = true;
+    private boolean alive = true;
+    private boolean zombie = false;
     private boolean canPlay = false;
     protected short currentVita;
     final private Stats baseStats;
@@ -148,7 +149,7 @@ abstract public class Fighter implements GMable, Creature {
         
         if(currentVita <= 0){
             currentVita = 0;
-            alive = false;
+            setZombie();
         }
         
         GameSendersRegistry.getEffect().removeVita(fight, getID(), num);
@@ -173,8 +174,21 @@ abstract public class Fighter implements GMable, Creature {
         return alive;
     }
     
+    /**
+     * Set the fighter as a zombie
+     * The fighter is dead, but the fight has not yet made is mourning
+     */
+    public void setZombie(){
+        alive = false;
+        zombie = true;
+    }
+
+    public boolean isZombie() {
+        return zombie;
+    }
+    
     public void onDie(){
-        
+        zombie = false;
     }
     
     public void onEnd(boolean win){

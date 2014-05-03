@@ -207,7 +207,7 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     }
     
     public void leave(){
-        alive = false;
-        fight.onFighterDie(this);
+        setZombie();
+        fight.checkZombies();
     }
 }
