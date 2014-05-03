@@ -248,6 +248,9 @@ public class Pathfinding {
     static public Collection<Short> findPath(Fight fight, short start, short dest, boolean addStart, boolean addDest, int limit){
         Collection<Short> path = findPath(fight, start, dest, addStart, addDest);
         
+        if(path == null)
+            return null;
+        
         List<Short> newPath = new ArrayList<>(limit);
         Iterator<Short> it = path.iterator();
         
