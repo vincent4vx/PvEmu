@@ -76,9 +76,12 @@ public class CommandsHandler {
     }
     
     private String[] parseCommand(String command, Asker asker){
-        String[] args = command.split("\\s+");
+        String[] args = command.trim().split("\\s+");
         
         for(int i = 0; i < args.length; ++i){
+            if(args[i].isEmpty())
+                continue;
+            
             if(args[i].charAt(0) == '%'){
                 switch(args[i]){
                     case "%me":
