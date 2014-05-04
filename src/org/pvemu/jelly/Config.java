@@ -37,6 +37,8 @@ public class Config {
     final static public ConfigItem<Integer> RATE_DEFIANCE    = new ConfigIntItem("RATE_DEFIANCE", 0);
     final static public ConfigItem<Integer> RATE_PVM         = new ConfigIntItem("RATE_PVM", 1);
     
+    final static public ConfigItem<Integer> RESPAWN_TIME     = new ConfigIntItem("RESPAWN_TIME", 3);
+    
     final static public ConfigItem<Boolean> PRELOAD          = new ConfigBoolItem("PRELOAD", false);
     
     abstract static public class ConfigItem<T>{

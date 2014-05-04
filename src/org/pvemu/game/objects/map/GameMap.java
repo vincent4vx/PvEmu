@@ -32,6 +32,7 @@ public final class GameMap {
         this.places = places;
         this.availableMonsters = availableMonsters;
         refreshMobs();
+        MapTimers.registerMonstersRespawnTimer(this);
     }
     
     public int getNextGmId(){
@@ -152,6 +153,14 @@ public final class GameMap {
         while(monsterGroups.size() < model.numgroup){
             addMonsterGroup(MonsterFactory.generateMonsterGroup(availableMonsters, this));
         }
+    }
+    
+    public int getCurrentGroupCount(){
+        return monsterGroups.size();
+    }
+
+    public List<MonsterTemplate> getAvailableMonsters() {
+        return availableMonsters;
     }
     
     public int getFreeFightId(){
