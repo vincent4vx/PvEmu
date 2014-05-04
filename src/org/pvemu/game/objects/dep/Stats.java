@@ -101,7 +101,7 @@ public class Stats{
     final static public short MAX_VALUE = Short.MAX_VALUE;
     private static final HashMap<Integer, Element> intToElement = new HashMap<>();
     private static final Map<Integer, Element> elementsByBoostID = new HashMap<>();
-    final private EnumMap<Element, Short> stats;    
+    final private EnumMap<Element, Integer> stats;    
     
     public Stats(){
         stats = new EnumMap<>(Element.class);
@@ -118,7 +118,7 @@ public class Stats{
      * @param qu
      * @return
      */
-    public Stats add(Element e, short qu) {
+    public Stats add(Element e, int qu) {
         if (stats.containsKey(e)) {
             qu += stats.get(e);
         }
@@ -135,7 +135,7 @@ public class Stats{
      * @param qu
      * @return
      */
-    public Stats add(int elemId, short qu) {
+    public Stats add(int elemId, int qu) {
         Element e = intToElement.get(elemId);
 
         if (e != null) {
@@ -156,7 +156,7 @@ public class Stats{
      * @return 
      */
     public Stats addAll(Stats other){
-        for(Entry<Element, Short> entry : other.stats.entrySet()){
+        for(Entry<Element, Integer> entry : other.stats.entrySet()){
             add(entry.getKey(), entry.getValue());
         }
         
@@ -169,7 +169,7 @@ public class Stats{
      * @param e
      * @return
      */
-    public Short get(Element e) {
+    public int get(Element e) {
         if (e != null && stats.containsKey(e)) {
             return stats.get(e);
         }
@@ -182,7 +182,7 @@ public class Stats{
      * @param elemId
      * @return
      */
-    public Short get(int elemId) {
+    public int get(int elemId) {
         Element e = intToElement.get(elemId);
         return get(e);
     }
@@ -191,7 +191,7 @@ public class Stats{
      * Retourne toute les stats, pour for-each
      * @return 
      */
-    public Set<Entry<Element, Short>> getAll(){
+    public Set<Entry<Element, Integer>> getAll(){
         return stats.entrySet();
     }
 

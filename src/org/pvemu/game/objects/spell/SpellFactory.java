@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 import org.pvemu.game.effect.EffectFactory;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.jelly.Shell;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.Spell;
 import org.pvemu.models.dao.DAOFactory;
@@ -23,12 +24,20 @@ final public class SpellFactory {
     static public SpellLevels getSpellLevelsById(int id){
         if(!spells.containsKey(id)){
             Spell model = DAOFactory.spell().find(id);
-            List<GameSpell> levels = new ArrayList<>();
             
             if(model == null){
                 Loggin.debug("Cannot found spell %d", id);
                 return null;
             }
+            
+            spells.put(id, getSpellByModel(model));
+        }
+        
+        return spells.get(id);
+    }
+    
+    static private SpellLevels getSpellByModel(Spell model){
+            List<GameSpell> levels = new ArrayList<>();
             
             String[] lvlsDatas = new String[]{
                 model.lvl1,
@@ -47,11 +56,7 @@ final public class SpellFactory {
                 
                 levels.add(spell);
             }
-            
-            spells.put(id, new SpellLevels(model, levels));
-        }
-        
-        return spells.get(id);
+            return new SpellLevels(model, levels);
     }
     
     static private GameSpell createGameSpell(Spell model, byte level, String data){
@@ -66,7 +71,8 @@ final public class SpellFactory {
         String area = tmp[15].trim();
         
         short PACost = 6, minLevel;
-        byte POMin, POMax, criticalRate, failRate;
+        byte POMin, POMax;
+        short criticalRate, failRate;
         
         String[] ets = Utils.split(model.effectTarget, ":");
         String normalTargets;
@@ -86,8 +92,8 @@ final public class SpellFactory {
         try{
             POMin = Byte.parseByte(tmp[3].trim());
             POMax = Byte.parseByte(tmp[4].trim());
-            criticalRate = Byte.parseByte(tmp[5].trim());
-            failRate = Byte.parseByte(tmp[6].trim());
+            criticalRate = Short.parseShort(tmp[5].trim());
+            failRate = Short.parseShort(tmp[6].trim());
             minLevel = Short.parseShort(tmp[tmp.length - 2].trim());
         }catch(NumberFormatException e){
             Loggin.error("cannot parse spell '" + data + "'", e);
@@ -144,5 +150,15 @@ final public class SpellFactory {
         }
         
         return effects;
+    }
+    
+    static public void preloadSpells(){
+        Shell.print("Loading spells : ", Shell.GraphicRenditionEnum.YELLOW);
+        List<Spell> models = DAOFactory.spell().getAll();
+        
+        for(Spell model : models){
+            spells.put(model.id, getSpellByModel(model));
+        }
+        Shell.println(models.size() + " spells loaded", Shell.GraphicRenditionEnum.GREEN);
     }
 }

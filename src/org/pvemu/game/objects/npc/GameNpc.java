@@ -1,4 +1,4 @@
-package org.pvemu.game.objects;
+package org.pvemu.game.objects.npc;
 
 import org.pvemu.game.objects.map.GMable;
 import org.pvemu.jelly.Constants;
@@ -23,6 +23,14 @@ public class GameNpc implements GMable {
         cellID = data.cellid;
         
         question = DAOFactory.question().getById(template.initQuestion);
+    }
+
+    public GameNpc(int id, NpcTemplate template, byte orientation, short cellID, NpcQuestion question) {
+        this.id = id;
+        this.template = template;
+        this.orientation = orientation;
+        this.cellID = cellID;
+        this.question = question;
     }
 
     @Override

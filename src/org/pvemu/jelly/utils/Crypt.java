@@ -116,10 +116,26 @@ public class Crypt {
     }
 
     public static byte getHashIndex(char c) {
-        for (byte i = 0; i < HASH.length; i++) {
+        /*for (byte i = 0; i < HASH.length; i++) {
             if (HASH[i] == c) {
                 return i;
             }
+        }*/
+        
+        if(c >= 'a' && c <= 'z'){
+            return (byte)(c - 'a');
+        }
+        if(c >= 'A' && c <= 'Z'){
+            return (byte)(c - 'A' + 26);
+        }
+        if(c >= '0' && c <= '9'){
+            return (byte)(c - '0' + 52);
+        }
+        if(c == '-'){
+            return 62;
+        }
+        if(c == '_'){
+            return 63;
         }
 
         return -1;

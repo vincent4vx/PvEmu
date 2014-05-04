@@ -30,7 +30,7 @@ public class Character implements org.pvemu.jelly.database.Model {
     public int spellPoints;
     public int boostPoints;
     public int kamas;
-    public short currentVita;
+    public int currentVita;
 
     @Override
     public void clear() {

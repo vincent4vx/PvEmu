@@ -69,19 +69,19 @@ public final class GameMap {
     public void addPlayer(Player p, short cellID) {
         players.put(p.getID(), p);
         gms.put(p.getID(), p);
-        getCellById(cellID).addPlayer(p);
+//        getCellById(cellID).addPlayer(p);
     }
 
     /**
      * Supprime un joueur de la map
      *
-     * @param p
+     * @param player
      */
-    public void removePlayer(Player p) {
-        players.remove(p.getID());
-        gms.remove(p.getID());
-        if (p.getCell() != null) {
-            p.getCell().removePlayer(p.getID());
+    public void removePlayer(Player player) {
+        players.remove(player.getID());
+        gms.remove(player.getID());
+        if (player.getCell() != null) {
+  //          player.getCell().removePlayer(player);
         }
     }
     

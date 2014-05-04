@@ -42,7 +42,7 @@ public class ObjectGenerator {
     public String generateStats(Stats stats){
         StringBuilder s = new StringBuilder(stats.getAll().size() * 16);
         
-        for(Map.Entry<Stats.Element, Short> curElem : stats.getAll()){
+        for(Map.Entry<Stats.Element, Integer> curElem : stats.getAll()){
             int jet = curElem.getValue();
             if(jet == 0){
                 continue;
@@ -68,6 +68,9 @@ public class ObjectGenerator {
             StringBuilder strEffects = new StringBuilder();
             
             for(String effect : Utils.split(template.statsTemplate, ",")){
+                if(effect.isEmpty())
+                    continue;
+                
                 try{
                     short effectID = Short.parseShort(Utils.split(effect, "#")[0], 16);
                     

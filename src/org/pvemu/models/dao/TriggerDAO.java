@@ -3,6 +3,11 @@ package org.pvemu.models.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.database.DAO;
 import org.pvemu.jelly.database.DatabaseHandler;
@@ -37,8 +42,8 @@ public class TriggerDAO extends DAO<Trigger> {
         }
     }
 
-    public ArrayList<Trigger> getByMapID(int mapID) {
-        ArrayList<Trigger> triggers = new ArrayList<>();
+    public Map<Short, List<Trigger>> getByMapID(int mapID) {
+        Map<Short, List<Trigger>> triggers = new HashMap<>();
         
         ReservedQuery query = getByMapID.reserveQuery();
         try {
@@ -49,7 +54,14 @@ public class TriggerDAO extends DAO<Trigger> {
             while (RS.next()) {
                 Trigger t = createByResultSet(RS);
                 if (t != null) {
-                    triggers.add(t);
+                    List<Trigger> list = triggers.get(t.cellID);
+                    
+                    if(list == null){
+                        list = new ArrayList<>();
+                        triggers.put(t.cellID, list);
+                    }
+                    
+                    list.add(t);
                 }
             }
         } catch (SQLException ex) {
@@ -59,5 +71,38 @@ public class TriggerDAO extends DAO<Trigger> {
         }
 
         return triggers;
+    }
+    
+    public Map<Short, Map<Short, List<Trigger>>> getAll(){
+        try {
+            ResultSet RS = DatabaseHandler.instance().executeQuery("SELECT * FROM triggers");
+            Map<Short, Map<Short, List<Trigger>>> triggers = new HashMap<>();
+            
+            while(RS.next()){
+                Trigger t = createByResultSet(RS);
+                if (t != null) {
+                    Map<Short, List<Trigger>> map = triggers.get(t.mapID);
+                    
+                    if(map == null){
+                        map = new HashMap<>();
+                        triggers.put(t.mapID, map);
+                    }
+                    
+                    List<Trigger> cell = map.get(t.cellID);
+                    
+                    if(cell == null){
+                        cell = new ArrayList<>();
+                        map.put(t.cellID, cell);
+                    }
+                    
+                    cell.add(t);
+                }
+            }
+            
+            return triggers;
+        } catch (SQLException ex) {
+            Loggin.error("Cannot load triggers", ex);
+            return null;
+        }
     }
 }

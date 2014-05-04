@@ -3,14 +3,17 @@ package org.pvemu.models.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.jelly.database.DAO;
 import org.pvemu.jelly.database.DatabaseHandler;
-import org.pvemu.jelly.database.FindableDAO;
 import org.pvemu.jelly.database.Query;
 import org.pvemu.jelly.database.ReservedQuery;
 import org.pvemu.models.MapNpcs;
 
-public class MapNpcsDAO extends FindableDAO<MapNpcs> {
+public class MapNpcsDAO extends DAO<MapNpcs> {
     final private Query getByMapId = DatabaseHandler.instance().prepareQuery("SELECT * FROM map_npcs WHERE mapid = ?");
 
     @Override
@@ -60,4 +63,31 @@ public class MapNpcsDAO extends FindableDAO<MapNpcs> {
         return list;
     }
     
+    public Map<Short, List<MapNpcs>> getAll(){
+        try{
+            ResultSet RS = DatabaseHandler.instance().executeQuery("SELECT * FROM "  + tableName());
+            Map<Short, List<MapNpcs>> npcs = new HashMap<>();
+            
+            while(RS.next()){
+                MapNpcs npc = createByResultSet(RS);
+                
+                if(npc == null)
+                    continue;
+                
+                List<MapNpcs> map = npcs.get(npc.mapid);
+                
+                if(map == null){
+                    map = new ArrayList<>();
+                    npcs.put(npc.mapid, map);
+                }
+                
+                map.add(npc);
+            }
+            
+            return npcs;
+        }catch(SQLException e){
+            Loggin.error("Cannot load npcs", e);
+            return null;
+        }
+    }
 }

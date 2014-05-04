@@ -49,7 +49,7 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
     public NpcQuestion current_npc_question = null;
     private Exchange exchange = null;
     private final GameActionsManager actionsManager = new GameActionsManager(GameActionsRegistry.instance());
-    private short lastCurrentVita;
+    private int lastCurrentVita;
     private long lastCurrentVitaSet;
     final private ItemSetHandler itemSetHandler = new ItemSetHandler(inventory);
 
@@ -64,7 +64,7 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
         this.curCell = curCell;
     }
     
-    public void setCurrentVita(short vita){
+    public void setCurrentVita(int vita){
         if(vita > getTotalStats().get(Element.VITA))
             vita = getTotalStats().get(Element.VITA);
         
@@ -72,7 +72,7 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
         lastCurrentVitaSet = System.currentTimeMillis();
     }
     
-    public short getCurrentVita(){
+    public int getCurrentVita(){
         return lastCurrentVita; //TODO: regen
     }
 
@@ -176,8 +176,8 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
      *
      * @return
      */
-    public Short getProspection() {
-        short p = getTotalStats().get(Element.PROSPEC);
+    public int getProspection() {
+        int p = getTotalStats().get(Element.PROSPEC);
         p += Math.ceil(getTotalStats().get(Element.CHANCE) / 10);
 
         return p;
@@ -249,7 +249,7 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
         Loggin.debug("Sauvegarde de %s", character.name);
         StringBuilder stats = new StringBuilder();
         
-        for(Entry<Element, Short> e : baseStats.getAll()){
+        for(Entry<Element, Integer> e : baseStats.getAll()){
             int val = e.getValue();
             if(val == 0){
                 continue;
@@ -322,10 +322,10 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
     }
 
     @Override
-    public short getInitiative(){
-        short fact = 4;
-        short pvmax = 100;
-        short pv = 100;
+    public int getInitiative(){
+        int fact = 4;
+        int pvmax = getTotalStats().get(Element.VITA);
+        int pv = getCurrentVita();
         /*if (_classe == Constants.CLASS_SACRIEUR) {
          fact = 8;
          }*/
@@ -339,9 +339,9 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
         coef += stats.get(Element.INTEL);
         coef += stats.get(Element.FORCE);
 
-        short init = 1;
+        int init = 1;
         if (pvmax != 0) {
-            init = (short) (coef * ((double) pv / (double) pvmax));
+            init = (int)(coef * ((double) pv / (double) pvmax));
         }
         
         if (init < 0) {

@@ -74,7 +74,7 @@ final public class PlayerFactory {
             
             try {
                 int elemID = Integer.parseInt(arr[0]);
-                short qu = Short.parseShort(arr[1]);
+                int qu = Integer.parseInt(arr[1]);
                 stats.add(elemID, qu);
             } catch (Exception e) {
                 Loggin.error("Cannot parse stats '" + data + "'", e);

@@ -84,7 +84,7 @@ final public class MapUtils {
         for (int i = 0; i < cellList.length(); i += 2) {
             short cell = Crypt.cellCode_To_ID(cellList.substring(i, i + 2));
 
-            if (availableCells.get(cell) != null && availableCells.get(cell).isWalkable()) {
+            if (availableCells.size() > cell && availableCells.get(cell).isWalkable()) {
                 list.add(cell);
             }
         }

@@ -15,27 +15,27 @@ import org.pvemu.game.objects.spell.GameSpell;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class EffectSender {
-    public void removePM(Fight fight, int fighterID, short nb){
-        updatePoint(fight, fighterID, FightActionsRegistry.USE_PM, (short)-nb);
+    public void removePM(Fight fight, int fighterID, int nb){
+        updatePoint(fight, fighterID, FightActionsRegistry.USE_PM, -nb);
     }
     
-    public void removePAOnAction(Fight fight, int fighterID, short nb){
-        updatePoint(fight, fighterID, FightActionsRegistry.USE_PA_ON_ACTION, (short)-nb);
+    public void removePAOnAction(Fight fight, int fighterID, int nb){
+        updatePoint(fight, fighterID, FightActionsRegistry.USE_PA_ON_ACTION, -nb);
     }
     
-    public void removePMOnWalk(Fight fight, int fighterID, short nb){
-        updatePoint(fight, fighterID, FightActionsRegistry.USE_PM_ON_MOVE, (short)-nb);
+    public void removePMOnWalk(Fight fight, int fighterID, int nb){
+        updatePoint(fight, fighterID, FightActionsRegistry.USE_PM_ON_MOVE, -nb);
     }
     
-    public void removeVita(Fight fight, int fighterID, short nb){
-        updatePoint(fight, fighterID, FightActionsRegistry.UPDATE_VITA, (short)-nb);
+    public void removeVita(Fight fight, int fighterID, int nb){
+        updatePoint(fight, fighterID, FightActionsRegistry.UPDATE_VITA, -nb);
     }
     
-    public void addVita(Fight fight, int fighterID, short nb){
+    public void addVita(Fight fight, int fighterID, int nb){
         updatePoint(fight, fighterID, FightActionsRegistry.UPDATE_VITA, nb);
     }
     
-    private void updatePoint(Fight fight, int fighterID, short action, short nb){
+    private void updatePoint(Fight fight, int fighterID, short action, int nb){
         GameSendersRegistry.getGameAction().unidentifiedGameActionToFight(
                 fight, 
                 action,

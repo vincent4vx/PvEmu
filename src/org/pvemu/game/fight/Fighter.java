@@ -25,11 +25,11 @@ abstract public class Fighter implements GMable, Creature {
     private boolean alive = true;
     private boolean zombie = false;
     private boolean canPlay = false;
-    protected short currentVita;
+    protected int currentVita;
     final private Stats baseStats;
     protected Stats totalStats;
-    private short numPA;
-    private short numPM;
+    private int numPA;
+    private int numPM;
     protected short cell;
     private FightTeam team;
     final protected Fight fight;
@@ -102,11 +102,11 @@ abstract public class Fighter implements GMable, Creature {
      *
      * @return the value of currentVita
      */
-    public short getCurrentVita() {
+    public int getCurrentVita() {
         return currentVita;
     }
     
-    public short getTotalVita(){
+    public int getTotalVita(){
         return totalStats.get(Stats.Element.VITA);
     }
     
@@ -119,29 +119,29 @@ abstract public class Fighter implements GMable, Creature {
         return totalStats;
     }
 
-    public short getNumPA() {
+    public int getNumPA() {
         return numPA;
     }
     
-    public void removePA(short num){
+    public void removePA(int num){
         numPA -= num;
         
         if(numPA < 0)
             numPA = 0;
     }
 
-    public short getNumPM() {
+    public int getNumPM() {
         return numPM;
     }
     
-    public void removePM(short num){
+    public void removePM(int num){
         numPM -= num;
         
         if(numPM < 0)
             numPM = 0;
     }
     
-    public void removeVita(short num){
+    public void removeVita(int num){
         if(num > currentVita)
             num = currentVita;
         
@@ -155,8 +155,8 @@ abstract public class Fighter implements GMable, Creature {
         GameSendersRegistry.getEffect().removeVita(fight, getID(), num);
     }
     
-    public void addVita(short num){
-        short max = (short)(totalStats.get(Stats.Element.VITA) - currentVita);
+    public void addVita(int num){
+        int max = totalStats.get(Stats.Element.VITA) - currentVita;
         
         if(num > max)
             num = max;

@@ -53,7 +53,7 @@ public class MonsterFighter extends AIFighter{
     }
 
     @Override
-    public short getInitiative() {
+    public int getInitiative() {
         return monster.getBasicStats().get(Stats.Element.INIT);
     }
 

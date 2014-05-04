@@ -20,7 +20,7 @@ public interface Creature {
      *
      * @return
      */
-    public short getInitiative();
+    public int getInitiative();
 
     public short getLevel();
 

@@ -19,9 +19,9 @@ import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.game.objects.spell.SpellFactory;
 import org.pvemu.game.objects.spell.SpellLevels;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.jelly.Shell;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.models.Monster;
-import org.pvemu.models.Spell;
 import org.pvemu.models.dao.DAOFactory;
 
 /**
@@ -63,6 +63,18 @@ final public class MonsterFactory {
         }
         
         return monsters.get(monsterId);
+    }
+    
+    static public void preloadMonsters(){
+        Shell.print("Load monsters : ", Shell.GraphicRenditionEnum.YELLOW);
+        List<Monster> models = DAOFactory.monster().getAll();
+        
+        for(Monster model : models){
+            MonsterGrades grades = new MonsterGrades();
+            monsters.put(model.id, grades);
+            populateGradesByModel(grades, model);
+        }
+        Shell.println(models.size() + " monsters loaded", Shell.GraphicRenditionEnum.GREEN);
     }
     
     static public List<MonsterTemplate> parseMonsterList(String monsterList){
@@ -156,26 +168,29 @@ final public class MonsterFactory {
             
             Stats statsObj = new Stats();
             
-            statsObj.add(Element.PA, Short.parseShort(curPoints[PA]));
-            statsObj.add(Element.PM, Short.parseShort(curPoints[PM]));
+            statsObj.add(Element.PA, Integer.parseInt(curPoints[PA].trim()));
+            statsObj.add(Element.PM, Integer.parseInt(curPoints[PM].trim()));
             
-            statsObj.add(Element.FORCE, Short.parseShort(basicStats[FORCE]));
-            statsObj.add(Element.INTEL, Short.parseShort(basicStats[INTEL]));
-            statsObj.add(Element.CHANCE, Short.parseShort(basicStats[CHANCE]));
-            statsObj.add(Element.SAGESSE, Short.parseShort(basicStats[SAGESSE]));
-            statsObj.add(Element.AGILITE, Short.parseShort(basicStats[AGILITE]));
+            statsObj.add(Element.FORCE, Integer.parseInt(basicStats[FORCE].trim()));
+            statsObj.add(Element.INTEL, Integer.parseInt(basicStats[INTEL].trim()));
+            statsObj.add(Element.CHANCE, Integer.parseInt(basicStats[CHANCE].trim()));
+            statsObj.add(Element.SAGESSE, Integer.parseInt(basicStats[SAGESSE].trim()));
+            statsObj.add(Element.AGILITE, Integer.parseInt(basicStats[AGILITE].trim()));
             
-            statsObj.add(Element.RES_NEUTRAL, Short.parseShort(resis[RES_NEUTRAL]));
-            statsObj.add(Element.RES_FIRE, Short.parseShort(resis[RES_FIRE]));
-            statsObj.add(Element.RES_GROUND, Short.parseShort(resis[RES_GROUND]));
-            statsObj.add(Element.RES_WATER, Short.parseShort(resis[RES_WATER]));
-            statsObj.add(Element.RES_AIR, Short.parseShort(resis[RES_AIR]));
+            statsObj.add(Element.RES_NEUTRAL, Integer.parseInt(resis[RES_NEUTRAL].trim()));
+            statsObj.add(Element.RES_FIRE, Integer.parseInt(resis[RES_FIRE].trim()));
+            statsObj.add(Element.RES_GROUND, Integer.parseInt(resis[RES_GROUND].trim()));
+            statsObj.add(Element.RES_WATER, Integer.parseInt(resis[RES_WATER].trim()));
+            statsObj.add(Element.RES_AIR, Integer.parseInt(resis[RES_AIR].trim()));
             
-            statsObj.add(Element.VITA, Short.parseShort(pdvs[i]));
-            statsObj.add(Element.INIT, Short.parseShort(inits[i]));
+            statsObj.add(Element.VITA, Integer.parseInt(pdvs[i].trim()));
+            statsObj.add(Element.INIT, Integer.parseInt(inits[i].trim()));
             
             Map<Integer, GameSpell> spellList = new HashMap<>();
             for(String spellData : Utils.split(spells[i], ";")){
+                if(spellData.isEmpty() || spellData.equals("-1"))
+                    continue;
+                
                 tmp = Utils.split(spellData, "@");
                 int spellID;
                 byte spellLevel = 1;

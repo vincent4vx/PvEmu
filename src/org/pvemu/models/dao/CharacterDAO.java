@@ -78,7 +78,7 @@ public class CharacterDAO extends UpdatableDAO<Character> {
             query.getStatement().setShort(10, p.lastCell);
             query.getStatement().setShort(11, p.startMap);
             query.getStatement().setShort(12, p.startCell);
-            query.getStatement().setShort(13, p.currentVita);
+            query.getStatement().setInt(13, p.currentVita);
             query.getStatement().setShort(14, p.level);
             query.getStatement().setLong(15, p.experience);
 
@@ -123,7 +123,7 @@ public class CharacterDAO extends UpdatableDAO<Character> {
             query.getStatement().setByte(++i, P.orientation);
             query.getStatement().setInt(++i, P.boostPoints);
             query.getStatement().setInt(++i, P.spellPoints);
-            query.getStatement().setShort(++i, P.currentVita);
+            query.getStatement().setInt(++i, P.currentVita);
 
             query.getStatement().setInt(++i, P.id);
 

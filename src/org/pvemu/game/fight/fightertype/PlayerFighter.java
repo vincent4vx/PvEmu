@@ -66,7 +66,7 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     }
 
     @Override
-    public short getInitiative() {
+    public int getInitiative() {
         return player.getInitiative();
     }
 

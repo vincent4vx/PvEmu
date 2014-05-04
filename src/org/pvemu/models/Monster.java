@@ -39,5 +39,10 @@ public class Monster implements Model {
     public void clear() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+    @Override
+    public String toString() {
+        return "Monster{" + "id=" + id + ", name=" + name + ", gfxID=" + gfxID + ", align=" + align + ", grades=" + grades + ", colors=" + colors + ", stats=" + stats + ", spells=" + spells + ", pdvs=" + pdvs + ", points=" + points + ", inits=" + inits + ", minKamas=" + minKamas + ", maxKamas=" + maxKamas + ", exps=" + exps + ", AI_type=" + AI_type + ", capturable=" + capturable + '}';
+    }
     
 }

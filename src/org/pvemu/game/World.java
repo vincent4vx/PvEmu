@@ -7,9 +7,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import org.pvemu.actions.ActionsRegistry;
+import org.pvemu.game.objects.map.MapFactory;
+import org.pvemu.game.objects.monster.MonsterFactory;
+import org.pvemu.game.objects.npc.NpcFactory;
+import org.pvemu.game.objects.spell.SpellFactory;
 import org.pvemu.jelly.Shell;
 import org.pvemu.jelly.Shell.GraphicRenditionEnum;
-import org.pvemu.models.dao.DAOFactory;
 
 /**
  * classe "registre"
@@ -35,16 +38,10 @@ public class World {
 
     private void preload() {
         Shell.println("\n====> Préchargement <====", GraphicRenditionEnum.BOLD);
-        Shell.print("Chargement des maps : ", GraphicRenditionEnum.YELLOW);
-        Shell.println(DAOFactory.map().getAll().size() + " maps chargées", GraphicRenditionEnum.GREEN);
-        Shell.print("Chargement des question : ", GraphicRenditionEnum.YELLOW);
-        Shell.println(DAOFactory.question().getAll().size() + " question chargées", GraphicRenditionEnum.GREEN);
-        Shell.print("Chargement des pnj : ", GraphicRenditionEnum.YELLOW);
-        Shell.println(DAOFactory.npcTemplate().getAll().size() + " templates chargées", GraphicRenditionEnum.GREEN);
-        Shell.print("Chargement des comptes : ", GraphicRenditionEnum.YELLOW);
-        Shell.println(DAOFactory.account().getAll().size() + " comptes chargés", GraphicRenditionEnum.GREEN);
-        Shell.print("Chargement des personnages : ", GraphicRenditionEnum.YELLOW);
-        Shell.println(DAOFactory.character().getAll().size() + " personnages chargées", GraphicRenditionEnum.GREEN);
+        SpellFactory.preloadSpells();
+        MonsterFactory.preloadMonsters();
+        NpcFactory.preloadNpcs();
+        MapFactory.preloadMaps();
         Shell.print("Execution du GC : ", GraphicRenditionEnum.YELLOW);
         System.gc();
         Shell.println("Ok", GraphicRenditionEnum.GREEN);
