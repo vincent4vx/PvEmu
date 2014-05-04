@@ -55,7 +55,7 @@ public class GameIoHandler extends MinaIoHandler {
         }
         String packet = ((String) message).trim();
         if (packet.length() > 1) {
-            Loggin.game("Recv << " + packet);
+            Loggin.game("Recv << %s" + packet);
             if (!packet.startsWith("AT") && !SessionAttributes.ACCOUNT.exists(session)) {
                 session.close(true);
                 return;
