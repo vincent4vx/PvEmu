@@ -1,10 +1,15 @@
 package org.pvemu.jelly.utils;
 
+import java.io.IOException;
+import java.net.DatagramSocket;
+import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Random;
 import org.pvemu.jelly.Jelly;
 
 public class Utils {
+    final static public short MIN_PORT_NUMBER = 1025; //get only no root ports
+    final static public short MAX_PORT_NUMBER = Short.MAX_VALUE;
 
     final private static Random rand = new Random();
 
@@ -237,5 +242,51 @@ public class Utils {
     
     static public boolean randBool(){
         return rand.nextBoolean();
+    }
+    
+    /**
+     * Checks to see if a specific port is available.
+     *
+     * @param port the port to check for availability
+     */
+    static public boolean checkPortAvailability(int port) {
+        if (port < MIN_PORT_NUMBER || port > MAX_PORT_NUMBER) {
+            throw new IllegalArgumentException("Invalid start port: " + port);
+        }
+
+        ServerSocket ss = null;
+        DatagramSocket ds = null;
+        try {
+            ss = new ServerSocket(port);
+            ss.setReuseAddress(true);
+            ds = new DatagramSocket(port);
+            ds.setReuseAddress(true);
+            return true;
+        } catch (IOException e) {
+        } finally {
+            if (ds != null) {
+                ds.close();
+            }
+
+            if (ss != null) {
+                try {
+                    ss.close();
+                } catch (IOException e) {
+                    /* should not be thrown */
+                }
+            }
+        }
+
+        return false;
+    }
+    
+    static public short getFreePort(){
+        for(short port = MIN_PORT_NUMBER; port <= MAX_PORT_NUMBER; ++port){
+            if(checkPortAvailability(port)){
+                return port;
+            }
+        }
+        
+        return -1;
     }
 }
