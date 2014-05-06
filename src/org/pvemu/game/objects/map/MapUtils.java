@@ -61,17 +61,28 @@ final public class MapUtils {
      * Get a random valid (i.e. walkable) cell in a map
      *
      * @param map
+     * @param noMonsters true if the cell shouldn't have monsters
      * @return
      */
-    static public MapCell getRandomValidCell(GameMap map) {
+    static public MapCell getRandomValidCell(GameMap map, boolean noMonsters) {
         MapCell cell;
         int size = map.getCells().size();
 
         do {
             cell = map.getCellById((short) Utils.rand(size));
-        } while (!cell.isWalkable());
+        } while (!cell.isWalkable() || (noMonsters && map.getMonsterGroupByCell(cell.getID()) != null));
 
         return cell;
+    }
+    
+    /**
+     * Get a random valid (i.e. walkable) cell in a map
+     *
+     * @param map
+     * @return
+     */
+    static public MapCell getRandomValidCell(GameMap map){
+        return getRandomValidCell(map, false);
     }
 
     static public List<Short> parseCellList(String cellList, GameMap map) {

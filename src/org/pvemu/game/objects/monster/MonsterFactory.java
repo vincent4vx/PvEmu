@@ -115,7 +115,7 @@ final public class MonsterFactory {
             return null;
         }
         int id = map.getNextGmId();
-        MapCell cell = MapUtils.getRandomValidCell(map);
+        MapCell cell = MapUtils.getRandomValidCell(map, true);
         
         int size = Utils.rand(1, map.getModel().groupmaxsize);
         

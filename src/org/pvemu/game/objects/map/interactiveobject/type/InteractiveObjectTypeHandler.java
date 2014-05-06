@@ -34,7 +34,7 @@ final public class InteractiveObjectTypeHandler {
 
         @Override
         public void startAction(InteractiveObject IO, Player player, int actionID) {
-            Loggin.debug("No actions implemented yet for %s" + IO);
+            Loggin.debug("No actions implemented yet for %s", IO);
         }
     };
 
