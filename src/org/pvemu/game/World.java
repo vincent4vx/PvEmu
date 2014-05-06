@@ -11,6 +11,7 @@ import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.game.objects.monster.MonsterFactory;
 import org.pvemu.game.objects.npc.NpcFactory;
 import org.pvemu.game.objects.spell.SpellFactory;
+import org.pvemu.game.triggeraction.TriggerFactory;
 import org.pvemu.jelly.Shell;
 import org.pvemu.jelly.Shell.GraphicRenditionEnum;
 
@@ -41,6 +42,7 @@ public class World {
         SpellFactory.preloadSpells();
         MonsterFactory.preloadMonsters();
         NpcFactory.preloadNpcs();
+        TriggerFactory.preloadTriggers();
         MapFactory.preloadMaps();
         Shell.print("Execution du GC : ", GraphicRenditionEnum.YELLOW);
         System.gc();

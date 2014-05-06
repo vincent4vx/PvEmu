@@ -1,0 +1,7 @@
+make MapCell immuable
+    - externalize triggers
+    - one monster group per cases
+    - store monster groups in map with cell as key
+new command system
+add plugin system
+    - dependencies system

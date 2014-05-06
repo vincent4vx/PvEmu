@@ -6,18 +6,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.database.DAO;
 import org.pvemu.jelly.database.DatabaseHandler;
 import org.pvemu.jelly.database.Query;
 import org.pvemu.jelly.database.ReservedQuery;
+import org.pvemu.jelly.utils.Pair;
 import org.pvemu.models.Trigger;
 
 public class TriggerDAO extends DAO<Trigger> {
 
-    final private Query getByMapID = DatabaseHandler.instance().prepareQuery("SELECT * FROM triggers WHERE MapID = ?");
+    final private Query getByCell = DatabaseHandler.instance().prepareQuery("SELECT * FROM triggers WHERE MapID = ? AND CellID = ?");
 
     @Override
     protected String tableName() {
@@ -41,58 +40,45 @@ public class TriggerDAO extends DAO<Trigger> {
             return null;
         }
     }
-
-    public Map<Short, List<Trigger>> getByMapID(int mapID) {
-        Map<Short, List<Trigger>> triggers = new HashMap<>();
-        
-        ReservedQuery query = getByMapID.reserveQuery();
-        try {
-            query.getStatement().setInt(1, mapID);
-
+    
+    public List<Trigger> getByCell(Pair<Short, Short> position){
+        List<Trigger> triggers = new ArrayList<>();
+        ReservedQuery query = getByCell.reserveQuery();
+        try{
+            query.getStatement().setShort(1, position.getFirst());
+            query.getStatement().setShort(2, position.getSecond());
+            
             ResultSet RS = query.getStatement().executeQuery();
-
-            while (RS.next()) {
+            
+            while(RS.next()){
                 Trigger t = createByResultSet(RS);
-                if (t != null) {
-                    List<Trigger> list = triggers.get(t.cellID);
-                    
-                    if(list == null){
-                        list = new ArrayList<>();
-                        triggers.put(t.cellID, list);
-                    }
-                    
-                    list.add(t);
+                
+                if(t != null){
+                    triggers.add(t);
                 }
             }
-        } catch (SQLException ex) {
-            Loggin.error("Cannot load triggers on map " + mapID, ex);
+        }catch(SQLException e){
+            Loggin.error("Cannot load trigger at " + position, e);
         }finally{
             query.release();
         }
-
         return triggers;
     }
     
-    public Map<Short, Map<Short, List<Trigger>>> getAll(){
+    public Map<Pair<Short, Short>, List<Trigger>> getAll(){
         try {
             ResultSet RS = DatabaseHandler.instance().executeQuery("SELECT * FROM triggers");
-            Map<Short, Map<Short, List<Trigger>>> triggers = new HashMap<>();
+            Map<Pair<Short, Short>, List<Trigger>> triggers = new HashMap<>();
             
             while(RS.next()){
                 Trigger t = createByResultSet(RS);
                 if (t != null) {
-                    Map<Short, List<Trigger>> map = triggers.get(t.mapID);
                     
-                    if(map == null){
-                        map = new HashMap<>();
-                        triggers.put(t.mapID, map);
-                    }
-                    
-                    List<Trigger> cell = map.get(t.cellID);
+                    List<Trigger> cell = triggers.get(new Pair<>(t.mapID, t.cellID));
                     
                     if(cell == null){
                         cell = new ArrayList<>();
-                        map.put(t.cellID, cell);
+                        triggers.put(new Pair<>(t.mapID, t.cellID), cell);
                     }
                     
                     cell.add(t);

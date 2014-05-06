@@ -48,19 +48,19 @@ public class PlayerActions {
     }
     
     public void arrivedOnCell(Player player, MapCell cell){
-//        player.getCell().removePlayer(player);
         player.setCell(cell);
-//        player.getCell().addPlayer(player);
 
         Loggin.debug("Joueur %s arrivé sur la cellule %d avec succès !", player.getName(), player.getCell().getID());
         
-        if(!player.getCell().getMonsterGroups().isEmpty() && player.getMap().canFight()){
-            MonsterGroup group = player.getCell().getMonsterGroups().iterator().next();
-            FightFactory.pvm(player, group);
-            return;
+        if(!player.getMap().canFight()){
+            MonsterGroup group = player.getMap().getMonsterGroupByCell(cell.getID());
+            if(group != null){
+                FightFactory.pvm(player, group);
+                return;
+            }
         }
         
-        player.getCell().performCellAction(player);
+        player.getCell().onArrivedOnCell(player);
     }
     
     public void logout(Player player){

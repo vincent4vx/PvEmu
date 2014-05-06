@@ -21,6 +21,7 @@ public final class GameMap {
     final private ConcurrentHashMap<Integer, GMable> gms = new ConcurrentHashMap<>();
     final private List<MonsterTemplate> availableMonsters;
     final private Map<Integer, MonsterGroup> monsterGroups = new ConcurrentHashMap<>();
+    final private Map<Short, MonsterGroup> monsterGroupsPosition = new ConcurrentHashMap<>();
     final private Map<Integer, Fight> fights = new ConcurrentHashMap<>();
     final private List<Short>[] places;
     private int lastGMId = 0;
@@ -52,13 +53,17 @@ public final class GameMap {
         
         addGMable(group);
         monsterGroups.put(group.getID(), group);
-        getCellById(group.getCellId()).addMonsterGroup(group);
+        monsterGroupsPosition.put(group.getCellId(), group);
     }
     
     public void removeMonsterGroup(MonsterGroup group){
         removeGMable(group);
         monsterGroups.remove(group.getID());
-        getCellById(group.getCellId()).removeMonsterGroup(group);
+        monsterGroupsPosition.remove(group.getCellId());
+    }
+    
+    public MonsterGroup getMonsterGroupByCell(short cell){
+        return monsterGroupsPosition.get(cell);
     }
 
     /**
@@ -70,7 +75,6 @@ public final class GameMap {
     public void addPlayer(Player p, short cellID) {
         players.put(p.getID(), p);
         gms.put(p.getID(), p);
-//        getCellById(cellID).addPlayer(p);
     }
 
     /**
@@ -81,9 +85,6 @@ public final class GameMap {
     public void removePlayer(Player player) {
         players.remove(player.getID());
         gms.remove(player.getID());
-        if (player.getCell() != null) {
-  //          player.getCell().removePlayer(player);
-        }
     }
     
     public void removeGMable(GMable gmable){

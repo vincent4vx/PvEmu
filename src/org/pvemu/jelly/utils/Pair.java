@@ -6,6 +6,8 @@
 
 package org.pvemu.jelly.utils;
 
+import java.util.Objects;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
@@ -25,6 +27,32 @@ public class Pair<F, S> {
 
     public S getSecond() {
         return second;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 37 * hash + Objects.hashCode(this.first);
+        hash = 37 * hash + Objects.hashCode(this.second);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Pair<?, ?> other = (Pair<?, ?>) obj;
+        if (!Objects.equals(this.first, other.first)) {
+            return false;
+        }
+        if (!Objects.equals(this.second, other.second)) {
+            return false;
+        }
+        return true;
     }
     
 }
