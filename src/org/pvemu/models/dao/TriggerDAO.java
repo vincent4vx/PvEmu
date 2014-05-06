@@ -16,7 +16,7 @@ import org.pvemu.models.Trigger;
 
 public class TriggerDAO extends DAO<Trigger> {
 
-    final private Query getByCell = DatabaseHandler.instance().prepareQuery("SELECT * FROM triggers WHERE MapID = ? AND CellID = ?");
+    final private Query getByMap = DatabaseHandler.instance().prepareQuery("SELECT * FROM triggers WHERE MapID = ?");
 
     @Override
     protected String tableName() {
@@ -39,30 +39,6 @@ public class TriggerDAO extends DAO<Trigger> {
             Loggin.error("Impossible de charger le trigger !", e);
             return null;
         }
-    }
-    
-    public List<Trigger> getByCell(Pair<Short, Short> position){
-        List<Trigger> triggers = new ArrayList<>();
-        ReservedQuery query = getByCell.reserveQuery();
-        try{
-            query.getStatement().setShort(1, position.getFirst());
-            query.getStatement().setShort(2, position.getSecond());
-            
-            ResultSet RS = query.getStatement().executeQuery();
-            
-            while(RS.next()){
-                Trigger t = createByResultSet(RS);
-                
-                if(t != null){
-                    triggers.add(t);
-                }
-            }
-        }catch(SQLException e){
-            Loggin.error("Cannot load trigger at " + position, e);
-        }finally{
-            query.release();
-        }
-        return triggers;
     }
     
     public Map<Pair<Short, Short>, List<Trigger>> getAll(){
@@ -89,6 +65,37 @@ public class TriggerDAO extends DAO<Trigger> {
         } catch (SQLException ex) {
             Loggin.error("Cannot load triggers", ex);
             return null;
+        }
+    }
+    
+    public Map<Short, List<Trigger>> getByMap(short map){
+        ReservedQuery query = getByMap.reserveQuery();
+        try {
+            query.getStatement().setShort(1, map);
+            ResultSet RS = query.getStatement().executeQuery();
+            Map<Short, List<Trigger>> triggers = new HashMap<>();
+            
+            while(RS.next()){
+                Trigger t = createByResultSet(RS);
+                if (t != null) {
+                    
+                    List<Trigger> cell = triggers.get(t.cellID);
+                    
+                    if(cell == null){
+                        cell = new ArrayList<>();
+                        triggers.put(t.cellID, cell);
+                    }
+                    
+                    cell.add(t);
+                }
+            }
+            
+            return triggers;
+        } catch (SQLException ex) {
+            Loggin.error("Cannot load triggers", ex);
+            return null;
+        }finally{
+            query.release();
         }
     }
 }

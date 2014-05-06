@@ -23,14 +23,20 @@ import org.pvemu.models.dao.DAOFactory;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class TriggerFactory {
-    final static private Map<Pair<Short, Short>, List<Trigger>> mapTriggers = new HashMap<>();
+    final static private Map<Short, Map<Short, List<Trigger>>> mapTriggers = new HashMap<>();
     
-    static public List<Trigger> getTriggersOnCell(Pair<Short, Short> position){
-        if(!mapTriggers.containsKey(position)){
-            storeTriggerList(position, DAOFactory.trigger().getByCell(position));
+    static public List<Trigger> getTriggersOnCell(short map, short cell){
+        if(!mapTriggers.containsKey(map)){
+            loadTriggersByMap(map);
         }
         
-        return mapTriggers.get(position);
+        return mapTriggers.get(map).get(cell);
+    }
+    
+    static public void loadTriggersByMap(short map){
+        for(Entry<Short, List<org.pvemu.models.Trigger>> entry : DAOFactory.trigger().getByMap(map).entrySet()){
+            storeTriggerList(map, entry.getKey(), entry.getValue());
+        }
     }
     
     static private Trigger newTrigger(org.pvemu.models.Trigger trigger){
@@ -40,12 +46,20 @@ public class TriggerFactory {
         );
     }
     
-    static private void storeTriggerList(Pair<Short, Short> position, List<org.pvemu.models.Trigger> list){
+    static private void storeTriggerList(short map, short cell, List<org.pvemu.models.Trigger> list){
         List<Trigger> triggers = new ArrayList<>();
         for(org.pvemu.models.Trigger t : list){
             triggers.add(newTrigger(t));
         }
-        mapTriggers.put(position, triggers);
+        
+        Map<Short, List<Trigger>> cells = mapTriggers.get(map);
+        
+        if(cells == null){
+            cells = new HashMap<>();
+            mapTriggers.put(map, cells);
+        }
+        
+        cells.put(cell, triggers);
     }
     
     static public Trigger newResponseAction(NpcResponseAction nra){
@@ -62,7 +76,11 @@ public class TriggerFactory {
         int count = 0;
         
         for(Entry<Pair<Short, Short>, List<org.pvemu.models.Trigger>> entry : models.entrySet()){
-            storeTriggerList(entry.getKey(), entry.getValue());
+            storeTriggerList(
+                    entry.getKey().getFirst(), 
+                    entry.getKey().getSecond(), 
+                    entry.getValue()
+            );
             count += entry.getValue().size();
         }
         

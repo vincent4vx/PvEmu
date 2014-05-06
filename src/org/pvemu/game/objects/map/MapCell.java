@@ -1,11 +1,13 @@
 package org.pvemu.game.objects.map;
 
+import java.util.List;
+import org.pvemu.game.fight.FightFactory;
 import org.pvemu.game.objects.map.interactiveobject.InteractiveObject;
+import org.pvemu.game.objects.monster.MonsterGroup;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.triggeraction.Trigger;
 import org.pvemu.game.triggeraction.TriggerActionHandler;
 import org.pvemu.game.triggeraction.TriggerFactory;
-import org.pvemu.jelly.utils.Pair;
 
 public class MapCell {
 
@@ -40,7 +42,19 @@ public class MapCell {
      * @param player the player
      */
     public void onArrivedOnCell(Player player){
-        for(Trigger trigger : TriggerFactory.getTriggersOnCell(new Pair<>(map, id))){
+        if(player.getMap().canFight()){
+            MonsterGroup group = player.getMap().getMonsterGroupByCell(id);
+            if(group != null){
+                FightFactory.pvm(player, group);
+                return;
+            }
+        }
+        List<Trigger> triggers = TriggerFactory.getTriggersOnCell(map, id);
+        
+        if(triggers == null)
+            return;
+        
+        for(Trigger trigger : triggers){
             TriggerActionHandler.instance().triggerAction(trigger, player);
         }
     }
