@@ -6,6 +6,7 @@
 
 package org.pvemu.commands.askers;
 
+import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.models.Account;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -15,22 +16,19 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class PlayerAsker extends ClientAsker {
-    
-    final private Player player;
 
-    public PlayerAsker(Player player, Account account) {
-        super(account);
-        this.player = player;
+    public PlayerAsker(IoSession session, Account account, Player player) {
+        super(session, account, player);
     }
 
     @Override
     public void write(String msg) {
-        GameSendersRegistry.getMessage().infoServerMessage(player.getSession(), "> " + msg);
+        GameSendersRegistry.getMessage().infoServerMessage(getSession(), "> " + msg);
     }
 
     @Override
     public void writeError(String msg) {
-        GameSendersRegistry.getMessage().errorServerMessage(player.getSession(), "> " + msg);
+        GameSendersRegistry.getMessage().errorServerMessage(getSession(), "> " + msg);
     }
     
 }

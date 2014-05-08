@@ -7,12 +7,12 @@
 package org.pvemu.commands;
 
 import org.pvemu.commands.askers.Asker;
-import org.pvemu.commands.askers.ClientAsker;
 import java.util.List;
 import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.argument.CommandArgumentException;
-import org.pvemu.game.World;
+import org.pvemu.commands.parser.ParserError;
+import org.pvemu.commands.parser.variable.VariableUtils;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
@@ -46,7 +46,15 @@ public class ItemCommand extends Command {
         int itemID = args.getInteger(1);
         int qu = args.getInteger(2, 1);
         boolean max = args.getArgument(3, "rand").equals("max");
-        List<Player> players = args.getPlayerList(4);
+        
+        List<Player> players;
+        
+        try{
+            players = args.getPlayerList(4, VariableUtils.getMe(asker));
+        }catch(ParserError e){
+            asker.writeError(e.getMessage());
+            return;
+        }
         
         ItemTemplate template = DAOFactory.item().getById(itemID);
         

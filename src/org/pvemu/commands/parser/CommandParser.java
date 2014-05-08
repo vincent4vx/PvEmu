@@ -6,6 +6,7 @@ import java.util.Map;
 import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.argument.LockedArgumentList;
 import org.pvemu.commands.askers.Asker;
+import org.pvemu.commands.parser.variable.VariablesHandler;
 import org.pvemu.jelly.utils.Pair;
 
 /**
@@ -21,6 +22,7 @@ public class CommandParser {
     public CommandParser() {
         registerParser(new SingleQuoteParser());
         registerParser(new ListParser());
+        registerParser(VariablesHandler.instance());
     }
     
     final public void registerParser(Parser parser){

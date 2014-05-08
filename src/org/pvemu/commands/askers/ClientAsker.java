@@ -6,20 +6,26 @@
 
 package org.pvemu.commands.askers;
 
+import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.filters.AccountFilter;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.models.Account;
-import org.pvemu.network.SessionAttributes;
+import org.pvemu.network.Sessionable;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-abstract public class ClientAsker implements Asker {
-    final protected Account account;
+abstract public class ClientAsker implements Asker, Sessionable {
+    final private IoSession session;
+    final private Account account;
+    final private Player player;
 
-    public ClientAsker(Account account) {
+    public ClientAsker(IoSession session, Account account, Player player) {
+        this.session = session;
         this.account = account;
+        this.player = player;
     }
 
     public Account getAccount() {
@@ -27,11 +33,17 @@ abstract public class ClientAsker implements Asker {
     }
 
     @Override
+    public IoSession getSession() {
+        return session;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    @Override
     public String name() {
-        if(account.getSession() != null && SessionAttributes.PLAYER.exists(account.getSession()))
-            return SessionAttributes.PLAYER.getValue(account.getSession()).getName();
-        
-        return account.pseudo;
+        return player.getName();
     }
 
     @Override

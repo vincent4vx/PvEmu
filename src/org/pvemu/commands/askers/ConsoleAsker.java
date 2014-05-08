@@ -6,6 +6,8 @@
 
 package org.pvemu.commands.askers;
 
+import org.apache.mina.core.session.IoSession;
+import org.pvemu.game.objects.player.Player;
 import org.pvemu.models.Account;
 import org.pvemu.network.game.GamePacketEnum;
 
@@ -15,18 +17,18 @@ import org.pvemu.network.game.GamePacketEnum;
  */
 public class ConsoleAsker extends ClientAsker {
 
-    public ConsoleAsker(Account account) {
-        super(account);
+    public ConsoleAsker(IoSession session, Account account, Player player) {
+        super(session, account, player);
     }
 
     @Override
     public void write(String msg) {
-        GamePacketEnum.CONSOLE_WRITE_OK.send(account.getSession(), msg);
+        GamePacketEnum.CONSOLE_WRITE_OK.send(getSession(), msg);
     }
 
     @Override
     public void writeError(String msg) {
-        GamePacketEnum.CONSOLE_WRITE_ERROR.send(account.getSession(), msg);
+        GamePacketEnum.CONSOLE_WRITE_ERROR.send(getSession(), msg);
     }
     
 }

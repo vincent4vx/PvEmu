@@ -42,7 +42,7 @@ final public class ChatHandler {
         if(args[1].startsWith(COMMAND_PREFIX)){
             CommandsHandler.instance().execute(
                     args[1].substring(COMMAND_PREFIX.length()), 
-                    new PlayerAsker(player, player.getAccount())
+                    new PlayerAsker(player.getSession(), player.getAccount(), player)
             );
         }else{
             channel.post(args[1], player);
