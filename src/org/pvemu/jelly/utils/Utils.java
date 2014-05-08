@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 import org.pvemu.jelly.Jelly;
 
@@ -234,6 +235,15 @@ public class Utils {
     static public boolean contains(Iterable array, Object obj){
         for(Object o : array){
             if(obj.equals(o))
+                return true;
+        }
+        
+        return false;
+    }
+    
+    static public boolean contains(Object[] array, Object obj){
+        for(Object o : array){
+            if(Objects.equals(o, obj))
                 return true;
         }
         

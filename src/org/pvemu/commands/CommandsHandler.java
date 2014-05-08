@@ -9,8 +9,13 @@ package org.pvemu.commands;
 import org.pvemu.commands.askers.Asker;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import org.pvemu.commands.argument.ArgumentList;
+import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.parser.CommandParser;
+import org.pvemu.commands.parser.ParserError;
+import org.pvemu.jelly.Loggin;
 
 /**
  *
@@ -20,6 +25,7 @@ public class CommandsHandler {
     final static private CommandsHandler instance = new CommandsHandler();
     final private HashMap<String, Command> commands = new HashMap<>();
     final private CommandParser parser = new CommandParser();
+    final private ExecutorService service = Executors.newSingleThreadExecutor();
 
     private CommandsHandler() {
         registerCommand(new HelpCommand());
@@ -65,43 +71,30 @@ public class CommandsHandler {
      * @param commandLine the command line
      * @param asker the Asker
      */
-    final public void execute(String commandLine, Asker asker){
-        /*String[] args = parseCommand(commandLine, asker);
-        
-        Command cmd = commands.get(args[0]);*/
-        try{
-            ArgumentList args = parser.parseCommand(commandLine, asker);
-            Command cmd = commands.get(args.getCommand());
+    final public void execute(final String commandLine, final Asker asker){
+        service.submit(new Runnable() {
+            @Override
+            public void run(){
+                try{
+                    ArgumentList args = parser.parseCommand(commandLine, asker);
+                    Command cmd = commands.get(args.getCommand());
 
-            if(cmd == null || !asker.corresponds(cmd.conditions())){
-                asker.writeError("Commande indisponible !");
-                return;
-            }
+                    if(cmd == null || !asker.corresponds(cmd.conditions())){
+                        asker.writeError("Commande indisponible !");
+                        return;
+                    }
 
-            cmd.perform(args, asker);
-        }catch(Exception e){
-            asker.writeError(e.getMessage());
-        }
-    }
-    
-    /*private String[] parseCommand(String command, Asker asker){
-        String[] args = command.trim().split("\\s+");
-        
-        for(int i = 0; i < args.length; ++i){
-            if(args[i].isEmpty())
-                continue;
-            
-            if(args[i].charAt(0) == '%'){
-                switch(args[i]){
-                    case "%me":
-                        args[i] = asker.name();
-                        break;
+                    cmd.perform(args, asker);
+                }catch(CommandArgumentException e){
+                    asker.writeError(e.getMessage());
+                }catch(ParserError e){
+                    asker.writeError(e.getMessage());
+                }catch(Exception e){
+                    Loggin.error("Error during executing `" + commandLine + "`", e);
                 }
             }
-        }
-        
-        return args;
-    }*/
+        });
+    }
     
     /**
      * Get the instance

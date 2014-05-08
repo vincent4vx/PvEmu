@@ -20,9 +20,10 @@ public class CommandParser {
 
     public CommandParser() {
         registerParser(new SingleQuoteParser());
+        registerParser(new ListParser());
     }
     
-    public void registerParser(Parser parser){
+    final public void registerParser(Parser parser){
         parsers.put(parser.start(), parser);
     }
     

@@ -2,6 +2,8 @@ package org.pvemu.commands.argument;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.pvemu.game.World;
+import org.pvemu.game.objects.player.Player;
 
 /**
  *
@@ -99,6 +101,49 @@ public class ArgumentList {
         try{
             return getList(number);
         }catch(RequiredArgumentException e){
+            return defaultValue;
+        }
+    }
+    
+    public List<Player> getPlayerList(int number) throws CommandArgumentException{
+        List<Player> list = new ArrayList<>();
+
+        for(String name : getList(number)){
+            Player player = World.instance().getOnlinePlayer(name);
+            
+            if(player != null)
+                list.add(player);
+        }
+        
+        return list;
+    }
+    
+    public List<Player> getPlayerList(int number, List<Player> defaultValue){
+        try{
+            return getPlayerList(number);
+        }catch(CommandArgumentException e){
+            return defaultValue;
+        }
+    }
+    
+    public List<Integer> getIntegerList(int number) throws CommandArgumentException{
+        List<Integer> list = new ArrayList<>();
+
+        for(String str : getList(number)){
+            try{
+                list.add(Integer.parseInt(str));
+            }catch(NumberFormatException e){
+                throw new CommandArgumentException(number, "Invalid integer list");
+            }
+        }
+        
+        return list;
+    }
+    
+    public List<Integer> getIntegerList(int number, List<Integer> defaultValue){
+        try{
+            return getIntegerList(number);
+        }catch(CommandArgumentException e){
             return defaultValue;
         }
     }
