@@ -1,15 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.pvemu.commands;
 
+import java.util.List;
 import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
-import org.pvemu.game.World;
+import org.pvemu.commands.parser.ParserError;
+import org.pvemu.commands.parser.variable.VariableUtils;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.FilterFactory;
@@ -27,24 +23,20 @@ public class SendCommand extends Command {
 
     @Override
     public void perform(ArgumentList args, Asker asker) throws CommandArgumentException{
-        /*if(args.length < 3){
-            asker.writeError("Commande invalide. veillez vous référer à 'help send' pour plus d'informations.");
-            return;
-        }*/
+        String packet = args.getArgument(1);
+        List<Player> players;
         
-        String target = args.getArgument(1);
-        /*String[] packet = new String[args.length - 2];
-        System.arraycopy(args, 2, packet, 0, packet.length);*/
-        
-        Player p = World.instance().getOnlinePlayer(target);
-        
-        if(p == null){
-            asker.writeError("Joueur '" + target + "' inexistant, ou non connecté !");
+        try {
+            players = args.getPlayerList(2, VariableUtils.getMe(asker));
+        } catch (ParserError ex) {
+            asker.writeError(ex.getMessage());
             return;
         }
         
-        p.getSession().write(args.getArgument(2));
-        asker.write("Packet envoyé !");
+        for(Player player : players){
+            player.getSession().write(packet);
+            asker.write(player.getName() + " : Packet sent !");
+        }
     }
 
     @Override
