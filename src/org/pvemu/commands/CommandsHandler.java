@@ -51,6 +51,10 @@ public class CommandsHandler {
     final public Collection<Command> getCommandList(){
         return commands.values();
     }
+
+    public CommandParser getParser() {
+        return parser;
+    }
     
     /**
      * Return the command by its name

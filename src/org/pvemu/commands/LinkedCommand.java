@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.pvemu.commands;
 
 import org.pvemu.commands.argument.ArgumentList;
@@ -17,13 +11,13 @@ import org.pvemu.jelly.filters.Filter;
  */
 public class LinkedCommand extends Command {
     final private String name;
-    final private Command linkedCommand;
-    final private String[] args;
+    final private String commandLine;
+    final private Command command;
 
-    public LinkedCommand(String name, Command linkedCommand, String[] args) {
+    public LinkedCommand(String name, String commandLine, Command command) {
         this.name = name;
-        this.linkedCommand = linkedCommand;
-        this.args = args;
+        this.commandLine = commandLine;
+        this.command = command;
     }   
 
     @Override
@@ -33,28 +27,38 @@ public class LinkedCommand extends Command {
 
     @Override
     public String title() {
-        return name + " -> " + linkedCommand.name();
+        return name + " -> " + commandLine;
     }
 
     @Override
     public void perform(ArgumentList args, Asker asker) throws CommandArgumentException{
-        /*String[] finalArgs = new String[this.args.length + args.length];
-        
-        finalArgs[0] = args[0]; //set the correct name of the command
-        System.arraycopy(this.args, 0, finalArgs, 1, this.args.length); //fill with default args in alias
-        System.arraycopy(args, 1, finalArgs, this.args.length + 1, args.length - 1); //fill with rest of args
-        
-        linkedCommand.perform(finalArgs, asker);*/
+        try{
+            ArgumentList aliasArgs = CommandsHandler.instance().getParser().parseCommand(commandLine, asker);
+            ArgumentList newArgs = new ArgumentList();
+            newArgs.addArgument(name);
+            
+            for(int i = 1; i < aliasArgs.size(); ++i){
+                newArgs.addList(aliasArgs.getList(i));
+            }
+            
+            for(int i = 1; i < args.size(); ++i){
+                newArgs.addList(args.getList(i));
+            }
+            
+            command.perform(newArgs, asker);
+        }catch(Exception e){
+            asker.writeError(e.getMessage());
+        }
     }
 
     @Override
     public Filter conditions() {
-        return linkedCommand.conditions();
+        return command.conditions();
     }
 
     @Override
     public String[] usage() {
-        return linkedCommand.usage();
+        return command.usage();
     }    
     
 }

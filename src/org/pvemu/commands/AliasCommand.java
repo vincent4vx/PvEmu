@@ -11,6 +11,7 @@ import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.FilterFactory;
+import org.pvemu.jelly.utils.Utils;
 
 /**
  *
@@ -48,7 +49,8 @@ public class AliasCommand extends Command {
     
     private void createAlias(ArgumentList args, Asker asker) throws CommandArgumentException{
         String alias = args.getArgument(1);
-        String name = args.getArgument(2);
+        String commandLine = args.getArgument(2);
+        String name = Utils.split(commandLine.trim(), " ", 2)[0];
         
         if(CommandsHandler.instance().getCommandByName(alias) != null){
             asker.writeError("Commande ou alias '" + alias + "' déjà utilisé !");
@@ -61,12 +63,10 @@ public class AliasCommand extends Command {
             return;
         }
         
-        /*String[] aliasArgs = new String[args.length - 3];
-        System.arraycopy(args, 3, aliasArgs, 0, aliasArgs.length);
-        LinkedCommand aliasCmd = new LinkedCommand(alias, cmd, aliasArgs);
+        Command aliasCmd = new LinkedCommand(alias, commandLine, cmd);
         
         CommandsHandler.instance().registerCommand(aliasCmd);
-        asker.write("Alias '" + aliasCmd.title() + "' créé.");*/
+        asker.write("Alias '" + aliasCmd.title() + "' créé.");
     }
 
     @Override
