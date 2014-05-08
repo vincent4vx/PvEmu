@@ -6,6 +6,7 @@
 
 package org.pvemu.commands;
 
+import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.commands.askers.ClientAsker;
 import org.pvemu.jelly.filters.AskerFilter;
@@ -25,7 +26,7 @@ public class ExitCommand extends Command {
     }
 
     @Override
-    public void perform(String[] args, Asker asker) {
+    public void perform(ArgumentList args, Asker asker) {
         if(asker instanceof ClientAsker){
             ((ClientAsker)asker).getAccount().getSession().close(false); //kick the asker
         }

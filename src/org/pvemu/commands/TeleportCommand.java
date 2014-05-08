@@ -8,6 +8,8 @@ package org.pvemu.commands;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.actions.ActionsRegistry;
+import org.pvemu.commands.argument.ArgumentList;
+import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.commands.askers.PlayerAsker;
 import org.pvemu.game.objects.map.GameMap;
@@ -32,19 +34,13 @@ public class TeleportCommand extends Command{
     }
 
     @Override
-    public void perform(String[] args, Asker asker) {
-        if(args.length < 2){
+    public void perform(ArgumentList args, Asker asker) throws CommandArgumentException{
+        if(args.size() < 2){
             asker.writeError("Wrong number of parameters");
             return;
         }
         
-        short mapID;
-        try{
-            mapID = Short.parseShort(args[1]);
-        }catch(NumberFormatException e){
-            asker.writeError("Wrong parameter 1");
-            return;
-        }
+        short mapID = args.getShort(1);
         
         GameMap map = MapFactory.getById(mapID);
         
@@ -54,16 +50,10 @@ public class TeleportCommand extends Command{
         }
         
         MapCell cell;
-        if(args.length < 3){
+        if(args.size() < 3){
             cell = MapUtils.getRandomValidCell(map);
         }else{
-            short cellID;
-            try{
-                cellID = Short.parseShort(args[2]);
-            }catch(NumberFormatException e){
-                asker.writeError("Wrong parameter 2");
-                return;
-            }
+            short cellID = args.getShort(2);
             cell = map.getCellById(cellID);
             
             if(cell == null){

@@ -6,6 +6,7 @@
 
 package org.pvemu.commands;
 
+import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.game.World;
 import org.pvemu.jelly.filters.Filter;
@@ -23,7 +24,7 @@ public class SaveCommand extends Command{
     }
 
     @Override
-    public void perform(String[] args, Asker asker) {
+    public void perform(ArgumentList args, Asker asker) {
         asker.write("Sauvegarde en cours...");
         World.instance().save();
         asker.write("Sauvegarde terminé !");

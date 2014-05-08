@@ -6,6 +6,8 @@
 
 package org.pvemu.commands;
 
+import org.pvemu.commands.argument.ArgumentList;
+import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.FilterFactory;
@@ -23,16 +25,16 @@ public class ExecCommand extends Command {
     }
 
     @Override
-    public void perform(String[] args, Asker asker) {
-        if(args.length == 1){
+    public void perform(ArgumentList args, Asker asker) throws CommandArgumentException{
+        if(args.size() == 1){
             asker.writeError("Nombre d'arguments invalide !");
             return;
         }
             
-        for(int i = 1; i < args.length; ++i){
+        for(int i = 1; i < args.size(); ++i){
             long time = System.currentTimeMillis();
-            API.execute(args[i]);
-            asker.write(args[i] + " chargé en " + (System.currentTimeMillis() - time) + "ms");
+            API.execute(args.getArgument(i));
+            asker.write(args.getArgument(i) + " chargé en " + (System.currentTimeMillis() - time) + "ms");
         }
     }
 

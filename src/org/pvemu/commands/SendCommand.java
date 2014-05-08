@@ -6,14 +6,13 @@
 
 package org.pvemu.commands;
 
+import org.pvemu.commands.argument.ArgumentList;
+import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.game.World;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.utils.Utils;
-import org.pvemu.jelly.filters.AskerFilter;
 import org.pvemu.jelly.filters.Filter;
 import org.pvemu.jelly.filters.FilterFactory;
-import org.pvemu.jelly.filters.comparators.MoreThanComparator;
 
 /**
  *
@@ -27,15 +26,15 @@ public class SendCommand extends Command {
     }
 
     @Override
-    public void perform(String[] args, Asker asker) {
-        if(args.length < 3){
+    public void perform(ArgumentList args, Asker asker) throws CommandArgumentException{
+        /*if(args.length < 3){
             asker.writeError("Commande invalide. veillez vous référer à 'help send' pour plus d'informations.");
             return;
-        }
+        }*/
         
-        String target = args[1];
-        String[] packet = new String[args.length - 2];
-        System.arraycopy(args, 2, packet, 0, packet.length);
+        String target = args.getArgument(1);
+        /*String[] packet = new String[args.length - 2];
+        System.arraycopy(args, 2, packet, 0, packet.length);*/
         
         Player p = World.instance().getOnlinePlayer(target);
         
@@ -44,7 +43,7 @@ public class SendCommand extends Command {
             return;
         }
         
-        p.getSession().write(Utils.join(packet, " "));
+        p.getSession().write(args.getArgument(2));
         asker.write("Packet envoyé !");
     }
 

@@ -9,6 +9,8 @@ package org.pvemu.commands;
 import org.pvemu.commands.askers.Asker;
 import java.util.ArrayList;
 import java.util.Collection;
+import org.pvemu.commands.argument.ArgumentList;
+import org.pvemu.commands.argument.CommandArgumentException;
 
 /**
  *
@@ -31,11 +33,11 @@ public class HelpCommand extends Command {
     }
 
     @Override
-    public void perform(String[] args, Asker asker) {
-        if(args.length == 1){
+    public void perform(ArgumentList args, Asker asker) throws CommandArgumentException {
+        if(args.size() == 1){
             showCommandsList(asker);
         }else{
-            showCommandInfo(args[1], asker);
+            showCommandInfo(args.getArgument(1), asker);
         }
     }
     

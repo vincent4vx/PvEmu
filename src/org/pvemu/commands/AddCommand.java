@@ -8,6 +8,8 @@ package org.pvemu.commands;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.pvemu.commands.argument.ArgumentList;
+import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.commands.askers.ClientAsker;
 import org.pvemu.game.World;
@@ -108,15 +110,10 @@ public class AddCommand extends Command{
     }
 
     @Override
-    public void perform(String[] args, Asker asker) {
-        if(args.length < 3){
-            asker.writeError("Nombre de paramètres invalide !");
-            return;
-        }
-        
+    public void perform(ArgumentList args, Asker asker) throws CommandArgumentException{        
         Player target;
         
-        if(args.length < 4){
+        if(args.size() < 4){
             if(!(asker instanceof ClientAsker)){
                 asker.writeError("Vous devez être en jeu !");
                 return;
@@ -124,7 +121,7 @@ public class AddCommand extends Command{
             
             target = SessionAttributes.PLAYER.getValue(((ClientAsker)asker).getAccount().getSession());
         }else{
-            target = World.instance().getOnlinePlayer(args[3].trim());
+            target = World.instance().getOnlinePlayer(args.getArgument(3));
         }
         
         if(target == null){
@@ -132,21 +129,14 @@ public class AddCommand extends Command{
             return;
         }
         
-        short qu;
-        
-        try{
-            qu = Short.parseShort(args[2]);
-        }catch(NumberFormatException e){
-            asker.writeError("Argument n°2 invalide !");
-            return;
-        }
+        int qu = args.getInteger(2);
         
         if(qu <= 0){
             asker.writeError("Argument n°2 invalide !");
             return;
         }
         
-        AddSubCommand cmd = subCommands.get(args[1].toLowerCase().trim());
+        AddSubCommand cmd = subCommands.get(args.getArgument(1).toLowerCase().trim());
         
         if(cmd == null){
             asker.writeError("Argument n°1 invalide !");

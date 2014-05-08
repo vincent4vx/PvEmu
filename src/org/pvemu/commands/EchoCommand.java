@@ -6,6 +6,8 @@
 
 package org.pvemu.commands;
 
+import org.pvemu.commands.argument.ArgumentList;
+import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.jelly.utils.Utils;
 import org.pvemu.jelly.filters.ConsoleAskerFilter;
@@ -31,10 +33,10 @@ public class EchoCommand extends Command {
     }
 
     @Override
-    public void perform(String[] args, Asker asker) {
-        String[] params = new String[args.length - 1];
-        System.arraycopy(args, 1, params, 0, params.length);
-        asker.write(Utils.join(params, " "));
+    public void perform(ArgumentList args, Asker asker) throws CommandArgumentException{
+        for(int i = 1; i < args.size(); ++i){
+            asker.write(args.getArgument(i));
+        }
     }
 
     @Override

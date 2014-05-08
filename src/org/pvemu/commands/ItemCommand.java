@@ -10,6 +10,8 @@ import org.pvemu.commands.askers.Asker;
 import org.pvemu.commands.askers.ClientAsker;
 import java.util.ArrayList;
 import org.pvemu.actions.ActionsRegistry;
+import org.pvemu.commands.argument.ArgumentList;
+import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.game.World;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.item.GameItem;
@@ -40,37 +42,24 @@ public class ItemCommand extends Command {
         };
     }
     
-    private void perform(String[] args, ClientAsker asker) {
-        if(args.length < 2){
-            asker.writeError("Arguments invalides !<br/>Faites `help item` pour plus d'informations.");
-            return;
-        }
-        
-        int itemID;
-        int qu = 1;
+    private void perform(ArgumentList args, ClientAsker asker) throws CommandArgumentException {        
+        int itemID = args.getInteger(1);
+        int qu = args.getInteger(2, 1);
         ArrayList<String> names = new ArrayList<>();
         boolean max = false;
         
-        try{
-            itemID = Integer.parseInt(args[1]);
-            
-            if(args.length > 2){
-                qu = Integer.parseInt(args[2]);
-            }
-            
-            if(args.length > 3){
-                max = args[3].equalsIgnoreCase("max");
-            }
-            
-            if(args.length > 4){
-                for(int i = 4; i < args.length; ++i)
-                    names.add(args[i]);
-            }else{
-                names.add(SessionAttributes.PLAYER.getValue(asker.getAccount().getSession()).getName());
-            }
-        }catch(NumberFormatException e){
-            asker.writeError("Arguments invalides !");
-            return;
+        itemID = args.getInteger(1);
+        
+
+        if(args.size() > 3){
+            max = args.getArgument(3).equalsIgnoreCase("max");
+        }
+
+        if(args.size() > 4){
+            for(int i = 4; i < args.size(); ++i)
+                names.add(args.getArgument(i));
+        }else{
+            names.add(SessionAttributes.PLAYER.getValue(asker.getAccount().getSession()).getName());
         }
         
         ItemTemplate template = DAOFactory.item().getById(itemID);
@@ -97,7 +86,7 @@ public class ItemCommand extends Command {
     }
 
     @Override
-    public void perform(String[] args, Asker asker) {
+    public void perform(ArgumentList args, Asker asker) throws CommandArgumentException {
         if(!(asker instanceof ClientAsker)){
             asker.writeError("Erreur : vous devez être en jeu !");
             return;

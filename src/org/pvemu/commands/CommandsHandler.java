@@ -9,6 +9,8 @@ package org.pvemu.commands;
 import org.pvemu.commands.askers.Asker;
 import java.util.Collection;
 import java.util.HashMap;
+import org.pvemu.commands.argument.ArgumentList;
+import org.pvemu.commands.parser.CommandParser;
 
 /**
  *
@@ -17,9 +19,9 @@ import java.util.HashMap;
 public class CommandsHandler {
     final static private CommandsHandler instance = new CommandsHandler();
     final private HashMap<String, Command> commands = new HashMap<>();
+    final private CommandParser parser = new CommandParser();
 
     private CommandsHandler() {
-        registerCommand(new EchoCommand());
         registerCommand(new HelpCommand());
         registerCommand(new SendCommand());
         registerCommand(new AliasCommand());
@@ -30,6 +32,7 @@ public class CommandsHandler {
         registerCommand(new SaveCommand());
         registerCommand(new AddCommand());
         registerCommand(new TeleportCommand());
+        registerCommand(new EchoCommand());
     }
     
     /**
@@ -63,19 +66,25 @@ public class CommandsHandler {
      * @param asker the Asker
      */
     final public void execute(String commandLine, Asker asker){
-        String[] args = parseCommand(commandLine, asker);
+        /*String[] args = parseCommand(commandLine, asker);
         
-        Command cmd = commands.get(args[0]);
-        
-        if(cmd == null || !asker.corresponds(cmd.conditions())){
-            asker.writeError("Commande indisponible !");
-            return;
+        Command cmd = commands.get(args[0]);*/
+        try{
+            ArgumentList args = parser.parseCommand(commandLine, asker);
+            Command cmd = commands.get(args.getCommand());
+
+            if(cmd == null || !asker.corresponds(cmd.conditions())){
+                asker.writeError("Commande indisponible !");
+                return;
+            }
+
+            cmd.perform(args, asker);
+        }catch(Exception e){
+            asker.writeError(e.getMessage());
         }
-        
-        cmd.perform(args, asker);
     }
     
-    private String[] parseCommand(String command, Asker asker){
+    /*private String[] parseCommand(String command, Asker asker){
         String[] args = command.trim().split("\\s+");
         
         for(int i = 0; i < args.length; ++i){
@@ -92,7 +101,7 @@ public class CommandsHandler {
         }
         
         return args;
-    }
+    }*/
     
     /**
      * Get the instance

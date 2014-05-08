@@ -6,8 +6,9 @@
 
 package org.pvemu.commands;
 
+import org.pvemu.commands.argument.ArgumentList;
+import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
-import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.filters.Filter;
 
 /**
@@ -36,14 +37,14 @@ public class LinkedCommand extends Command {
     }
 
     @Override
-    public void perform(String[] args, Asker asker) {
-        String[] finalArgs = new String[this.args.length + args.length];
+    public void perform(ArgumentList args, Asker asker) throws CommandArgumentException{
+        /*String[] finalArgs = new String[this.args.length + args.length];
         
         finalArgs[0] = args[0]; //set the correct name of the command
         System.arraycopy(this.args, 0, finalArgs, 1, this.args.length); //fill with default args in alias
         System.arraycopy(args, 1, finalArgs, this.args.length + 1, args.length - 1); //fill with rest of args
         
-        linkedCommand.perform(finalArgs, asker);
+        linkedCommand.perform(finalArgs, asker);*/
     }
 
     @Override
