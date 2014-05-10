@@ -13,7 +13,7 @@ public enum RealmPacketEnum {
     /**
      * en cas de version différente de celle de l'ému, envoit la version requise
      */
-    REQUIRE_VERSION("AlEv", Constants.DOFUS_VER),
+    REQUIRE_VERSION("AlEv", Constants.DOFUS_VER.toString()),
     /**
      * Erreur d'authentification (login / pass incorrect)
      */

@@ -1,14 +1,7 @@
 package org.pvemu.jelly;
 
-import org.pvemu.game.World;
 import java.io.PrintStream;
-import java.lang.management.ManagementFactory;
-import java.lang.management.ThreadMXBean;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import org.fusesource.jansi.AnsiConsole;
-import org.pvemu.network.game.GameIoHandler;
 
 public class Shell {
 

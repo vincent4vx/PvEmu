@@ -49,7 +49,7 @@ public class RealmIoHandler extends MinaIoHandler {
             Loggin.realm("Recv << " + packet);
 
             if (!session.containsAttribute("good_version")) {
-                if (!packet.equals(Constants.DOFUS_VER)) {
+                if (!packet.equals(Constants.DOFUS_VER.toString())) {
                     RealmPacketEnum.REQUIRE_VERSION.send(session);
                     session.close(true);
                 } else {

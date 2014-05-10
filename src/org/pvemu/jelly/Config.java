@@ -10,7 +10,9 @@ import org.pvemu.jelly.utils.Utils;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -40,6 +42,8 @@ public class Config {
     final static public ConfigItem<Integer> RESPAWN_TIME     = new ConfigIntItem("RESPAWN_TIME", 3);
     
     final static public ConfigItem<Boolean> PRELOAD          = new ConfigBoolItem("PRELOAD", false);
+    
+    final static public ConfigItem<List<String>> PLUGINS     = new ConfigListStringItem("PLUGINS", new ArrayList<String>());
     
     abstract static public class ConfigItem<T>{
         protected String name;
@@ -94,6 +98,24 @@ public class Config {
         @Override
         protected void setValue(String value) {
             this.value = Boolean.parseBoolean(value);
+        }
+        
+    }
+    
+    static private class ConfigListStringItem extends ConfigItem<List<String>>{
+
+        public ConfigListStringItem(String name, List<String> value) {
+            super(name, value);
+        }
+
+        @Override
+        protected void setValue(String value) throws Exception {
+            for(String str : Utils.split(value, " ")){
+                str = str.trim();
+                
+                if(!str.isEmpty())
+                    this.value.add(str);
+            }
         }
         
     }

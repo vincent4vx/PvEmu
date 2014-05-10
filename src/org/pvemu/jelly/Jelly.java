@@ -3,6 +3,7 @@ package org.pvemu.jelly;
 import org.pvemu.game.World;
 import org.pvemu.jelly.Shell.GraphicRenditionEnum;
 import org.pvemu.jelly.database.DatabaseHandler;
+import org.pvemu.jelly.plugin.PluginsHandler;
 import org.pvemu.jelly.scripting.API;
 import org.pvemu.jelly.utils.SystemStats;
 import org.pvemu.models.dao.DAOFactory;
@@ -23,7 +24,7 @@ public class Jelly {
         Shell.println("v4vx", GraphicRenditionEnum.YELLOW, GraphicRenditionEnum.BOLD);
         Shell.print("Version " + Constants.VERSION + " (r" + Constants.REV + ")", GraphicRenditionEnum.YELLOW);
         Shell.print("\tPour dofus ", GraphicRenditionEnum.YELLOW);
-        Shell.println(Constants.DOFUS_VER, GraphicRenditionEnum.YELLOW, GraphicRenditionEnum.BOLD);
+        Shell.println(Constants.DOFUS_VER.toString(), GraphicRenditionEnum.YELLOW, GraphicRenditionEnum.BOLD);
         Shell.println("======================================================", GraphicRenditionEnum.YELLOW);
 
         if (args.length == 0) {
@@ -61,6 +62,7 @@ public class Jelly {
         DatabaseHandler.init();
         DAOFactory.init();
         World.instance().create(Config.PRELOAD.getValue());
+        PluginsHandler.instance().loadPlugins();
         RealmServer.start();
         GameServer.start();
         Shell.println("Serveur lancé en " + (System.currentTimeMillis() - start) + "ms", GraphicRenditionEnum.GREEN, GraphicRenditionEnum.BOLD);
