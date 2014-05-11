@@ -22,7 +22,7 @@ public class Jelly {
         printAsciiLogo();
         Shell.print("\t\t\t" + Constants.NAME + " by ", GraphicRenditionEnum.YELLOW);
         Shell.println("v4vx", GraphicRenditionEnum.YELLOW, GraphicRenditionEnum.BOLD);
-        Shell.print("Version " + Constants.VERSION + " (r" + Constants.REV + ")", GraphicRenditionEnum.YELLOW);
+        Shell.print("Version " + Constants.VERSION, GraphicRenditionEnum.YELLOW);
         Shell.print("\tPour dofus ", GraphicRenditionEnum.YELLOW);
         Shell.println(Constants.DOFUS_VER.toString(), GraphicRenditionEnum.YELLOW, GraphicRenditionEnum.BOLD);
         Shell.println("======================================================", GraphicRenditionEnum.YELLOW);
