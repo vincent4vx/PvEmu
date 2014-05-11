@@ -3,6 +3,7 @@ package org.pvemu.game.effect;
 import java.util.Collection;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
+import org.pvemu.game.fight.buff.Buff;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Loggin;
 
@@ -42,7 +43,16 @@ abstract public class FighterEffect implements Effect {
                 continue;
             }
 
-            applyToFighter(data, caster, target);
+            if(data.getDuration() < 1){
+                applyToFighter(data, caster, target);
+            }else{
+                Buff buff = new Buff(this, data, caster);
+                
+                if(target.canPlay()) //auto-buff
+                    buff.apply(fight, target);
+                
+                target.getBuffList().addBuff(buff);
+            }
         }
         
         fight.checkZombies();

@@ -6,6 +6,7 @@
 
 package org.pvemu.game.fight;
 
+import org.pvemu.game.fight.buff.BuffList;
 import org.pvemu.game.fight.buttin.FightButtin;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
 import org.pvemu.game.objects.dep.Creature;
@@ -34,6 +35,7 @@ abstract public class Fighter implements GMable, Creature {
     private FightTeam team;
     final protected Fight fight;
     private FightButtin fightButtin;
+    final private BuffList buffList = new BuffList(this);
 
     public Fighter(Stats baseStats, Fight fight) {
         this.baseStats = baseStats;
@@ -49,9 +51,11 @@ abstract public class Fighter implements GMable, Creature {
     
     public void startTurn(){
         Loggin.debug("Start turn for %s", getName());
+        
+        buffList.applyBuffs();
     }
     
-    public void endTurn(){
+    public void endTurn(){        
         numPA = totalStats.get(Stats.Element.PA);
         numPM = totalStats.get(Stats.Element.PM);
     }
@@ -257,6 +261,10 @@ abstract public class Fighter implements GMable, Creature {
 
     public void setFightButtin(FightButtin fightButtin) {
         this.fightButtin = fightButtin;
+    }
+
+    public BuffList getBuffList() {
+        return buffList;
     }
 
     @Override

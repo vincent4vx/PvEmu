@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.pvemu.game.fight.fightertype;
 
 import java.util.Collection;
@@ -38,9 +32,14 @@ abstract public class AIFighter extends Fighter{
     @Override
     public void startTurn() {
         super.startTurn();
+        
         try{
             Thread.sleep(10); //wait for the timer
         }catch(InterruptedException e){}
+        
+        if(!isAlive()) //the buffs kill him
+            return;
+        
         AIHandler.instance().runAI(AIType(), fight, this);
     }
     

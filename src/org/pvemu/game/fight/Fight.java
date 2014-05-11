@@ -123,9 +123,9 @@ abstract public class Fight {
         GameSendersRegistry.getFight().turnMiddle(this);
         
         fighter = fighters.getNext();
+        GameSendersRegistry.getFight().turnStart(this, fighter.getID());
         fighter.setCanPlay(true);
         fighter.startTurn();
-        GameSendersRegistry.getFight().turnStart(this, fighter.getID());
         
         timer = FightUtils.turnTimer(this);
     }

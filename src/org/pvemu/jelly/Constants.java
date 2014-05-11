@@ -5,8 +5,8 @@ import org.pvemu.jelly.utils.Version;
 public class Constants {
 
     public final static String NAME = "PvEmu";
-    final static public Version VERSION = new Version(0, 54, 1, "a");
-    public final static int REV = 244;
+    final static public Version VERSION = new Version(0, 55, 1, "a");
+    public final static int REV = 245;
     final static public Version DOFUS_VER = new Version(1, 29, 1);
     public final static int DOFUS_VER_ID = 1291;
     public final static byte SERV_ID = 1;
