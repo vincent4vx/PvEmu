@@ -6,10 +6,21 @@
 
 package org.pvemu.network.generators;
 
+import org.pvemu.game.fight.buff.Buff;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class EffectGenerator {
-    
+    public String generateBuffEffect(Buff buff){
+        return buff.getEffect().id() + ";"
+                + buff.getFighter().getID() + ";"
+                + buff.getData().getMin() + ";"
+                + buff.getData().getMax() + ";"
+                + ";" //TODO: current jet?
+                + ";" //TODO: ?
+                + buff.getDuration() + ";"
+                + buff.getData().getSpellID();
+    }
 }

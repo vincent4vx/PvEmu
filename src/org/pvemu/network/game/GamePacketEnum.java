@@ -286,6 +286,7 @@ public enum GamePacketEnum {
     ADD_TO_TEAM("Gt"),
     FIGHT_PLACES("GP"),
     FIGHT_CHANGE_PLACE("GIC"),
+    FIGHT_EFFECT("GIE"),
     FIGHT_ADD_FLAG("Gc+"),
     FIGHT_REMOVE_FLAG("Gc-"),
     FIGHT_READY("GR"),

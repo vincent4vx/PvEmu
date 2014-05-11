@@ -19,22 +19,22 @@ final public class Buff {
     final private FighterEffect effect;
     final private EffectData data;
     final private Fighter caster;
+    final private Fighter fighter;
     private int duration;
 
-    public Buff(FighterEffect effect, EffectData data, Fighter caster) {
+    public Buff(FighterEffect effect, EffectData data, Fighter caster, Fighter fighter) {
         this.effect = effect;
         this.data = data;
         this.caster = caster;
+        this.fighter = fighter;
         this.duration = data.getDuration();
     }
     
     /**
      * apply the buff on fighter and decrement the duration count
-     * @param fight
-     * @param fighter
      * @return true if the duration count is > 0
      */
-    public boolean apply(Fight fight, Fighter fighter){
+    public boolean apply(){
         if(!fighter.isAlive())
             return false;
         
@@ -42,4 +42,21 @@ final public class Buff {
         
         return --duration > 0;
     }
+
+    public FighterEffect getEffect() {
+        return effect;
+    }
+
+    public EffectData getData() {
+        return data;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public Fighter getFighter() {
+        return fighter;
+    }
+    
 }

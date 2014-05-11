@@ -6,14 +6,16 @@ package org.pvemu.game.effect;
  */
 public class EffectData {
     final private Effect effect;
+    final private int spellID;
     final private int min;
     final private int max;
     final private int duration;
     final private byte target;
     final private String area;
 
-    EffectData(Effect effect, int min, int max, int duration, byte target, String area) {
+    EffectData(Effect effect, int spellID, int min, int max, int duration, byte target, String area) {
         this.effect = effect;
+        this.spellID = spellID;
         this.min = min;
         this.max = max;
         this.duration = duration;
@@ -23,6 +25,10 @@ public class EffectData {
 
     public Effect getEffect() {
         return effect;
+    }
+
+    public int getSpellID() {
+        return spellID;
     }
 
     public int getMin() {

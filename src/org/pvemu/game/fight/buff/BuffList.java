@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  *
@@ -34,7 +35,7 @@ final public class BuffList {
         List<Buff> newBuffs = new ArrayList<>(buffs.size());
         
         for(Buff buff : buffs){
-            if(buff.apply(fighter.getFight(), fighter))
+            if(buff.apply())
                 newBuffs.add(buff);
         }
         

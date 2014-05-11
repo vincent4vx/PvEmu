@@ -7,8 +7,11 @@
 package org.pvemu.network.game.output;
 
 import org.pvemu.game.fight.Fight;
+import org.pvemu.game.fight.buff.Buff;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
 import org.pvemu.game.objects.spell.GameSpell;
+import org.pvemu.network.game.GamePacketEnum;
+import org.pvemu.network.generators.GeneratorsRegistry;
 
 /**
  *
@@ -64,5 +67,9 @@ public class EffectSender {
                         spell.getLevel() + "," +
                         spell.getModel().spriteInfos                
         );
+    }
+    
+    public void buffEffect(Fight fight, Buff buff){
+        GamePacketEnum.FIGHT_EFFECT.sendToFight(fight, GeneratorsRegistry.getEffect().generateBuffEffect(buff));
     }
 }

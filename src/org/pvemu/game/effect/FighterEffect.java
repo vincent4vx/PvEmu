@@ -6,6 +6,7 @@ import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.buff.Buff;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Loggin;
+import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
  * Define methods for effect witch affect directly the fighers on the area
@@ -45,12 +46,15 @@ abstract public class FighterEffect implements Effect {
             if(data.getDuration() < 1){
                 applyToFighter(data, caster, target);
             }else{
-                Buff buff = new Buff(this, data, caster);
+                Buff buff = new Buff(this, data, caster, target);
                 
                 if(target.canPlay()) //auto-buff
-                    buff.apply(fight, target);
+                    buff.apply();
                 
-                target.getBuffList().addBuff(buff);
+                if(buff.getDuration() > 0){
+                    target.getBuffList().addBuff(buff);
+                    GameSendersRegistry.getEffect().buffEffect(fight, buff);
+                }
             }
         }
         

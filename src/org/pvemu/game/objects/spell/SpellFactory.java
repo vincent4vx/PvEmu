@@ -100,8 +100,8 @@ final public class SpellFactory {
             return null;
         }
         
-        Set<EffectData> effects = parseSpellEffect(tmp[0], area.substring(0, area.length() / 2), normalTargets);
-        Set<EffectData> criticals = parseSpellEffect(tmp[1], area.substring(area.length() / 2), criticalTargets);
+        Set<EffectData> effects = parseSpellEffect(model.id, tmp[0], area.substring(0, area.length() / 2), normalTargets);
+        Set<EffectData> criticals = parseSpellEffect(model.id, tmp[1], area.substring(area.length() / 2), criticalTargets);
         
         return new GameSpell(
                 model, 
@@ -117,7 +117,7 @@ final public class SpellFactory {
         );
     }
     
-    static private Set<EffectData> parseSpellEffect(String strEffect, String area, String targets){
+    static private Set<EffectData> parseSpellEffect(int spellID, String strEffect, String area, String targets){
         Set<EffectData> effects = new HashSet<>();
         
         if(strEffect.isEmpty() || strEffect.equals("-1"))
@@ -141,7 +141,7 @@ final public class SpellFactory {
                 target = Byte.parseByte(targetsArray[i]);
             }catch(Exception e){}
             
-            EffectData effect = EffectFactory.parseSpellEffect(effectsArray[i], curArea, target);
+            EffectData effect = EffectFactory.parseSpellEffect(spellID, effectsArray[i], curArea, target);
             
             if(effect == null)
                 continue;
