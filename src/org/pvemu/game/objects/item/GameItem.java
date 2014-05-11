@@ -25,10 +25,19 @@ public abstract class GameItem {
         this.template = template;
     }
     
+    /**
+     * Get the item id
+     * @return 
+     * @see InventoryEntry#id
+     */
     public int getID(){
         return entry.id;
     }
 
+    /**
+     * Get the stats of the item
+     * @return 
+     */
     public Stats getStats() {
         return stats;
     }

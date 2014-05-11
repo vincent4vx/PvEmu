@@ -68,6 +68,10 @@ public class MapCell {
         return obj;
     }
 
+    /**
+     * Test if the cell block the line of sight
+     * @return 
+     */
     public boolean isSightBlock() {
         return sightBlock;
     }

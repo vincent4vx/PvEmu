@@ -19,16 +19,30 @@ abstract public class Command {
     
     abstract public void perform(ArgumentList args, Asker asker) throws CommandArgumentException;
     
+    /**
+     * Get the title of the command (show in the help commad)
+     * @return 
+     * @see HelpCommand
+     */
     public String title(){
         return name();
     }
     
+    /**
+     * Get the usage of the command
+     * @return an array of string witch represents the lines to sends
+     * @see HelpCommand
+     */
     public String[] usage(){
         return new String[]{
             "Commande non documenté."
         };
     }
     
+    /**
+     * The conditions for execute command
+     * @return the filter witch represents those conditions
+     */
     public Filter conditions(){
         return FilterFactory.yesFilter();
     }

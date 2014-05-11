@@ -12,7 +12,7 @@ import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.jelly.utils.Utils;
 
 /**
- *
+ * simple heal
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class HealEffect extends FighterEffect{

@@ -316,8 +316,11 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
         return character.name;
     }
 
+    /**
+     * Get the basic stats (without items)
+     * @return 
+     */
     public Stats getBaseStats() {
-        //return baseStats;
         return new Stats(baseStats).addAll(classData.getClassStats(character.level));
     }
 
@@ -371,6 +374,11 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
         return -1; //TODO: alignment
     }
     
+    /**
+     * Boost a stats by id
+     * @param statsID
+     * @return true on success
+     */
     public boolean boostStats(int statsID){
         Element element = Stats.getElementByBoostID(statsID);
         

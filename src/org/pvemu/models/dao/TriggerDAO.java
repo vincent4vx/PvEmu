@@ -41,6 +41,10 @@ public class TriggerDAO extends DAO<Trigger> {
         }
     }
     
+    /**
+     * Load all triggers
+     * @return 
+     */
     public Map<Pair<Short, Short>, List<Trigger>> getAll(){
         try {
             ResultSet RS = DatabaseHandler.instance().executeQuery("SELECT * FROM triggers");
@@ -68,6 +72,11 @@ public class TriggerDAO extends DAO<Trigger> {
         }
     }
     
+    /**
+     * get trigger list by map
+     * @param map
+     * @return 
+     */
     public Map<Short, List<Trigger>> getByMap(short map){
         ReservedQuery query = getByMap.reserveQuery();
         try {

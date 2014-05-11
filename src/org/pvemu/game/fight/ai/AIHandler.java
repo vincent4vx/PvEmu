@@ -25,10 +25,20 @@ final public class AIHandler {
         registerAI(new RunawayAI());
     }
     
+    /**
+     * Register a new AI type
+     * @param type AI to register
+     */
     public void registerAI(AIType type){
         aiTypes.put(type.typeID(), type);
     }
     
+    /**
+     * Start the AI thread
+     * @param typeID the AI type
+     * @param fight the current fight
+     * @param fighter the fighter
+     */
     public void runAI(byte typeID, final Fight fight, final AIFighter fighter){
         final AIType type = aiTypes.containsKey(typeID) ? aiTypes.get(typeID) : DEFAULT_AI;
         

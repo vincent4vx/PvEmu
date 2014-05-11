@@ -5,14 +5,12 @@ import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.pvemu.jelly.Config;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.Shell;
 
 /**
- *
+ * Handle the connexions, queries...
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class DatabaseHandler {
@@ -32,6 +30,10 @@ public class DatabaseHandler {
         }
     }
     
+    /**
+     * Get a valid and free connexion
+     * @return the connexion
+     */
     DatabaseConnection getFreeConnection(){
         try {
             return pool.take();
@@ -40,10 +42,20 @@ public class DatabaseHandler {
         }
     }
     
+    /**
+     * Return the connexion on the queue when transaction is complete
+     * @param connexion the connexion to return
+     */
     void returnConnection(DatabaseConnection connexion){
         pool.add(connexion);
     }
     
+    /**
+     * Prepare a query (query with parameters) on all connexions
+     * @param sql the SQL query
+     * @return The query representation
+     * @see Query
+     */
     synchronized public Query prepareQuery(String sql){
          Query query = new Query(sql, this);
          
@@ -59,6 +71,12 @@ public class DatabaseHandler {
          return query;
     }
     
+    /**
+     * Prepare a query for insert and get generated keys
+     * @see #prepareQuery(java.lang.String) 
+     * @param sql the SQL query
+     * @return the query
+     */
     synchronized public Query prepareInsert(String sql){
          Query query = new Query(sql, this);
          
@@ -74,6 +92,13 @@ public class DatabaseHandler {
          return query;
     }
     
+    /**
+     * Execute a simple query
+     * @param sql the SQL query to execute
+     * @return the result of the query
+     * @throws SQLException 
+     * @see DatabaseConnection#query(java.lang.String) 
+     */
     public ResultSet executeQuery(String sql) throws SQLException{
         try {
             DatabaseConnection connection = pool.take();
@@ -87,6 +112,9 @@ public class DatabaseHandler {
         }
     }
         
+    /**
+     * Initialize and connect pool to the db
+     */
     static public void init(){
         if(instance != null){
             Loggin.warning("DatabaseHandler already initialized !");
@@ -112,6 +140,10 @@ public class DatabaseHandler {
         return instance;
     }
     
+    /**
+     * Close all the connections
+     * @see DatabaseConnection#close() 
+     */
     synchronized public void close(){
         for(DatabaseConnection connection : connexions){
             connection.close();

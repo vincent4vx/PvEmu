@@ -13,11 +13,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
- *
+ * Handle one connexion
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class DatabaseConnection {
@@ -33,22 +31,46 @@ public class DatabaseConnection {
         connection.setAutoCommit(true);
     }
     
+    /**
+     * Execute a query
+     * @param query the SQL query
+     * @return the result
+     * @throws SQLException 
+     */
     synchronized public ResultSet query(String query) throws SQLException{
         return connection.createStatement().executeQuery(query);
     }
     
+    /**
+     * Prepare a query
+     * @param query the SQL query
+     * @throws SQLException 
+     */
     synchronized public void prepare(Query query) throws SQLException{
         statements.put(query, connection.prepareStatement(query.getSql()));
     }
     
+    /**
+     * Prepare a query for insert (and get generated keys)
+     * @param query the SQL query
+     * @throws SQLException 
+     */
     synchronized public void prepareInsert(Query query) throws SQLException{
         statements.put(query, connection.prepareStatement(query.getSql(), PreparedStatement.RETURN_GENERATED_KEYS));
     }
     
+    /**
+     * Get the prepared statement for a query
+     * @param query the query
+     * @return the prepared statement if exists
+     */
     synchronized public PreparedStatement getPreparedStatement(Query query){
         return statements.get(query);
     }
     
+    /**
+     * Close the connexion to DB
+     */
     synchronized public void close(){
         try{
             for(PreparedStatement statement : statements.values()){

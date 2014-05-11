@@ -7,7 +7,7 @@
 package org.pvemu.game.effect;
 
 /**
- *
+ * effects witch affect only the environment (the map)
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 abstract public class EnvironmentEffect implements Effect{

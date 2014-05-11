@@ -21,28 +21,80 @@ import java.util.List;
 public class Config {
     final static private HashMap<String, ConfigItem> items = new HashMap<>();
     
+    /**
+     * IP of the DB
+     * @see org.pvemu.jelly.database.DatabaseHandler#init() 
+     */
     final static public ConfigItem<String> DB_HOST           = new ConfigStringItem("DB_HOST", "127.0.0.1");
+    /**
+     * DB user name
+     * @see org.pvemu.jelly.database.DatabaseHandler#init() 
+     */
     final static public ConfigItem<String> DB_USER           = new ConfigStringItem("DB_USER", "root");
+    /**
+     * DB pass (can be empty)
+     * @see org.pvemu.jelly.database.DatabaseHandler#init() 
+     */
     final static public ConfigItem<String> DB_PASS           = new ConfigStringItem("DB_PASS", "");
+    /**
+     * name of the DB
+     * @see org.pvemu.jelly.database.DatabaseHandler#init() 
+     */
     final static public ConfigItem<String> DB_NAME           = new ConfigStringItem("DB_NAME", "pvemu");
-    final static public ConfigItem<Integer> DB_COMMIT_TIME   = new ConfigIntItem("DB_COMMIT_TIME", 600);
+    /**
+     * number of parallele connexion
+     * @see org.pvemu.jelly.database.DatabaseHandler#init() 
+     */
     final static public ConfigItem<Integer> DB_POOL_SIZE     = new ConfigIntItem("DB_POOL_SIZE", 8);
     
+    /**
+     * Crypt the server IP
+     */
     final static public ConfigItem<Boolean> CRYPT_IP         = new ConfigBoolItem("CRYPT_IP", false);
+    /**
+     * The game server IP
+     */
     final static public ConfigItem<String> IP                = new ConfigStringItem("IP", "127.0.0.1");
+    /**
+     * Game server port (with a number < 1, a valid port is selected)
+     */
     final static public ConfigItem<Integer> GAME_PORT        = new ConfigIntItem("GAME_PORT", 5555);
+    /**
+     * Realm server port
+     */
     final static public ConfigItem<Integer> REALM_PORT       = new ConfigIntItem("REALM_PORT", 443);
     
+    /**
+     * Maximum number of characters per account
+     */
     final static public ConfigItem<Integer> CHAR_PER_ACCOUNT = new ConfigIntItem("CHAR_PER_ACCOUNT", 5);
     
+    /**
+     * Start level of a character
+     */
     final static public ConfigItem<Integer> START_LEVEL      = new ConfigIntItem("START_LEVEL", 1);
+    /**
+     * win xp rate on defiance
+     */
     final static public ConfigItem<Integer> RATE_DEFIANCE    = new ConfigIntItem("RATE_DEFIANCE", 0);
+    /**
+     * win xp rate on pvm
+     */
     final static public ConfigItem<Integer> RATE_PVM         = new ConfigIntItem("RATE_PVM", 1);
     
+    /**
+     * respawn time of monster in seconds
+     */
     final static public ConfigItem<Integer> RESPAWN_TIME     = new ConfigIntItem("RESPAWN_TIME", 3);
     
+    /**
+     * Preload (save all datas into ram) on start
+     */
     final static public ConfigItem<Boolean> PRELOAD          = new ConfigBoolItem("PRELOAD", false);
     
+    /**
+     * List of plugins to load
+     */
     final static public ConfigItem<List<String>> PLUGINS     = new ConfigListStringItem("PLUGINS", new ArrayList<String>());
     
     abstract static public class ConfigItem<T>{
@@ -120,6 +172,9 @@ public class Config {
         
     }
     
+    /**
+     * Load the configuration file
+     */
     static public void load(){
         Shell.print("Chargement de la configuration : ", Shell.GraphicRenditionEnum.YELLOW);
         

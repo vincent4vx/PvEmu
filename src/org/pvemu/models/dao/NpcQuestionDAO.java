@@ -8,7 +8,7 @@ import org.pvemu.jelly.database.FindableDAO;
 import org.pvemu.models.NpcQuestion;
 
 public class NpcQuestionDAO extends FindableDAO<NpcQuestion> {
-    private HashMap<Integer, NpcQuestion> questionsById = new HashMap<>();
+    final private HashMap<Integer, NpcQuestion> questionsById = new HashMap<>();
 
     @Override
     protected String tableName() {

@@ -42,7 +42,7 @@ public class NpcTemplateDAO extends FindableDAO<NpcTemplate> {
     }
     
     /**
-     * Retourne le pnj correspondant
+     * get the template by id
      * @param id
      * @return 
      */

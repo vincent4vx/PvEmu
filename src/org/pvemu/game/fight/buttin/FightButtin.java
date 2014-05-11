@@ -11,7 +11,7 @@ import java.util.Set;
 import org.pvemu.jelly.utils.Pair;
 
 /**
- *
+ * the buttin after fight
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class FightButtin {

@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.pvemu.jelly.utils;
 
 /**
@@ -11,6 +5,8 @@ package org.pvemu.jelly.utils;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 final public class VersionMatcher {
+    final static public VersionMatcher ALL = new VersionMatcher(Interval.INFINITE);
+    
     final private Interval major;
     final private Interval minor;
     final private Interval rev;
@@ -24,19 +20,13 @@ final public class VersionMatcher {
     public VersionMatcher(Interval major, Interval minor) {
         this.major = major;
         this.minor = minor;
-        this.rev = new Interval();
+        this.rev = Interval.INFINITE;
     }
 
     public VersionMatcher(Interval major) {
         this.major = major;
-        this.minor = new Interval();
-        this.rev = new Interval();
-    }
-
-    public VersionMatcher() {
-        this.major = new Interval();
-        this.minor = new Interval();
-        this.rev = new Interval();
+        this.minor = Interval.INFINITE;
+        this.rev = Interval.INFINITE;
     }
 
     public Interval getMajor() {
@@ -51,6 +41,11 @@ final public class VersionMatcher {
         return rev;
     }
     
+    /**
+     * Test if the version belongs to the interval
+     * @param version
+     * @return true if good
+     */
     public boolean match(Version version){
         return major.belongs(version.getMajor())
                 && minor.belongs(version.getMinor())

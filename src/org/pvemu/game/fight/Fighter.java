@@ -44,7 +44,7 @@ abstract public class Fighter implements GMable, Creature {
     }
     
     public void enterFight(){
-        currentVita = getTotalVita();
+        currentVita = totalStats.get(Stats.Element.VITA);
         numPA = totalStats.get(Stats.Element.PA);
         numPM = totalStats.get(Stats.Element.PM);
     }
@@ -88,6 +88,10 @@ abstract public class Fighter implements GMable, Creature {
         return cell;
     }
 
+    /**
+     * Change the player's cell
+     * @param cell 
+     */
     public void setCell(short cell) {
         this.cell = cell;
     }
@@ -97,6 +101,10 @@ abstract public class Fighter implements GMable, Creature {
         return 1;
     }
 
+    /**
+     * Get the current fight
+     * @return 
+     */
     public Fight getFight() {
         return fight;
     }
@@ -110,19 +118,35 @@ abstract public class Fighter implements GMable, Creature {
         return currentVita;
     }
     
+    /**
+     * Get the maximum vita
+     * @return 
+     */
     public int getTotalVita(){
         return totalStats.get(Stats.Element.VITA);
     }
     
+    /**
+     * Get the base stats (stats without buff)
+     * @return 
+     */
     public Stats getBaseStats(){
         return baseStats;
     }
 
+    /**
+     * Get the total stats (with buff)
+     * @return 
+     */
     @Override
     public Stats getTotalStats() {
         return totalStats;
     }
 
+    /**
+     * Get the current number of PA
+     * @return 
+     */
     public int getNumPA() {
         return numPA;
     }
@@ -134,6 +158,10 @@ abstract public class Fighter implements GMable, Creature {
             numPA = 0;
     }
 
+    /**
+     * Get the current number of PM
+     * @return 
+     */
     public int getNumPM() {
         return numPM;
     }
@@ -145,6 +173,10 @@ abstract public class Fighter implements GMable, Creature {
             numPM = 0;
     }
     
+    /**
+     * Remove vita from current vita
+     * @param num 
+     */
     public void removeVita(int num){
         if(num > currentVita)
             num = currentVita;
@@ -159,6 +191,10 @@ abstract public class Fighter implements GMable, Creature {
         GameSendersRegistry.getEffect().removeVita(fight, getID(), num);
     }
     
+    /**
+     * Heal fighter
+     * @param num 
+     */
     public void addVita(int num){
         int max = totalStats.get(Stats.Element.VITA) - currentVita;
         
@@ -187,6 +223,11 @@ abstract public class Fighter implements GMable, Creature {
         zombie = true;
     }
 
+    /**
+     * The player is not alive, but is not concidered as death by the fight
+     * @return 
+     * @see Fight#checkZombies() 
+     */
     public boolean isZombie() {
         return zombie;
     }
@@ -199,8 +240,20 @@ abstract public class Fighter implements GMable, Creature {
         
     }
     
+    /**
+     * Test if the fighter can use the weapon on dest
+     * @param weapon the weapon to use
+     * @param dest the targeted cell
+     * @return true if good
+     */
     abstract public boolean canUseWeapon(Weapon weapon, short dest);
     
+    /**
+     * Use the weapon into the fight
+     * @param weapon weapon to use
+     * @param dest targeted cell
+     * @return true on success
+     */
     public boolean useWeapon(Weapon weapon, short dest){
         if(!canUseWeapon(weapon, dest))
             return false;
@@ -228,8 +281,20 @@ abstract public class Fighter implements GMable, Creature {
         return true;
     }
     
+    /**
+     * Test if the fighter can use the spell
+     * @param spell spell to use
+     * @param dest the targeted cell
+     * @return true if it's good
+     */
     abstract public boolean canUseSpell(GameSpell spell, short dest);
     
+    /**
+     * Cast the spell into fight
+     * @param spell spell to use
+     * @param dest the targeted cell
+     * @return true on success
+     */
     public boolean castSpell(GameSpell spell, short dest){
         if(!canUseSpell(spell, dest))
             return false;
@@ -255,6 +320,10 @@ abstract public class Fighter implements GMable, Creature {
     
     abstract public GameSpell getSpellById(int spellID);
 
+    /**
+     * Get the current fight buttin
+     * @return 
+     */
     public FightButtin getFightButtin() {
         return fightButtin;
     }

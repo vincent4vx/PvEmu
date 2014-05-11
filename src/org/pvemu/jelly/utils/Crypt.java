@@ -15,14 +15,30 @@ public class Crypt {
     
     final static public char[] HEX_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
+    /**
+     * Hash data with md5
+     * @param data
+     * @return 
+     */
     public static String md5(String data) {
         return hash("MD5", data);
     }
 
+    /**
+     * Hash data with sha1
+     * @param data
+     * @return 
+     */
     public static String sha1(String data) {
         return hash("SHA-1", data);
     }
 
+    /**
+     * Hash message
+     * @param algo the algo use to hash
+     * @param message message to hash
+     * @return 
+     */
     public static String hash(String algo, String message) {
         try {
             byte[] hashData = java.security.MessageDigest.getInstance(algo).digest(message.getBytes());
@@ -116,12 +132,6 @@ public class Crypt {
     }
 
     public static byte getHashIndex(char c) {
-        /*for (byte i = 0; i < HASH.length; i++) {
-            if (HASH[i] == c) {
-                return i;
-            }
-        }*/
-        
         if(c >= 'a' && c <= 'z'){
             return (byte)(c - 'a');
         }
@@ -164,9 +174,6 @@ public class Crypt {
     }
 
     public static String CryptPort(int config_game_port) {
-        /*char[] HASH = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
-            't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U',
-            'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'};*/
         int P = config_game_port;
         String nbr64 = "";
         for (int a = 2; a >= 0; a--) {

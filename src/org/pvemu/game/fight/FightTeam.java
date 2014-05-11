@@ -36,6 +36,10 @@ abstract public class FightTeam {
         this.places = places;
     }
     
+    /**
+     * add a new fighter into the team
+     * @param fighter the fighter to add
+     */
     synchronized public void addFighter(Fighter fighter){
         if(canAddToTeam(fighter) != 0)
             return;
@@ -75,6 +79,7 @@ abstract public class FightTeam {
      * Return the character error (constant in JoinFightAction)
      * @param fighter the fighter to add
      * @return the error or 0 if can join
+     * @see JoinFightAction
      */
     public char canAddToTeam(Fighter fighter){
         if(isFull())

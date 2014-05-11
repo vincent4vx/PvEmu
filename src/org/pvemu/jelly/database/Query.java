@@ -6,10 +6,7 @@
 
 package org.pvemu.jelly.database;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Pair;
 
 /**
  *

@@ -14,7 +14,22 @@ import org.pvemu.jelly.filters.Filter;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public interface TriggerAction {
+    /**
+     * the action id
+     * @return 
+     */
     public short actionId();
+    
+    /**
+     * Actions to perform
+     * @param trigger
+     * @param player 
+     */
     public void perform(Trigger trigger, Player player);
+    
+    /**
+     * Conditions to perform this action
+     * @return 
+     */
     public Filter condition();
 }

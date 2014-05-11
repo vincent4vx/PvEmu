@@ -11,6 +11,7 @@ import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.Shell;
 import org.pvemu.network.game.GameIoHandler;
 
+@Deprecated
 public class SystemStats {
 
     private static ThreadMXBean TMB = ManagementFactory.getThreadMXBean();

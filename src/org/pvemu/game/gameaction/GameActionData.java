@@ -32,6 +32,11 @@ public class GameActionData<T extends ActionPerformer> {
         return arguments;
     }
     
+    /**
+     * Get a value of an argument
+     * @param index the index of the argument
+     * @return the argument if exists, or null
+     */
     public String getArgument(int index){
         return arguments.length > index ? arguments[index] : null;
     }
@@ -51,6 +56,10 @@ public class GameActionData<T extends ActionPerformer> {
         return gameActionID;
     }
 
+    /**
+     * Get the action performer
+     * @return 
+     */
     public T getPerformer() {
         return performer;
     }

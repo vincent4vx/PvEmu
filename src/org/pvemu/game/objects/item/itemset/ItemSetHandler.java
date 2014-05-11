@@ -8,7 +8,6 @@ package org.pvemu.game.objects.item.itemset;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import org.pvemu.game.objects.dep.Stats;
@@ -18,7 +17,7 @@ import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.jelly.Loggin;
 
 /**
- *
+ * handle item sets
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 final public class ItemSetHandler {
@@ -41,6 +40,11 @@ final public class ItemSetHandler {
         }
     }
     
+    /**
+     * Test if the item is already managed
+     * @param item
+     * @return 
+     */
     public boolean exists(GameItem item){
         
         for(Set<GameItem> items : itemsByItemSet.values()){
@@ -53,6 +57,10 @@ final public class ItemSetHandler {
         return false;
     }
     
+    /**
+     * Update item sets
+     * @return 
+     */
     public Set<Integer> updateItemSets(){
         Set<Integer> updated = new HashSet<>();
         
@@ -82,6 +90,11 @@ final public class ItemSetHandler {
         return updated;
     }
     
+    /**
+     * try to add an item into corresponding item set
+     * @param item item to handle
+     * @return true if the itemset is found
+     */
     private boolean addItemInItemSet(GameItem item){
         if(!ItemPosition.getByPosID(item.getEntry().position).isWearPlace())
             return false;
@@ -121,14 +134,28 @@ final public class ItemSetHandler {
         return isd.getStatsByItemsNumber(items.size());
     }
     
+    /**
+     * Get all weared items of an itemset
+     * @param itemset
+     * @return 
+     */
     public Set<GameItem> getItemsInItemSet(int itemset){
         return itemsByItemSet.get(itemset);
     }
     
+    /**
+     * Get the stats for one itemset
+     * @param itemset
+     * @return 
+     */
     public Stats getStatsByItemSet(int itemset){
         return statsByItemSet.get(itemset);
     }
     
+    /**
+     * Get total stats of the itemsets
+     * @return 
+     */
     public Stats getAllStats(){
         Stats stats = new Stats();
         
@@ -139,6 +166,10 @@ final public class ItemSetHandler {
         return stats;
     }
     
+    /**
+     * Get list of current itemsets
+     * @return 
+     */
     public Set<Integer> getItemSets(){
         return itemsByItemSet.keySet();
     }

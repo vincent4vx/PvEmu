@@ -34,6 +34,11 @@ public interface Plugin {
      */
     public Pair<String, VersionMatcher>[] dependencies();
     
+    /**
+     * Get the plugin name
+     * it can be different than file name
+     * @return 
+     */
     public String name();
     
     /**

@@ -16,7 +16,7 @@ import org.pvemu.jelly.Shell;
 import org.pvemu.jelly.Shell.GraphicRenditionEnum;
 
 /**
- * classe "registre"
+ * registry class
  * @note singleton
  * @author vincent
  */
@@ -25,9 +25,6 @@ public class World {
 
     private final ConcurrentHashMap<String, Player> online  = new ConcurrentHashMap<>();
     
-    /**
-     * Constructeur privé (singleton)
-     */
     private World(){}
     
     public void create(boolean preload){
@@ -50,8 +47,7 @@ public class World {
     }
 
     /**
-     * Ajoute un joueur dans la liste des joueurs en ligne
-     *
+     * add a new player into the list
      * @param p
      */
     public void addOnline(Player p) {
@@ -59,8 +55,7 @@ public class World {
     }
 
     /**
-     * Supprime un joueur de la liste des connectés
-     *
+     * delete a player from online list
      * @param p
      */
     public void removeOnline(Player p) {
@@ -68,51 +63,15 @@ public class World {
     }
 
     /**
-     * Retourne la liste de tout les joueurs en ligne
-     *
+     * get the online list
      * @return
      */
     public Collection<Player> getOnlinePlayers() {
         return online.values();
     }
-
+    
     /**
-     * retourne la liste des joueurs correspondant au gm lvl donné
-     *
-     * @param c = : gm level strictement identique, + : gm level suppérieur, - :
-     * gm level inférieur
-     * @param level
-     * @return
-     */
-    public Collection<Player> getOnlinePlayers(char c, byte level) {
-        Collection<Player> players = new ArrayList<>();
-
-        for (Player P : online.values()) {
-            switch (c) {
-                case '+':
-                    if (P.getAccount().level > level) {
-                        players.add(P);
-                    }
-                    break;
-                case '-':
-                    if (P.getAccount().level < level) {
-                        players.add(P);
-                    }
-                    break;
-                case '=':
-                    if (P.getAccount().level == level) {
-                        players.add(P);
-                    }
-                    break;
-            }
-        }
-
-        return players;
-    }
-
-    /**
-     * Retourne le personnage connecté avec le nom correspondant
-     *
+     * get an online player by his name
      * @param name
      * @return
      */
@@ -121,7 +80,7 @@ public class World {
     }
 
     /**
-     * Sauvegarde le monde
+     * Sauvegarde the world
      */
     public void save() {
         Shell.println("Sauvegarde des personnages...", GraphicRenditionEnum.YELLOW);
@@ -132,7 +91,7 @@ public class World {
     }
 
     /**
-     * Déconnecte TOUTE les personnes connectés (avant de fermer le serveur)
+     * logout all online players
      */
     public void kickAll() {
         Shell.print("Déconnexion des clients: ", GraphicRenditionEnum.RED);
@@ -152,7 +111,7 @@ public class World {
     }
     
     /**
-     * Détruit le monde
+     * Destroy the world :'(
      */
     public void destroy(){
         Shell.println("Destruction du monde...", GraphicRenditionEnum.RED);

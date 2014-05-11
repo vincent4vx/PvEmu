@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.pvemu.game.effect;
 
 /**
@@ -47,6 +41,11 @@ public class EffectData {
         return target;
     }
 
+    /**
+     * The effective area
+     * @return 
+     * @see org.pvemu.game.objects.map.MapUtils#getCellsFromArea(org.pvemu.game.objects.map.GameMap, short, short, java.lang.String) 
+     */
     public String getArea() {
         return area;
     }

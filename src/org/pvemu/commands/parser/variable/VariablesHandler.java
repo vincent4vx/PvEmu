@@ -13,7 +13,7 @@ import org.pvemu.jelly.utils.Pair;
 import org.pvemu.jelly.utils.Utils;
 
 /**
- *
+ * parse and store variables {@literal $name}
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class VariablesHandler implements Parser{
@@ -30,6 +30,10 @@ public class VariablesHandler implements Parser{
         registerDynamicVar(new AllVar());
     }
     
+    /**
+     * Register a new DynamicVar
+     * @param var 
+     */
     final public void registerDynamicVar(DynamicVar var){
         dynamicVars.put(var.name().toLowerCase(), var);
     }
@@ -104,6 +108,13 @@ public class VariablesHandler implements Parser{
         return new Pair<>(i, value);
     }
     
+    /**
+     * @see #parse(java.lang.String, int, org.pvemu.commands.askers.Asker) 
+     * @param code
+     * @param asker
+     * @return
+     * @throws ParserError 
+     */
     public List<String> eval(String code, Asker asker) throws ParserError{
         return parse(code, 0, asker).getSecond();
     }

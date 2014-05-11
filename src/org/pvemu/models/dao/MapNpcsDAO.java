@@ -38,6 +38,11 @@ public class MapNpcsDAO extends DAO<MapNpcs> {
         }
     }
     
+    /**
+     * Get list of npcs by map
+     * @param mapID
+     * @return 
+     */
     public ArrayList<MapNpcs> getByMapId(short mapID){
         ArrayList<MapNpcs> list = new ArrayList<>();
         
@@ -63,6 +68,10 @@ public class MapNpcsDAO extends DAO<MapNpcs> {
         return list;
     }
     
+    /**
+     * Load all npcs
+     * @return 
+     */
     public Map<Short, List<MapNpcs>> getAll(){
         try{
             ResultSet RS = DatabaseHandler.instance().executeQuery("SELECT * FROM "  + tableName());

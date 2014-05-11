@@ -15,8 +15,29 @@ import org.pvemu.jelly.filters.Filter;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public interface InteractiveObjectAction {
+    /**
+     * The action id
+     * @return 
+     */
     public int id();
+    
+    /**
+     * Start the action
+     * @param IO
+     * @param player 
+     */
     public void startAction(InteractiveObject IO, Player player);
+    
+    /**
+     * Conditions to perform this action
+     * @return 
+     */
     public Filter condition();
+    
+    /**
+     * When an error occure
+     * @param IO
+     * @param player 
+     */
     public void onError(InteractiveObject IO, Player player);
 }

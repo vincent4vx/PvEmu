@@ -15,7 +15,7 @@ import org.pvemu.jelly.Config;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
- *
+ * handle map timers
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 final public class MapTimers {

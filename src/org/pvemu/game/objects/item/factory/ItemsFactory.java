@@ -174,6 +174,11 @@ public class ItemsFactory {
 
     }
     
+    /**
+     * Get an item by its InventoryEntry (record into db)
+     * @param entry
+     * @return 
+     */
     static public GameItem recoverItem(InventoryEntry entry){
         Stats stats = parseStats(entry.stats, true);
         ItemTemplate template = DAOFactory.item().getById(entry.item_id);
@@ -184,6 +189,14 @@ public class ItemsFactory {
         return getTypeOfItem(template).getFactory().newItem(stats, entry, template);
     }
     
+    /**
+     * Create a new game item and generate his stats
+     * @param itemList
+     * @param template
+     * @param qu
+     * @param maxStats
+     * @return 
+     */
     static public GameItem createItem(ItemList itemList, ItemTemplate template, int qu, boolean maxStats){
         InventoryEntry entry = new InventoryEntry();
         entry.item_id = template.id;
@@ -199,6 +212,14 @@ public class ItemsFactory {
         return getTypeOfItem(template).getFactory().newItem(stats, entry, template);
     }
     
+    /**
+     * Copy an item
+     * @param src
+     * @param dest
+     * @param dest_qu
+     * @param dest_pos
+     * @return 
+     */
     static public GameItem copyItem(GameItem src, ItemList dest, int dest_qu, byte dest_pos){
         InventoryEntry entry = new InventoryEntry();
         entry.item_id = src.getTemplate().id;
@@ -213,6 +234,13 @@ public class ItemsFactory {
         return getTypeOfItem(src.getTemplate()).getFactory().newItem(stats, entry, src.getTemplate());
     }
     
+    /**
+     * Copy an item
+     * @param src
+     * @param dest
+     * @param dest_qu
+     * @return 
+     */
     static public GameItem copyItem(GameItem src, ItemList dest, int dest_qu){
         return copyItem(src, dest, dest_qu, ItemPosition.DEFAULT_POSITION);
     }
@@ -263,6 +291,12 @@ public class ItemsFactory {
         return effects;
     }
     
+    /**
+     * Get the effects of an item (weapon or usable item)
+     * @param template
+     * @param area
+     * @return 
+     */
     static public Set<EffectData> getEffects(ItemTemplate template, String area){
         if(!effectsByItem.containsKey(template.id)){
             effectsByItem.put(template.id, parseEffects(template.statsTemplate, area));
@@ -271,6 +305,10 @@ public class ItemsFactory {
         return effectsByItem.get(template.id);
     }
 
+    /**
+     * Get the punch weapon (default weapon)
+     * @return 
+     */
     public static Weapon getPunch() {
         return punch;
     }

@@ -56,8 +56,7 @@ public class AccountDAO extends UpdatableDAO<Account> {
     }
 
     /**
-     * Charge le compte suivant le username (bdd ou HashMap)
-     *
+     * get the account by its name
      * @param name
      * @return
      */
@@ -83,8 +82,7 @@ public class AccountDAO extends UpdatableDAO<Account> {
     }
 
     /**
-     * Charge le compte suivent l'id (bdd ou HashMap)
-     *
+     * get the account by its id
      * @param id
      * @return
      */

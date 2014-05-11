@@ -44,6 +44,12 @@ public class PluginsHandler {
     
     private PluginsHandler(){}
     
+    /**
+     * load a plugin file
+     * @param name
+     * @return
+     * @throws PluginException 
+     */
     public List<Plugin> loadPlugin(String name) throws PluginException{
         List<Plugin> list = new ArrayList<>();
         Loggin.debug("Loading plugin %s", name);
@@ -106,6 +112,9 @@ public class PluginsHandler {
         return list;
     }
     
+    /**
+     * Load all config plugins
+     */
     public void loadPlugins(){
         Shell.print("Loading plugins : ", Shell.GraphicRenditionEnum.YELLOW);
         

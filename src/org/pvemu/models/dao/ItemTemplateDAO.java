@@ -39,7 +39,7 @@ public class ItemTemplateDAO extends FindableDAO<ItemTemplate> {
     }
     
     /**
-     * Charge un item donnée
+     * load an item by its id
      * @param id
      * @return 
      */

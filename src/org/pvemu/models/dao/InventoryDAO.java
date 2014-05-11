@@ -97,6 +97,11 @@ public class InventoryDAO extends UpdatableDAO<InventoryEntry> {
         return list;
     }
 
+    /**
+     * Get accessories list of a player
+     * @param id
+     * @return 
+     */
     public HashMap<Byte, Integer> getAccessoriesByPlayerId(int id) {
         HashMap<Byte, Integer> list = new HashMap<>();
 

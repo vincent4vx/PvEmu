@@ -126,6 +126,14 @@ final public class MapUtils {
         return (int) Math.ceil(Math.sqrt(diffX * diffX + diffY * diffY));
     }
 
+    /**
+     * Get list of cell from an effect area
+     * @param map
+     * @param start
+     * @param casterCell
+     * @param area
+     * @return the list of cells
+     */
     static public Collection<Short> getCellsFromArea(GameMap map, short start, short casterCell, String area) {
         byte size = Crypt.getHashIndex(area.charAt(1));
         Collection<Short> cells = new HashSet<>();

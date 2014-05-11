@@ -10,7 +10,7 @@ import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
 
 /**
- *
+ * the actions performed on end of fight
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public interface FighterEndActions<T extends Fight, E extends Fighter>{

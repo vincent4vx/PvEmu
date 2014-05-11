@@ -8,12 +8,10 @@ package org.pvemu.jelly.database;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.pvemu.jelly.Loggin;
 
 /**
- *
+ * @see Query#reserveQuery() 
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class ReservedQuery {
@@ -28,18 +26,34 @@ public class ReservedQuery {
         this.connection = connection;
     }
 
+    /**
+     * Get the query object
+     * @return 
+     */
     public Query getQuery() {
         return query;
     }
 
+    /**
+     * Get the current prepared statement
+     * @return 
+     */
     public PreparedStatement getStatement() {
         return statement;
     }
 
+    /**
+     * Get the current connexion
+     * @return 
+     */
     public DatabaseConnection getConnection() {
         return connection;
     }
     
+    /**
+     * release this statement
+     * @see DatabaseHandler#returnConnection(org.pvemu.jelly.database.DatabaseConnection) 
+     */
     public void release(){
         try {
             statement.clearParameters();

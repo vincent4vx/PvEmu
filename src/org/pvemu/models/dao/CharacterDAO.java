@@ -137,8 +137,7 @@ public class CharacterDAO extends UpdatableDAO<Character> {
     }
 
     /**
-     * Charge le perso par son nom
-     *
+     * search the character by its name
      * @param name
      * @return
      */
@@ -162,8 +161,7 @@ public class CharacterDAO extends UpdatableDAO<Character> {
     }
 
     /**
-     * Charge un perso par son ID
-     *
+     * get the charzcter by its id
      * @param id
      * @return
      */
@@ -204,8 +202,7 @@ public class CharacterDAO extends UpdatableDAO<Character> {
     }
 
     /**
-     * Test si un nom existe en bdd
-     *
+     * Verify if the name already exists
      * @param name
      * @return
      */
@@ -228,8 +225,7 @@ public class CharacterDAO extends UpdatableDAO<Character> {
     }
 
     /**
-     * Compte le nombre de perso dans un compte
-     *
+     * count number of character of an account
      * @param accountId
      * @return
      */

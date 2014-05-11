@@ -23,6 +23,9 @@ final public class BuffList {
         this.fighter = fighter;
     }
     
+    /**
+     * Apply buffs on fighter
+     */
     public void applyBuffs(){
         Loggin.debug("Apply buffs for %s", fighter);
         if(buffs.isEmpty())
@@ -41,6 +44,10 @@ final public class BuffList {
             fighter.getFight().checkZombies();
     }
     
+    /**
+     * add a new buff
+     * @param buff 
+     */
     public void addBuff(Buff buff){
         buffs.add(buff);
     }

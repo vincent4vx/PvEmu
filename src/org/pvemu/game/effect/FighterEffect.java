@@ -9,7 +9,6 @@ import org.pvemu.jelly.Loggin;
 
 /**
  * Define methods for effect witch affect directly the fighers on the area
- *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 abstract public class FighterEffect implements Effect {

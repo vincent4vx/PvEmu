@@ -36,10 +36,18 @@ public final class GameMap {
         MapTimers.registerMonstersRespawnTimer(this);
     }
     
+    /**
+     * Get a new and free GMId
+     * @return 
+     */
     public int getNextGmId(){
         return lastGMId - 1;
     }
     
+    /**
+     * add a new GMable into map
+     * @param gm 
+     */
     public void addGMable(GMable gm){
         gms.put(gm.getID(), gm);
         
@@ -147,6 +155,9 @@ public final class GameMap {
         return id;
     }
     
+    /**
+     * Refresh (fill) the monsters on map
+     */
     public void refreshMobs(){
         if(monsterGroups.size() >= model.numgroup || availableMonsters.isEmpty())
             return;
@@ -156,14 +167,26 @@ public final class GameMap {
         }
     }
     
+    /**
+     * Get the current number of monster groups
+     * @return 
+     */
     public int getCurrentGroupCount(){
         return monsterGroups.size();
     }
 
+    /**
+     * Get the list of groups
+     * @return 
+     */
     public List<MonsterTemplate> getAvailableMonsters() {
         return availableMonsters;
     }
     
+    /**
+     * Get a new fight id
+     * @return 
+     */
     public int getFreeFightId(){
         int fightID = 0;
         
@@ -174,32 +197,62 @@ public final class GameMap {
         return fightID;
     }
     
+    /**
+     * add a new fight into map
+     * @param fight 
+     */
     public void addFight(Fight fight){
         fights.put(fight.getId(), fight);
         GameSendersRegistry.getMap().fightCountToMap(this);
     }
     
+    /**
+     * Get the number of fight
+     * @return 
+     * @see org.pvemu.network.game.output.MapSender#fightCount(org.pvemu.game.objects.map.GameMap, org.apache.mina.core.session.IoSession) 
+     */
     public int getFightCount(){
         return fights.size();
     }
     
+    /**
+     * Get fight by its id
+     * @param fightID
+     * @return 
+     */
     public Fight getFight(int fightID){
         return fights.get(fightID);
     }
     
+    /**
+     * Get list of fights
+     * @return 
+     */
     public Collection<Fight> getFights(){
         return fights.values();
     }
     
+    /**
+     * remove a fight from map
+     * @param fight 
+     */
     public void removeFight(Fight fight){
         fights.remove(fight.getId());
         GameSendersRegistry.getMap().fightCountToMap(this);
     }
 
+    /**
+     * Gte fight places
+     * @return 
+     */
     public List<Short>[] getPlaces() {
         return places;
     }
     
+    /**
+     * Test if can start a fight
+     * @return 
+     */
     public boolean canFight(){
         if(places.length < 2)
             return false;

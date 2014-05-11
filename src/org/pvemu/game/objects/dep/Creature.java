@@ -22,9 +22,21 @@ public interface Creature {
      */
     public int getInitiative();
 
+    /**
+     * The creature level
+     * @return 
+     */
     public short getLevel();
 
+    /**
+     * the gfx
+     * @return 
+     */
     public short getGfxID();
 
+    /**
+     * the colors
+     * @return 
+     */
     public String[] getColors();
 }

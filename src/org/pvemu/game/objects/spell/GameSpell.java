@@ -48,14 +48,26 @@ public class GameSpell {
         return SpellFactory.getSpellLevelsById(model.id);
     }
 
+    /**
+     * Get list of normal effects
+     * @return 
+     */
     public Set<EffectData> getEffects() {
         return effects;
     }
 
+    /**
+     * get list of critical effects
+     * @return 
+     */
     public Set<EffectData> getCritical() {
         return critical;
     }
 
+    /**
+     * Get the spell level (between 1 and 6)
+     * @return 
+     */
     public byte getLevel() {
         return level;
     }
@@ -80,6 +92,10 @@ public class GameSpell {
         return failRate;
     }
 
+    /**
+     * Get the minimum level to learn it
+     * @return 
+     */
     public short getMinLevel() {
         return minLevel;
     }

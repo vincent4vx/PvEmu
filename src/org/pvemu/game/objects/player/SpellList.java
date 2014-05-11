@@ -68,6 +68,9 @@ public class SpellList {
         return spells.get(id);
     }
     
+    /**
+     * save all learned spells
+     */
     public void save(){
         for(LearnedSpell spell : learnedSpells.values()){
             DAOFactory.learnedSpell().update(spell);
@@ -88,6 +91,12 @@ public class SpellList {
         ls.position = dest;
     }
     
+    /**
+     * Test if the player can boost a spell
+     * @param player
+     * @param spell the spell to boost
+     * @return true if it's good
+     */
     private boolean canBoostSpell(Player player, GameSpell spell){
         if(spell.getLevel() >= SpellLevels.LEVEL_MAX){
             Loggin.debug("spell already on max level");
@@ -109,6 +118,12 @@ public class SpellList {
         return true;
     }
     
+    /**
+     * Boost a spell
+     * @param player
+     * @param spellID
+     * @return the new spell level or -1 on error
+     */
     public byte boostSpell(Player player, int spellID){
         GameSpell spell = spells.get(spellID);
         

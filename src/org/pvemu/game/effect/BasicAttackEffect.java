@@ -6,7 +6,7 @@ import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.jelly.utils.Utils;
 
 /**
- *
+ * simple physical attacks
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 abstract class BasicAttackEffect extends FighterEffect{

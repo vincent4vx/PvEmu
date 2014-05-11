@@ -83,6 +83,12 @@ abstract public class ClassData {
     final private Set<SpellByLevelData> spellsByLevel = new HashSet<>();
     final private Map<Stats.Element, Set<BoostStatsCost>> boostStatsCosts = new EnumMap<>(Stats.Element.class);
     
+    /**
+     * Register a new spell for this class
+     * @param level
+     * @param spellID
+     * @param position 
+     */
     public void addSpell(int level, int spellID, char position){
         SpellLevels spellLevels = SpellFactory.getSpellLevelsById(spellID);
         
@@ -97,6 +103,12 @@ abstract public class ClassData {
         spellsByLevel.add(new SpellByLevelData(level, spell, position));
     }
     
+    /**
+     * register a new boost stats cost
+     * @param element
+     * @param maxStats
+     * @param cost 
+     */
     public void setBoostStatsCost(Stats.Element element, short maxStats, float cost){
         if(!boostStatsCosts.containsKey(element)){
             boostStatsCosts.put(element, new TreeSet<BoostStatsCost>());
@@ -105,6 +117,12 @@ abstract public class ClassData {
         boostStatsCosts.get(element).add(new BoostStatsCost(element, maxStats, cost));
     }
     
+    /**
+     * Get the cost to boost an element
+     * @param player
+     * @param element
+     * @return 
+     */
     public float getBoostStatsCost(Player player, Stats.Element element){
         Set<BoostStatsCost> costs = boostStatsCosts.get(element);
         
@@ -123,10 +141,19 @@ abstract public class ClassData {
         return bsc.getCost();
     }
     
+    /**
+     * Register a new spell for this class
+     * @param level
+     * @param spellID
+     */
     public void addSpell(int level, int spellID){
         addSpell(level, spellID, SpellList.DEFAULT_POS);
     }
     
+    /**
+     * Learn class spell on level up or login
+     * @param player 
+     */
     public void learnClassSpells(Player player){
         for(SpellByLevelData sld : spellsByLevel){
             if(player.getLevel() < sld.getLevel() 
@@ -137,8 +164,17 @@ abstract public class ClassData {
         }
     }
     
+    /**
+     * Get the class id
+     * @return 
+     */
     abstract public byte id();
     
+    /**
+     * get the default gfx
+     * @param sex
+     * @return 
+     */
     public short getGfxID(byte sex){
         return (short)(id() * 10 + sex);
     }
@@ -149,6 +185,11 @@ abstract public class ClassData {
     abstract public short getAstrubStatueMap();
     abstract public short getAstrubStatueCell();
     
+    /**
+     * Get the base stats of the class by level
+     * @param level
+     * @return 
+     */
     public Stats getClassStats(int level){
         Stats stats = new Stats();
         

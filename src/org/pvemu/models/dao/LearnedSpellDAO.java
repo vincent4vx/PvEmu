@@ -89,6 +89,11 @@ public class LearnedSpellDAO extends UpdatableDAO<LearnedSpell>{
         throw new UnsupportedOperationException("cannot find with single primary key");
     }
     
+    /**
+     * Get spell list of a player
+     * @param player
+     * @return 
+     */
     public Collection<LearnedSpell> getLearnedSpells(int player){
         Collection<LearnedSpell> list = new HashSet<>();
         

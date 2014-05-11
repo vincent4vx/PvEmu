@@ -16,8 +16,27 @@ public interface GMable {
      */
     public int getID();
     
+    /**
+     * Get the current cell
+     * @return 
+     */
     public short getCellId();
+    
+    /**
+     * Get the orientation
+     * @return 
+     */
     public byte getOrientation();
+    
+    /**
+     * get the name
+     * @return 
+     */
     public String getName();
+    
+    /**
+     * get the alignment
+     * @return 
+     */
     public byte getAlignment();
 }

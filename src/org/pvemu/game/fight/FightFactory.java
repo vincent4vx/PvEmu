@@ -24,6 +24,12 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class FightFactory {
+    /**
+     * create a new defiance fight
+     * @param p1
+     * @param p2
+     * @return 
+     */
     static public DefianceFight defiance(Player p1, Player p2){
         GameMap map = p1.getMap();
         
@@ -59,6 +65,12 @@ public class FightFactory {
         return new PlayerFighter(player, fight);
     }
     
+    /**
+     * Create a new pvm fight
+     * @param player
+     * @param group
+     * @return 
+     */
     static public PvMFight pvm(Player player, MonsterGroup group){
         GameMap map = player.getMap();
         

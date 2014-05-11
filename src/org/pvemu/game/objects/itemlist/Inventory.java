@@ -36,7 +36,9 @@ final public class Inventory implements ItemList{
         return owner.getID();
     }
     
-    
+    /**
+     * Load the items in the inventory
+     */
     public void load(){
         items.clear();
         itemsByPos.clear();
@@ -384,6 +386,11 @@ final public class Inventory implements ItemList{
         }
     }
     
+    /**
+     * Commit the states (send to session, and save into db)
+     * @param out
+     * @return 
+     */
     public boolean commitStates(IoSession out){
         boolean haveChanges = false;
         for(EntryState state : waitingStates){

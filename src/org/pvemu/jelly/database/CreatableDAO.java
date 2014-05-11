@@ -6,19 +6,29 @@
 
 package org.pvemu.jelly.database;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import org.pvemu.jelly.Loggin;
 
 /**
- *
+ * a DAO witch can create and delete a record
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
+ * @param <T> the generated model
  */
 abstract public class CreatableDAO<T extends Model> extends FindableDAO<T> {
     final protected Query delete = DatabaseHandler.instance().prepareQuery("DELETE FROM " + tableName() + " WHERE " + primaryKey() + " = ?");
     
+    /**
+     * Insert into db the record
+     * @param obj the record to insert
+     * @return 
+     */
     abstract public boolean create(T obj);
     
+    /**
+     * Delete a record from db
+     * @param pk the the primary key of the record
+     * @return true on success
+     */
     public boolean delete(int pk) {
         ReservedQuery query = delete.reserveQuery();
         try {
@@ -36,6 +46,11 @@ abstract public class CreatableDAO<T extends Model> extends FindableDAO<T> {
         }
     }
 
+    /**
+     * Delete a model object and his record into db
+     * @param obj the model to delete
+     * @return true on success
+     */
     public boolean delete(T obj) {
         if (delete(obj.getPk())) {
             obj.clear();

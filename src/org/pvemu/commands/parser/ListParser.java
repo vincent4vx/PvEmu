@@ -7,7 +7,7 @@ import org.pvemu.jelly.utils.Pair;
 import org.pvemu.jelly.utils.Utils;
 
 /**
- *
+ * parse list {@literal [ a, b, c ]}
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class ListParser implements Parser{

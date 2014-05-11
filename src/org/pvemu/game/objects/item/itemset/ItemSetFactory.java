@@ -19,6 +19,11 @@ import org.pvemu.models.dao.DAOFactory;
 final public class ItemSetFactory {
     final static private Map<Integer, ItemSetData> itemSets = new HashMap<>();
     
+    /**
+     * Get an itemset by its id
+     * @param id
+     * @return 
+     */
     static public ItemSetData getById(int id){
         if(!itemSets.containsKey(id)){
             ItemSet model = DAOFactory.getItemSet().find(id);

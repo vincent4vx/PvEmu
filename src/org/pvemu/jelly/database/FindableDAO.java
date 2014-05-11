@@ -13,8 +13,9 @@ import java.util.List;
 import org.pvemu.jelly.Loggin;
 
 /**
- *
+ * The DAO for findable objects (SELECT queries)
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
+ * @param <T> the generated model
  */
 abstract public class FindableDAO<T extends Model> extends DAO<T> {
     
@@ -22,9 +23,8 @@ abstract public class FindableDAO<T extends Model> extends DAO<T> {
 
     /**
      * find an element by his primary key
-     *
-     * @param pk
-     * @return
+     * @param pk the value of the primary key
+     * @return the generated object or null if not found
      */
     public T find(int pk) {
         if (primaryKey().isEmpty()) {
@@ -51,6 +51,10 @@ abstract public class FindableDAO<T extends Model> extends DAO<T> {
         }
     }
 
+    /**
+     * Get all the rows of the table
+     * @return list contening of the rows
+     */
     public List<T> getAll() {
         List<T> list = new ArrayList<>();
         String query = "SELECT * FROM " + tableName();

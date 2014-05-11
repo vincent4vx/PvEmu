@@ -7,9 +7,15 @@
 package org.pvemu.jelly.database;
 
 /**
- *
+ * a DAO witch can be updated
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
+ * @param <T> the generaed model
  */
 abstract public class UpdatableDAO<T extends Model> extends CreatableDAO<T> {
+    /**
+     * update the object into the db
+     * @param obj the object to update
+     * @return true on success
+     */
     abstract public boolean update(T obj);
 }

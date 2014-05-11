@@ -28,6 +28,12 @@ final public class Buff {
         this.duration = data.getDuration();
     }
     
+    /**
+     * apply the buff on fighter and decrement the duration count
+     * @param fight
+     * @param fighter
+     * @return true if the duration count is > 0
+     */
     public boolean apply(Fight fight, Fighter fighter){
         if(!fighter.isAlive())
             return false;

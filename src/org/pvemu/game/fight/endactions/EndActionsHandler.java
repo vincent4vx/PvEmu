@@ -9,7 +9,7 @@ import org.pvemu.game.fight.endactions.pvm.PvmEndActionsRegistry;
 import org.pvemu.jelly.Loggin;
 
 /**
- *
+ * handle the end fight actions
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 final public class EndActionsHandler {

@@ -50,6 +50,12 @@ public class FightMap {
         return map;
     }
     
+    /**
+     * Test if the place is valid to go on
+     * @param fighter
+     * @param cell
+     * @return 
+     */
     public boolean isValidPlace(Fighter fighter, short cell){
         if(fighters.containsKey(cell))
             return false;
@@ -63,23 +69,42 @@ public class FightMap {
         return Utils.contains(fighter.getTeam().getPlaces(), cell);
     }
     
+    /**
+     * Change the place of a fighter
+     * @param fighter
+     * @param dest 
+     */
     public void moveFighter(Fighter fighter, short dest){
         fighters.remove(fighter.getCellId());
         fighter.setCell(dest);
         fighters.put(dest, fighter);
     }
     
+    /**
+     * Test if the cell is free (can move on)
+     * @param cell
+     * @return 
+     */
     public boolean isFreeCell(short cell){
         return !fighters.containsKey(cell)
                 && map.getCellById(cell) != null
                 && map.getCellById(cell).isWalkable();
     }
     
+    /**
+     * Get a fighter by its position
+     * @param position
+     * @return 
+     */
     public Fighter getFighter(short position){
         return fighters.get(position);
     }
     
-    
+    /**
+     * Get a fighter list on cell list
+     * @param cells the cell list (area)
+     * @return 
+     */
     public Collection<Fighter> getFightersByCells(Collection<Short> cells){
         Collection<Fighter> list = new HashSet<>(cells.size());
         for(short cell : cells){
@@ -91,6 +116,10 @@ public class FightMap {
         return list;
     }
     
+    /**
+     * remove a fighter from map
+     * @param fighter 
+     */
     public void removeFighter(Fighter fighter){
         fighters.remove(fighter.getCellId());
     }

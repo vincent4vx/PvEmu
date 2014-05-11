@@ -8,14 +8,12 @@ package org.pvemu.actions;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.World;
-import org.pvemu.game.fight.FightFactory;
 import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapCell;
 import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.game.objects.map.MapUtils;
-import org.pvemu.game.objects.monster.MonsterGroup;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -26,10 +24,11 @@ import org.pvemu.network.game.output.GameSendersRegistry;
  */
 public class PlayerActions {
     /**
-     * Téléporte le personnage
-     * @param player personne à téléporter
-     * @param mapID map de destination
-     * @param cellID cellule de destination
+     * Teleport the player
+     * @param player target
+     * @param mapID destination map
+     * @param cellID destination cell
+     * @see MapActions#addPlayer(org.pvemu.game.objects.map.GameMap, org.pvemu.game.objects.player.Player) 
      */
     public void teleport(Player player, short mapID, short cellID){
         if(!MapUtils.isValidDest(mapID, cellID)){
@@ -47,6 +46,12 @@ public class PlayerActions {
         ActionsRegistry.getMap().addPlayer(map, player);
     }
     
+    /**
+     * perform actions when player arrived on cell (no fight)
+     * @param player the player
+     * @param cell the target cell
+     * @see MapCell#onArrivedOnCell(org.pvemu.game.objects.player.Player) 
+     */
     public void arrivedOnCell(Player player, MapCell cell){
         player.setCell(cell);
 
@@ -55,6 +60,10 @@ public class PlayerActions {
         player.getCell().onArrivedOnCell(player);
     }
     
+    /**
+     * Prepare a logout of a player
+     * @param player the player to logout
+     */
     public void logout(Player player){
         GameMap map = player.getMap();
         ActionsRegistry.getMap().removePlayer(map, player);

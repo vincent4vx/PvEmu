@@ -69,7 +69,11 @@ final public class WeaponData {
         return datasByItem;
     }
     
-    
+    /**
+     * Parse weapon data
+     * @param template the item template
+     * @return 
+     */
     static public WeaponData getWeaponDataByTemplate(ItemTemplate template){
         if(!datasByItem.containsKey(template.id)){
             try{

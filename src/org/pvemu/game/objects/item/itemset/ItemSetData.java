@@ -38,6 +38,11 @@ final public class ItemSetData {
         return stats;
     }
     
+    /**
+     * Get the stats with the current number of item of the same item set
+     * @param num number of weared items
+     * @return 
+     */
     public Stats getStatsByItemsNumber(int num){
         num -= 2; //passing item count to index (bonus of itemset start with 2 items !)
         

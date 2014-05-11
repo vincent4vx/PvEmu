@@ -13,13 +13,17 @@ import java.util.concurrent.TimeUnit;
 import org.pvemu.jelly.Constants;
 
 /**
- *
+ * handle fight timers
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 final public class FightUtils {
     final static int TIMERS_POOL_SIZE = Runtime.getRuntime().availableProcessors();
     final private static ScheduledExecutorService timers = Executors.newScheduledThreadPool(TIMERS_POOL_SIZE);
     
+    /**
+     * start the starting countdown
+     * @param fight 
+     */
     static public void startCountdownTimer(final Fight fight){
         if(fight.canCancel())
             return;
@@ -36,10 +40,21 @@ final public class FightUtils {
         ));
     }
     
+    /**
+     * Schedule a new fight task
+     * @param task
+     * @param time
+     * @return 
+     */
     static public ScheduledFuture scheduleTask(Runnable task, int time){
         return timers.schedule(task, time, TimeUnit.SECONDS);
     }
     
+    /**
+     * The turn countdown
+     * @param fight
+     * @return 
+     */
     static public ScheduledFuture turnTimer(final Fight fight){
         return scheduleTask(new Runnable() {
             @Override

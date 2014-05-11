@@ -13,7 +13,7 @@ import org.pvemu.jelly.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
- *
+ * the main fight class
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 abstract public class Fight {
@@ -44,13 +44,13 @@ abstract public class Fight {
         FightUtils.startCountdownTimer(this);
     }
     
-    public char addFighterToTeamByNumber(Fighter fighter, byte number){
-        if(teams.length < number)
-            return JoinFightAction.CANT_FIGHT;
-        
-        return addToTeam(fighter, teams[number]);
-    }
-    
+    /**
+     * Add a fighter into a team by the team id
+     * @param fighter the fighter to add
+     * @param teamID the team id
+     * @return 0 on success or the error char
+     * @see #addToTeam(org.pvemu.game.fight.Fighter, org.pvemu.game.fight.FightTeam) 
+     */
     public char addToTeamById(Fighter fighter, int teamID){
         FightTeam team;
         int number = 0;
@@ -62,6 +62,13 @@ abstract public class Fight {
         return addToTeam(fighter, team);
     }
     
+    /**
+     * Add a fighter into the team
+     * @param fighter the fighter to add
+     * @param team the team
+     * @return 0 on success or the error char
+     * @see FightTeam#addFighter(org.pvemu.game.fight.Fighter) 
+     */
     public char addToTeam(Fighter fighter, FightTeam team){
         char error = team.canAddToTeam(fighter);
         
@@ -104,6 +111,9 @@ abstract public class Fight {
         nextFighter();
     }
     
+    /**
+     * End the current fighter turn, an start the turn of the next fighter
+     */
     public void nextFighter(){
         if(state == STATE_FINISHED)
             return;
@@ -130,9 +140,20 @@ abstract public class Fight {
         timer = FightUtils.turnTimer(this);
     }
     
+    /**
+     * Get the type of the fight
+     * @return 
+     */
     abstract public byte getType();
     abstract public int spec();
+    
+    /**
+     * @return true if the player can click to ready button
+     */
     abstract public boolean canReady();
+    /**
+     * @return true if the player can cancel the fight
+     */
     abstract public boolean canCancel();
     abstract public boolean isHonnorFight();
 
@@ -144,6 +165,10 @@ abstract public class Fight {
         return --startCountdown;
     }
 
+    /**
+     * Get the current fight state
+     * @return one of the states constants
+     */
     public byte getState() {
         return state;
     }
@@ -172,6 +197,12 @@ abstract public class Fight {
         return map.isFreeCell(dest) && fighter.getNumPM() >= nbPM;
     }
     
+    /**
+     * Apply the effects (spell or weapon) to fight
+     * @param caster the caster
+     * @param effects the effects list (of spell or weapon)
+     * @param cell the targeted cell
+     */
     public void applyEffects(Fighter caster, Set<EffectData> effects, short cell){
         if(effects.isEmpty())
             return;
@@ -211,6 +242,10 @@ abstract public class Fight {
         }
     }
     
+    /**
+     * Verify if all teams are dead except one
+     * @return 
+     */
     private boolean verifyEndOfGame(){
         int count = 0;
         
@@ -222,6 +257,10 @@ abstract public class Fight {
         return count <= 1;
     }
     
+    /**
+     * Get the only team witch have at least one player alive
+     * @return 
+     */
     private FightTeam getWinTeam(){
         for(FightTeam team : teams){
             if(!team.isAllDead())
@@ -281,6 +320,10 @@ abstract public class Fight {
         return (System.currentTimeMillis() - startTime) / 1000;
     }
     
+    /**
+     * Generate a new fighter id
+     * @return 
+     */
     public int getNewId(){
         return --lastID;
     }

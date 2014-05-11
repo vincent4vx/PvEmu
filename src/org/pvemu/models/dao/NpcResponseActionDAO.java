@@ -34,6 +34,11 @@ public class NpcResponseActionDAO extends FindableDAO<NpcResponseAction> {
         }
     }
     
+    /**
+     * Get list of actions by reponse id
+     * @param id
+     * @return 
+     */
     public ArrayList<NpcResponseAction> getByResponseId(int id){
         ArrayList<NpcResponseAction> list = new ArrayList<>();
         

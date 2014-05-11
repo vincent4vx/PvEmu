@@ -6,7 +6,7 @@ import org.pvemu.commands.askers.Asker;
 import org.pvemu.jelly.utils.Pair;
 
 /**
- *
+ * parse single quotes
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class SingleQuoteParser implements Parser{

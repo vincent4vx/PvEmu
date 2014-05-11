@@ -27,6 +27,12 @@ final public class ChatHandler {
         registerChannel(new RecruitmentChannel());
     }
     
+    /**
+     * Parse a chat packet
+     * @param args
+     * @param player 
+     * @see org.pvemu.network.game.input.basic.ChatChanelPacket
+     */
     public void parse(String[] args, Player player){
         ChatChannel channel = channels.get(args[0]);
         

@@ -12,7 +12,7 @@ import org.pvemu.commands.parser.ParserError;
 import org.pvemu.jelly.Loggin;
 
 /**
- *
+ * Handle commands
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class CommandsHandler {
@@ -52,6 +52,10 @@ public class CommandsHandler {
         return commands.values();
     }
 
+    /**
+     * Get the current command parser
+     * @return 
+     */
     public CommandParser getParser() {
         return parser;
     }
@@ -69,6 +73,8 @@ public class CommandsHandler {
      * Execute a command
      * @param commandLine the command line
      * @param asker the Asker
+     * @see CommandParser#parseCommand(java.lang.String, org.pvemu.commands.askers.Asker) 
+     * @see Command#perform(org.pvemu.commands.argument.ArgumentList, org.pvemu.commands.askers.Asker) 
      */
     final public void execute(final String commandLine, final Asker asker){
         service.submit(new Runnable() {

@@ -12,7 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- *
+ * a list of fighter sorted by intiative
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 class FighterList implements Collection<Fighter>{

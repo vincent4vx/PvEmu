@@ -16,6 +16,10 @@ import org.pvemu.network.SessionAttributes;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 public class AccountAction {
+    /**
+     * Prepare the account logout
+     * @param account account to logout
+     */
     public void logout(Account account){
         IoSession session = account.getSession();
         account.removeSession();

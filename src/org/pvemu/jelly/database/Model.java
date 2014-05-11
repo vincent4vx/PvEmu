@@ -1,11 +1,19 @@
 package org.pvemu.jelly.database;
 
-import java.lang.reflect.Field;
-import java.sql.ResultSet;
-
+/**
+ * Object representation of a table record
+ * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
+ */
 public interface Model {
 
+    /**
+     * The primary key value
+     * @return 
+     */
     public abstract int getPk();
 
+    /**
+     * Clear the object after deleting into db
+     */
     public abstract void clear();
 }
