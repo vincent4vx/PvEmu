@@ -9,14 +9,14 @@ import org.pvemu.jelly.utils.Utils;
  * simple physical attacks
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-abstract class BasicAttackEffect extends FighterEffect{
+abstract class BasicAttackEffect extends PhysicalEffect{
 
     abstract protected Stats.Element getActiveElement();
     abstract protected Stats.Element getResistanceElement();
 
     @Override
-    public void applyToFighter(EffectData data, Fighter caster, Fighter target) {
-        int jet = Utils.rand(data.getMin(), data.getMax());
+    public void applyToFighter(int min, int max, Fighter caster, Fighter target) {
+        int jet = Utils.rand(min, max);
         
         jet *= (1 + .01 * (double)(caster.getTotalStats().get(getActiveElement()) + caster.getTotalStats().get(Stats.Element.PERDOM)));
         jet += caster.getTotalStats().get(Stats.Element.DOMMAGE);
@@ -28,6 +28,7 @@ abstract class BasicAttackEffect extends FighterEffect{
         
         target.removeVita((short)jet);
     }
+    
 
     @Override
     protected int getEfficiencyForOneFighter(EffectData data, Fight fight, Fighter caster, Fighter target) {

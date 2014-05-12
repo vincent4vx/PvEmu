@@ -28,7 +28,8 @@ abstract public class Fighter implements GMable, Creature {
     private boolean canPlay = false;
     protected int currentVita;
     final private Stats baseStats;
-    protected Stats totalStats;
+    private Stats totalStats;
+    private Stats buffStats;
     private int numPA;
     private int numPM;
     protected short cell;
@@ -39,25 +40,32 @@ abstract public class Fighter implements GMable, Creature {
 
     public Fighter(Stats baseStats, Fight fight) {
         this.baseStats = baseStats;
-        totalStats = new Stats(baseStats);
+        this.totalStats = new Stats(baseStats);
         this.fight = fight;
     }
     
     public void enterFight(){
+        buffStats = new Stats();
+        updatePoints();
         currentVita = totalStats.get(Stats.Element.VITA);
-        numPA = totalStats.get(Stats.Element.PA);
-        numPM = totalStats.get(Stats.Element.PM);
     }
     
     public void startTurn(){
         Loggin.debug("Start turn for %s", getName());
         
+        buffStats = new Stats();
         buffList.applyBuffs();
     }
     
-    public void endTurn(){        
+    public void updatePoints(){
+        totalStats = new Stats(baseStats);
+        totalStats.addAll(buffStats);
         numPA = totalStats.get(Stats.Element.PA);
         numPM = totalStats.get(Stats.Element.PM);
+    }
+    
+    public void endTurn(){
+        updatePoints();
     }
 
     public FightTeam getTeam() {
@@ -141,6 +149,10 @@ abstract public class Fighter implements GMable, Creature {
     @Override
     public Stats getTotalStats() {
         return totalStats;
+    }
+
+    public Stats getBuffStats() {
+        return buffStats;
     }
 
     /**

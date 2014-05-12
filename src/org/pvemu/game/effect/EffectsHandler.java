@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.pvemu.game.effect;
 
 import java.util.HashMap;
@@ -24,6 +18,7 @@ final public class EffectsHandler {
         registerEffect(new AirAttackEffect());
         registerEffect(new FireAttackEffect());
         registerEffect(new HealEffect());
+        registerEffect(new RemovePAEffect());
     }
     
     public void registerEffect(Effect effect){

@@ -15,6 +15,7 @@ import org.pvemu.game.gameaction.AbstractGameActionsRegistry;
  */
 public class FightActionsRegistry extends AbstractGameActionsRegistry<PlayerFighter>{
     final static public short WALK             = 1;
+    final static public short UPDATE_PA        = 101;
     final static public short USE_PA_ON_ACTION = 102;
     final static public short FIGHTER_DIE      = 103;
     final static public short UPDATE_VITA      = 110;

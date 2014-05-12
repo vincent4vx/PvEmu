@@ -16,10 +16,10 @@ public class EffectGenerator {
     public String generateBuffEffect(Buff buff){
         return buff.getEffect().id() + ";"
                 + buff.getFighter().getID() + ";"
-                + buff.getData().getMin() + ";"
-                + buff.getData().getMax() + ";"
-                + ";" //TODO: current jet?
-                + ";" //TODO: ?
+                + (buff.getParam1() == 0 ? "" : buff.getParam1()) + ";"
+                + (buff.getParam2() == 0 ? "" : buff.getParam2()) + ";"
+                + (buff.getParam3() == 0 ? "" : buff.getParam3()) + ";"
+                + (buff.getParam4() == 0 ? "" : buff.getParam4()) + ";"
                 + buff.getDuration() + ";"
                 + buff.getData().getSpellID();
     }

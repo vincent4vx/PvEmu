@@ -16,12 +16,20 @@ abstract public class FighterEffect implements Effect {
 
     /**
      * Apply this effect to a fighter (without concider the area)
-     *
-     * @param data the effect data
+     * @param min
+     * @param max
      * @param caster the spell caster
      * @param target the targeted fighter
      */
-    abstract public void applyToFighter(EffectData data, Fighter caster, Fighter target);
+    abstract public void applyToFighter(int min, int max, Fighter caster, Fighter target);
+    
+    final public void applyToFighter(EffectData data, Fighter caster, Fighter target){
+        applyToFighter(data.getMin(), data.getMax(), caster, target);
+    }
+    
+    abstract public void startBuff(EffectData data, Fighter caster, Fighter target);
+    
+    abstract public void applyBuff(Buff buff);
 
     @Override
     public void applyToFight(EffectData data, Fight fight, Fighter caster, short cell) {
@@ -34,7 +42,7 @@ abstract public class FighterEffect implements Effect {
 
         Loggin.debug("Apply %s on cell %d", data, cell);
 
-        for (Fighter target : fight.getFightMap().getFightersByCells(cells)) {            
+        for (Fighter target : fight.getFightMap().getFightersByCells(cells)) { 
             if(!isGoodTarget(data.getTarget(), caster, target)){
                 continue;
             }
@@ -46,15 +54,7 @@ abstract public class FighterEffect implements Effect {
             if(data.getDuration() < 1){
                 applyToFighter(data, caster, target);
             }else{
-                Buff buff = new Buff(this, data, caster, target);
-                
-                if(target.canPlay()) //auto-buff
-                    buff.apply();
-                
-                if(buff.getDuration() > 0){
-                    target.getBuffList().addBuff(buff);
-                    GameSendersRegistry.getEffect().buffEffect(fight, buff);
-                }
+                startBuff(data, caster, target);
             }
         }
         

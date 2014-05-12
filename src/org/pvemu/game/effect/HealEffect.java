@@ -1,9 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package org.pvemu.game.effect;
 
 import org.pvemu.game.fight.Fight;
@@ -15,7 +9,7 @@ import org.pvemu.jelly.utils.Utils;
  * simple heal
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class HealEffect extends FighterEffect{
+public class HealEffect extends PhysicalEffect{
 
     @Override
     public short id() {
@@ -28,8 +22,8 @@ public class HealEffect extends FighterEffect{
     }
 
     @Override
-    public void applyToFighter(EffectData data, Fighter caster, Fighter target) {
-        int jet = Utils.rand(data.getMin(), data.getMax());
+    public void applyToFighter(int min, int max, Fighter caster, Fighter target) {
+        int jet = Utils.rand(min, max);
         
         jet *= (1 + .01 * (double)(caster.getTotalStats().get(Stats.Element.INTEL)));
         jet += caster.getTotalStats().get(Stats.Element.SOIN);
