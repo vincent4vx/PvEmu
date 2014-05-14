@@ -25,6 +25,8 @@ final public class ChatHandler {
     private ChatHandler(){
         registerChannel(new MapChannel());
         registerChannel(new RecruitmentChannel());
+        registerChannel(new TradeChannel());
+        registerChannel(new TeamChannel());
     }
     
     /**

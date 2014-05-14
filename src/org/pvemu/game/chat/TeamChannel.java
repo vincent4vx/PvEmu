@@ -8,34 +8,32 @@ package org.pvemu.game.chat;
 
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.YesFilter;
+import org.pvemu.jelly.filters.FilterFactory;
 import org.pvemu.network.game.GamePacketEnum;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class MapChannel implements ChatChannel {
+public class TeamChannel implements ChatChannel{
 
     @Override
     public String id() {
-        return "*";
+        return "#";
     }
 
     @Override
     public void post(String msg, Player player) {
-        StringBuilder packet = new StringBuilder(msg.length() + 20);
-        packet.append('|').append(player.getID()).append('|').append(player.getName()).append('|').append(msg);
+        String packet = id() + "|" + player.getID()
+                + "|" + player.getName()
+                + "|" + msg;
         
-        if(!player.getActionsManager().isInFight())
-            GamePacketEnum.CHAT_MESSAGE_OK.sendToMap(player.getMap(), packet.toString());
-        else
-            GamePacketEnum.CHAT_MESSAGE_OK.sendToFight(player.getFighter().getFight(), packet);
+        GamePacketEnum.CHAT_MESSAGE_OK.sendToFighters(player.getFighter().getTeam().getFighters().values(), packet);
     }
 
     @Override
     public Filter conditions() {
-        return new YesFilter();
+        return FilterFactory.playerInFightFilter();
     }
     
 }

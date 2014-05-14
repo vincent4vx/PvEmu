@@ -13,7 +13,7 @@ public class Constants {
      * The version of the emulator
      * @see org.pvemu.jelly.plugin.Plugin#compatibility()
      */
-    final static public Version VERSION = new Version(0, 57, 2, "a");
+    final static public Version VERSION = new Version(0, 57, 3, "a");
     
     /**
      * The version of the client

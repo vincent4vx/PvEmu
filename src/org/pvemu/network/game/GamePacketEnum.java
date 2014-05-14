@@ -387,7 +387,16 @@ public enum GamePacketEnum {
     }
     
     public void sendToFight(Fight fight, Object param){
-        for(Fighter fighter : fight.getFighters()){
+        /*for(Fighter fighter : fight.getFighters()){
+            if(fighter instanceof Sessionable){
+                send(((Sessionable)fighter).getSession(), param);
+            }
+        }*/
+        sendToFighters(fight.getFighters(), param);
+    }
+    
+    public void sendToFighters(Iterable<Fighter> fighters, Object param){
+        for(Fighter fighter : fighters){
             if(fighter instanceof Sessionable){
                 send(((Sessionable)fighter).getSession(), param);
             }

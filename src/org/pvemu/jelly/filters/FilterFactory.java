@@ -19,6 +19,7 @@ public class FilterFactory {
     static private AskerFilter moderatorAskerFilter = null;
     static private AskerFilter adminConsoleFilter = null;
     static private PlayerFilter playerNotInFightFilter = null;
+    static private PlayerFilter playerInFightFilter = null;
     
     static public Filter adminAskerFilter(){
         if(adminAskerFilter == null){
@@ -55,5 +56,13 @@ public class FilterFactory {
         }
         
         return playerNotInFightFilter;
+    }
+    static public Filter playerInFightFilter(){
+        if(playerInFightFilter == null){
+            playerInFightFilter = new PlayerFilter();
+            playerInFightFilter.setInFight(new EqualComparator<>(true));
+        }
+        
+        return playerInFightFilter;
     }
 }

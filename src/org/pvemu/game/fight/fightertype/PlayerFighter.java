@@ -47,6 +47,7 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
         player.getActionsManager().setBusy(true);
         player.getActionsManager().setInFight(true);
         SessionAttributes.FIGHTER.setValue(this, player.getSession());
+        player.setFighter(this);
         GameSendersRegistry.getMap().removeGMable(player.getMap(), player);
         player.getMap().removeGMable(player);
         GameSendersRegistry.getFight().joinFightOk(player.getSession(), fight);
@@ -123,6 +124,7 @@ public class PlayerFighter extends Fighter implements ActionPerformer{
     public void onEnd(boolean win) {
         super.onEnd(win); //To change body of generated methods, choose Tools | Templates.
         SessionAttributes.FIGHTER.removeValue(player.getSession());
+        player.setFighter(null);
         player.getActionsManager().setInFight(false);
         player.getActionsManager().setBusy(false);
     }

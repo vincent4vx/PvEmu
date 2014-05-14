@@ -16,6 +16,7 @@ import org.pvemu.models.NpcQuestion;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.ExperienceHandler;
+import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.gameaction.ActionPerformer;
 import org.pvemu.game.gameaction.GameActionsManager;
 import org.pvemu.game.gameaction.game.GameActionsRegistry;
@@ -52,6 +53,7 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
     private int lastCurrentVita;
     private long lastCurrentVitaSet;
     final private ItemSetHandler itemSetHandler = new ItemSetHandler(inventory);
+    private PlayerFighter fighter = null;
 
     Player(Character character, Account account, ClassData classData, String[] colors, Stats baseStats, SpellList spellList, GameMap curMap, MapCell curCell) {
         this.character = character;
@@ -450,6 +452,14 @@ public class Player implements GMable, Filterable, Sessionable, Creature, Action
 
     public ItemSetHandler getItemSetHandler() {
         return itemSetHandler;
+    }
+
+    public PlayerFighter getFighter() {
+        return fighter;
+    }
+
+    public void setFighter(PlayerFighter fighter) {
+        this.fighter = fighter;
     }
 
     @Override
