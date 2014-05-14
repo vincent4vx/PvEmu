@@ -12,6 +12,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveAction;
 import org.pvemu.game.objects.npc.GameNpc;
 import org.pvemu.game.objects.map.interactiveobject.InteractiveObjectFactory;
 import org.pvemu.game.objects.monster.MonsterFactory;
@@ -28,7 +31,7 @@ import org.pvemu.models.dao.DAOFactory;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 final public class MapFactory {
-    final static private Map<Short, GameMap> mapsById = new HashMap<>(2000);
+    final static private Map<Short, GameMap> mapsById = new ConcurrentHashMap<>(2000);
     
     static public GameMap getById(short mapID){
         if(!mapsById.containsKey(mapID)){
@@ -134,19 +137,68 @@ final public class MapFactory {
         return new MapCell(cellID, mapID, walkable, canSight, obj);
     }
     
-    static public void preloadMaps(){        
+    static public void preloadMaps(){
         Shell.print("Loading maps : ", Shell.GraphicRenditionEnum.YELLOW);
         List<MapModel> models = DAOFactory.map().getAll();
         Map<Short, List<MapNpcs>> npcs = DAOFactory.mapNpcs().getAll();
         
-        for(MapModel model : models){
+        /*for(MapModel model : models){
             List<MapNpcs> list = npcs.get(model.id);
             
             if(list == null)
                 list = new ArrayList<>();
             
             mapsById.put(model.id, getByModel(model, list));
-        }
+        }*/
+        
+        new ForkJoinPool().invoke(new MapLoader(models, 0, models.size(), npcs));
+        
         Shell.println(models.size() + " maps loaded", Shell.GraphicRenditionEnum.GREEN);
+    }
+    
+    static private class MapLoader extends RecursiveAction{
+        final private static int MAX_MAP_PER_THREAD = 500;
+        
+        final private List<MapModel> models;
+        final private int start;
+        final private int end;
+        final private Map<Short, List<MapNpcs>> npcs;
+
+        public MapLoader(List<MapModel> models, int start, int end, Map<Short, List<MapNpcs>> npcs) {
+            this.models = models;
+            this.start = start;
+            this.end = end;
+            this.npcs = npcs;
+        }
+
+        @Override
+        protected void compute() {
+            int count = end - start;
+            if(count < MAX_MAP_PER_THREAD){
+                load();
+                return;
+            }
+            
+            int middle = count / 2;
+            
+            MapLoader loader1 = new MapLoader(models, start, start + middle, npcs);
+            MapLoader loader2 = new MapLoader(models, start + middle, end, npcs);
+            loader2.fork();
+            loader1.compute();
+            loader2.join();
+        }
+        
+        private void load(){
+            for(int i = start; i < end; ++i){
+                MapModel model = models.get(i);
+                List<MapNpcs> list = npcs.get(model.id);
+
+                if(list == null)
+                    list = new ArrayList<>();
+
+                mapsById.put(model.id, getByModel(model, list));
+            }
+        }
+        
     }
 }

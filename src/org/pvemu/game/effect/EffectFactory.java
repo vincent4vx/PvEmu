@@ -5,6 +5,8 @@
  */
 package org.pvemu.game.effect;
 
+import org.pvemu.game.fight.Fight;
+import org.pvemu.game.fight.Fighter;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.utils.Utils;
 
@@ -19,7 +21,7 @@ final public class EffectFactory {
         String[] args = Utils.split(spellEffect, ";");
 
         try {
-            short id = Short.parseShort(args[0]);
+            final short id = Short.parseShort(args[0]);
             int duration = Integer.parseInt(args[4]);
             
             int min = Integer.parseInt(args[1].trim());
@@ -31,8 +33,28 @@ final public class EffectFactory {
             Effect effect = EffectsHandler.instance().getEffect(id);
 
             if (effect == null) {
-                Loggin.debug("Cannot find effectID %d", id);
-                return null;
+                effect = new Effect() {
+
+                    @Override
+                    public short id() {
+                        return id;
+                    }
+
+                    @Override
+                    public void applyToFight(EffectData data, Fight fight, Fighter caster, short cell) {
+                        Loggin.debug("effect %d not implemented", id);
+                    }
+
+                    @Override
+                    public int getEfficiency(EffectData data, Fight fight, Fighter caster, short cell) {
+                        return 0;
+                    }
+
+                    @Override
+                    public Effect.EffectType getEffectType() {
+                        return EffectType.ENVIRONMENT;
+                    }
+                };
             }
 
             return new EffectData(effect, spellID, min, max, duration, target, area);

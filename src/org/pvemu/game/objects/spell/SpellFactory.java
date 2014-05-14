@@ -2,11 +2,13 @@ package org.pvemu.game.objects.spell;
 
 import org.pvemu.game.effect.EffectData;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.RecursiveAction;
 import org.pvemu.game.effect.EffectFactory;
 import org.pvemu.jelly.Loggin;
 import org.pvemu.jelly.Shell;
@@ -19,7 +21,7 @@ import org.pvemu.models.dao.DAOFactory;
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
 final public class SpellFactory {
-    final static private Map<Integer, SpellLevels> spells = new HashMap<>();
+    final static private Map<Integer, SpellLevels> spells = new ConcurrentHashMap<>();
     
     static public SpellLevels getSpellLevelsById(int id){
         if(!spells.containsKey(id)){
@@ -156,9 +158,52 @@ final public class SpellFactory {
         Shell.print("Loading spells : ", Shell.GraphicRenditionEnum.YELLOW);
         List<Spell> models = DAOFactory.spell().getAll();
         
-        for(Spell model : models){
+        /*for(Spell model : models){
             spells.put(model.id, getSpellByModel(model));
-        }
+        }*/
+        
+        new ForkJoinPool().invoke(new SpellLoader(models, 0, models.size()));
+        
         Shell.println(models.size() + " spells loaded", Shell.GraphicRenditionEnum.GREEN);
+    }
+    
+    static private class SpellLoader extends RecursiveAction{
+        final private List<Spell> models;
+        final private int start;
+        final private int end;
+        
+        final static private int MAX_PER_TASK = 400;
+
+        public SpellLoader(List<Spell> models, int start, int end) {
+            this.models = models;
+            this.start = start;
+            this.end = end;
+        }
+
+        @Override
+        protected void compute() {
+            int count = end - start;
+            
+            if(count < MAX_PER_TASK){
+                load();
+                return;
+            }
+            
+            int middle = count / 2;
+            
+            SpellLoader loader1 = new SpellLoader(models, start, start + middle);
+            SpellLoader loader2 = new SpellLoader(models, start + middle, end);
+            loader2.fork();
+            loader1.compute();
+            loader2.join();
+        }
+        
+        private void load(){
+            for(int i = start; i < end; ++i){
+                Spell model = models.get(i);
+                spells.put(model.id, getSpellByModel(model));
+            }
+        }
+        
     }
 }

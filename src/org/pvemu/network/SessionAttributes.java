@@ -32,6 +32,9 @@ public class SessionAttributes<T> {
      * @return l'objet stocké, null si inexistant
      */
     public T getValue(IoSession session){
+        if(session == null)
+            return null;
+        
         return (T)session.getAttribute(this);
     }
     
@@ -49,6 +52,8 @@ public class SessionAttributes<T> {
      * @param session 
      */
     public void removeValue(IoSession session){
+        if(session == null)
+            return;
         session.removeAttribute(this);
     }
     
@@ -58,6 +63,9 @@ public class SessionAttributes<T> {
      * @return true si l'information existe, false sinon
      */
     public boolean exists(IoSession session){
+        if(session == null)
+            return false;
+        
         return session.containsAttribute(this);
     }
 }
