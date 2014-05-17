@@ -1,12 +1,6 @@
 new command system
-    - new parser
-    - new arguments system
-    - new error handling
-    - add vars
     - add sript files for init, login and logout
     - add TerminalAsker
-add plugin system
-    - dependencies system
 new path validator
     - use list of short for all path
     - FightMap and GameMap implements same interface (Walkable)

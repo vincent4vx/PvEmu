@@ -6,12 +6,14 @@
 
 package org.pvemu.game.fight;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import org.pvemu.game.objects.map.GameMap;
+import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.utils.Utils;
 
 /**
@@ -80,6 +82,26 @@ public class FightMap {
         fighters.put(dest, fighter);
     }
     
+    public Collection<Short> validatePath(Collection<Short> path, Fighter fighter){
+        int pm = fighter.getNumPM();
+        List<Short> newPath = new ArrayList<>(path.size());
+        
+        for(short cell : path){
+            if(--pm < 0)
+                break;
+            
+            if(!isFreeCell(cell))
+                break;
+            
+            newPath.add(cell);
+            
+            if(haveEnnemyArround(cell, fighter)) //stop if near ennemy
+                break;
+        }
+        
+        return newPath;
+    }
+    
     /**
      * Test if the cell is free (can move on)
      * @param cell
@@ -122,5 +144,14 @@ public class FightMap {
      */
     public void removeFighter(Fighter fighter){
         fighters.remove(fighter.getCellId());
+    }
+    
+    public boolean haveEnnemyArround(short cell, Fighter fighter){
+        for(short c : MapUtils.getAdjencentCells(map, cell)){
+            if(fighters.get(c) != null && fighters.get(c).getTeam() != fighter.getTeam())
+                return true;
+        }
+        
+        return false;
     }
 }

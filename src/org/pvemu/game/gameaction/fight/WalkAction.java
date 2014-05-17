@@ -6,6 +6,7 @@
 
 package org.pvemu.game.gameaction.fight;
 
+import java.util.Collection;
 import java.util.concurrent.atomic.AtomicReference;
 import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.gameaction.GameAction;
@@ -33,13 +34,18 @@ public class WalkAction implements GameAction<PlayerFighter>{
             return;
         }
         
-        AtomicReference<String> rPath = new AtomicReference<>((String) data.getArgument(0));
-        short steps = Pathfinding.validatePath(
+        Collection<Short> path = Pathfinding.parsePath(
                 data.getPerformer().getFight().getFightMap().getMap(),
                 data.getPerformer().getCellId(),
-                rPath,
+                data.getArgument(0),
                 true
         );
+        
+        Loggin.debug("path : %s", path);
+        
+        path = data.getPerformer().getFight().getFightMap().validatePath(path, data.getPerformer());
+        
+        int steps = path.size();
 
         Loggin.debug("[Fight] Tentative de déplacement de %s de %d en %d étapes", data.getPerformer().getName(), data.getPerformer().getCellId(), steps);
 
@@ -49,20 +55,13 @@ public class WalkAction implements GameAction<PlayerFighter>{
             return;
         }
         
-        short dest = Crypt.cellCode_To_ID(rPath.get().substring(rPath.get().length() - 2));
+        String newPath = Crypt.compressPath(
+                data.getPerformer().getFight().getFightMap().getMap(), 
+                data.getPerformer().getCellId(), 
+                path,
+                false
+        );
         
-        if(!data.getPerformer().getFight().canMove(data.getPerformer(), dest, steps)){
-            Loggin.debug("[Fight] %s can't move", data.getPerformer().getName());
-            GameSendersRegistry.getGameAction().error(data.getPerformer().getSession());
-            return;
-        }
-
-        String newPath = "a"
-                + Crypt.cellID_To_Code(
-                        data.getPerformer().getCellId()
-                )
-                + rPath.get();
-
         data.setArgument(0, newPath);
 
         short id = data.getPerformer().getActionsManager().addGameAction(data);

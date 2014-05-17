@@ -9,69 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.pvemu.game.objects.map.GameMap;
-import java.util.concurrent.atomic.AtomicReference;
 import org.pvemu.game.fight.Fight;
-import org.pvemu.game.objects.map.MapCell;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.jelly.Loggin;
 
 public class Pathfinding {
-    
-    static public short validatePath(GameMap map, short startCell, AtomicReference<String> path, boolean inFight){
-        short steps = 0;
-        short currentCell = startCell;
-        short endCell = Crypt.cellCode_To_ID(path.get().substring(path.get().length() - 2, path.get().length()));
-        
-        for(int i = 0; i < path.get().length(); i += 3){
-            String step = path.get().substring(i, i+3);
-            short cellID = Crypt.cellCode_To_ID(step.substring(1));
-            char dir = step.charAt(0);
-            boolean stop = false;
-            
-            int lastSteps = steps;
-            for(;;){
-                ++steps;
-                
-                short lastCell = currentCell;
-                currentCell = MapUtils.getCellIDFromDirrection(currentCell, dir, map, inFight);
-                MapCell cell = map.getCellById(currentCell);
-                
-                if(cell == null || !cell.isWalkable()){
-                    Loggin.debug("Case %d non marchable", currentCell);
-                    stop = true;
-                }else if(endCell == currentCell && cell.getObj() != null){ //Use the IO
-                    Loggin.debug("IO %d trouvé", cell.getObj().getObjID());
-                    stop = true;
-                }
-                
-                if(!stop && currentCell == cellID){ //end of the step
-                    break;
-                }
-                
-                if(stop){ //blocked
-                    --steps;
-                    stop = true;
-                    currentCell = lastCell;
-                    break;
-                }
-                
-                if(steps > lastSteps + 64)
-                    return -1000;
-            }
-            
-                
-            if(stop){
-                path.set(
-                        new StringBuilder().append(path.get().substring(0, i))
-                                .append(dir).append(Crypt.cellID_To_Code(currentCell))
-                                .toString()
-                );
-                break;
-            }
-        }
-        
-        return steps;
-    }
     
     static public Collection<Short> parsePath(GameMap map, short startCell, String strPath, boolean inFight){
         List<Short> path = new ArrayList<>();
@@ -91,8 +33,9 @@ public class Pathfinding {
                     && map.getCellById(lastCell).isWalkable()
                     && s-- > 0
             ){
-                step.add(lastCell);
+                
                 lastCell = MapUtils.getCellIDFromDirrection(lastCell, lastDir, map, inFight);
+                step.add(lastCell);
             }
             
             if(s == 0){

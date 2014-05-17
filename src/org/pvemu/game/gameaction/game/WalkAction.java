@@ -1,6 +1,6 @@
 package org.pvemu.game.gameaction.game;
 
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Collection;
 import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.gameaction.GameAction;
 import org.pvemu.game.gameaction.GameActionData;
@@ -24,14 +24,10 @@ public class WalkAction implements GameAction<Player> {
 
     @Override
     public void start(GameActionData<Player> data) {
-        Loggin.debug("path : %s", Pathfinding.parsePath(data.getPerformer().getMap(), data.getPerformer().getCellId(), data.getArgument(0), false));
-        AtomicReference<String> rPath = new AtomicReference<>((String) data.getArgument(0));
-        short steps = Pathfinding.validatePath(
-                data.getPerformer().getMap(),
-                data.getPerformer().getCell().getID(),
-                rPath,
-                false
-        );
+        Collection<Short> path = Pathfinding.parsePath(data.getPerformer().getMap(), data.getPerformer().getCellId(), data.getArgument(0), false);
+        Loggin.debug("path : %s", path);
+        
+        int steps = path.size();
 
         Loggin.debug("Tentative de déplacement de %s de %d en %d étapes", data.getPerformer().getName(), data.getPerformer().getCell().getID(), steps);
 
@@ -40,12 +36,13 @@ public class WalkAction implements GameAction<Player> {
             GameSendersRegistry.getGameAction().error(data.getPerformer().getSession());
             return;
         }
-
-        String newPath = "a"
-                + Crypt.cellID_To_Code(
-                        data.getPerformer().getCell().getID()
-                )
-                + rPath.get();
+        
+        String newPath = Crypt.compressPath(
+                data.getPerformer().getMap(), 
+                data.getPerformer().getCellId(), 
+                path,
+                false
+        );
 
         data.setArgument(0, newPath);
 
