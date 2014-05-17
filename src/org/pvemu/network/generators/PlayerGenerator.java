@@ -12,9 +12,9 @@ import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.game.objects.player.SpellList;
-import org.pvemu.jelly.Constants;
-import org.pvemu.jelly.utils.Pair;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Constants;
+import org.pvemu.common.utils.Pair;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.Experience;
 
 /**

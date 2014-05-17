@@ -11,7 +11,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import org.pvemu.game.objects.monster.MonsterFactory;
 import org.pvemu.game.objects.monster.MonsterGroup;
-import org.pvemu.jelly.Config;
+import org.pvemu.common.Config;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

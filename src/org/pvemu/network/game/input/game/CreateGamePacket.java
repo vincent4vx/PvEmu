@@ -9,7 +9,7 @@ package org.pvemu.network.game.input.game;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.Constants;
+import org.pvemu.common.Constants;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.GamePacketEnum;

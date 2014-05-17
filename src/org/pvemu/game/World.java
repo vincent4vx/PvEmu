@@ -2,7 +2,7 @@ package org.pvemu.game;
 
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.dep.Stats;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,8 +12,8 @@ import org.pvemu.game.objects.monster.MonsterFactory;
 import org.pvemu.game.objects.npc.NpcFactory;
 import org.pvemu.game.objects.spell.SpellFactory;
 import org.pvemu.game.triggeraction.TriggerFactory;
-import org.pvemu.jelly.Shell;
-import org.pvemu.jelly.Shell.GraphicRenditionEnum;
+import org.pvemu.common.Shell;
+import org.pvemu.common.Shell.GraphicRenditionEnum;
 
 /**
  * registry class

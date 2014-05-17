@@ -16,7 +16,7 @@ import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.monster.MonsterGroup;
 import org.pvemu.game.objects.monster.MonsterTemplate;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

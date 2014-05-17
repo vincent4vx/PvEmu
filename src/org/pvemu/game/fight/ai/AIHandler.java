@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.fightertype.AIFighter;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  *

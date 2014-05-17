@@ -8,8 +8,8 @@ import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.fight.buttin.FightButtinFactory;
 import org.pvemu.game.fight.endactions.EndActionsHandler;
 import org.pvemu.game.gameaction.game.JoinFightAction;
-import org.pvemu.jelly.Constants;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Constants;
+import org.pvemu.common.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

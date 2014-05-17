@@ -1,7 +1,7 @@
 package org.pvemu.network.realm.input;
 
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.jelly.Constants;
+import org.pvemu.common.Constants;
 import org.pvemu.models.Account;
 import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.InputPacket;

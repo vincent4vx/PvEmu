@@ -8,7 +8,7 @@ package org.pvemu.game.fight.buttin;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.pvemu.jelly.utils.Pair;
+import org.pvemu.common.utils.Pair;
 
 /**
  * the buttin after fight

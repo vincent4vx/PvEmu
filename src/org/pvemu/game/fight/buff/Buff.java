@@ -3,7 +3,7 @@ package org.pvemu.game.fight.buff;
 import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.effect.FighterEffect;
 import org.pvemu.game.fight.Fighter;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  *

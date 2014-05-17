@@ -13,9 +13,9 @@ import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.fightertype.MonsterFighter;
 import org.pvemu.game.fight.fightertype.PlayerFighter;
-import org.pvemu.jelly.Constants;
-import org.pvemu.jelly.utils.Pair;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Constants;
+import org.pvemu.common.utils.Pair;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.Experience;
 
 /**

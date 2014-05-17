@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.pvemu.jelly.Shell;
-import org.pvemu.jelly.utils.Pair;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Shell;
+import org.pvemu.common.utils.Pair;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.NpcResponseAction;
 import org.pvemu.models.dao.DAOFactory;
 

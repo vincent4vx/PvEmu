@@ -1,6 +1,6 @@
 package org.pvemu.network;
 
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import org.pvemu.models.Account;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;

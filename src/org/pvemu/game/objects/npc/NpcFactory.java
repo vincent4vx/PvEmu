@@ -8,7 +8,7 @@ package org.pvemu.game.objects.npc;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.pvemu.jelly.Shell;
+import org.pvemu.common.Shell;
 import org.pvemu.models.MapNpcs;
 import org.pvemu.models.NpcQuestion;
 import org.pvemu.models.NpcTemplate;

@@ -1,9 +1,9 @@
 package org.pvemu.network.realm;
 
-import org.pvemu.jelly.Constants;
-import org.pvemu.jelly.Jelly;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Constants;
+import org.pvemu.common.Jelly;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.Account;
 import org.pvemu.models.dao.DAOFactory;
 import org.apache.mina.core.session.IoSession;

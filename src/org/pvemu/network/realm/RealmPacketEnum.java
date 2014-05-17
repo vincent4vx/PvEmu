@@ -1,7 +1,7 @@
 package org.pvemu.network.realm;
 
-import org.pvemu.jelly.Constants;
-import org.pvemu.jelly.Jelly;
+import org.pvemu.common.Constants;
+import org.pvemu.common.Jelly;
 import org.apache.mina.core.session.IoSession;
 
 public enum RealmPacketEnum {

@@ -3,8 +3,8 @@ package org.pvemu.models.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.FindableDAO;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.database.FindableDAO;
 import org.pvemu.models.NpcQuestion;
 
 public class NpcQuestionDAO extends FindableDAO<NpcQuestion> {

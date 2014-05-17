@@ -2,7 +2,7 @@ package org.pvemu.commands.parser.variable;
 
 import java.util.List;
 import org.pvemu.commands.askers.Asker;
-import org.pvemu.jelly.filters.Filter;
+import org.pvemu.common.filters.Filter;
 
 /**
  *

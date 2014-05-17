@@ -4,11 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.DatabaseHandler;
-import org.pvemu.jelly.database.Query;
-import org.pvemu.jelly.database.ReservedQuery;
-import org.pvemu.jelly.database.UpdatableDAO;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.database.DatabaseHandler;
+import org.pvemu.common.database.Query;
+import org.pvemu.common.database.ReservedQuery;
+import org.pvemu.common.database.UpdatableDAO;
 import org.pvemu.models.Account;
 
 public class AccountDAO extends UpdatableDAO<Account> {

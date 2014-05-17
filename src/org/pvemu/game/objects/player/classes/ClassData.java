@@ -19,7 +19,7 @@ import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.game.objects.spell.SpellFactory;
 import org.pvemu.game.objects.spell.SpellLevels;
 import org.pvemu.game.objects.player.SpellList;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  *

@@ -6,7 +6,7 @@
 
 package org.pvemu.commands.askers;
 
-import org.pvemu.jelly.filters.Filterable;
+import org.pvemu.common.filters.Filterable;
 
 /**
  *

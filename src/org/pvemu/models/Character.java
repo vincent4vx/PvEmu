@@ -8,7 +8,7 @@ package org.pvemu.models;
  *
  * @author vincent
  */
-public class Character implements org.pvemu.jelly.database.Model {
+public class Character implements org.pvemu.common.database.Model {
 
     public int id;
     public String name;

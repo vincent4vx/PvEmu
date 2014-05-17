@@ -5,15 +5,15 @@ import org.pvemu.game.objects.player.Player;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import org.pvemu.jelly.utils.Utils;
-import org.pvemu.jelly.utils.Crypt;
+import org.pvemu.common.utils.Utils;
+import org.pvemu.common.utils.Crypt;
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.filters.AbstractFilterable;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.filters.AbstractFilterable;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.Sessionable;
 
-public class Account extends AbstractFilterable implements org.pvemu.jelly.database.Model, Sessionable {
+public class Account extends AbstractFilterable implements org.pvemu.common.database.Model, Sessionable {
 
     public int id;
     public String account;

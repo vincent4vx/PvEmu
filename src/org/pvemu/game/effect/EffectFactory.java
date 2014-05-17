@@ -7,8 +7,8 @@ package org.pvemu.game.effect;
 
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.utils.Utils;
 
 /**
  *

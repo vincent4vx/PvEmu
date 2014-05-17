@@ -13,8 +13,8 @@ import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.game.objects.player.classes.ClassData;
 import org.pvemu.game.objects.player.classes.ClassesHandler;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.Account;
 import org.pvemu.models.dao.DAOFactory;
 

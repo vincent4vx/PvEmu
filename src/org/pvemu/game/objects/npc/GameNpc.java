@@ -1,8 +1,8 @@
 package org.pvemu.game.objects.npc;
 
 import org.pvemu.game.objects.map.GMable;
-import org.pvemu.jelly.Constants;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Constants;
+import org.pvemu.common.Loggin;
 import org.pvemu.models.MapNpcs;
 import org.pvemu.models.NpcQuestion;
 import org.pvemu.models.NpcTemplate;

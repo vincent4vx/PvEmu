@@ -9,7 +9,7 @@ package org.pvemu.game.fight.buff;
 import java.util.ArrayList;
 import java.util.List;
 import org.pvemu.game.fight.Fighter;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  *

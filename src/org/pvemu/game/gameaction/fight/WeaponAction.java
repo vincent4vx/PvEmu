@@ -14,7 +14,7 @@ import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
 import org.pvemu.game.objects.item.types.Weapon;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

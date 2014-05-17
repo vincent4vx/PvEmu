@@ -14,7 +14,7 @@ import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapCell;
 import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.game.objects.map.MapUtils;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.output.GameSendersRegistry;
 

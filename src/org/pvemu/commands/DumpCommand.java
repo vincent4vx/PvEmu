@@ -4,8 +4,8 @@ import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.argument.RequiredArgumentException;
 import org.pvemu.commands.askers.Asker;
-import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.FilterFactory;
+import org.pvemu.common.filters.Filter;
+import org.pvemu.common.filters.FilterFactory;
 
 /**
  *

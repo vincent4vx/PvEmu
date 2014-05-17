@@ -6,7 +6,7 @@
 
 package org.pvemu.game.triggeraction;
 
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.utils.Utils;
 
 /**
  *

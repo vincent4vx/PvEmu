@@ -14,7 +14,7 @@ import org.pvemu.game.fight.FightTeam;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.buttin.defiance.DefianceFightButtinFactoriesRegistry;
 import org.pvemu.game.fight.buttin.pvm.PvMFightButtinFactoriesRegistry;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  *

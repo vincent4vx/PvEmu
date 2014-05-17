@@ -8,9 +8,9 @@ import org.pvemu.commands.askers.Asker;
 import org.pvemu.commands.parser.CommandParser;
 import org.pvemu.commands.parser.Parser;
 import org.pvemu.commands.parser.ParserError;
-import org.pvemu.jelly.filters.FilterFactory;
-import org.pvemu.jelly.utils.Pair;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.filters.FilterFactory;
+import org.pvemu.common.utils.Pair;
+import org.pvemu.common.utils.Utils;
 
 /**
  * parse and store variables {@literal $name}

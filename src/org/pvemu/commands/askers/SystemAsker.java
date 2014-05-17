@@ -6,9 +6,9 @@
 
 package org.pvemu.commands.askers;
 
-import org.pvemu.jelly.Shell;
-import org.pvemu.jelly.Shell.GraphicRenditionEnum;
-import org.pvemu.jelly.filters.Filter;
+import org.pvemu.common.Shell;
+import org.pvemu.common.Shell.GraphicRenditionEnum;
+import org.pvemu.common.filters.Filter;
 
 /**
  *

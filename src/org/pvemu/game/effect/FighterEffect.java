@@ -5,7 +5,7 @@ import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.buff.Buff;
 import org.pvemu.game.objects.map.MapUtils;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

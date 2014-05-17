@@ -10,9 +10,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveAction;
 import org.pvemu.game.effect.EffectFactory;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.Shell;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.Shell;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.Spell;
 import org.pvemu.models.dao.DAOFactory;
 

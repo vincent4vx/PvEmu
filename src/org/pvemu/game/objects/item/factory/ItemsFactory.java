@@ -17,7 +17,7 @@ import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.effect.EffectFactory;
 import org.pvemu.game.objects.item.WeaponData;
 import org.pvemu.game.objects.itemlist.ItemList;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.models.ItemTemplate;
 import org.pvemu.models.dao.DAOFactory;

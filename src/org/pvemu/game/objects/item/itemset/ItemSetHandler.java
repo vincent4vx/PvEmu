@@ -14,7 +14,7 @@ import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.itemlist.Inventory;
 import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.ItemPosition;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  * handle item sets

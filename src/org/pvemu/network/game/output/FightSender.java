@@ -14,7 +14,7 @@ import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.gameaction.game.GameActionsRegistry;
 import org.pvemu.game.objects.map.GameMap;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
 

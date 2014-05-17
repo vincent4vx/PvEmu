@@ -9,8 +9,8 @@ package org.pvemu.game.triggeraction;
 import org.pvemu.game.cinematic.CinematicsHandler;
 import org.pvemu.game.gameaction.GameActionFactory;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.YesFilter;
+import org.pvemu.common.filters.Filter;
+import org.pvemu.common.filters.YesFilter;
 
 /**
  *

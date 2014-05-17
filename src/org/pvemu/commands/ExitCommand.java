@@ -9,10 +9,10 @@ package org.pvemu.commands;
 import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.commands.askers.ClientAsker;
-import org.pvemu.jelly.filters.AskerFilter;
-import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.FilterFactory;
-import org.pvemu.jelly.filters.comparators.MoreThanComparator;
+import org.pvemu.common.filters.AskerFilter;
+import org.pvemu.common.filters.Filter;
+import org.pvemu.common.filters.FilterFactory;
+import org.pvemu.common.filters.comparators.MoreThanComparator;
 
 /**
  *

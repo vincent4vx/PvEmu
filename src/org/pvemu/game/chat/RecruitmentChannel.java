@@ -7,8 +7,8 @@
 package org.pvemu.game.chat;
 
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.YesFilter;
+import org.pvemu.common.filters.Filter;
+import org.pvemu.common.filters.YesFilter;
 import org.pvemu.network.game.GamePacketEnum;
 
 /**

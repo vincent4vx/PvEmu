@@ -2,13 +2,13 @@ package org.pvemu.network.game;
 
 import org.pvemu.game.World;
 import org.pvemu.game.objects.map.GameMap;
-import org.pvemu.jelly.Jelly;
+import org.pvemu.common.Jelly;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
-import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.FilterFactory;
-import org.pvemu.jelly.filters.Filterable;
+import org.pvemu.common.filters.Filter;
+import org.pvemu.common.filters.FilterFactory;
+import org.pvemu.common.filters.Filterable;
 import org.pvemu.network.Sessionable;
 
 public enum GamePacketEnum {

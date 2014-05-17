@@ -11,7 +11,7 @@ import java.util.Map;
 import org.pvemu.game.objects.map.interactiveobject.InteractiveObject;
 import org.pvemu.game.objects.map.interactiveobject.actions.InteractiveObjectAction;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  *

@@ -1,7 +1,7 @@
 package org.pvemu.models;
 
 //import org.pvemu.game.objects.item.ItemStats;
-import org.pvemu.jelly.database.Model;
+import org.pvemu.common.database.Model;
 
 public class ItemTemplate implements Model {
     public int id;

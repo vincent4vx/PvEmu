@@ -16,9 +16,9 @@ import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.fight.fightmode.PvMFight;
 import org.pvemu.game.fight.teamtype.MonsterTeam;
 import org.pvemu.game.objects.dep.Stats;
-import org.pvemu.jelly.Config;
-import org.pvemu.jelly.utils.Pair;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Config;
+import org.pvemu.common.utils.Pair;
+import org.pvemu.common.utils.Utils;
 
 /**
  *

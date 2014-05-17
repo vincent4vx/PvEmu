@@ -17,9 +17,9 @@ import org.pvemu.game.objects.map.MapCell;
 import org.pvemu.game.objects.map.MapFactory;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.filters.ClientAskerFilter;
-import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.comparators.MoreThanComparator;
+import org.pvemu.common.filters.ClientAskerFilter;
+import org.pvemu.common.filters.Filter;
+import org.pvemu.common.filters.comparators.MoreThanComparator;
 import org.pvemu.network.SessionAttributes;
 
 /**

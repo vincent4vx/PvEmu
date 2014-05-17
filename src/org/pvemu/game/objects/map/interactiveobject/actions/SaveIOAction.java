@@ -2,8 +2,8 @@ package org.pvemu.game.objects.map.interactiveobject.actions;
 
 import org.pvemu.game.objects.map.interactiveobject.InteractiveObject;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.FilterFactory;
+import org.pvemu.common.filters.Filter;
+import org.pvemu.common.filters.FilterFactory;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

@@ -7,7 +7,7 @@ import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.argument.LockedArgumentList;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.commands.parser.variable.VariablesHandler;
-import org.pvemu.jelly.utils.Pair;
+import org.pvemu.common.utils.Pair;
 
 /**
  * main parser

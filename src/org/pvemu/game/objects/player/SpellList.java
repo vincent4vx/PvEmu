@@ -12,7 +12,7 @@ import java.util.Map;
 import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.game.objects.spell.SpellFactory;
 import org.pvemu.game.objects.spell.SpellLevels;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import org.pvemu.models.LearnedSpell;
 import org.pvemu.models.dao.DAOFactory;
 

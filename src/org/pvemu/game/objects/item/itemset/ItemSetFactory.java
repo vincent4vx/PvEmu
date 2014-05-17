@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.pvemu.game.objects.dep.Stats;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.ItemSet;
 import org.pvemu.models.dao.DAOFactory;
 

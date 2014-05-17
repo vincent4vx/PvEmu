@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import org.pvemu.jelly.utils.Pair;
+import org.pvemu.common.utils.Pair;
 import org.pvemu.models.Experience;
 import org.pvemu.models.dao.DAOFactory;
 

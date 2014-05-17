@@ -7,7 +7,7 @@
 package org.pvemu.network.game.output;
 
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.jelly.utils.Pair;
+import org.pvemu.common.utils.Pair;
 import org.pvemu.network.game.GamePacketEnum;
 import org.pvemu.network.generators.GeneratorsRegistry;
 

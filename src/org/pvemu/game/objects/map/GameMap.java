@@ -9,7 +9,7 @@ import org.pvemu.game.fight.Fight;
 import org.pvemu.game.objects.monster.MonsterFactory;
 import org.pvemu.game.objects.monster.MonsterGroup;
 import org.pvemu.game.objects.monster.MonsterTemplate;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import org.pvemu.models.MapModel;
 import org.pvemu.network.game.output.GameSendersRegistry;
 

@@ -10,8 +10,8 @@ import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.gameaction.ActionPerformer;
 //import org.pvemu.game.GameActionHandler;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;
 

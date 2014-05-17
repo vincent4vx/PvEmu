@@ -9,9 +9,9 @@ package org.pvemu.commands;
 import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
-import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.FilterFactory;
-import org.pvemu.jelly.scripting.API;
+import org.pvemu.common.filters.Filter;
+import org.pvemu.common.filters.FilterFactory;
+import org.pvemu.common.scripting.API;
 
 /**
  *

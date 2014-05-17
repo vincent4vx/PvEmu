@@ -8,7 +8,7 @@ package org.pvemu.commands.parser;
 
 import java.util.List;
 import org.pvemu.commands.askers.Asker;
-import org.pvemu.jelly.utils.Pair;
+import org.pvemu.common.utils.Pair;
 
 /**
  *

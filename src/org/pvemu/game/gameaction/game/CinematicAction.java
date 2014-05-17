@@ -11,7 +11,7 @@ import org.pvemu.game.cinematic.CinematicsHandler;
 import org.pvemu.game.gameaction.GameAction;
 import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

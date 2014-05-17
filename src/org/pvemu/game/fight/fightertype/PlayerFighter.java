@@ -19,7 +19,7 @@ import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.objects.spell.GameSpell;
-import org.pvemu.jelly.utils.Pair;
+import org.pvemu.common.utils.Pair;
 import org.pvemu.models.ItemTemplate;
 import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.SessionAttributes;

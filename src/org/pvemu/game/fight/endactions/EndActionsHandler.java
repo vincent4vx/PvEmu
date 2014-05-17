@@ -6,7 +6,7 @@ import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.endactions.defiance.DefianceEndActionsRegisty;
 import org.pvemu.game.fight.endactions.pvm.PvmEndActionsRegistry;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  * handle the end fight actions

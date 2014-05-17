@@ -11,7 +11,7 @@ import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.game.triggeraction.TriggerActionHandler;
 import org.pvemu.game.triggeraction.TriggerFactory;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.NpcResponseAction;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;

@@ -9,9 +9,9 @@ package org.pvemu.game.objects.map.interactiveobject.actions;
 import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.objects.map.interactiveobject.InteractiveObject;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.PlayerFilter;
-import org.pvemu.jelly.filters.comparators.LessThanComparator;
+import org.pvemu.common.filters.Filter;
+import org.pvemu.common.filters.PlayerFilter;
+import org.pvemu.common.filters.comparators.LessThanComparator;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

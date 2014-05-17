@@ -18,9 +18,9 @@ import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.game.objects.spell.SpellFactory;
 import org.pvemu.game.objects.spell.SpellLevels;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.Shell;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.Shell;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.Monster;
 import org.pvemu.models.dao.DAOFactory;
 

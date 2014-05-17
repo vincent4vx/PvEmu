@@ -8,7 +8,7 @@ package org.pvemu.game.cinematic;
 
 import java.util.HashMap;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  *

@@ -1,7 +1,7 @@
 package org.pvemu.models;
 
 //import org.pvemu.game.ActionsHandler.Action;
-import org.pvemu.jelly.database.Model;
+import org.pvemu.common.database.Model;
 
 public class NpcResponseAction implements Model {
     public int response_id;

@@ -8,8 +8,8 @@ package org.pvemu.commands.askers;
 
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.filters.AccountFilter;
-import org.pvemu.jelly.filters.Filter;
+import org.pvemu.common.filters.AccountFilter;
+import org.pvemu.common.filters.Filter;
 import org.pvemu.models.Account;
 import org.pvemu.network.Sessionable;
 

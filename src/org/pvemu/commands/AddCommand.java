@@ -14,8 +14,8 @@ import org.pvemu.commands.askers.Asker;
 import org.pvemu.commands.askers.ClientAsker;
 import org.pvemu.game.World;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.FilterFactory;
+import org.pvemu.common.filters.Filter;
+import org.pvemu.common.filters.FilterFactory;
 import org.pvemu.network.SessionAttributes;
 import org.pvemu.network.game.output.GameSendersRegistry;
 

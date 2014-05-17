@@ -8,8 +8,8 @@ package org.pvemu.game.objects.item;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.ItemTemplate;
 
 /**

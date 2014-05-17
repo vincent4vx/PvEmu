@@ -14,7 +14,7 @@ import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.item.types.Weapon;
 import org.pvemu.game.objects.map.GMable;
 import org.pvemu.game.objects.spell.GameSpell;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

@@ -1,9 +1,9 @@
 package org.pvemu.models.dao;
 
 import java.sql.ResultSet;
-import org.pvemu.jelly.Constants;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.FindableDAO;
+import org.pvemu.common.Constants;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.database.FindableDAO;
 import org.pvemu.models.MapModel;
 
 public class MapDAO extends FindableDAO<MapModel> {

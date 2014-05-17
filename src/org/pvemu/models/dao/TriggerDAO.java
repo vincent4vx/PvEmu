@@ -6,12 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.DAO;
-import org.pvemu.jelly.database.DatabaseHandler;
-import org.pvemu.jelly.database.Query;
-import org.pvemu.jelly.database.ReservedQuery;
-import org.pvemu.jelly.utils.Pair;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.database.DAO;
+import org.pvemu.common.database.DatabaseHandler;
+import org.pvemu.common.database.Query;
+import org.pvemu.common.database.ReservedQuery;
+import org.pvemu.common.utils.Pair;
 import org.pvemu.models.Trigger;
 
 public class TriggerDAO extends DAO<Trigger> {

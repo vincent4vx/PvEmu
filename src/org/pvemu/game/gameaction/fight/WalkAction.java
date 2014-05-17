@@ -11,9 +11,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.gameaction.GameAction;
 import org.pvemu.game.gameaction.GameActionData;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Crypt;
-import org.pvemu.jelly.utils.Pathfinding;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.utils.Crypt;
+import org.pvemu.common.utils.Pathfinding;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

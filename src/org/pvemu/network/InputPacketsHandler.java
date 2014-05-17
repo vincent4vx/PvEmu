@@ -8,7 +8,7 @@ package org.pvemu.network;
 
 import java.util.HashMap;
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  *

@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Set;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.Shell;
-import org.pvemu.jelly.Shell.GraphicRenditionEnum;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.Shell;
+import org.pvemu.common.Shell.GraphicRenditionEnum;
 
 public class Stats{
 

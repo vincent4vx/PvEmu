@@ -9,7 +9,7 @@ import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.parser.CommandParser;
 import org.pvemu.commands.parser.ParserError;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  * Handle commands

@@ -7,7 +7,7 @@
 package org.pvemu.game.objects.itemlist.entrystate;
 
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import org.pvemu.models.InventoryEntry;
 import org.pvemu.network.game.output.GameSendersRegistry;
 

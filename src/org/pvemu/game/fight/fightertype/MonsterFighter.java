@@ -5,7 +5,7 @@ import org.pvemu.game.fight.Fight;
 import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.game.objects.monster.MonsterTemplate;
 import org.pvemu.game.objects.spell.GameSpell;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.network.generators.GeneratorsRegistry;
 
 /**

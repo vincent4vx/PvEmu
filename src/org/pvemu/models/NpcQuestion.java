@@ -2,7 +2,7 @@ package org.pvemu.models;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.pvemu.jelly.database.Model;
+import org.pvemu.common.database.Model;
 import org.pvemu.models.dao.DAOFactory;
 
 public class NpcQuestion implements Model {

@@ -9,7 +9,7 @@ package org.pvemu.network.generators;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.pvemu.jelly.Constants;
+import org.pvemu.common.Constants;
 
 /**
  *

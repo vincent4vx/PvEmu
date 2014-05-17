@@ -11,8 +11,8 @@ import java.util.List;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.game.World;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.filters.Filter;
-import org.pvemu.jelly.filters.FilterFactory;
+import org.pvemu.common.filters.Filter;
+import org.pvemu.common.filters.FilterFactory;
 
 /**
  *

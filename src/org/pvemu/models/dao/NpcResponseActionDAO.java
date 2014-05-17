@@ -3,11 +3,11 @@ package org.pvemu.models.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.database.DatabaseHandler;
-import org.pvemu.jelly.database.FindableDAO;
-import org.pvemu.jelly.database.Query;
-import org.pvemu.jelly.database.ReservedQuery;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.database.DatabaseHandler;
+import org.pvemu.common.database.FindableDAO;
+import org.pvemu.common.database.Query;
+import org.pvemu.common.database.ReservedQuery;
 import org.pvemu.models.NpcResponseAction;
 
 public class NpcResponseActionDAO extends FindableDAO<NpcResponseAction> {

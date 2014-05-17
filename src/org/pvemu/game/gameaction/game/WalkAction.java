@@ -5,10 +5,10 @@ import org.pvemu.actions.ActionsRegistry;
 import org.pvemu.game.gameaction.GameAction;
 import org.pvemu.game.gameaction.GameActionData;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Crypt;
-import org.pvemu.jelly.utils.Pathfinding;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.utils.Crypt;
+import org.pvemu.common.utils.Pathfinding;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

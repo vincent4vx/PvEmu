@@ -10,7 +10,7 @@ import java.util.HashMap;
 import org.pvemu.commands.CommandsHandler;
 import org.pvemu.commands.askers.PlayerAsker;
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  *

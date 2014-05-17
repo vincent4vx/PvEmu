@@ -1,6 +1,6 @@
 package org.pvemu.models;
 
-import org.pvemu.jelly.database.Model;
+import org.pvemu.common.database.Model;
 import org.pvemu.models.dao.DAOFactory;
 
 public class MapNpcs implements Model {

@@ -8,7 +8,7 @@ package org.pvemu.game.objects.item;
 
 import java.util.HashMap;
 import org.pvemu.game.objects.item.types.*;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  *

@@ -8,7 +8,7 @@ package org.pvemu.game.gameaction;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

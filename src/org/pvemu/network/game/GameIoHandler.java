@@ -1,8 +1,8 @@
 package org.pvemu.network.game;
 
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.jelly.Jelly;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Jelly;
+import org.pvemu.common.Loggin;
 import org.pvemu.models.Account;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.actions.ActionsRegistry;

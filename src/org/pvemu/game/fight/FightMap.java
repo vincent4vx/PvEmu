@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapUtils;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.utils.Utils;
 
 /**
  *

@@ -7,7 +7,7 @@
 package org.pvemu.network.game.input.account;
 
 import org.apache.mina.core.session.IoSession;
-import org.pvemu.jelly.utils.Utils;
+import org.pvemu.common.utils.Utils;
 import org.pvemu.models.Account;
 import org.pvemu.network.InputPacket;
 import org.pvemu.network.SessionAttributes;

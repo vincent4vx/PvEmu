@@ -13,10 +13,10 @@ import org.pvemu.game.fight.fightertype.AIFighter;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.game.objects.spell.GameSpell;
-import org.pvemu.jelly.Loggin;
-import org.pvemu.jelly.utils.Crypt;
-import org.pvemu.jelly.utils.Pair;
-import org.pvemu.jelly.utils.Pathfinding;
+import org.pvemu.common.Loggin;
+import org.pvemu.common.utils.Crypt;
+import org.pvemu.common.utils.Pair;
+import org.pvemu.common.utils.Pathfinding;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**

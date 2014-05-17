@@ -3,7 +3,7 @@ package org.pvemu.game.fight.ai;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.fightertype.AIFighter;
-import org.pvemu.jelly.Loggin;
+import org.pvemu.common.Loggin;
 
 /**
  *

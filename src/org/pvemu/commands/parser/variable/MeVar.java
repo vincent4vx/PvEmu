@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.commands.askers.ClientAsker;
-import org.pvemu.jelly.filters.ClientAskerFilter;
-import org.pvemu.jelly.filters.Filter;
+import org.pvemu.common.filters.ClientAskerFilter;
+import org.pvemu.common.filters.Filter;
 
 /**
  *
