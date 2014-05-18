@@ -1,5 +1,6 @@
-package org.pvemu.game.effect;
+package org.pvemu.game.effect.physical.attack;
 
+import org.pvemu.game.effect.physical.BasicAttackEffect;
 import org.pvemu.game.objects.dep.Stats;
 
 /**

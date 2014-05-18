@@ -4,29 +4,30 @@
  * and open the template in the editor.
  */
 
-package org.pvemu.game.effect;
+package org.pvemu.game.effect.physical.attack;
 
+import org.pvemu.game.effect.physical.BasicAttackEffect;
 import org.pvemu.game.objects.dep.Stats;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class FireAttackEffect extends BasicAttackEffect{
+public class GroundAttackEffect extends BasicAttackEffect{
 
     @Override
     protected Stats.Element getActiveElement() {
-        return Stats.Element.INTEL;
+        return Stats.Element.FORCE;
     }
 
     @Override
     protected Stats.Element getResistanceElement() {
-        return Stats.Element.RES_FIRE;
+        return Stats.Element.RES_GROUND;
     }
 
     @Override
     public short id() {
-        return 99;
+        return 97;
     }
     
 }

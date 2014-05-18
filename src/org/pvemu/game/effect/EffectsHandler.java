@@ -1,7 +1,18 @@
 package org.pvemu.game.effect;
 
+import org.pvemu.game.effect.physical.attack.NeutralAttackEffect;
+import org.pvemu.game.effect.physical.HealEffect;
+import org.pvemu.game.effect.physical.attack.WaterAttackEffect;
+import org.pvemu.game.effect.physical.attack.FireAttackEffect;
+import org.pvemu.game.effect.physical.attack.GroundAttackEffect;
+import org.pvemu.game.effect.physical.attack.AirAttackEffect;
 import java.util.HashMap;
 import java.util.Map;
+import org.pvemu.game.effect.physical.lifesteal.AirLifeStealEffect;
+import org.pvemu.game.effect.physical.lifesteal.FireLifeStealEffect;
+import org.pvemu.game.effect.physical.lifesteal.GroundLifeStealEffect;
+import org.pvemu.game.effect.physical.lifesteal.NeutralLifeStealEffect;
+import org.pvemu.game.effect.physical.lifesteal.WaterLifeStealEffect;
 
 /**
  *
@@ -19,6 +30,11 @@ final public class EffectsHandler {
         registerEffect(new FireAttackEffect());
         registerEffect(new HealEffect());
         registerEffect(new RemovePAEffect());
+        registerEffect(new NeutralLifeStealEffect());
+        registerEffect(new WaterLifeStealEffect());
+        registerEffect(new GroundLifeStealEffect());
+        registerEffect(new AirLifeStealEffect());
+        registerEffect(new FireLifeStealEffect());
     }
     
     public void registerEffect(Effect effect){
