@@ -7,7 +7,7 @@ import org.pvemu.common.i18n.I18n;
 import org.pvemu.common.i18n.translation.Commons;
 import org.pvemu.common.plugin.PluginsHandler;
 import org.pvemu.common.scripting.API;
-import org.pvemu.common.utils.SystemStats;
+import org.pvemu.common.systats.SystemStats;
 import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.game.GameServer;
 import org.pvemu.network.realm.RealmServer;
@@ -74,7 +74,7 @@ public class PvEmu {
                 PvEmu.close();
             }
         });
-        SystemStats.displayStatsAtFixedRate();
+        SystemStats.init();
     }
 
     private static void printAsciiLogo() {
