@@ -7,7 +7,9 @@
 package org.pvemu.network.game.output;
 
 import org.pvemu.game.fight.Fight;
+import org.pvemu.game.fight.Fighter;
 import org.pvemu.game.fight.buff.Buff;
+import org.pvemu.game.fight.fightertype.InvocationFighter;
 import org.pvemu.game.gameaction.fight.FightActionsRegistry;
 import org.pvemu.game.objects.spell.GameSpell;
 import org.pvemu.network.game.GamePacketEnum;
@@ -75,5 +77,14 @@ public class EffectSender {
     
     public void buffEffect(Fight fight, Buff buff){
         GamePacketEnum.FIGHT_EFFECT.sendToFight(fight, GeneratorsRegistry.getEffect().generateBuffEffect(buff));
+    }
+    
+    public void invocate(Fight fight, Fighter invocator, InvocationFighter invoc){
+        GameSendersRegistry.getGameAction().unidentifiedGameActionToFight(
+                fight, 
+                FightActionsRegistry.INVOCATE,
+                invocator.getID(),
+                GeneratorsRegistry.getFight().generateMonsterGMPacket(invoc)
+        );
     }
 }

@@ -143,7 +143,7 @@ final public class AIUtils {
         return best;
     }
     
-    static public short getFarestAcessibleCell(Fight fight, AIFighter fighter){
+    static public short getFarestAccessibleCell(Fight fight, AIFighter fighter){
         if(fighter.getNumPM() <= 0)
             return -1;
         
@@ -192,7 +192,7 @@ final public class AIUtils {
         if(fighter.getNumPM() <= 0)
             return false;
         
-        short cell = getFarestAcessibleCell(fight, fighter);
+        short cell = getFarestAccessibleCell(fight, fighter);
         
         if(cell == -1 || cell == fighter.getCellId())
             return false;
@@ -223,7 +223,7 @@ final public class AIUtils {
                 continue;
             }
             
-            int curDist = MapUtils.getDirBetweenTwoCase(cell, fighter.getCellId(), fight.getFightMap().getMap(), true);
+            int curDist = MapUtils.getDistanceBetween(fight.getFightMap().getMap(), cell, fighter.getCellId());
             
             if(curDist < distance){
                 target = cell;
@@ -373,6 +373,9 @@ final public class AIUtils {
             int efficiency = 0;
             
             for(Fighter fighter : fight.getFighters()){
+                if(!caster.canUseSpell(spell, fighter.getCellId()))
+                    continue;
+                
                 int curEff = getSpellEfficiency(fight, caster, spell, fighter.getCellId(), EC);
                 
                 if(curEff > efficiency){

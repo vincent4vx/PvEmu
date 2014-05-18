@@ -402,4 +402,8 @@ public enum GamePacketEnum {
             }
         }
     }
+
+    public String getPacket() {
+        return packet;
+    }
 }

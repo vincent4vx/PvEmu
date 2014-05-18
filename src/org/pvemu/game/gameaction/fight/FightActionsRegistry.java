@@ -21,6 +21,7 @@ public class FightActionsRegistry extends AbstractGameActionsRegistry<PlayerFigh
     final static public short UPDATE_VITA      = 110;
     final static public short USE_PM           = 128;
     final static public short USE_PM_ON_MOVE   = 129;
+    final static public short INVOCATE         = 181;
     final static public short SPELL            = 300;
     final static public short WEAPON           = 303;
     

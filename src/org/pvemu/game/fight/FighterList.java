@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import org.pvemu.game.fight.fightertype.InvocationFighter;
 
 /**
  * a list of fighter sorted by intiative
@@ -73,6 +74,14 @@ class FighterList implements Collection<Fighter>{
         }
         
         return true;
+    }
+    
+    /**
+     * Add a new invocation in the fighter list, after the invocator
+     * @param invoc the invocation
+     */
+    void addInvoc(InvocationFighter invoc){
+        fighters.add(currentKey + 1, invoc);
     }
 
     @Override

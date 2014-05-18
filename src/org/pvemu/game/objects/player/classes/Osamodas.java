@@ -72,12 +72,14 @@ public class Osamodas extends ClassData{
 
     @Override
     public short getStartMap() {
-        return 10284;
+        //return 10284; //FIXME: inexistant start map
+        return 10298;
     }
 
     @Override
     public short getStartCell() {
-        return 372;
+        //return 372; //FIXME: inexistant start map
+        return 300;
     }
 
     @Override

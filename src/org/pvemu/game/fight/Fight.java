@@ -7,9 +7,9 @@ import java.util.concurrent.ScheduledFuture;
 import org.pvemu.game.effect.EffectData;
 import org.pvemu.game.fight.buttin.FightButtinFactory;
 import org.pvemu.game.fight.endactions.EndActionsHandler;
-import org.pvemu.game.gameaction.game.JoinFightAction;
 import org.pvemu.common.Constants;
 import org.pvemu.common.Loggin;
+import org.pvemu.game.fight.fightertype.InvocationFighter;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
@@ -77,11 +77,22 @@ abstract public class Fight {
         
         Loggin.debug("new player (%s) into fight (there are %d players)", fighter.getName(), fighters.size());
         team.addFighter(fighter);
+        addFighter(fighter);
+        
+        return 0;
+    }
+    
+    public void addInvocation(InvocationFighter invocation, short cell){
+        invocation.setCell(cell);
+        fighters.addInvoc(invocation);
+        map.addFighter(invocation);
+        invocation.enterFight();
+    }
+    
+    private void addFighter(Fighter fighter){
         fighters.add(fighter);
         map.addFighter(fighter);
         fighter.enterFight();
-        
-        return 0;
     }
 
     public FightTeam[] getTeams() {

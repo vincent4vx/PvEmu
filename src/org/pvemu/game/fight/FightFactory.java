@@ -6,6 +6,7 @@
 
 package org.pvemu.game.fight;
 
+import java.util.Map.Entry;
 import org.pvemu.game.fight.fightertype.MonsterFighter;
 import org.pvemu.game.fight.fightertype.PlayerFighter;
 import org.pvemu.game.fight.fightmode.DefianceFight;
@@ -17,6 +18,8 @@ import org.pvemu.game.objects.monster.MonsterGroup;
 import org.pvemu.game.objects.monster.MonsterTemplate;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.common.utils.Utils;
+import org.pvemu.game.fight.fightertype.InvocationFighter;
+import org.pvemu.game.objects.dep.Stats;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
 /**
@@ -112,5 +115,17 @@ public class FightFactory {
     
     static public Fighter newMonsterFighter(MonsterTemplate template, Fight fight){
         return new MonsterFighter(fight.getNewId(), template, template.getBasicStats(), fight);
+    }
+    
+    static public InvocationFighter newInvocation(MonsterTemplate template, Fighter invocator, Fight fight){
+        Stats stats = new Stats();
+        
+        for(Entry<Stats.Element, Integer> entry : template.getBasicStats().getAll()){
+            int value = entry.getValue();
+            value *= 1 + (double)(invocator.getLevel()) / 100D;
+            stats.add(entry.getKey(), value);
+        }
+        
+        return new InvocationFighter(fight.getNewId(), template, stats, fight, invocator);
     }
 }

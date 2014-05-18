@@ -35,6 +35,7 @@ final public class EffectsHandler {
         registerEffect(new GroundLifeStealEffect());
         registerEffect(new AirLifeStealEffect());
         registerEffect(new FireLifeStealEffect());
+        registerEffect(new InvocationEffect());
     }
     
     public void registerEffect(Effect effect){

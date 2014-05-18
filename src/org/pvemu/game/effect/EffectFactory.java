@@ -27,8 +27,8 @@ final public class EffectFactory {
             int min = Integer.parseInt(args[1].trim());
             int max = Integer.parseInt(args[2].trim());
             
-            if(max < min)
-                max = min;
+            /*if(max < min)
+                max = min;*/
 
             Effect effect = EffectsHandler.instance().getEffect(id);
 
