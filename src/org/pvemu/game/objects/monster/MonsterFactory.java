@@ -20,6 +20,8 @@ import org.pvemu.game.objects.spell.SpellFactory;
 import org.pvemu.game.objects.spell.SpellLevels;
 import org.pvemu.common.Loggin;
 import org.pvemu.common.Shell;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commons;
 import org.pvemu.common.utils.Utils;
 import org.pvemu.models.Monster;
 import org.pvemu.models.dao.DAOFactory;
@@ -66,7 +68,7 @@ final public class MonsterFactory {
     }
     
     static public void preloadMonsters(){
-        Shell.print("Load monsters : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print(I18n.tr(Commons.LOADING, I18n.tr(Commons.MONSTERS)), Shell.GraphicRenditionEnum.YELLOW);
         List<Monster> models = DAOFactory.monster().getAll();
         
         for(Monster model : models){
@@ -74,7 +76,7 @@ final public class MonsterFactory {
             monsters.put(model.id, grades);
             populateGradesByModel(grades, model);
         }
-        Shell.println(models.size() + " monsters loaded", Shell.GraphicRenditionEnum.GREEN);
+        Shell.println(I18n.tr(Commons.MONSTERS_LOADED, models.size()), Shell.GraphicRenditionEnum.GREEN);
     }
     
     static public List<MonsterTemplate> parseMonsterList(String monsterList){

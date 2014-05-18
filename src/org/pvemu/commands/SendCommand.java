@@ -9,6 +9,8 @@ import org.pvemu.commands.parser.variable.VariableUtils;
 import org.pvemu.game.objects.player.Player;
 import org.pvemu.common.filters.Filter;
 import org.pvemu.common.filters.FilterFactory;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
 
 /**
  *
@@ -35,7 +37,7 @@ public class SendCommand extends Command {
         
         for(Player player : players){
             player.getSession().write(packet);
-            asker.write(player.getName() + " : Packet sent !");
+            asker.write(I18n.tr(Commands.PACKET_SENT, player.getName()));
         }
     }
 

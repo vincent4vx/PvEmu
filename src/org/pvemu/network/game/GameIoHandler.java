@@ -1,7 +1,7 @@
 package org.pvemu.network.game;
 
 import org.pvemu.game.objects.player.Player;
-import org.pvemu.common.Jelly;
+import org.pvemu.common.PvEmu;
 import org.pvemu.common.Loggin;
 import org.pvemu.models.Account;
 import org.apache.mina.core.session.IoSession;
@@ -50,7 +50,7 @@ public class GameIoHandler extends MinaIoHandler {
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
         RECV++;
-        if (!Jelly.running) { //si serveur offline, on ne recoit rien
+        if (!PvEmu.running) { //si serveur offline, on ne recoit rien
             return;
         }
         String packet = ((String) message).trim();

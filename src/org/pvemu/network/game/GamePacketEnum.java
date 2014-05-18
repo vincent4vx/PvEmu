@@ -2,7 +2,7 @@ package org.pvemu.network.game;
 
 import org.pvemu.game.World;
 import org.pvemu.game.objects.map.GameMap;
-import org.pvemu.common.Jelly;
+import org.pvemu.common.PvEmu;
 import org.apache.mina.core.session.IoSession;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.fight.Fighter;
@@ -321,7 +321,7 @@ public enum GamePacketEnum {
      * @param param
      */
     public void send(IoSession session, Object param) {
-        if (!Jelly.running) {
+        if (!PvEmu.running) {
             return; //ne rien envoyer une fois off
         }
         if(session == null || session.isClosing()){

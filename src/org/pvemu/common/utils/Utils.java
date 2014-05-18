@@ -6,7 +6,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
-import org.pvemu.common.Jelly;
+import org.pvemu.common.PvEmu;
 
 public class Utils {
     final static public short MIN_PORT_NUMBER = 1025; //get only no root ports
@@ -136,7 +136,7 @@ public class Utils {
     public static String getUptime(){
         StringBuilder ret = new StringBuilder();
         
-        long time = System.currentTimeMillis() - Jelly.start;
+        long time = System.currentTimeMillis() - PvEmu.start;
         int days = (int) (time / (1000 * 3600 * 24));
         int hours = (int)(time / (1000 * 3600) % 24);
         int minutes = (int)(time / (1000 * 60) % 60);

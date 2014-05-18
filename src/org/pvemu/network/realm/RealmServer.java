@@ -6,21 +6,23 @@ import org.pvemu.common.Config;
 import org.pvemu.common.Loggin;
 import org.pvemu.common.Shell;
 import org.pvemu.common.Shell.GraphicRenditionEnum;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commons;
 import org.pvemu.network.MinaServer;
 
 public class RealmServer {
 
-    protected MinaServer _server;
+    protected MinaServer server;
     protected static RealmServer instance = null;
 
     private RealmServer() {
         try {
-            Shell.print("Lancement du Realm : ", GraphicRenditionEnum.YELLOW);
-            _server = new MinaServer(Config.REALM_PORT.getValue(), new RealmIoHandler());
+            Shell.print(I18n.tr(Commons.LAUNCHING_REALM), GraphicRenditionEnum.YELLOW);
+            server = new MinaServer(Config.REALM_PORT.getValue(), new RealmIoHandler());
             Shell.print("Ok", GraphicRenditionEnum.GREEN);
-            Shell.println(" (port " + Config.REALM_PORT.getValue() + ")");
+            Shell.println(I18n.tr(Commons.PORT, Config.REALM_PORT.getValue()));
         } catch (IOException ex) {
-            Loggin.realm("Impossible de lancer le serveur de Realm (port : %d)", Level.SEVERE, Config.REALM_PORT.getValue());
+            Loggin.realm(I18n.tr(Commons.CANT_LAUNCH, "realm", Config.REALM_PORT.getValue()), Level.SEVERE, ex);
             System.exit(1);
         }
     }
@@ -33,8 +35,8 @@ public class RealmServer {
     }
 
     public static void stop() {
-        Shell.print("Arrêt du realm : ", GraphicRenditionEnum.RED);
-        instance._server.stop();
+        Shell.print(I18n.tr(Commons.STOPING_REALM), GraphicRenditionEnum.RED);
+        instance.server.stop();
         Shell.println("ok", GraphicRenditionEnum.GREEN);
     }
 }

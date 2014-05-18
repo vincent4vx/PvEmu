@@ -11,6 +11,9 @@ import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.common.filters.Filter;
 import org.pvemu.common.filters.FilterFactory;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
+import org.pvemu.common.i18n.translation.Commons;
 import org.pvemu.common.scripting.API;
 
 /**
@@ -27,14 +30,14 @@ public class ExecCommand extends Command {
     @Override
     public void perform(ArgumentList args, Asker asker) throws CommandArgumentException{
         if(args.size() == 1){
-            asker.writeError("Nombre d'arguments invalide !");
+            asker.writeError(I18n.tr(Commands.INVALID_ARGUMENTS_NUMBER));
             return;
         }
             
         for(int i = 1; i < args.size(); ++i){
             long time = System.currentTimeMillis();
             API.execute(args.getArgument(i));
-            asker.write(args.getArgument(i) + " chargé en " + (System.currentTimeMillis() - time) + "ms");
+            asker.write(I18n.tr(Commons.LOADED_IN, args.getArgument(i), (System.currentTimeMillis() - time)));
         }
     }
 
@@ -46,9 +49,8 @@ public class ExecCommand extends Command {
     @Override
     public String[] usage() {
         return new String[]{
-            "Charge et exécute un (ou plusieurs) fichier(s) javascript.",
-            "Seul les administrateurs (level > 3) peuvent exécuter cette commande.",
-            "exec [script] [...]"
+            I18n.tr(Commands.EXEC_USAGE1),
+            I18n.tr(Commands.EXEC_USAGE2)
         };
     }
 

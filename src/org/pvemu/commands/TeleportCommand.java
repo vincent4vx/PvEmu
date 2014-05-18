@@ -20,6 +20,8 @@ import org.pvemu.game.objects.player.Player;
 import org.pvemu.common.filters.ClientAskerFilter;
 import org.pvemu.common.filters.Filter;
 import org.pvemu.common.filters.comparators.MoreThanComparator;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
 import org.pvemu.network.SessionAttributes;
 
 /**
@@ -36,7 +38,7 @@ public class TeleportCommand extends Command{
     @Override
     public void perform(ArgumentList args, Asker asker) throws CommandArgumentException{
         if(args.size() < 2){
-            asker.writeError("Wrong number of parameters");
+            asker.writeError(I18n.tr(Commands.INVALID_ARGUMENTS_NUMBER));
             return;
         }
         
@@ -45,7 +47,7 @@ public class TeleportCommand extends Command{
         GameMap map = MapFactory.getById(mapID);
         
         if(map == null){
-            asker.writeError("Wrong parameter 1");
+            asker.writeError(I18n.tr(Commands.INVALID_ARGUMENT, 1));
             return;
         }
         
@@ -57,7 +59,7 @@ public class TeleportCommand extends Command{
             cell = map.getCellById(cellID);
             
             if(cell == null){
-                asker.writeError("Wrong parameter 2");
+                asker.writeError(I18n.tr(Commands.INVALID_ARGUMENT, 2));
                 return;
             }
         }
@@ -80,8 +82,8 @@ public class TeleportCommand extends Command{
     @Override
     public String[] usage() {
         return new String[]{
-            "Téléporte le personnage à la map indiqué",
-            "teleport [mapid] {cellid}"
+            I18n.tr(Commands.TELEPORT_USAGE1),
+            I18n.tr(Commands.TELEPORT_USAGE2)
         };
     }
     

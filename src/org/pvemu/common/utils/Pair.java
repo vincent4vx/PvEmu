@@ -12,7 +12,7 @@ import java.util.Objects;
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class Pair<F, S> {
+public class Pair<F, S> implements IPair<F, S>{
     final private F first;
     final private S second;
 
@@ -21,10 +21,12 @@ public class Pair<F, S> {
         this.second = second;
     }
 
+    @Override
     public F getFirst() {
         return first;
     }
 
+    @Override
     public S getSecond() {
         return second;
     }

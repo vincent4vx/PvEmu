@@ -9,9 +9,10 @@ package org.pvemu.commands;
 import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
-import org.pvemu.common.utils.Utils;
 import org.pvemu.common.filters.ConsoleAskerFilter;
 import org.pvemu.common.filters.Filter;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
 
 /**
  *
@@ -27,8 +28,8 @@ public class EchoCommand extends Command {
     @Override
     public String[] usage(){
         return new String[]{
-            "Affiche un texte.",
-            "echo {texte ...} : affiche les paramètres donnés séparés par un espace"
+            I18n.tr(Commands.ECHO_USAGE1),
+            I18n.tr(Commands.ECHO_USAGE2)
         };
     }
 
@@ -43,7 +44,4 @@ public class EchoCommand extends Command {
     public Filter conditions() {
         return new ConsoleAskerFilter();
     }
-    
-    
-    
 }

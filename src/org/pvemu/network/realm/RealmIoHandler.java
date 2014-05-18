@@ -1,7 +1,7 @@
 package org.pvemu.network.realm;
 
 import org.pvemu.common.Constants;
-import org.pvemu.common.Jelly;
+import org.pvemu.common.PvEmu;
 import org.pvemu.common.Loggin;
 import org.pvemu.common.utils.Utils;
 import org.pvemu.models.Account;
@@ -41,7 +41,7 @@ public class RealmIoHandler extends MinaIoHandler {
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
-        if (!Jelly.running) {
+        if (!PvEmu.running) {
             return;
         }
         String packet = ((String) message).trim();

@@ -5,6 +5,8 @@ import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.common.filters.Filter;
 import org.pvemu.common.filters.FilterFactory;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
 
 /**
  *
@@ -35,7 +37,7 @@ abstract public class Command {
      */
     public String[] usage(){
         return new String[]{
-            "Commande non documenté."
+            I18n.tr(Commands.UNDOCUMENTED)
         };
     }
     

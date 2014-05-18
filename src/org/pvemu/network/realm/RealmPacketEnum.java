@@ -1,7 +1,7 @@
 package org.pvemu.network.realm;
 
 import org.pvemu.common.Constants;
-import org.pvemu.common.Jelly;
+import org.pvemu.common.PvEmu;
 import org.apache.mina.core.session.IoSession;
 
 public enum RealmPacketEnum {
@@ -79,7 +79,7 @@ public enum RealmPacketEnum {
      * @param param
      */
     public void send(IoSession session, String param) {
-        if (!Jelly.running) {
+        if (!PvEmu.running) {
             return;
         }
         session.write(packet + param);
@@ -91,7 +91,7 @@ public enum RealmPacketEnum {
      * @param session
      */
     public void send(IoSession session) {
-        if (!Jelly.running) {
+        if (!PvEmu.running) {
             return;
         }
         session.write(packet + param);

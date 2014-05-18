@@ -1,5 +1,8 @@
 package org.pvemu.commands.parser;
 
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
@@ -17,7 +20,6 @@ public class ParserError extends Exception{
 
     @Override
     public String getMessage() {
-        String msg = "[Parser error] " + message + " at column " + col + " near : '";
         int begin = col - 4;
         
         if(begin < 0)
@@ -28,7 +30,7 @@ public class ParserError extends Exception{
         if(end > commandLine.length())
             end = commandLine.length();
         
-        return msg + commandLine.substring(begin, end) + "'";
+        return I18n.tr(Commands.PARSER_ERROR, message, col, commandLine.substring(begin, end));
     }
     
     

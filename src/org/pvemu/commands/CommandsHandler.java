@@ -10,6 +10,8 @@ import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.parser.CommandParser;
 import org.pvemu.commands.parser.ParserError;
 import org.pvemu.common.Loggin;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
 
 /**
  * Handle commands
@@ -85,7 +87,7 @@ public class CommandsHandler {
                     Command cmd = commands.get(args.getCommand());
 
                     if(cmd == null || !asker.corresponds(cmd.conditions())){
-                        asker.writeError("Commande indisponible !");
+                        asker.writeError(I18n.tr(Commands.UNAVAILABLE_COMMAND, args.getCommand()));
                         return;
                     }
 
@@ -95,7 +97,7 @@ public class CommandsHandler {
                 }catch(ParserError e){
                     asker.writeError(e.getMessage());
                 }catch(Exception e){
-                    Loggin.error("Error during executing `" + commandLine + "`", e);
+                    Loggin.error(I18n.tr(Commands.EXECUTION_ERROR, commandLine), e);
                 }
             }
         });

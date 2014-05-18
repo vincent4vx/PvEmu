@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.argument.CommandArgumentException;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
 
 /**
  *
@@ -26,9 +28,9 @@ public class HelpCommand extends Command {
     @Override
     public String[] usage(){
         return new String[]{
-            "Retourne la liste des commandes disponibles, ou donne l'utilisation d'une commande.",
-            "help (pas de paramètres) : liste des commandes disponibles",
-            "help [cmd] : donne l'aide sur la commande demandé"
+            I18n.tr(Commands.HELP_USAGE1),
+            I18n.tr(Commands.HELP_USAGE2),
+            I18n.tr(Commands.HELP_USAGE3)
         };
     }
 
@@ -42,7 +44,7 @@ public class HelpCommand extends Command {
     }
     
     private void showCommandsList(Asker asker){
-        asker.write("Liste des commandes disponibles :");
+        asker.write(I18n.tr(Commands.AVAILABLE_COMMANDS));
         
         Collection<Command> commands = new ArrayList<>();
         
@@ -53,7 +55,7 @@ public class HelpCommand extends Command {
         }
         
         if(commands.isEmpty()){
-            asker.writeError("Aucunes commandes disponibles.");
+            asker.writeError(I18n.tr(Commands.NO_COMMANDS_AVAILABLE));
             return;
         }
         
@@ -66,10 +68,10 @@ public class HelpCommand extends Command {
         Command cmd = CommandsHandler.instance().getCommandByName(cmdName);
         
         if(cmd == null)
-            asker.writeError("Commande non trouvée !");
+            asker.writeError(I18n.tr(Commands.UNAVAILABLE_COMMAND, cmdName));
         else{
-            asker.write("Commande : " + cmd.name());
-            asker.write("Utilisation : ");
+            asker.write(I18n.tr(Commands.COMMAND, cmd.name()));
+            asker.write(I18n.tr(Commands.USAGE));
             for(String msg : cmd.usage())
                 asker.write(msg);
         }

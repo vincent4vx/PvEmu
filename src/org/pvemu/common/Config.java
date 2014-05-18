@@ -13,6 +13,8 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commons;
 
 /**
  *
@@ -97,6 +99,11 @@ public class Config {
      */
     final static public ConfigItem<List<String>> PLUGINS     = new ConfigListStringItem("PLUGINS", new ArrayList<String>());
     
+    /**
+     * Language to use
+     */
+    final static public ConfigItem<String> LANG              = new ConfigStringItem("LANG", "en");
+    
     abstract static public class ConfigItem<T>{
         protected String name;
         protected T value;
@@ -176,13 +183,12 @@ public class Config {
      * Load the configuration file
      */
     static public void load(){
-        Shell.print("Chargement de la configuration : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print(I18n.tr(Commons.LOADING, I18n.tr(Commons.CONFIG)), Shell.GraphicRenditionEnum.YELLOW);
         
         File f = new File(Constants.CONFIG_FILE);
 
-        try {
-            FileReader FR = new FileReader(f);
-            BufferedReader file = new BufferedReader(FR);
+        try (FileReader FR = new FileReader(f);
+             BufferedReader file = new BufferedReader(FR)){
             String line;
 
             while ((line = file.readLine()) != null) {
@@ -204,19 +210,17 @@ public class Config {
                 ConfigItem item = items.get(param);
                 
                 if(item == null){
-                    Loggin.debug("Item de configuration '%s' introuvable.", param);
                     continue;
                 }
                 
                 try{
                     item.setValue(value);
                 }catch(Exception e){
-                    Loggin.error("Valeur '" + value + "' incorrecte pour '" + param + "'", e);
+                    Loggin.error(I18n.tr(Commons.INVALID_CONFIG_VALUE, value, param), e);
+                    System.exit(1);
                 }
             }
-
-            file.close();
-            FR.close();
+            
             Shell.println("Ok", Shell.GraphicRenditionEnum.GREEN);
         } catch (Exception ex) {
             Loggin.error("Erreur lors du chargement de la config", ex);

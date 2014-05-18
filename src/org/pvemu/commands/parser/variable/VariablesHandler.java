@@ -9,6 +9,8 @@ import org.pvemu.commands.parser.CommandParser;
 import org.pvemu.commands.parser.Parser;
 import org.pvemu.commands.parser.ParserError;
 import org.pvemu.common.filters.FilterFactory;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
 import org.pvemu.common.utils.Pair;
 import org.pvemu.common.utils.Utils;
 
@@ -100,7 +102,7 @@ public class VariablesHandler implements Parser{
         }
         
         if(value == null)
-            throw new ParserError(command, "Variable " + name + " don't exists", start);
+            throw new ParserError(command, I18n.tr(Commands.VAR_NOT_FOUND, name), start);
         
         if(tmp.length == 2)
             value = filterValue(value, tmp[1]);

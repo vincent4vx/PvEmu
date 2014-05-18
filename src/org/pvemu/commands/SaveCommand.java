@@ -11,6 +11,8 @@ import org.pvemu.commands.askers.Asker;
 import org.pvemu.game.World;
 import org.pvemu.common.filters.Filter;
 import org.pvemu.common.filters.FilterFactory;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commons;
 
 /**
  *
@@ -25,9 +27,9 @@ public class SaveCommand extends Command{
 
     @Override
     public void perform(ArgumentList args, Asker asker) {
-        asker.write("Sauvegarde en cours...");
+        asker.write(I18n.tr(Commons.SAVING));
         World.instance().save();
-        asker.write("Sauvegarde terminé !");
+        asker.write(I18n.tr(Commons.SAVING_OK));
     }
 
     @Override

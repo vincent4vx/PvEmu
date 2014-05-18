@@ -8,11 +8,11 @@ package org.pvemu.commands;
 
 import org.pvemu.commands.argument.ArgumentList;
 import org.pvemu.commands.askers.Asker;
-import org.pvemu.commands.askers.ClientAsker;
-import org.pvemu.common.filters.AskerFilter;
 import org.pvemu.common.filters.Filter;
 import org.pvemu.common.filters.FilterFactory;
-import org.pvemu.common.filters.comparators.MoreThanComparator;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
+import org.pvemu.network.Sessionable;
 
 /**
  *
@@ -27,17 +27,11 @@ public class ExitCommand extends Command {
 
     @Override
     public void perform(ArgumentList args, Asker asker) {
-        if(asker instanceof ClientAsker){
-            ((ClientAsker)asker).getAccount().getSession().close(false); //kick the asker
+        if(asker instanceof Sessionable){
+            ((Sessionable)asker).getSession().close(false); //kick the asker
         }
         
-        //Exit in a new thread (to preserve dead lock)
-        new Thread(){
-            @Override
-            public void run(){
-                System.exit(0);
-            }
-        }.start();
+        System.exit(0);
     }
 
     @Override
@@ -48,17 +42,9 @@ public class ExitCommand extends Command {
     @Override
     public String[] usage() {
         return new String[]{
-            "Arrête le serveur sans préavis, sécurités, sauvegardes...",
-            "exit (pas de paramètres)",
-            "Attention : A utiliser avec prudence !"
+            I18n.tr(Commands.EXIT_USAGE1),
+            I18n.tr(Commands.EXIT_USAGE2),
+            I18n.tr(Commands.EXIT_USAGE3)
         };
-    }
-
-    @Override
-    public String title() {
-        return name() + " - arrêt brusque du serveur";
-    }
-    
-    
-    
+    }    
 }

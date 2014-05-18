@@ -6,7 +6,7 @@ import java.lang.management.ThreadMXBean;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import org.pvemu.common.Jelly;
+import org.pvemu.common.PvEmu;
 import org.pvemu.common.Loggin;
 import org.pvemu.common.Shell;
 import org.pvemu.network.game.GameIoHandler;
@@ -107,7 +107,7 @@ public class SystemStats {
                 new Runnable(){
                     @Override
                     public void run(){
-                        if(Jelly.DEBUG){
+                        if(PvEmu.DEBUG){
                             return;
                         }
                         Shell.clear();

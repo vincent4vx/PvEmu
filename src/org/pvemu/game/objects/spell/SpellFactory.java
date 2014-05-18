@@ -12,6 +12,8 @@ import java.util.concurrent.RecursiveAction;
 import org.pvemu.game.effect.EffectFactory;
 import org.pvemu.common.Loggin;
 import org.pvemu.common.Shell;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commons;
 import org.pvemu.common.utils.Utils;
 import org.pvemu.models.Spell;
 import org.pvemu.models.dao.DAOFactory;
@@ -155,16 +157,12 @@ final public class SpellFactory {
     }
     
     static public void preloadSpells(){
-        Shell.print("Loading spells : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print(I18n.tr(Commons.LOADING, I18n.tr(Commons.SPELLS)), Shell.GraphicRenditionEnum.YELLOW);
         List<Spell> models = DAOFactory.spell().getAll();
-        
-        /*for(Spell model : models){
-            spells.put(model.id, getSpellByModel(model));
-        }*/
         
         new ForkJoinPool().invoke(new SpellLoader(models, 0, models.size()));
         
-        Shell.println(models.size() + " spells loaded", Shell.GraphicRenditionEnum.GREEN);
+        Shell.println(I18n.tr(Commons.SPELLS_LOADED, models.size()), Shell.GraphicRenditionEnum.GREEN);
     }
     
     static private class SpellLoader extends RecursiveAction{

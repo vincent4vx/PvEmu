@@ -18,6 +18,8 @@ import org.pvemu.game.objects.item.GameItem;
 import org.pvemu.game.objects.item.factory.ItemsFactory;
 import org.pvemu.common.filters.Filter;
 import org.pvemu.common.filters.FilterFactory;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
 import org.pvemu.models.ItemTemplate;
 import org.pvemu.models.dao.DAOFactory;
 import org.pvemu.network.game.output.GameSendersRegistry;
@@ -36,8 +38,8 @@ public class ItemCommand extends Command {
     @Override
     public String[] usage() {
         return new String[]{
-            "Ajoute un item à un joueur.",
-            "item [itemID]  {{quantité = 1 {stats : max|rand = rand} {player1 = %me {player2...}}}} : ajoute l'item [itemID] aux joueurs {player1 {player2...}} avec des stats {stats}"
+            I18n.tr(Commands.ITEM_USAGE1),
+            I18n.tr(Commands.ITEM_USAGE2)
         };
     }
 
@@ -59,13 +61,13 @@ public class ItemCommand extends Command {
         ItemTemplate template = DAOFactory.item().getById(itemID);
         
         if(template == null){
-            asker.writeError("L'item '" + itemID + "' est inexistant !");
+            asker.writeError(I18n.tr(Commands.ITEM_NOT_FOUND, itemID));
             return;
         }
         
         for(Player player : players){
             GameItem item = ItemsFactory.createItem(player.getInventory(), template, qu, max);
-            asker.write("L'item '" + template.name + "' généré avec succès pour le joueur '" + player.getName() + "'");
+            asker.write(I18n.tr(Commands.ITEM_GENERATED, template.name, player.getName()));
             GameSendersRegistry.getInformativeMessage().info(player.getSession(), 21, item.getEntry().qu, itemID);
             ActionsRegistry.getObject().addItem(item, player);
         }

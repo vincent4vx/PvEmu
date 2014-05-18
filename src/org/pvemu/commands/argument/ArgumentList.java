@@ -2,6 +2,8 @@ package org.pvemu.commands.argument;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
 import org.pvemu.game.World;
 import org.pvemu.game.objects.player.Player;
 
@@ -83,7 +85,7 @@ public class ArgumentList {
         try{
             return Integer.parseInt(getArgument(number));
         }catch(NumberFormatException e){
-            throw new CommandArgumentException(number, "not a valid number");
+            throw new CommandArgumentException(number, I18n.tr(Commands.INVALID_NUMBER));
         }
     }
     public int getInteger(int number, int defaultValue){
@@ -98,7 +100,7 @@ public class ArgumentList {
         try{
             return Short.parseShort(getArgument(number));
         }catch(NumberFormatException e){
-            throw new CommandArgumentException(number, "not a valid number");
+            throw new CommandArgumentException(number, I18n.tr(Commands.INVALID_NUMBER));
         }
     }
     
@@ -172,7 +174,7 @@ public class ArgumentList {
             try{
                 list.add(Integer.parseInt(str));
             }catch(NumberFormatException e){
-                throw new CommandArgumentException(number, "Invalid integer list");
+                throw new CommandArgumentException(number, I18n.tr(Commands.INVALID_INT_LIST));
             }
         }
         

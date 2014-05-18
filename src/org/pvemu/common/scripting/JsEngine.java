@@ -54,17 +54,17 @@ public final class JsEngine {
         
         eval(
                 "var pvemu = Packages.org.pvemu;"
-                + "var jelly = pvemu.jelly;"
+                + "var common = pvemu.common;"
                 + "var game = pvemu.game;"
                 + "var network = pvemu.network;"
-                + "importPackage(jelly);"
+                + "importPackage(common);"
                 + "importPackage(java.lang);"
-                + "importClass(jelly.scripting.API);"
+                + "importClass(common.scripting.API);"
                 + "var commands = pvemu.commands;"
                 + "importPackage(commands);"
                 + "var actions = pvemu.actions;"
                 + "importPackage(actions);"
-                + "importPackage(jelly.utils);"
+                + "importPackage(common.utils);"
         );
     }
     

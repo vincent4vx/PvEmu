@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.pvemu.common.Shell;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commons;
 import org.pvemu.common.utils.Pair;
 import org.pvemu.common.utils.Utils;
 import org.pvemu.models.NpcResponseAction;
@@ -70,7 +72,7 @@ public class TriggerFactory {
     }
     
     static public void preloadTriggers(){
-        Shell.print("Loading triggers : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print(I18n.tr(Commons.LOADING, I18n.tr(Commons.TRIGGERS)), Shell.GraphicRenditionEnum.YELLOW);
         
         Map<Pair<Short, Short>, List<org.pvemu.models.Trigger>> models = DAOFactory.trigger().getAll();
         int count = 0;
@@ -84,6 +86,6 @@ public class TriggerFactory {
             count += entry.getValue().size();
         }
         
-        Shell.println(count + " triggers loaded", Shell.GraphicRenditionEnum.GREEN);
+        Shell.println(I18n.tr(Commons.TRIGGERS_LOADED, count), Shell.GraphicRenditionEnum.GREEN);
     }
 }

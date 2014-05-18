@@ -11,6 +11,8 @@ import org.pvemu.commands.argument.CommandArgumentException;
 import org.pvemu.commands.askers.Asker;
 import org.pvemu.common.filters.Filter;
 import org.pvemu.common.filters.FilterFactory;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
 import org.pvemu.common.utils.Utils;
 
 /**
@@ -43,7 +45,7 @@ public class AliasCommand extends Command {
         }
         
         if(empty)
-            asker.writeError("Aucuns alias disponibles !");
+            asker.writeError(I18n.tr(Commands.NO_ALIAS_FOUND));
         
     }
     
@@ -53,28 +55,28 @@ public class AliasCommand extends Command {
         String name = Utils.split(commandLine.trim(), " ", 2)[0];
         
         if(CommandsHandler.instance().getCommandByName(alias) != null){
-            asker.writeError("Commande ou alias '" + alias + "' déjà utilisé !");
+            asker.writeError(I18n.tr(Commands.ALIAS_ALREADY_EXISTS, alias));
             return;
         }
         
         Command cmd;
         if((cmd = CommandsHandler.instance().getCommandByName(name)) == null){
-            asker.writeError("Commande '" + name + "' inéxistante !");
+            asker.writeError(I18n.tr(Commands.UNAVAILABLE_COMMAND, name));
             return;
         }
         
         Command aliasCmd = new LinkedCommand(alias, commandLine, cmd);
         
         CommandsHandler.instance().registerCommand(aliasCmd);
-        asker.write("Alias '" + aliasCmd.title() + "' créé.");
+        asker.write(I18n.tr(Commands.ALIAS_CREATED, aliasCmd.title()));
     }
 
     @Override
     public String[] usage() {
         return new String[]{
-            "Crée un alias.",
-            "alias (pas d'arguments) : affiche la liste des alias disponibles",
-            "alias [nom de l'alias] [nom de la commande] {params...} : ajoute un alias"
+            I18n.tr(Commands.ALIAS_USAGE1),
+            I18n.tr(Commands.ALIAS_USAGE2),
+            I18n.tr(Commands.ALIAS_USAGE3)
         };
     }
 

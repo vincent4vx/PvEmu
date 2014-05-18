@@ -8,6 +8,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import org.pvemu.common.Config;
 import org.pvemu.common.Loggin;
 import org.pvemu.common.Shell;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commons;
 
 /**
  * Handle the connexions, queries...
@@ -120,7 +122,7 @@ public class DatabaseHandler {
             Loggin.warning("DatabaseHandler already initialized !");
             return;
         }
-        Shell.print("Database initialization : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print(I18n.tr(Commons.DB_INIT), Shell.GraphicRenditionEnum.YELLOW);
         try {
             instance = new DatabaseHandler(
                     Config.DB_HOST.getValue(),

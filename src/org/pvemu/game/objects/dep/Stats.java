@@ -9,6 +9,8 @@ import java.util.Set;
 import org.pvemu.common.Loggin;
 import org.pvemu.common.Shell;
 import org.pvemu.common.Shell.GraphicRenditionEnum;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commons;
 
 public class Stats{
 
@@ -196,7 +198,7 @@ public class Stats{
     }
 
     public static void loadElements() {
-        Shell.print("Chargement des élements : ", GraphicRenditionEnum.YELLOW);
+        Shell.print(I18n.tr(Commons.LOADING, I18n.tr(Commons.STATS)), GraphicRenditionEnum.YELLOW);
         int num = 0;
         for (Element e : Element.values()) {
             for (int id : e.add_id) {
@@ -210,7 +212,7 @@ public class Stats{
             if(e.getBoostID() != -1)
                 elementsByBoostID.put(e.getBoostID(), e);
         }
-        Shell.println(num + " éléments chargées !", GraphicRenditionEnum.GREEN);
+        Shell.println(I18n.tr(Commons.STATS_LOADED, num), GraphicRenditionEnum.GREEN);
     }
     
     static public Element getElementById(int elemID){

@@ -54,7 +54,7 @@ public class Loggin {
      * @param args
      */
     public static void debug(String format, Object... args) {
-        if (Jelly.DEBUG) {
+        if (PvEmu.DEBUG) {
             Shell.print("[Debug] ", GraphicRenditionEnum.GREEN, GraphicRenditionEnum.BOLD);
             Shell.println(String.format(format, args), GraphicRenditionEnum.CYAN);
         }
@@ -67,7 +67,7 @@ public class Loggin {
      * @param args
      */
     public static void realm(String msg, Object... args) {
-        if (Jelly.DEBUG) {
+        if (PvEmu.DEBUG) {
             realm(msg, Level.INFO, args);
         }
     }
@@ -80,7 +80,7 @@ public class Loggin {
      * @param ex
      */
     public static void realm(String msg, Level lvl, Exception ex) {
-        if (lvl == Level.INFO && !Jelly.DEBUG) {
+        if (lvl == Level.INFO && !PvEmu.DEBUG) {
             return;
         }
         if(lvl != Level.INFO){
@@ -98,7 +98,7 @@ public class Loggin {
      * @param args
      */
     public static void realm(String format, Level lvl, Object... args) {
-        if (lvl == Level.INFO && !Jelly.DEBUG) {
+        if (lvl == Level.INFO && !PvEmu.DEBUG) {
             return;
         }
         self.realm.log(lvl, format, args);
@@ -112,7 +112,7 @@ public class Loggin {
      * @param args
      */
     public static void game(String msg, Object... args) {
-        if (Jelly.DEBUG) {
+        if (PvEmu.DEBUG) {
             game(msg, Level.INFO, args);
         }
     }
@@ -125,7 +125,7 @@ public class Loggin {
      * @param ex
      */
     public static void game(String msg, Level lvl, Exception ex) {
-        if (lvl == Level.INFO && !Jelly.DEBUG) {
+        if (lvl == Level.INFO && !PvEmu.DEBUG) {
             return;
         }
         if(lvl != Level.INFO){
@@ -143,7 +143,7 @@ public class Loggin {
      * @param args
      */
     public static void game(String format, Level lvl, Object... args) {
-        if (lvl == Level.INFO && !Jelly.DEBUG) {
+        if (lvl == Level.INFO && !PvEmu.DEBUG) {
             return;
         }
         self.game.log(lvl, format, args);

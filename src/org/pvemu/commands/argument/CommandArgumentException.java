@@ -1,5 +1,8 @@
 package org.pvemu.commands.argument;
 
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
@@ -20,10 +23,12 @@ public class CommandArgumentException extends Exception{
 
     @Override
     public String getMessage() {
-        return String.format(
+        /*return String.format(
                 "Invalid argument %d%s", 
                 argumentNumber,
                 message == null ? "" : " : " + message
-        );
-    }    
+        );*/
+        
+        return I18n.tr(Commands.INVALID_ARGUMENT, argumentNumber) + (message == null ? "" : " : " + message);
+    }
 }

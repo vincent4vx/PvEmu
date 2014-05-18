@@ -6,6 +6,9 @@
 
 package org.pvemu.commands.argument;
 
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commands;
+
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
@@ -13,7 +16,7 @@ package org.pvemu.commands.argument;
 public class UnauthorizedEmptyList extends CommandArgumentException{
 
     public UnauthorizedEmptyList(int argumentNumber) {
-        super(argumentNumber, "empty list is not authorized here");
+        super(argumentNumber, I18n.tr(Commands.UNAUTHORIZED_EMPTY_LIST));
     }
     
 }

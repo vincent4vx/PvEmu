@@ -20,6 +20,8 @@ import org.pvemu.game.objects.map.interactiveobject.InteractiveObjectFactory;
 import org.pvemu.game.objects.monster.MonsterFactory;
 import org.pvemu.game.objects.npc.NpcFactory;
 import org.pvemu.common.Shell;
+import org.pvemu.common.i18n.I18n;
+import org.pvemu.common.i18n.translation.Commons;
 import org.pvemu.common.utils.Crypt;
 import org.pvemu.common.utils.Utils;
 import org.pvemu.models.MapModel;
@@ -138,22 +140,13 @@ final public class MapFactory {
     }
     
     static public void preloadMaps(){
-        Shell.print("Loading maps : ", Shell.GraphicRenditionEnum.YELLOW);
+        Shell.print(I18n.tr(Commons.LOADING, I18n.tr(Commons.MAPS)), Shell.GraphicRenditionEnum.YELLOW);
         List<MapModel> models = DAOFactory.map().getAll();
         Map<Short, List<MapNpcs>> npcs = DAOFactory.mapNpcs().getAll();
         
-        /*for(MapModel model : models){
-            List<MapNpcs> list = npcs.get(model.id);
-            
-            if(list == null)
-                list = new ArrayList<>();
-            
-            mapsById.put(model.id, getByModel(model, list));
-        }*/
-        
         new ForkJoinPool().invoke(new MapLoader(models, 0, models.size(), npcs));
         
-        Shell.println(models.size() + " maps loaded", Shell.GraphicRenditionEnum.GREEN);
+        Shell.println(I18n.tr(Commons.MAPS_LOADED, models.size()), Shell.GraphicRenditionEnum.GREEN);
     }
     
     static private class MapLoader extends RecursiveAction{
