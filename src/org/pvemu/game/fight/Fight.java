@@ -205,7 +205,7 @@ abstract public class Fight {
     }
     
     public boolean canMove(Fighter fighter, short dest, short nbPM){
-        return map.isFreeCell(dest) && fighter.getNumPM() >= nbPM;
+        return map.canWalk(dest) && fighter.getNumPM() >= nbPM;
     }
     
     /**

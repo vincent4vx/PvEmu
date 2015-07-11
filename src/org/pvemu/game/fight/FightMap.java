@@ -15,12 +15,13 @@ import java.util.Map;
 import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.common.utils.Utils;
+import org.pvemu.game.objects.map.Environment;
 
 /**
  *
  * @author Vincent Quatrevieux <quatrevieux.vincent@gmail.com>
  */
-public class FightMap {
+public class FightMap implements Environment{
     final private GameMap map;
     final private Map<Short, Fighter> fighters = new HashMap<>();
 
@@ -90,7 +91,7 @@ public class FightMap {
             if(--pm < 0)
                 break;
             
-            if(!isFreeCell(cell))
+            if(!canWalk(cell))
                 break;
             
             newPath.add(cell);
@@ -107,10 +108,10 @@ public class FightMap {
      * @param cell
      * @return 
      */
-    public boolean isFreeCell(short cell){
+    @Override
+    public boolean canWalk(short cell){
         return !fighters.containsKey(cell)
-                && map.getCellById(cell) != null
-                && map.getCellById(cell).isWalkable();
+                && map.canWalk(cell);
     }
     
     /**
@@ -153,5 +154,15 @@ public class FightMap {
         }
         
         return false;
+    }
+
+    @Override
+    public byte getWidth() {
+        return map.getWidth();
+    }
+
+    @Override
+    public short size() {
+        return map.size();
     }
 }

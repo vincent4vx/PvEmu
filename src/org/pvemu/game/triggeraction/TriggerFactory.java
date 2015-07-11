@@ -36,6 +36,7 @@ public class TriggerFactory {
     }
     
     static public void loadTriggersByMap(short map){
+        mapTriggers.put(map, new HashMap<Short, List<Trigger>>());
         for(Entry<Short, List<org.pvemu.models.Trigger>> entry : DAOFactory.trigger().getByMap(map).entrySet()){
             storeTriggerList(map, entry.getKey(), entry.getValue());
         }

@@ -8,14 +8,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.pvemu.game.objects.map.GameMap;
 import org.pvemu.game.fight.Fight;
 import org.pvemu.game.objects.map.MapUtils;
 import org.pvemu.common.Loggin;
+import org.pvemu.game.objects.map.Environment;
 
 public class Pathfinding {
     
-    static public Collection<Short> parsePath(GameMap map, short startCell, String strPath, boolean inFight){
+    static public Collection<Short> parsePath(Environment map, short startCell, String strPath, boolean inFight){
         List<Short> path = new ArrayList<>();
         
         short lastCell = startCell;
@@ -29,8 +29,7 @@ public class Pathfinding {
             int s = map.getWidth() * 2 + 1;
             
             while(lastCell != stepCell 
-                    && map.getCellById(lastCell) != null 
-                    && map.getCellById(lastCell).isWalkable()
+                    && map.canWalk(lastCell)
                     && s-- > 0
             ){
                 
@@ -82,29 +81,26 @@ public class Pathfinding {
             
         }
         
-        final private Fight fight;
+        final private Environment map;
         final private short start;
         final private short dest;
         final private Map<Short, Node> openList = new HashMap<>();
         final private Map<Short, Node> closeList = new HashMap<>();
 
-        public AStar(Fight fight, short start, short dest) {
-            this.fight = fight;
+        public AStar(Environment map, short start, short dest) {
+            this.map = map;
             this.start = start;
             this.dest = dest;
         }
         
         private void addAdjacentCells(short cell){
-            for(short c : MapUtils.getAdjencentCells(fight.getFightMap().getMap(), cell)){
-                if(!fight.getFightMap().getMap().getCellById(c).isWalkable())
-                    continue;
-                
-                if(c != dest && fight.getFightMap().getFighter(c) != null)
+            for(short c : MapUtils.getAdjencentCells(map, cell)){
+                if(!map.canWalk(c) && c != dest)
                     continue;
                 
                 if(!closeList.containsKey(c)){
                     int startDist = closeList.get(cell).getStartDist() + 1;
-                    int destDist = MapUtils.getDistanceBetween(fight.getFightMap().getMap(), c, dest);
+                    int destDist = MapUtils.getDistanceBetween(map, c, dest);
                     int totalDist = startDist + destDist;
                     Node node = new Node(startDist, destDist, totalDist, cell);
                     
@@ -183,7 +179,7 @@ public class Pathfinding {
     }
     
     static public Collection<Short> findPath(Fight fight, short start, short dest, boolean addStart, boolean addDest){
-        return new AStar(fight, start, dest).computePath(addStart, addDest);
+        return new AStar(fight.getFightMap(), start, dest).computePath(addStart, addDest);
     }
     
     static public Collection<Short> findPath(Fight fight, short start, short dest, boolean addStart, boolean addDest, int limit){

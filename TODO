@@ -2,6 +2,4 @@ new command system
     - add sript files for init, login and logout
     - add TerminalAsker
 new path validator
-    - use list of short for all path
     - FightMap and GameMap implements same interface (Walkable)
-    - compress all path for AI, player fighter, or simple player

@@ -13,7 +13,7 @@ import org.pvemu.common.Loggin;
 import org.pvemu.models.MapModel;
 import org.pvemu.network.game.output.GameSendersRegistry;
 
-public final class GameMap {
+public final class GameMap implements Environment{
     short id;
     final private MapModel model;
     final private List<MapCell> cells;
@@ -263,5 +263,17 @@ public final class GameMap {
         }
         
         return true;
+    }
+
+    @Override
+    public boolean canWalk(short cell) {
+        MapCell c = getCellById(cell);
+        
+        return c != null && c.isWalkable();
+    }
+
+    @Override
+    public short size() {
+        return (short)cells.size();
     }
 }

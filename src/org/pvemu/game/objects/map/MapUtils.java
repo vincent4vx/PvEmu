@@ -104,7 +104,7 @@ final public class MapUtils {
     }
 
 
-    static public Coordinates getCellCoordinates(GameMap map, short cell) {
+    static public Coordinates getCellCoordinates(Environment map, short cell) {
         int width = map.getWidth();
         int loc5 = (int) (cell / ((width * 2) - 1));
         int loc6 = cell - loc5 * ((width * 2) - 1);
@@ -116,7 +116,7 @@ final public class MapUtils {
         return new Coordinates(x, y);
     }
 
-    static public int getDistanceBetween(GameMap map, short cell1, short cell2) {
+    static public int getDistanceBetween(Environment map, short cell1, short cell2) {
         Coordinates c1 = getCellCoordinates(map, cell1);
         Coordinates c2 = getCellCoordinates(map, cell2);
 
@@ -134,7 +134,7 @@ final public class MapUtils {
      * @param area
      * @return the list of cells
      */
-    static public Collection<Short> getCellsFromArea(GameMap map, short start, short casterCell, String area) {
+    static public Collection<Short> getCellsFromArea(Environment map, short start, short casterCell, String area) {
         byte size = Crypt.getHashIndex(area.charAt(1));
         Collection<Short> cells = new HashSet<>();
         cells.add(start);
@@ -197,7 +197,7 @@ final public class MapUtils {
         return cells;
     }
 
-    static public Collection<Short> getCellsAround(GameMap map, short cell) {
+    static public Collection<Short> getCellsAround(Environment map, short cell) {
         Collection<Short> cells = new HashSet<>(4);
 
         for (char c : new char[]{'b', 'd', 'f', 'h'}) {
@@ -211,7 +211,7 @@ final public class MapUtils {
         return cells;
     }
 
-    public static char getDirBetweenTwoCase(short cell1ID, short cell2ID, GameMap map, boolean inFight) {
+    public static char getDirBetweenTwoCase(short cell1ID, short cell2ID, Environment map, boolean inFight) {
         char dir = Crypt.HASH[getDirection(map, cell1ID, cell2ID)];
         
         if(inFight){
@@ -224,7 +224,7 @@ final public class MapUtils {
         return dir;
     }
     
-    static public int getDirection(GameMap mapHandler, short nCell1, short nCell2)
+    static public int getDirection(Environment mapHandler, short nCell1, short nCell2)
     {
         int _loc3 = mapHandler.getWidth();
         int[] _loc4 = new int[]{1, _loc3, _loc3 * 2 - 1, _loc3 - 1, -1, -_loc3, -_loc3 * 2 + 1, -(_loc3 - 1)};
@@ -261,7 +261,7 @@ final public class MapUtils {
         } // end else if
     } // End of the function
     
-    static public Set<Short> getAdjencentCells(GameMap map, short cell){
+    static public Set<Short> getAdjencentCells(Environment map, short cell){
         Set<Short> cells = new HashSet<>(4);
         
         if(cell > 15)
@@ -270,7 +270,7 @@ final public class MapUtils {
         if(cell > 14)
             cells.add((short)(cell - 14));
         
-        int size = map.getCells().size();
+        int size = map.size();
         
         if(cell + 15 < size)
             cells.add((short)(cell + 15));
@@ -297,24 +297,24 @@ final public class MapUtils {
         return d == 14 || d == 15;
     }
 
-    public static short getCellIDFromDirrection(short CaseID, char Direction, GameMap map, boolean inFight) {
-        switch (Direction) {
+    public static short getCellIDFromDirrection(short cellID, char direction, Environment map, boolean useAllDirections) {
+        switch (direction) {
             case 'a':
-                return (short) (inFight ? -1 : CaseID + 1);
+                return (short) (useAllDirections ? -1 : cellID + 1);
             case 'b':
-                return (short) (CaseID + map.getWidth());
+                return (short) (cellID + map.getWidth());
             case 'c':
-                return (short) (inFight ? -1 : CaseID + (map.getWidth() * 2 - 1));
+                return (short) (useAllDirections ? -1 : cellID + (map.getWidth() * 2 - 1));
             case 'd':
-                return (short) (CaseID + (map.getWidth() - 1));
+                return (short) (cellID + (map.getWidth() - 1));
             case 'e':
-                return (short) (inFight ? -1 : CaseID - 1);
+                return (short) (useAllDirections ? -1 : cellID - 1);
             case 'f':
-                return (short) (CaseID - map.getWidth());
+                return (short) (cellID - map.getWidth());
             case 'g':
-                return (short) (inFight ? -1 : CaseID - (map.getWidth() * 2 - 1));
+                return (short) (useAllDirections ? -1 : cellID - (map.getWidth() * 2 - 1));
             case 'h':
-                return (short) (CaseID - map.getWidth() + 1);
+                return (short) (cellID - map.getWidth() + 1);
         }
         return -1;
     }

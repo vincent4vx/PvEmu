@@ -130,7 +130,7 @@ final public class AIUtils {
         short best = fighter.getCellId();
         int dist = MapUtils.getDistanceBetween(fight.getFightMap().getMap(), fighter.getCellId(), target);
         for(short cell : possibleCells){
-            if(!fight.getFightMap().isFreeCell(cell))
+            if(!fight.getFightMap().canWalk(cell))
                 continue;
             
             int curDist = MapUtils.getDistanceBetween(fight.getFightMap().getMap(), cell, target);
@@ -157,7 +157,7 @@ final public class AIUtils {
         short best = fighter.getCellId();
         int dist = averageEnnemyDistance(fight, fighter.getTeam(), best);
         for(short cell : possibleCells){
-            if(!fight.getFightMap().isFreeCell(cell))
+            if(!fight.getFightMap().canWalk(cell))
                 continue;
             
             int curDist = averageEnnemyDistance(fight, fighter.getTeam(), cell);
